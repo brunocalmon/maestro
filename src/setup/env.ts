@@ -10,8 +10,39 @@ import type { TargetEnvironment } from "../hooks/detect.js";
  * that's what makes detection verifiable without depending on the machine.
  */
 export function detectEnvironment(root: string = process.cwd()): TargetEnvironment {
-  const dir = resolve(root, ".claude");
-  if (!existsSync(dir)) return { hasClaudeCode: false, files: [] };
-  const files = readdirSync(dir).map((f) => `.claude/${f}`);
-  return { hasClaudeCode: true, files: [".claude/", ...files] };
+  const files: string[] = [];
+
+  const claudeDir = resolve(root, ".claude");
+  const hasClaudeCode = existsSync(claudeDir);
+  if (hasClaudeCode) {
+    try {
+      files.push(".claude/", ...readdirSync(claudeDir).map((f) => `.claude/${f}`));
+    } catch {
+      files.push(".claude/");
+    }
+  }
+
+  const agentsDir = resolve(root, ".agents");
+  const geminiDir = resolve(root, ".gemini");
+  const hasAntigravity = existsSync(agentsDir) || existsSync(geminiDir);
+  if (existsSync(agentsDir)) {
+    try {
+      files.push(".agents/", ...readdirSync(agentsDir).map((f) => `.agents/${f}`));
+    } catch {
+      files.push(".agents/");
+    }
+  }
+  if (existsSync(geminiDir)) {
+    try {
+      files.push(".gemini/", ...readdirSync(geminiDir).map((f) => `.gemini/${f}`));
+    } catch {
+      files.push(".gemini/");
+    }
+  }
+
+  return {
+    hasClaudeCode,
+    hasAntigravity,
+    files,
+  };
 }

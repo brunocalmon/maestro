@@ -50,7 +50,7 @@ Relação: relaciona cada arquivo observado à sua superfície.
 | Outras fontes | src/extensions/repair.ts | QuarantineEnvironment, QUARANTINE_DIR, realQuarantineEnvironment, RepairResult, repairExtension |
 | Outras fontes | src/extensions/router.ts | buildRouterBlock, buildAgentsPointer, buildConfigLanguageBlock, buildConfigLanguagePointer |
 | Outras fontes | src/hooks/claude-code.ts | TranslatedHook, EVENT_MAP, translateForClaudeCode, wrap, unwrap, FRAGMENT_START, FRAGMENT_END, PREAMBLE |
-| Outras fontes | src/hooks/detect.ts | TargetEnvironment, Detection, TARGET, KNOWN_TARGETS, EVIDENCE, detectTarget |
+| Outras fontes | src/hooks/detect.ts | TARGET, KNOWN_TARGETS, detectTarget |
 | Outras fontes | src/hooks/resolve.ts | shellQuote, resolveHookCommand |
 | Outras fontes | src/hooks/source.ts | Hook, EVENTS, scalar, scriptFrom, readHook |
 | Outras fontes | src/mcp/main.ts | — |
@@ -81,6 +81,10 @@ Relação: relaciona cada arquivo observado à sua superfície.
 | Outras fontes | src/skills/source.ts | OFFICIAL_SOURCE, OFFICIAL_SOURCES, resolveSource |
 | Outras fontes | src/specsfy/executor.ts | resolveSpecsfyBin, SpecsfyJson, realSpecsfyExecutor, describeSpecsfyCommand |
 | Outras fontes | src/specsfy/install.ts | buildSpecsfyInstallArgs, InstallOptions, InstallResult, installSpecsfy |
+| Outras fontes | src/targets/adapter.ts | TargetEnvironment, DetectionResult, TargetAdapter |
+| Outras fontes | src/targets/antigravity.ts | EVIDENCE |
+| Outras fontes | src/targets/claude-code.ts | EVIDENCE |
+| Outras fontes | src/targets/registry.ts | ADAPTERS, DEFAULT_TARGET, KNOWN_TARGETS, getTargetAdapter, detectTarget |
 | Outras fontes | src/telemetry/read.ts | readTrace |
 | Outras fontes | src/telemetry/record.ts | — |
 | Outras fontes | src/telemetry/render.ts | renderTelemetry |
@@ -224,6 +228,7 @@ Relação: relaciona cada arquivo observado à sua superfície.
 | Testes | tests/rename-setup-directory.test.ts | project, LEGACY_RECORD |
 | Testes | tests/run-command.test.ts | — |
 | Testes | tests/scripts.test.ts | — |
+| Testes | tests/setup-antigravity.test.ts | — |
 | Testes | tests/setup-bridge.test.ts | — |
 | Testes | tests/setup-delivers-bundled-skill.test.ts | — |
 | Testes | tests/setup-delivers-config-yaml.test.ts | — |
@@ -254,9 +259,4 @@ Relação: relaciona cada arquivo observado à sua superfície.
 | Testes | tests/skills-inventory-symlink.test.ts | — |
 | Testes | tests/skills-nao-destrutivo.test.ts | — |
 | Testes | tests/skills-registro-persistido.test.ts | writtenRecord |
-| Testes | tests/skills-registro.test.ts | — |
-| Testes | tests/skills-segunda-origem.test.ts | cleanRoot |
-| Testes | tests/skills-source-arbitraria.test.ts | — |
-| Testes | tests/skills-source-oficial.test.ts | — |
-| Testes | tests/skills-source-terceiro.test.ts | — |
 <!-- specsfy:documentator:end -->

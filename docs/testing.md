@@ -3,7 +3,7 @@
 <!-- specsfy:documentator:start -->
 ## Resumo
 
-- Arquivos de teste: 199.
+- Arquivos de teste: 200.
 - Runner: Vitest.
 - Scripts: prepare: node scripts/install-git-hooks.mjs; prebuild: node scripts/check-version-checksum.mjs; build: tsc; test:tdd: vitest run; verify: node scripts/cycle.mjs.
 
@@ -146,6 +146,7 @@
 | tests/rename-setup-directory.test.ts |
 | tests/run-command.test.ts |
 | tests/scripts.test.ts |
+| tests/setup-antigravity.test.ts |
 | tests/setup-bridge.test.ts |
 | tests/setup-delivers-bundled-skill.test.ts |
 | tests/setup-delivers-config-yaml.test.ts |

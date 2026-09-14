@@ -2,8 +2,10 @@ import { readFileSync, readdirSync, existsSync } from "node:fs";
 import { resolve, dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { detectTarget, TARGET, type TargetEnvironment } from "../hooks/detect.js";
+import { getTargetAdapter } from "../targets/registry.js";
+import { claudeCodeAdapter } from "../targets/claude-code.js";
 import { readHook } from "../hooks/source.js";
-import { renderSettings, translateForClaudeCode, type Settings, type TranslatedHook } from "../hooks/claude-code.js";
+import { translateForClaudeCode, renderSettings, type Settings, type TranslatedHook } from "../hooks/claude-code.js";
 import { resolveHookCommand } from "../hooks/resolve.js";
 import { realSource, type TraceSource } from "../telemetry/trace.js";
 import { installSkills, type Executor as SkillsExecutor, type InstallResult as SkillsInstallResult } from "../skills/install.js";
@@ -176,7 +178,7 @@ function ensureConfigYaml(root: string): void {
 /** Locally-authored skills bundled with this package, delivered by `setup` itself — never fetched from a third-party source. */
 const BUNDLED_SKILLS = ["maestro-extension-creator"];
 
-/** Both directories the real installer observably populates for the one supported target (`claude-code`) today. */
+/** Both directories the real installer observably populates for the supported targets. */
 const SKILL_TARGET_DIRS = [".claude/skills", ".agents/skills"];
 
 /**
@@ -185,10 +187,10 @@ const SKILL_TARGET_DIRS = [".claude/skills", ".agents/skills"];
  * Same-content overwrite every run — cheap, side-effect-free, and safe since
  * this is package-shipped content, never something a person edited by hand.
  */
-function deliverLocalSkills(root: string): void {
+function deliverLocalSkills(root: string, skillDirs: string[] = SKILL_TARGET_DIRS): void {
   const env = realSkillWriteEnvironment(root);
   for (const name of BUNDLED_SKILLS) {
-    deliverBundledSkill(readBundledSkill(name), name, SKILL_TARGET_DIRS, env);
+    deliverBundledSkill(readBundledSkill(name), name, skillDirs, env);
   }
 }
 
@@ -221,6 +223,9 @@ export function runSetup(opts: SetupOptions): SetupResult {
     return { ...empty, report: `target ${detection.target} ignored: ${detection.reason}` };
   }
 
+  const adapter = getTargetAdapter(detection.target) ?? claudeCodeAdapter;
+  const targetSettings = adapter.settingsPath ?? ".claude/settings.json";
+
   // Computed before translation, not after: a hook's embedded command needs
   // to know whether a local code-review-graph copy exists — or is about to,
   // this same run — before it's written, not after. Read-only, no
@@ -232,14 +237,13 @@ export function runSetup(opts: SetupOptions): SetupResult {
   });
 
   const hooks = loadHooks().map((h) => ({ ...h, script: resolveHookCommand(h.script, dependencyResolution) }));
-  const translated = hooks.map(translateForClaudeCode);
-  const planned = translated.map((h) => ({ name: h.name, target: TARGET_SETTINGS, event: h.event }));
-  const settings = renderSettings(translated);
+  const { settings, installed: translated } = adapter.formatHooks(hooks);
+  const planned = translated.map((h) => ({ name: h.name, target: targetSettings, event: h.event }));
 
   if (opts.dryRun === true) {
     return {
       ...empty, planned, settings,
-      report: `dry run: ${planned.length} hooks would be installed in ${TARGET_SETTINGS}`,
+      report: `dry run: ${planned.length} hooks would be installed in ${targetSettings}`,
     };
   }
 
@@ -271,15 +275,15 @@ export function runSetup(opts: SetupOptions): SetupResult {
     // blocks on nor depends on the rest already being pending (FR-086,
     // FR-087, DEC-083).
     if (opts.write) {
-      ensureRouterCandidates(root);
-      deliverLocalSkills(root);
-      ensureConfigLanguageRouterCandidate(root);
+      adapter.ensureDirectoryStructure(root);
+      adapter.ensureInstructions(root);
+      deliverLocalSkills(root, adapter.skillDirs);
       ensureConfigYaml(root);
     }
     return {
       ...empty, installed: translated, settings,
       record: readRecord(opts.previous ?? null),
-      report: `already configured: ${translated.length} hooks unchanged in ${TARGET_SETTINGS}`,
+      report: `already configured: ${translated.length} hooks unchanged in ${targetSettings}`,
     };
   }
 
@@ -352,7 +356,7 @@ export function runSetup(opts: SetupOptions): SetupResult {
   const now = source.now();
   const trace = source.id();
   const entries: RecordEntry[] = translated.map((h) => ({
-    name: h.name, target: TARGET_SETTINGS, version, installedAt: now, event: h.event,
+    name: h.name, target: targetSettings, version, installedAt: now, event: h.event,
   }));
   // Installation precedes recording: it's the lockfile it produces that
   // supplies the provenance recorded here. Assembling the record first
@@ -389,7 +393,7 @@ export function runSetup(opts: SetupOptions): SetupResult {
   // written with no content: a record with an empty field claims an
   // identification that never happened.
   const record: InstallRecord = {
-    target: TARGET, version,
+    target: adapter.name, version,
     ...(trace ? { trace } : {}),
     hooks: entries,
     ...(skills ? { skills } : {}),
@@ -400,14 +404,16 @@ export function runSetup(opts: SetupOptions): SetupResult {
   // disk. The regression on a clean clone caught it.
   const written: string[] = [];
   if (opts.write) {
-    written.push(writeSettings(root, TARGET_SETTINGS, settings));
+    adapter.ensureDirectoryStructure(root);
+    if (adapter.settingsPath && settings !== null) {
+      written.push(writeSettings(root, adapter.settingsPath, settings));
+    }
     written.push(writeRecordFile(root, RECORD_PATH, record));
     // Same hook-plan approval already decided above — the router doesn't
     // go through the third-party batch dependency-approval registry
     // (SPEC-0010), because it isn't an external command (T018).
-    ensureRouterCandidates(root);
-    deliverLocalSkills(root);
-    ensureConfigLanguageRouterCandidate(root);
+    adapter.ensureInstructions(root);
+    deliverLocalSkills(root, adapter.skillDirs);
     ensureConfigYaml(root);
   }
 
@@ -428,7 +434,7 @@ export function runSetup(opts: SetupOptions): SetupResult {
   return {
     installed: translated, planned, written, settings, record, recordPath: RECORD_PATH,
     report: [
-      `${translated.length} hooks installed in ${TARGET_SETTINGS}`,
+      `${translated.length} hooks installed in ${targetSettings}`,
       ...setsBySource.map((c) => c.report),
       framework?.report,
       bridge.refused ? `Python bridge: ${bridge.refused}` : null,
