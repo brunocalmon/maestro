@@ -8,7 +8,7 @@ import { isAbsolute, join } from "node:path";
  * section 13 of the spec records it as a reversible assumption: if
  * validation turns out too loose or too strict, the adjustment happens here.
  */
-export const PROJECT_MARKERS = [".git", "package.json", ".claude"] as const;
+export const PROJECT_MARKERS = [".git", "package.json", ".claude", ".agents", ".gemini", "AGENTS.md"] as const;
 
 export type RootCheck =
   | { ok: true; root: string }
