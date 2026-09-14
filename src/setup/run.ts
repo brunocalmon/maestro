@@ -1,4 +1,4 @@
-import { readFileSync, readdirSync, existsSync } from "node:fs";
+import { readFileSync, readdirSync, existsSync, cpSync, mkdirSync } from "node:fs";
 import { resolve, dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { detectTarget, TARGET, type TargetEnvironment } from "../hooks/detect.js";
@@ -194,6 +194,32 @@ function deliverLocalSkills(root: string, skillDirs: string[] = SKILL_TARGET_DIR
   }
 }
 
+/**
+ * Ensures third-party skills installed into .claude/skills are synced
+ * into .agents/skills when target uses .agents/skills.
+ */
+function syncSkillsToTargetDirs(root: string, skillDirs: string[]): void {
+  const claudeSkillsDir = join(root, ".claude", "skills");
+  if (!existsSync(claudeSkillsDir)) return;
+  for (const targetDirName of skillDirs) {
+    const destDir = join(root, targetDirName);
+    if (destDir === claudeSkillsDir) continue;
+    if (!existsSync(destDir)) mkdirSync(destDir, { recursive: true });
+    try {
+      const skills = readdirSync(claudeSkillsDir, { withFileTypes: true });
+      for (const entry of skills) {
+        if (entry.isDirectory()) {
+          const srcSkill = join(claudeSkillsDir, entry.name);
+          const destSkill = join(destDir, entry.name);
+          cpSync(srcSkill, destSkill, { recursive: true });
+        }
+      }
+    } catch {
+      // ignore
+    }
+  }
+}
+
 const hooksDir = (): string => resolve(dirname(fileURLToPath(import.meta.url)), "..", "..", "resources", "hooks");
 
 /** Reads the bundled hooks. They live in `resources/hooks/`, not in `specs/`, whose path changes. */
@@ -278,6 +304,7 @@ export function runSetup(opts: SetupOptions): SetupResult {
       adapter.ensureDirectoryStructure(root);
       adapter.ensureInstructions(root);
       deliverLocalSkills(root, adapter.skillDirs);
+      syncSkillsToTargetDirs(root, adapter.skillDirs);
       ensureConfigYaml(root);
     }
     return {
@@ -389,6 +416,11 @@ export function runSetup(opts: SetupOptions): SetupResult {
 
   const framework = opts.specsfy ? installSpecsfy({ root, execute: opts.specsfy.execute }) : null;
 
+  // Sync any installed skills to target directories (e.g. .agents/skills)
+  if (opts.write) {
+    syncSkillsToTargetDirs(root, adapter.skillDirs);
+  }
+
   // The field is omitted when the identifier comes back empty, instead of
   // written with no content: a record with an empty field claims an
   // identification that never happened.
@@ -414,6 +446,7 @@ export function runSetup(opts: SetupOptions): SetupResult {
     // (SPEC-0010), because it isn't an external command (T018).
     adapter.ensureInstructions(root);
     deliverLocalSkills(root, adapter.skillDirs);
+    syncSkillsToTargetDirs(root, adapter.skillDirs);
     ensureConfigYaml(root);
   }
 
