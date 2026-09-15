@@ -36,6 +36,7 @@ import { readBundledSkill, deliverBundledSkill, realSkillWriteEnvironment } from
 import { ensureConfigFile, backfillConfigFile } from "../config/write.js";
 import { seedAgentDefaults } from "../agents/seed.js";
 import { syncProjectFromStack } from "../config/sync.js";
+import { ensureReadmeHomepage } from "./readme.js";
 
 /** Where the target's file is written, relative to the project. */
 export const TARGET_SETTINGS = ".claude/settings.json";
@@ -173,6 +174,7 @@ function ensureConfigYaml(root: string): void {
   backfillConfigFile(root);
   seedAgentDefaults(root);
   syncProjectFromStack(root);
+  ensureReadmeHomepage(root);
 }
 
 /** Locally-authored skills bundled with this package, delivered by `setup` itself — never fetched from a third-party source. */
