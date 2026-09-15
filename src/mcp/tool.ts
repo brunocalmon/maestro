@@ -47,11 +47,14 @@ export const inputShape = {
 };
 
 /**
- * Response shape, declared to the client.
+ * Response shape for `structuredContent`.
  *
- * The SDK validates `structuredContent` against this schema only on the
- * success path; refusal is explicitly exempt, so declaring the output
- * doesn't stop the tool from reporting an error.
+ * Not passed as `outputSchema` in `server.ts`'s `registerTool` call: the
+ * SDK's Zod v3 conversion path always emits a draft-07 `$schema`, and some
+ * MCP clients validate an advertised `outputSchema` against 2020-12 before
+ * calling the tool, rejecting it outright. `executeSetup` still shapes its
+ * `structuredContent` to match this exactly; only the formal advertisement
+ * to the client is skipped. Revisit once the project migrates off `zod@3`.
  */
 export const outputShape = {
   root: z.string().describe("Project root that received the configuration."),
