@@ -21,17 +21,17 @@
   ],
   "dependencies": {
     "@modelcontextprotocol/sdk": "1.30.0",
-    "@promovaweb/specsfy": "0.22.2",
+    "@promovaweb/specsfy": "0.23.0",
     "context-mode": "1.0.169",
-    "skills": "1.5.23",
-    "yaml": "2.9.0",
-    "zod": "3.25.76"
+    "skills": "1.5.26",
+    "yaml": "2.9.1",
+    "zod": "4.6.5"
   },
   "devDependencies": {
     "@types/node": "26.3.0",
-    "@vitest/coverage-v8": "4.1.11",
+    "@vitest/coverage-v8": "5.0.1",
     "typescript": "7.0.2",
-    "vitest": "4.1.11"
+    "vitest": "5.0.1"
   },
   "scripts": {
     "prepare": "node scripts/install-git-hooks.mjs",
