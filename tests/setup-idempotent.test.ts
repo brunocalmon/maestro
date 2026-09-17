@@ -1,4 +1,5 @@
 import { describe, it, expect } from "vitest";
+import { installedHookCount } from "./helpers-spec-0022";
 import { mkdirSync, mkdtempSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
@@ -35,7 +36,7 @@ describe("AC-005 — rerunning doesn't duplicate", () => {
     const root = project();
     const one = runSetup({ env, root, write: true });
     const two = runSetup({ env, root, write: true, previous: one.record });
-    expect(two.record.hooks).toHaveLength(8);
+    expect(two.record.hooks).toHaveLength(installedHookCount());
   });
 
   // SPECSFY: US-003 FR-008 AC-005

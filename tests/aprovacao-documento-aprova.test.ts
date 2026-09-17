@@ -1,4 +1,5 @@
 import { describe, it, expect } from "vitest";
+import { installedHookCount } from "./helpers-spec-0022";
 import { existsSync } from "node:fs";
 import { join } from "node:path";
 import { runSetup } from "../src/setup/run";
@@ -39,6 +40,6 @@ describe("AC-065 — the document authorizes the run", () => {
   // SPECSFY: US-061 FR-062 AC-065
   it("the number of installed hooks is as expected", () => {
     const root = project();
-    expect(run(root).installed.length).toBe(8);
+    expect(run(root).installed.length).toBe(installedHookCount());
   });
 });

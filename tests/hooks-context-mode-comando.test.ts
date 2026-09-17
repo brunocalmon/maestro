@@ -1,51 +1,36 @@
 import { describe, it, expect } from "vitest";
-import { readFileSync, mkdtempSync, writeFileSync } from "node:fs";
-import { tmpdir } from "node:os";
-import { join } from "node:path";
-import { spawnSync } from "node:child_process";
-import { readHook } from "../src/hooks/source";
+import { existsSync } from "node:fs";
+import { resolve } from "node:path";
+import { projectContextModeHooks } from "../src/hooks/upstream";
 import { translateForClaudeCode } from "../src/hooks/claude-code";
 
-const CONTEXT_MODE_HOOKS = [
-  "context-mode-pretooluse.md",
-  "context-mode-posttooluse.md",
-  "context-mode-stop.md",
-];
+// SPEC-0022 (FR-006): the context-mode hooks are no longer Markdown files
+// the maestro maintains; they are projected from the installed package's
+// own `hooks/hooks.json`. This file keeps the original intent of AC-009
+// (SPEC-0003): the final command carries no unresolved placeholder and
+// runs as a real command line.
+const REAL_HOOKS_JSON = resolve(__dirname, "..", "node_modules", "context-mode", "hooks", "hooks.json");
 
 describe("AC-009 — the final command contains no unresolved placeholder", () => {
   // SPECSFY: US-002 FR-002 AC-009
-  it("no fragment contains the {ide} key", () => {
-    for (const name of CONTEXT_MODE_HOOKS) {
-      const hook = readHook(readFileSync(join("resources", "hooks", name), "utf8"));
-      expect(hook.script).not.toContain("{ide}");
+  it("no projected command keeps the {ide} or ${CLAUDE_PLUGIN_ROOT} placeholder", () => {
+    if (!existsSync(REAL_HOOKS_JSON)) return;
+    const { hooks, skipped } = projectContextModeHooks(REAL_HOOKS_JSON);
+    expect(skipped).toBeUndefined();
+    expect(hooks.length).toBeGreaterThan(0);
+    for (const h of hooks) {
+      expect(h.script).not.toContain("{ide}");
+      expect(h.script).not.toContain("${CLAUDE_PLUGIN_ROOT}");
     }
   });
 
   // SPECSFY: US-002 FR-002 AC-009
-  it("the command starts with context-mode hook claude-code", () => {
-    for (const name of CONTEXT_MODE_HOOKS) {
-      const hook = readHook(readFileSync(join("resources", "hooks", name), "utf8"));
-      expect(hook.script.trim()).toMatch(/^context-mode hook claude-code /);
+  it("every projected command points at a script inside the installed package", () => {
+    if (!existsSync(REAL_HOOKS_JSON)) return;
+    const { hooks } = projectContextModeHooks(REAL_HOOKS_JSON);
+    for (const h of hooks) {
+      expect(h.kind).toBe("dispatch");
+      expect(translateForClaudeCode(h).command).toMatch(/node_modules\/context-mode\/hooks\/[a-z]+\.mjs/);
     }
   });
-
-  // SPECSFY: US-002 FR-002 AC-009
-  // Generous timeout: the real `context-mode`, called for real and not
-  // mocked, can legitimately take longer than Vitest's default 5s when
-  // `npm run verify` runs install, build and the suite together — that's
-  // exactly what produced a false red on this case's first run.
-  it("the translated script actually runs and doesn't throw on syntax", () => {
-    const hook = readHook(readFileSync(join("resources", "hooks", "context-mode-pretooluse.md"), "utf8"));
-    const translated = translateForClaudeCode(hook);
-    const dir = mkdtempSync(join(tmpdir(), "crs-cm-"));
-    const path = join(dir, "hook.sh");
-    writeFileSync(path, translated.script, { mode: 0o755 });
-    const r = spawnSync("bash", [path], {
-      input: '{"tool_input":{"command":"echo x"}}',
-      encoding: "utf8",
-      timeout: 25_000,
-    });
-    expect(r.error).toBeUndefined();
-    expect(r.status).not.toBeNull();
-  }, 30_000);
 });

@@ -5,6 +5,23 @@
 # Execution Flows of Maestro
 
 <!-- specsfy:documentator:start -->
+## Fluxo principal
+
+```mermaid
+flowchart LR
+  Entrada --> Aplicação --> Saída
+```
+
+```mermaid
+sequenceDiagram
+  participant Cliente
+  participant Aplicação
+  Cliente->>Aplicação: requisição
+```
+<!-- specsfy:documentator:end -->
+
+<!-- O bloco specsfy:documentator acima é o inventário mecânico gerado pelo Specsfy e é reescrito a cada build (findings/external/FIND-EXT-001). A documentação do projeto vive fora dele, a partir daqui. -->
+
 ## Flow Overview
 
 **Maestro** operates as a strict pipeline of verification and execution. All primary workflows (setup, planning, execution, and repair) adhere to the principle of **preventive verification before state modification**, ensuring full user transparency over disk writes and process execution.
@@ -115,4 +132,3 @@ stateDiagram-v2
     Restored --> VerifiedOK
     Aborted --> DriftDetected
 ```
-<!-- specsfy:documentator:end -->

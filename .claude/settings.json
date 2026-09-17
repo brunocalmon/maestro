@@ -2,83 +2,225 @@
   "hooks": {
     "PostToolUse": [
       {
-        "matcher": "code-review-graph-update",
+        "matcher": "Edit|Write|MultiEdit|NotebookEdit|Bash|mcp__.*",
         "hooks": [
           {
             "type": "command",
-            "command": "#!/usr/bin/env bash\nHOOK_INPUT=$(cat)\ndecision=allow\nmessage=''\nPROJECT_DIR=\"${CLAUDE_PROJECT_DIR:-$PWD}\"\nHOOK_COMMAND=$(printf '%s' \"$HOOK_INPUT\" | tr '\\n' ' ' \\\n  | sed -n 's/.*\"command\"[[:space:]]*:[[:space:]]*\"\\(\\([^\"\\\\]\\|\\\\.\\)*\\)\".*/\\1/p')\nHOOK_FILE=$(printf '%s' \"$HOOK_INPUT\" | tr '\\n' ' ' \\\n  | sed -n 's/.*\"\\(file_path\\|path\\)\"[[:space:]]*:[[:space:]]*\"\\(\\([^\"\\\\]\\|\\\\.\\)*\\)\".*/\\2/p')\n\nHOOK_EVENT=\"after-file-edit\"\n\n# >>> hook fragment\ncode-review-graph update --brief\n# <<< hook fragment\n\n# Emits the decision the fragment set. Without this, the fragment doesn't block.\ncase \"$decision\" in\n  deny) printf '%s\\n' \"$message\" >&2; exit 2 ;;\n  ask)  printf '%s\\n' \"$message\" >&2; exit 2 ;;\n  *)    exit 0 ;;\nesac"
+            "command": "\"$CLAUDE_PROJECT_DIR/.maestro/hooks/code-review-graph-update.sh\""
           }
         ]
       },
       {
-        "matcher": "context-mode-posttooluse",
+        "matcher": "Bash|mcp__.*(execute|run_in_terminal|shell).*",
         "hooks": [
           {
             "type": "command",
-            "command": "#!/usr/bin/env bash\nHOOK_INPUT=$(cat)\ndecision=allow\nmessage=''\nPROJECT_DIR=\"${CLAUDE_PROJECT_DIR:-$PWD}\"\nHOOK_COMMAND=$(printf '%s' \"$HOOK_INPUT\" | tr '\\n' ' ' \\\n  | sed -n 's/.*\"command\"[[:space:]]*:[[:space:]]*\"\\(\\([^\"\\\\]\\|\\\\.\\)*\\)\".*/\\1/p')\nHOOK_FILE=$(printf '%s' \"$HOOK_INPUT\" | tr '\\n' ' ' \\\n  | sed -n 's/.*\"\\(file_path\\|path\\)\"[[:space:]]*:[[:space:]]*\"\\(\\([^\"\\\\]\\|\\\\.\\)*\\)\".*/\\2/p')\n\nHOOK_EVENT=\"after-file-edit\"\n\n# >>> hook fragment\n'/home/bcalmon/Projects/common-rules-server/node_modules/.bin/context-mode' hook claude-code posttooluse\n# <<< hook fragment\n\n# Emits the decision the fragment set. Without this, the fragment doesn't block.\ncase \"$decision\" in\n  deny) printf '%s\\n' \"$message\" >&2; exit 2 ;;\n  ask)  printf '%s\\n' \"$message\" >&2; exit 2 ;;\n  *)    exit 0 ;;\nesac"
+            "command": "\"$CLAUDE_PROJECT_DIR/.maestro/hooks/skills-project.sh\""
+          }
+        ]
+      },
+      {
+        "matcher": "Bash|Read|Write|Edit|NotebookEdit|Glob|Grep|TodoWrite|TaskCreate|TaskUpdate|EnterPlanMode|ExitPlanMode|Skill|Agent|AskUserQuestion|EnterWorktree|mcp__",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"/home/bcalmon/Projects/maestro/node_modules/context-mode/hooks/posttooluse.mjs\" # maestro:hook=context-mode-posttooluse-0"
           }
         ]
       }
     ],
     "PreToolUse": [
       {
-        "matcher": "context-mode-pretooluse",
+        "matcher": "Grep|Glob",
         "hooks": [
           {
             "type": "command",
-            "command": "#!/usr/bin/env bash\nHOOK_INPUT=$(cat)\ndecision=allow\nmessage=''\nPROJECT_DIR=\"${CLAUDE_PROJECT_DIR:-$PWD}\"\nHOOK_COMMAND=$(printf '%s' \"$HOOK_INPUT\" | tr '\\n' ' ' \\\n  | sed -n 's/.*\"command\"[[:space:]]*:[[:space:]]*\"\\(\\([^\"\\\\]\\|\\\\.\\)*\\)\".*/\\1/p')\nHOOK_FILE=$(printf '%s' \"$HOOK_INPUT\" | tr '\\n' ' ' \\\n  | sed -n 's/.*\"\\(file_path\\|path\\)\"[[:space:]]*:[[:space:]]*\"\\(\\([^\"\\\\]\\|\\\\.\\)*\\)\".*/\\2/p')\n\nHOOK_EVENT=\"before-shell\"\n\n# >>> hook fragment\n'/home/bcalmon/Projects/common-rules-server/node_modules/.bin/context-mode' hook claude-code pretooluse\n# <<< hook fragment\n\n# Emits the decision the fragment set. Without this, the fragment doesn't block.\ncase \"$decision\" in\n  deny) printf '%s\\n' \"$message\" >&2; exit 2 ;;\n  ask)  printf '%s\\n' \"$message\" >&2; exit 2 ;;\n  *)    exit 0 ;;\nesac"
+            "command": "\"$CLAUDE_PROJECT_DIR/.maestro/hooks/graph-hint.sh\""
           }
         ]
       },
       {
-        "matcher": "guard-destructive",
+        "matcher": "Bash|mcp__.*(execute|run_in_terminal|shell).*",
         "hooks": [
           {
             "type": "command",
-            "command": "#!/usr/bin/env bash\nHOOK_INPUT=$(cat)\ndecision=allow\nmessage=''\nPROJECT_DIR=\"${CLAUDE_PROJECT_DIR:-$PWD}\"\nHOOK_COMMAND=$(printf '%s' \"$HOOK_INPUT\" | tr '\\n' ' ' \\\n  | sed -n 's/.*\"command\"[[:space:]]*:[[:space:]]*\"\\(\\([^\"\\\\]\\|\\\\.\\)*\\)\".*/\\1/p')\nHOOK_FILE=$(printf '%s' \"$HOOK_INPUT\" | tr '\\n' ' ' \\\n  | sed -n 's/.*\"\\(file_path\\|path\\)\"[[:space:]]*:[[:space:]]*\"\\(\\([^\"\\\\]\\|\\\\.\\)*\\)\".*/\\2/p')\n\nHOOK_EVENT=\"before-shell\"\n\n# >>> hook fragment\ncmd=\"$HOOK_COMMAND\"\n\n# Command position: start of string, or immediately after a separator.\nPOS='(^|[;&|]|&&|\\|\\|)[[:space:]]*'\n\nif printf '%s' \"$cmd\" | grep -qE \"${POS}rm[[:space:]]+(-[a-zA-Z]*[[:space:]]+)*-?[a-zA-Z]*[rRf][a-zA-Z]*[[:space:]]+/[[:space:]]*$\"; then\n  decision=deny\n  message=\"Blocked: this deletes from the filesystem root.\"\n\nelif printf '%s' \"$cmd\" | grep -qE \"${POS}rm[[:space:]]+-[a-zA-Z]*(rf|fr|Rf|fR)\"; then\n  decision=ask\n  message=\"Recursive force delete. Confirm the path is what you intend before continuing.\"\n\nelif printf '%s' \"$cmd\" | grep -qE \"${POS}git[[:space:]]+push([[:space:]]+[^;&|]*)?[[:space:]]+(--force([[:space:]]|$)|-f([[:space:]]|$))\"; then\n  decision=ask\n  message=\"Force push rewrites published history and can discard commits other people have. Confirm the branch and that nobody else is on it.\"\n\nelif printf '%s' \"$cmd\" | grep -qE \"${POS}git[[:space:]]+(reset[[:space:]]+--hard|clean[[:space:]]+-[a-zA-Z]*f|checkout[[:space:]]+\\.[[:space:]]*$)\"; then\n  decision=ask\n  message=\"This discards uncommitted work permanently. Confirm nothing in the working tree is worth keeping.\"\n\nelif printf '%s' \"$cmd\" | grep -qiE '(psql|mysql|mariadb|sqlite3|mongo|mongosh|redis-cli|clickhouse)' \\\n  && printf '%s' \"$cmd\" | grep -qiE '(drop[[:space:]]+(table|database|schema)|truncate[[:space:]]+table|delete[[:space:]]+from[^;]*$)'; then\n  decision=ask\n  message=\"Destructive database statement. Confirm the target is not production and that a backup exists.\"\nfi\n\n# <<< hook fragment\n\n# Emits the decision the fragment set. Without this, the fragment doesn't block.\ncase \"$decision\" in\n  deny) printf '%s\\n' \"$message\" >&2; exit 2 ;;\n  ask)  printf '%s\\n' \"$message\" >&2; exit 2 ;;\n  *)    exit 0 ;;\nesac",
+            "command": "\"$CLAUDE_PROJECT_DIR/.maestro/hooks/guard-destructive.sh\"",
             "blocking": true
           }
         ]
       },
       {
-        "matcher": "guard-secrets",
+        "matcher": "Bash|mcp__.*(execute|run_in_terminal|shell).*",
         "hooks": [
           {
             "type": "command",
-            "command": "#!/usr/bin/env bash\nHOOK_INPUT=$(cat)\ndecision=allow\nmessage=''\nPROJECT_DIR=\"${CLAUDE_PROJECT_DIR:-$PWD}\"\nHOOK_COMMAND=$(printf '%s' \"$HOOK_INPUT\" | tr '\\n' ' ' \\\n  | sed -n 's/.*\"command\"[[:space:]]*:[[:space:]]*\"\\(\\([^\"\\\\]\\|\\\\.\\)*\\)\".*/\\1/p')\nHOOK_FILE=$(printf '%s' \"$HOOK_INPUT\" | tr '\\n' ' ' \\\n  | sed -n 's/.*\"\\(file_path\\|path\\)\"[[:space:]]*:[[:space:]]*\"\\(\\([^\"\\\\]\\|\\\\.\\)*\\)\".*/\\2/p')\n\nHOOK_EVENT=\"before-shell\"\n\n# >>> hook fragment\nreason='Blocked: this command would print credentials into the transcript, where they cannot be recalled. Read the file with an editor tool, or reference the variable without displaying it.'\n\n# A display command whose target really is a credential file. The trailing\n# boundary matters: without it, \".env\" also matches \"notes.environment\".\nif printf '%s' \"$HOOK_COMMAND\" | grep -qE \\\n  '(^|[;&|]|&&|\\|\\|)[[:space:]]*(cat|less|more|head|tail|bat|xxd|od|strings)([[:space:]]+-[^[:space:]]+)*[[:space:]]+[^[:space:]]*(\\.env([.[:space:]\"'\"'\"']|$)|id_rsa|id_ed25519|id_ecdsa|\\.pem([[:space:]\"'\"'\"']|$)|\\.p12|\\.pfx|\\.netrc|credentials|secrets?\\.(ya?ml|json|toml))'\nthen\n  decision=deny\n  message=\"$reason\"\nfi\n\n# Wholesale environment dumps. Anchored to command position so a commit message\n# or prompt that merely mentions printenv is not treated as running it.\nif printf '%s' \"$HOOK_COMMAND\" | grep -qE \\\n  '(^|[;&|]|&&|\\|\\|)[[:space:]]*(printenv|env)([[:space:]]*$|[[:space:]]*\\|)'\nthen\n  decision=deny\n  message=\"$reason\"\nfi\n\n# <<< hook fragment\n\n# Emits the decision the fragment set. Without this, the fragment doesn't block.\ncase \"$decision\" in\n  deny) printf '%s\\n' \"$message\" >&2; exit 2 ;;\n  ask)  printf '%s\\n' \"$message\" >&2; exit 2 ;;\n  *)    exit 0 ;;\nesac",
+            "command": "\"$CLAUDE_PROJECT_DIR/.maestro/hooks/guard-docs.sh\"",
             "blocking": true
           }
         ]
       },
       {
-        "matcher": "protect-authorship",
+        "matcher": "Bash|mcp__.*(execute|run_in_terminal|shell).*",
         "hooks": [
           {
             "type": "command",
-            "command": "#!/usr/bin/env bash\nHOOK_INPUT=$(cat)\ndecision=allow\nmessage=''\nPROJECT_DIR=\"${CLAUDE_PROJECT_DIR:-$PWD}\"\nHOOK_COMMAND=$(printf '%s' \"$HOOK_INPUT\" | tr '\\n' ' ' \\\n  | sed -n 's/.*\"command\"[[:space:]]*:[[:space:]]*\"\\(\\([^\"\\\\]\\|\\\\.\\)*\\)\".*/\\1/p')\nHOOK_FILE=$(printf '%s' \"$HOOK_INPUT\" | tr '\\n' ' ' \\\n  | sed -n 's/.*\"\\(file_path\\|path\\)\"[[:space:]]*:[[:space:]]*\"\\(\\([^\"\\\\]\\|\\\\.\\)*\\)\".*/\\2/p')\n\nHOOK_EVENT=\"before-shell\"\n\n# >>> hook fragment\ncmd=\"$HOOK_COMMAND\"\n\ncase \"$cmd\" in\n  *\"git commit\"*)\n    trailer=$(printf '%s' \"$cmd\" | grep -io 'co-authored-by:[^\"]*' || printf '')\n    case \"$trailer\" in\n      *[Cc]laude*|*[Aa]nthropic*|*[Cc]ursor*|*[Cc]opilot*|*[Gg]emini*|*[Aa]ntigravity*|*noreply@*)\n        decision=deny\n        message=\"Blocked: this commit message credits an AI agent as co-author. Commit authorship belongs to the person who owns the work. Remove the trailer and commit again.\"\n        ;;\n    esac\n    ;;\nesac\n\n# <<< hook fragment\n\n# Emits the decision the fragment set. Without this, the fragment doesn't block.\ncase \"$decision\" in\n  deny) printf '%s\\n' \"$message\" >&2; exit 2 ;;\n  ask)  printf '%s\\n' \"$message\" >&2; exit 2 ;;\n  *)    exit 0 ;;\nesac",
+            "command": "\"$CLAUDE_PROJECT_DIR/.maestro/hooks/guard-secrets.sh\"",
             "blocking": true
+          }
+        ]
+      },
+      {
+        "matcher": "Bash|mcp__.*(execute|run_in_terminal|shell).*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"$CLAUDE_PROJECT_DIR/.maestro/hooks/protect-authorship.sh\"",
+            "blocking": true
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"/home/bcalmon/Projects/maestro/node_modules/context-mode/hooks/pretooluse.mjs\" # maestro:hook=context-mode-pretooluse-0"
+          }
+        ]
+      },
+      {
+        "matcher": "WebFetch",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"/home/bcalmon/Projects/maestro/node_modules/context-mode/hooks/pretooluse.mjs\" # maestro:hook=context-mode-pretooluse-1"
+          }
+        ]
+      },
+      {
+        "matcher": "Read",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"/home/bcalmon/Projects/maestro/node_modules/context-mode/hooks/pretooluse.mjs\" # maestro:hook=context-mode-pretooluse-2"
+          }
+        ]
+      },
+      {
+        "matcher": "Grep",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"/home/bcalmon/Projects/maestro/node_modules/context-mode/hooks/pretooluse.mjs\" # maestro:hook=context-mode-pretooluse-3"
+          }
+        ]
+      },
+      {
+        "matcher": "Agent",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"/home/bcalmon/Projects/maestro/node_modules/context-mode/hooks/pretooluse.mjs\" # maestro:hook=context-mode-pretooluse-4"
+          }
+        ]
+      },
+      {
+        "matcher": "mcp__plugin_context-mode_context-mode__ctx_execute",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"/home/bcalmon/Projects/maestro/node_modules/context-mode/hooks/pretooluse.mjs\" # maestro:hook=context-mode-pretooluse-5"
+          }
+        ]
+      },
+      {
+        "matcher": "mcp__plugin_context-mode_context-mode__ctx_execute_file",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"/home/bcalmon/Projects/maestro/node_modules/context-mode/hooks/pretooluse.mjs\" # maestro:hook=context-mode-pretooluse-6"
+          }
+        ]
+      },
+      {
+        "matcher": "mcp__plugin_context-mode_context-mode__ctx_batch_execute",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"/home/bcalmon/Projects/maestro/node_modules/context-mode/hooks/pretooluse.mjs\" # maestro:hook=context-mode-pretooluse-7"
+          }
+        ]
+      },
+      {
+        "matcher": "mcp__",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"/home/bcalmon/Projects/maestro/node_modules/context-mode/hooks/pretooluse.mjs\" # maestro:hook=context-mode-pretooluse-8"
           }
         ]
       }
     ],
     "Stop": [
       {
-        "matcher": "context-mode-stop",
         "hooks": [
           {
             "type": "command",
-            "command": "#!/usr/bin/env bash\nHOOK_INPUT=$(cat)\ndecision=allow\nmessage=''\nPROJECT_DIR=\"${CLAUDE_PROJECT_DIR:-$PWD}\"\nHOOK_COMMAND=$(printf '%s' \"$HOOK_INPUT\" | tr '\\n' ' ' \\\n  | sed -n 's/.*\"command\"[[:space:]]*:[[:space:]]*\"\\(\\([^\"\\\\]\\|\\\\.\\)*\\)\".*/\\1/p')\nHOOK_FILE=$(printf '%s' \"$HOOK_INPUT\" | tr '\\n' ' ' \\\n  | sed -n 's/.*\"\\(file_path\\|path\\)\"[[:space:]]*:[[:space:]]*\"\\(\\([^\"\\\\]\\|\\\\.\\)*\\)\".*/\\2/p')\n\nHOOK_EVENT=\"stop\"\n\n# >>> hook fragment\n'/home/bcalmon/Projects/common-rules-server/node_modules/.bin/context-mode' hook claude-code stop\n# <<< hook fragment\n\n# Emits the decision the fragment set. Without this, the fragment doesn't block.\ncase \"$decision\" in\n  deny) printf '%s\\n' \"$message\" >&2; exit 2 ;;\n  ask)  printf '%s\\n' \"$message\" >&2; exit 2 ;;\n  *)    exit 0 ;;\nesac"
+            "command": "\"$CLAUDE_PROJECT_DIR/.maestro/hooks/code-review-graph-stop.sh\""
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"/home/bcalmon/Projects/maestro/node_modules/context-mode/hooks/stop.mjs\" # maestro:hook=context-mode-stop-0"
           }
         ]
       }
     ],
     "SessionStart": [
       {
-        "matcher": "setup-check",
         "hooks": [
           {
             "type": "command",
-            "command": "#!/usr/bin/env bash\nHOOK_INPUT=$(cat)\ndecision=allow\nmessage=''\nPROJECT_DIR=\"${CLAUDE_PROJECT_DIR:-$PWD}\"\nHOOK_COMMAND=$(printf '%s' \"$HOOK_INPUT\" | tr '\\n' ' ' \\\n  | sed -n 's/.*\"command\"[[:space:]]*:[[:space:]]*\"\\(\\([^\"\\\\]\\|\\\\.\\)*\\)\".*/\\1/p')\nHOOK_FILE=$(printf '%s' \"$HOOK_INPUT\" | tr '\\n' ' ' \\\n  | sed -n 's/.*\"\\(file_path\\|path\\)\"[[:space:]]*:[[:space:]]*\"\\(\\([^\"\\\\]\\|\\\\.\\)*\\)\".*/\\2/p')\n\nHOOK_EVENT=\"session-start\"\n\n# >>> hook fragment\nif [ ! -f \"$PROJECT_DIR/.maestro/install.json\" ] || [ ! -d \"$PROJECT_DIR/.specsfy\" ]; then\n  cat <<'EOF'\nmaestro: this project hasn't completed setup yet (missing .maestro/install.json or .specsfy/). Run the `setup` tool (or `maestro setup` from a terminal) before relying on its hooks, skills or the Specsfy framework — some of what's configured so far may be partial.\nEOF\nfi\n\n# <<< hook fragment\n\n# Emits the decision the fragment set. Without this, the fragment doesn't block.\ncase \"$decision\" in\n  deny) printf '%s\\n' \"$message\" >&2; exit 2 ;;\n  ask)  printf '%s\\n' \"$message\" >&2; exit 2 ;;\n  *)    exit 0 ;;\nesac"
+            "command": "\"$CLAUDE_PROJECT_DIR/.maestro/hooks/setup-check.sh\""
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"$CLAUDE_PROJECT_DIR/.maestro/hooks/skills-project-session.sh\""
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"/home/bcalmon/Projects/maestro/node_modules/context-mode/hooks/sessionstart.mjs\" # maestro:hook=context-mode-sessionstart-0"
+          }
+        ]
+      }
+    ],
+    "PreCompact": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"/home/bcalmon/Projects/maestro/node_modules/context-mode/hooks/precompact.mjs\" # maestro:hook=context-mode-precompact-0"
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"/home/bcalmon/Projects/maestro/node_modules/context-mode/hooks/userpromptsubmit.mjs\" # maestro:hook=context-mode-userpromptsubmit-0"
           }
         ]
       }

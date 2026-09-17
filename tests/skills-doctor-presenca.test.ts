@@ -8,8 +8,8 @@ import { join } from "node:path";
 function consistentProject(): string {
   const root = projectWithSkills();
   for (const n of MATTPOCOCK_SET) {
-    mkdirSync(join(root, ".claude", "skills", n), { recursive: true });
-    writeFileSync(join(root, ".claude", "skills", n, "SKILL.md"), `---\nname: ${n}\n---\nbody\n`);
+    mkdirSync(join(root, ".agents", "skills", n), { recursive: true });
+    writeFileSync(join(root, ".agents", "skills", n, "SKILL.md"), `---\nname: ${n}\n---\nbody\n`);
   }
   writeLock(root, MATTPOCOCK_SET);
   return root;

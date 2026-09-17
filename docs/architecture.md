@@ -5,6 +5,28 @@
 # System Design and Architecture of Maestro
 
 <!-- specsfy:documentator:start -->
+## Componentes
+
+| Tipo | Quantidade |
+| --- | --- |
+| Código | 320 |
+| Testes | 229 |
+
+## Diagramas
+
+```mermaid
+flowchart TD
+  Application[Aplicação]
+```
+
+```mermaid
+classDiagram
+  class Application
+```
+<!-- specsfy:documentator:end -->
+
+<!-- O bloco specsfy:documentator acima é o inventário mecânico gerado pelo Specsfy e é reescrito a cada build (findings/external/FIND-EXT-001). A documentação do projeto vive fora dele, a partir daqui. -->
+
 ## Architectural Overview
 
 **Maestro** is designed as a lightweight, declarative orchestration layer. Rather than reimplementing existing software development tools, the system orchestrates third-party subsystems and AI coding agents through a verifiable dependency contract.
@@ -165,4 +187,3 @@ Enables custom local rules and hooks (`maestro extension create`) backed by SHA-
 
 ### 5. MCP Server (`src/mcp/`)
 Provides integration for IDEs via the Model Context Protocol over STDIO (`maestro-mcp`). The server validates project root paths strictly (`validateRoot`) to prevent accidental operations in incorrect workspace directories.
-<!-- specsfy:documentator:end -->

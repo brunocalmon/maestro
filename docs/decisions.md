@@ -5,6 +5,13 @@
 # Architecture Decision Records (ADRs) of Maestro
 
 <!-- specsfy:documentator:start -->
+## Política
+
+Decisões explícitas em `PROJECT.md` e `.specsfy/` prevalecem sobre inferências deste documento.
+<!-- specsfy:documentator:end -->
+
+<!-- O bloco specsfy:documentator acima é o inventário mecânico gerado pelo Specsfy e é reescrito a cada build (findings/external/FIND-EXT-001). A documentação do projeto vive fora dele, a partir daqui. -->
+
 ## Decisions Overview
 
 Architecture decisions in **Maestro** are formally recorded through specifications (`specs/`) and aligned with principles of deterministic, secure, and non-destructive orchestration.
@@ -59,4 +66,3 @@ In case of conflict, the following normative hierarchy applies:
 1. **No Manual Global Installations**: Maestro never runs `npm install -g`, `apt`, or system-level installer commands.
 2. **No Native Lifecycle Scripts**: npm package installations execute with `--ignore-scripts`.
 3. **Private Package**: Package `@brunocalmon/maestro` declares `"private": true` in `package.json`, preventing accidental public npm registry publishing.
-<!-- specsfy:documentator:end -->

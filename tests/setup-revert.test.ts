@@ -1,4 +1,5 @@
 import { describe, it, expect } from "vitest";
+import { installedHookCount } from "./helpers-spec-0022";
 import { mkdirSync, mkdtempSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
@@ -26,7 +27,7 @@ describe("AC-012 — the record allows undoing what was done", () => {
   it("describes each removal precisely enough to undo", () => {
     const root = project();
     const r = runSetup({ env, root, write: true });
-    expect(entriesToRemove(r.record)).toHaveLength(8);
+    expect(entriesToRemove(r.record)).toHaveLength(installedHookCount());
   });
 
   // SPECSFY: US-003 FR-007 NFR-002 AC-012
@@ -41,6 +42,6 @@ describe("AC-012 — the record allows undoing what was done", () => {
   // SPECSFY: US-003 FR-007 AC-012
   it("reinstalls all seven when run again after reverting", () => {
     const root = project();
-    expect(runSetup({ env, root, write: true, previous: null }).installed).toHaveLength(8);
+    expect(runSetup({ env, root, write: true, previous: null }).installed).toHaveLength(installedHookCount());
   });
 });

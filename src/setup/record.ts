@@ -9,6 +9,12 @@ export interface RecordEntry {
   installedAt: string;
   /** Event under which the entry sits in the target, to locate it on removal. */
   event: string;
+  /** `script` (file in .maestro/hooks/) or `dispatch` (binary invoked directly). Absent in records written before SPEC-0022. */
+  kind?: "script" | "dispatch";
+  /** The hook's own event name (`before-tool`, `on-prompt`, ...), independent of the target's naming. Absent before SPEC-0022. */
+  canonicalEvent?: string;
+  /** Script path relative to the project, or the dispatch command. Absent in records written before SPEC-0022. */
+  path?: string;
 }
 
 /** Provenance of a skill set, read from the installer's lockfile. */
@@ -29,6 +35,8 @@ export interface InstallRecord {
   hooks: RecordEntry[];
   /** Installed sets, when skills were installed. */
   skills?: SkillsRecordEntry[];
+  /** Skills copied from `.agents/skills` into the target's directory, with the checksum of each copy (SPEC-0024). */
+  projections?: { name: string; checksum: string }[];
 }
 
 /** Record path, always inside the project. */

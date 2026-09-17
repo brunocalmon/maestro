@@ -54,3 +54,59 @@ describe("Root README Homepage and Docs Relative Links Sanitization", () => {
     expect(updatedDoc).toBe("# Arch\n[Back](../README.md) and [Decisions](decisions.md)");
   });
 });
+
+describe("AC-007 — a missing README gets a generic placeholder, never maestro's own content", () => {
+  // SPECSFY: US-002 FR-003 AC-007
+  test("does not mention maestro, its package name or its own commands", () => {
+    const root = mkdtempSync(join(tmpdir(), "maestro-test-readme-generic-"));
+    mkdirSync(join(root, "docs"), { recursive: true });
+
+    ensureReadmeHomepage(root);
+
+    const content = readFileSync(join(root, "README.md"), "utf8").toLowerCase();
+    expect(content).not.toContain("maestro");
+    expect(content).not.toContain("@brunocalmon");
+    expect(content).not.toContain("specsfy");
+  });
+
+  // SPECSFY: US-002 FR-003 AC-007
+  test("still points to docs/README.md as the index and warns that title/description are pending", () => {
+    const root = mkdtempSync(join(tmpdir(), "maestro-test-readme-generic-index-"));
+    mkdirSync(join(root, "docs"), { recursive: true });
+
+    ensureReadmeHomepage(root);
+
+    const content = readFileSync(join(root, "README.md"), "utf8");
+    expect(content).toContain("docs/README.md");
+    expect(content.toLowerCase()).toMatch(/fill in the (project )?(title|name) and description/);
+  });
+});
+
+describe("AC-008 — an existing README is never replaced by the generic placeholder", () => {
+  // SPECSFY: US-002 FR-003 AC-008
+  test("keeps the project's own content untouched", () => {
+    const root = mkdtempSync(join(tmpdir(), "maestro-test-readme-preserve-"));
+    mkdirSync(join(root, "docs"), { recursive: true });
+    const path = join(root, "README.md");
+    writeFileSync(path, "# My Own Project\n\nThis is my project's own README.\n", "utf8");
+
+    ensureReadmeHomepage(root);
+
+    expect(readFileSync(path, "utf8")).toBe("# My Own Project\n\nThis is my project's own README.\n");
+  });
+});
+
+describe("AC-009 — malformed links in an existing README are still sanitized", () => {
+  // SPECSFY: US-002 FR-003 AC-009
+  test("old-style docs/ links are normalized without touching the rest of the content", () => {
+    const root = mkdtempSync(join(tmpdir(), "maestro-test-readme-sanitize-only-"));
+    mkdirSync(join(root, "docs"), { recursive: true });
+    const path = join(root, "README.md");
+    writeFileSync(path, "# Real Project\n[Architecture](/docs/architecture.md)\n", "utf8");
+
+    ensureReadmeHomepage(root);
+
+    const content = readFileSync(path, "utf8");
+    expect(content).toBe("# Real Project\n[Architecture](docs/architecture.md)\n");
+  });
+});

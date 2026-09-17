@@ -1,17 +1,21 @@
-import { readFileSync, readdirSync, existsSync, cpSync, mkdirSync } from "node:fs";
+import { readFileSync, readdirSync, existsSync, cpSync, mkdirSync, writeFileSync } from "node:fs";
 import { resolve, dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { detectTarget, TARGET, type TargetEnvironment } from "../hooks/detect.js";
 import { getTargetAdapter } from "../targets/registry.js";
+import type { TargetAdapter } from "../targets/adapter.js";
 import { claudeCodeAdapter } from "../targets/claude-code.js";
 import { readHook } from "../hooks/source.js";
 import { translateForClaudeCode, renderSettings, type Settings, type TranslatedHook } from "../hooks/claude-code.js";
-import { resolveHookCommand } from "../hooks/resolve.js";
+import { resolveHookCommand, resolveDispatchCommand } from "../hooks/resolve.js";
+import { projectContextModeHooks } from "../hooks/upstream.js";
+import type { SkippedHook } from "../targets/adapter.js";
 import { realSource, type TraceSource } from "../telemetry/trace.js";
 import { installSkills, type Executor as SkillsExecutor, type InstallResult as SkillsInstallResult } from "../skills/install.js";
 import { OFFICIAL_SOURCES } from "../skills/source.js";
 import { readLock, toRecordEntries } from "../skills/record.js";
-import { inspectSkills } from "../skills/inventory.js";
+import { inspectSkills, SKILLS_DIR } from "../skills/inventory.js";
+import { projectSkills } from "../skills/project.js";
 import { installSpecsfy, type Executor as SpecsfyExecutor } from "../specsfy/install.js";
 import { describeSpecsfyCommand } from "../specsfy/executor.js";
 import { describeSkillsCommand } from "../skills/executor.js";
@@ -28,10 +32,8 @@ import {
   type CommandCandidate,
 } from "../approval/plan.js";
 import { readApprovalRegistry, writeApprovalRegistry, realRegistryEnvironment, type RegistryEnvironment } from "../approval/registry.js";
-import { writeRecordFile, writeSettings } from "./write.js";
+import { writeRecordFile, readRecordFile, writeSettings, writeHookScripts, hasLegacyEntries, hookScriptPath, type WriteHookScriptsResult } from "./write.js";
 import { realChecksumEnvironment } from "../extensions/registry.js";
-import { createExtension, realTargetFileEnvironment } from "../extensions/create.js";
-import { buildRouterBlock, buildAgentsPointer, buildConfigLanguageBlock, buildConfigLanguagePointer } from "../extensions/router.js";
 import { readBundledSkill, deliverBundledSkill, realSkillWriteEnvironment } from "../skills/deliver.js";
 import { ensureConfigFile, backfillConfigFile } from "../config/write.js";
 import { seedAgentDefaults } from "../agents/seed.js";
@@ -88,10 +90,23 @@ export interface SetupOptions {
    * default — the same way `skills` stays out until it's provided.
    */
   approval?: { context?: TerminalContext; source?: DecisionSource; stdin?: StdinReader };
+  /** Directory of canonical hooks. Absent, the package's `resources/hooks/` — exists for cases that need a synthetic hook. */
+  hooksDir?: string;
+  /**
+   * Upstream projections (SPEC-0022, FR-006). `contextModeHooksJson`
+   * absent: the installed package's `hooks/hooks.json`; `null`: skip.
+   */
+  upstream?: { contextModeHooksJson?: string | null };
 }
 
 export interface SetupResult {
   installed: TranslatedHook[];
+  /** Hooks the target adapter refused, with the reason (FR-007). */
+  skipped: SkippedHook[];
+  /** Legacy inline entries replaced in the settings file (FR-004). */
+  migrated: number;
+  /** Files copied to `.maestro/quarantine/` this run: divergent scripts and an unparsable settings file. */
+  quarantined: string[];
   planned: { name: string; target: string; event: string }[];
   written: string[];
   settings: Settings | null;
@@ -100,62 +115,6 @@ export interface SetupResult {
   report: string;
   bridged: boolean;
   exitCode: number;
-}
-
-/**
- * Ensures the router in `CLAUDE.md`/`AGENTS.md` — not a third-party
- * command (`T018`), so it stays outside the batch dependency-approval
- * registry (`SPEC-0010`); idempotency comes from `createExtension` itself,
- * which refuses on a name conflict once the artifact already exists
- * (`FR-086`, `FR-087`).
- */
-function ensureRouterCandidates(root: string): void {
-  const registryEnv = realChecksumEnvironment(root);
-  const targetEnv = realTargetFileEnvironment(root);
-  createExtension({
-    category: "extension",
-    name: "router",
-    target: "CLAUDE.md",
-    content: buildRouterBlock(),
-    registryEnv,
-    targetEnv,
-  });
-  createExtension({
-    category: "extension",
-    name: "agents-pointer",
-    target: "AGENTS.md",
-    content: buildAgentsPointer(),
-    registryEnv,
-    targetEnv,
-  });
-}
-
-/**
- * Delivers the language/config.yaml instruction as its own anchored block —
- * distinct from `ensureRouterCandidates` (SPEC-0012, DEC-002): reusing the
- * `"router"`/`"agents-pointer"` names would make this instruction
- * unreachable in any project that already ran `setup` once, since
- * `createExtension` refuses a name already registered.
- */
-function ensureConfigLanguageRouterCandidate(root: string): void {
-  const registryEnv = realChecksumEnvironment(root);
-  const targetEnv = realTargetFileEnvironment(root);
-  createExtension({
-    category: "extension",
-    name: "config-language-rule",
-    target: "CLAUDE.md",
-    content: buildConfigLanguageBlock(),
-    registryEnv,
-    targetEnv,
-  });
-  createExtension({
-    category: "extension",
-    name: "config-language-pointer",
-    target: "AGENTS.md",
-    content: buildConfigLanguagePointer(),
-    registryEnv,
-    targetEnv,
-  });
 }
 
 /**
@@ -175,6 +134,24 @@ function ensureConfigYaml(root: string): void {
   seedAgentDefaults(root);
   syncProjectFromStack(root);
   ensureReadmeHomepage(root);
+}
+
+/** Where hooks keep per-session state (graph hash, one-time hints). Never versioned (SPEC-0023, DEC-006). */
+export const STATE_DIR = ".maestro/state";
+
+/**
+ * Creates `.maestro/state/` and keeps it out of git. The `.gitignore` line is
+ * added once; a file that already has it is left alone, and a missing
+ * `.gitignore` is created with just that line.
+ */
+function ensureStateDir(root: string): void {
+  mkdirSync(join(root, STATE_DIR), { recursive: true });
+  const ignore = join(root, ".gitignore");
+  const line = `${STATE_DIR}/`;
+  const current = existsSync(ignore) ? readFileSync(ignore, "utf8") : "";
+  if (current.split(/\r?\n/).some((l) => l.trim() === line)) return;
+  const prefix = current.length === 0 || current.endsWith("\n") ? current : `${current}\n`;
+  writeFileSync(ignore, `${prefix}${line}\n`);
 }
 
 /** Locally-authored skills bundled with this package, delivered by `setup` itself — never fetched from a third-party source. */
@@ -197,32 +174,54 @@ function deliverLocalSkills(root: string, skillDirs: string[] = SKILL_TARGET_DIR
 }
 
 /**
- * Ensures third-party skills installed into .claude/skills are synced
- * into .agents/skills when target uses .agents/skills.
+ * Projects `.agents/skills` into the target's own directory when it has
+ * one, carrying the previous checksums so an edited copy is never replaced
+ * (SPEC-0024, FR-006). Replaces the old one-way sync `.claude → .agents`.
  */
-function syncSkillsToTargetDirs(root: string, skillDirs: string[]): void {
-  const claudeSkillsDir = join(root, ".claude", "skills");
-  if (!existsSync(claudeSkillsDir)) return;
-  for (const targetDirName of skillDirs) {
-    const destDir = join(root, targetDirName);
-    if (destDir === claudeSkillsDir) continue;
-    if (!existsSync(destDir)) mkdirSync(destDir, { recursive: true });
-    try {
-      const skills = readdirSync(claudeSkillsDir, { withFileTypes: true });
-      for (const entry of skills) {
-        if (entry.isDirectory()) {
-          const srcSkill = join(claudeSkillsDir, entry.name);
-          const destSkill = join(destDir, entry.name);
-          cpSync(srcSkill, destSkill, { recursive: true });
-        }
-      }
-    } catch {
-      // ignore
-    }
-  }
+function projectSkillsForTarget(root: string, adapter: TargetAdapter, known: readonly { name: string; checksum: string }[]): ReturnType<typeof projectSkills> {
+  if (!adapter.projectsSkillsTo) return { copied: [], updated: [], kept: [], skipped: [], records: [] };
+  return projectSkills(root, SKILLS_DIR, adapter.projectsSkillsTo, known);
+}
+
+/**
+ * The checksums of earlier projections are what tell our copy from an
+ * edited one; a caller that didn't pass the previous record still has it on
+ * disk — read before this run overwrites it.
+ */
+function knownProjections(root: string, previous: InstallRecord | null): { name: string; checksum: string }[] {
+  return previous?.projections ?? readRecordFile(root, RECORD_PATH)?.projections ?? [];
+}
+
+function projectionNotes(r: ReturnType<typeof projectSkills>): string[] {
+  const notes: string[] = [];
+  if (r.copied.length > 0) notes.push(`skills projected to the target: ${r.copied.join(", ")}`);
+  if (r.updated.length > 0) notes.push(`projected skills refreshed: ${r.updated.join(", ")}`);
+  if (r.kept.length > 0) notes.push(`projected skills kept (local copy diverged from the projection): ${r.kept.join(", ")}`);
+  if (r.skipped.length > 0) notes.push(`skills not projected (symlink): ${r.skipped.join(", ")}`);
+  return notes;
+}
+
+/** Report lines for what the instruction migration did (SPEC-0024, FR-002). */
+function instructionNotes(result: ReturnType<TargetAdapter["ensureInstructions"]>): string[] {
+  if (!result) return [];
+  const notes: string[] = [];
+  if (result.migration.migrated.length > 0) notes.push(`instructions migrated to AGENTS.md: ${result.migration.migrated.join(", ")}`);
+  if (result.migration.removed.length > 0) notes.push(`obsolete pointers removed: ${result.migration.removed.join(", ")}`);
+  for (const q of result.migration.quarantined) notes.push(`block ${q.name} diverged: moved to .maestro/quarantine/${q.quarantinePath} and restored`);
+  if (result.importAlreadyPresent) notes.push("CLAUDE.md already imports AGENTS.md outside a maestro block: no import block added");
+  const f = result.foreign;
+  if (f.moved.length > 0) notes.push(`third-party sections moved from CLAUDE.md to AGENTS.md: ${f.moved.join(", ")}`);
+  if (f.deduplicated.length > 0) notes.push(`duplicate third-party sections removed from CLAUDE.md: ${f.deduplicated.join(", ")}`);
+  if (f.conflicting.length > 0) notes.push(`third-party sections differ between CLAUDE.md and AGENTS.md, left as they are: ${f.conflicting.join(", ")}`);
+  if (f.drifted.length > 0) notes.push(`foreign content changed since it was registered (not the maestro's to rewrite): ${f.drifted.join(", ")}`);
+  return notes;
 }
 
 const hooksDir = (): string => resolve(dirname(fileURLToPath(import.meta.url)), "..", "..", "resources", "hooks");
+
+/** The context-mode package's own hook manifest, resolved from this package's dependency, not from the target project. */
+const contextModeHooksJson = (): string =>
+  resolve(dirname(fileURLToPath(import.meta.url)), "..", "..", "node_modules", "context-mode", "hooks", "hooks.json");
 
 /** Reads the bundled hooks. They live in `resources/hooks/`, not in `specs/`, whose path changes. */
 export function loadHooks(dir: string = hooksDir()): ReturnType<typeof readHook>[] {
@@ -243,7 +242,7 @@ export function runSetup(opts: SetupOptions): SetupResult {
   const version = readVersion();
   const detection = detectTarget(opts.env, opts.target);
   const empty: SetupResult = {
-    installed: [], planned: [], written: [], settings: null, record: null,
+    installed: [], skipped: [], migrated: 0, quarantined: [], planned: [], written: [], settings: null, record: null,
     recordPath: RECORD_PATH, report: "", bridged: false, exitCode: 0,
   };
 
@@ -264,18 +263,40 @@ export function runSetup(opts: SetupOptions): SetupResult {
     codeReviewGraphLocal: codeReviewGraphWillBeLocal(opts.bridgeEnv, bridgePending),
   });
 
-  const hooks = loadHooks().map((h) => ({ ...h, script: resolveHookCommand(h.script, dependencyResolution) }));
-  const { settings, installed: translated } = adapter.formatHooks(hooks);
+  // Canonical hooks plus the context-mode projection read from the
+  // package's own manifest (FR-006). A script hook's fragment passes
+  // through `resolveHookCommand` unchanged; a dispatch hook gets the
+  // runtime shim (FR-008).
+  const upstreamPath = opts.upstream?.contextModeHooksJson === undefined ? contextModeHooksJson() : opts.upstream.contextModeHooksJson;
+  const upstream = upstreamPath === null ? { hooks: [] } : projectContextModeHooks(upstreamPath);
+  const hooks = [...loadHooks(opts.hooksDir), ...upstream.hooks].map((h) => ({
+    ...h,
+    script: h.kind === "dispatch" ? resolveDispatchCommand(h.script, dependencyResolution) : resolveHookCommand(h.script, dependencyResolution),
+  }));
+  const { settings, installed: translated, skipped } = adapter.formatHooks(hooks, dependencyResolution);
   const planned = translated.map((h) => ({ name: h.name, target: targetSettings, event: h.event }));
+  const hookNames = translated.map((h) => h.name);
+  const upstreamNote = upstream.skipped ? `context-mode hooks skipped: ${upstream.skipped}` : null;
+  const skippedNote = skipped.length > 0 ? `skipped: ${skipped.map((s) => `${s.name} (${s.reason})`).join(", ")}` : null;
 
   if (opts.dryRun === true) {
     return {
-      ...empty, planned, settings,
-      report: `dry run: ${planned.length} hooks would be installed in ${targetSettings}`,
+      ...empty, planned, settings, skipped,
+      report: [`dry run: ${planned.length} hooks would be installed in ${targetSettings}`, skippedNote, upstreamNote].filter(Boolean).join("; "),
     };
   }
 
   const root = opts.root ?? process.cwd();
+  const checksumEnv = realChecksumEnvironment(root);
+
+  // Scripts are managed content: written once, compared by checksum after,
+  // divergence quarantined (FR-002, PR-004). Runs on every write, including
+  // the "already configured" path, because drift is exactly what that path
+  // would otherwise miss.
+  const writeScripts = (): WriteHookScriptsResult =>
+    adapter.settingsPath ? writeHookScripts(root, translated, { registryEnv: checksumEnv }) : { written: [], unchanged: [], quarantined: [] };
+  const missingScripts = (): boolean =>
+    adapter.settingsPath !== null && translated.some((h) => h.kind === "script" && !existsSync(join(root, hookScriptPath(h.name))));
 
   // Already configured with the same set and version: nothing to do — but
   // matching hooks isn't enough. Skills and the Specsfy framework may have
@@ -284,7 +305,13 @@ export function runSetup(opts: SetupOptions): SetupResult {
   // are cheap — filesystem, no subprocess — because calling the real
   // installers on every run just to find out whether there's anything to
   // do would pay an unnecessary cost in the common case, where nothing changed.
-  const hooksAlreadyDone = matches(opts.previous ?? null, hooks.map((h) => h.name), version);
+  // Matching names and version isn't enough once the settings can carry
+  // the previous inline format or lack a script file: both mean the disk
+  // doesn't yet reflect the record (FR-004).
+  const hooksAlreadyDone =
+    matches(opts.previous ?? null, hookNames, version) &&
+    !(adapter.settingsPath && hasLegacyEntries(root, adapter.settingsPath, hookNames)) &&
+    !missingScripts();
   const previousSkills = opts.previous?.skills ?? [];
   // A missing previous record isn't "already done" — it's "never
   // attempted." A project whose hooks were recorded before `skills`
@@ -302,17 +329,33 @@ export function runSetup(opts: SetupOptions): SetupResult {
     // name conflict) and isn't a third-party command, so it neither
     // blocks on nor depends on the rest already being pending (FR-086,
     // FR-087, DEC-083).
+    let scripts: WriteHookScriptsResult = { written: [], unchanged: [], quarantined: [] };
+    let instructions: string[] = [];
+    let projection: ReturnType<typeof projectSkills> = { copied: [], updated: [], kept: [], skipped: [], records: [] };
     if (opts.write) {
       adapter.ensureDirectoryStructure(root);
-      adapter.ensureInstructions(root);
+      ensureStateDir(root);
+      scripts = writeScripts();
+      instructions = instructionNotes(adapter.ensureInstructions(root));
       deliverLocalSkills(root, adapter.skillDirs);
-      syncSkillsToTargetDirs(root, adapter.skillDirs);
+      projection = projectSkillsForTarget(root, adapter, knownProjections(root, opts.previous ?? null));
+      if (projection.records.length > 0 || (opts.previous?.projections?.length ?? 0) > 0) {
+        writeRecordFile(root, RECORD_PATH, { ...readRecord(opts.previous ?? null), projections: projection.records });
+      }
       ensureConfigYaml(root);
     }
+    const quarantined = scripts.quarantined.map((q) => q.quarantinePath);
     return {
-      ...empty, installed: translated, settings,
+      ...empty, installed: translated, settings, skipped, quarantined,
       record: readRecord(opts.previous ?? null),
-      report: `already configured: ${translated.length} hooks unchanged in ${targetSettings}`,
+      report: [
+        `already configured: ${translated.length} hooks unchanged in ${targetSettings}`,
+        ...scripts.quarantined.map((q) => `hook ${q.name} diverged: moved to .maestro/quarantine/${q.quarantinePath} and restored`),
+        ...instructions,
+        ...projectionNotes(projection),
+        skippedNote,
+        upstreamNote,
+      ].filter(Boolean).join("; "),
     };
   }
 
@@ -386,6 +429,7 @@ export function runSetup(opts: SetupOptions): SetupResult {
   const trace = source.id();
   const entries: RecordEntry[] = translated.map((h) => ({
     name: h.name, target: targetSettings, version, installedAt: now, event: h.event,
+    kind: h.kind, canonicalEvent: h.canonicalEvent, path: h.kind === "script" ? hookScriptPath(h.name) : h.command,
   }));
   // Installation precedes recording: it's the lockfile it produces that
   // supplies the provenance recorded here. Assembling the record first
@@ -418,10 +462,6 @@ export function runSetup(opts: SetupOptions): SetupResult {
 
   const framework = opts.specsfy ? installSpecsfy({ root, execute: opts.specsfy.execute }) : null;
 
-  // Sync any installed skills to target directories (e.g. .agents/skills)
-  if (opts.write) {
-    syncSkillsToTargetDirs(root, adapter.skillDirs);
-  }
 
   // The field is omitted when the identifier comes back empty, instead of
   // written with no content: a record with an empty field claims an
@@ -437,18 +477,41 @@ export function runSetup(opts: SetupOptions): SetupResult {
   // because all of them checked the function's return value, not the
   // disk. The regression on a clean clone caught it.
   const written: string[] = [];
+  const previousProjections = knownProjections(root, opts.previous ?? null);
+  let migrated = 0;
+  const quarantined: string[] = [];
+  const notes: string[] = [];
   if (opts.write) {
     adapter.ensureDirectoryStructure(root);
+    ensureStateDir(root);
+    const scripts = writeScripts();
+    written.push(...scripts.written);
+    for (const q of scripts.quarantined) {
+      quarantined.push(q.quarantinePath);
+      notes.push(`hook ${q.name} diverged: moved to .maestro/quarantine/${q.quarantinePath} and restored`);
+    }
     if (adapter.settingsPath && settings !== null) {
-      written.push(writeSettings(root, adapter.settingsPath, settings));
+      const result = writeSettings(root, adapter.settingsPath, settings, hookNames);
+      written.push(result.path);
+      migrated = result.migrated;
+      if (result.migrated > 0) notes.push(`${result.migrated} legacy inline entries migrated`);
+      if (result.quarantined) {
+        quarantined.push(result.quarantined);
+        notes.push(`${adapter.settingsPath} was unreadable (invalid JSON): original kept in .maestro/quarantine/${result.quarantined}`);
+      }
     }
     written.push(writeRecordFile(root, RECORD_PATH, record));
     // Same hook-plan approval already decided above — the router doesn't
     // go through the third-party batch dependency-approval registry
     // (SPEC-0010), because it isn't an external command (T018).
-    adapter.ensureInstructions(root);
+    notes.push(...instructionNotes(adapter.ensureInstructions(root)));
     deliverLocalSkills(root, adapter.skillDirs);
-    syncSkillsToTargetDirs(root, adapter.skillDirs);
+    const projection = projectSkillsForTarget(root, adapter, previousProjections);
+    notes.push(...projectionNotes(projection));
+    if (projection.records.length > 0) {
+      record.projections = projection.records;
+      writeRecordFile(root, RECORD_PATH, record);
+    }
     ensureConfigYaml(root);
   }
 
@@ -467,9 +530,12 @@ export function runSetup(opts: SetupOptions): SetupResult {
   }
 
   return {
-    installed: translated, planned, written, settings, record, recordPath: RECORD_PATH,
+    installed: translated, skipped, migrated, quarantined, planned, written, settings, record, recordPath: RECORD_PATH,
     report: [
       `${translated.length} hooks installed in ${targetSettings}`,
+      ...notes,
+      skippedNote,
+      upstreamNote,
       ...setsBySource.map((c) => c.report),
       framework?.report,
       bridge.refused ? `Python bridge: ${bridge.refused}` : null,

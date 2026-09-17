@@ -12,11 +12,11 @@ function cleanRoot(): string {
   return root;
 }
 
-const skillsOf = (root: string) => readdirSync(join(root, ".claude", "skills")).sort();
+const skillsOf = (root: string) => readdirSync(join(root, ".agents", "skills")).sort();
 
 describe("AC-020 — the two sources coexist", () => {
   // SPECSFY: US-020 FR-027 AC-020
-  it("mattpocock/skills and promovaweb/specsfy coexist in .claude/skills/", async () => {
+  it("mattpocock/skills and promovaweb/specsfy coexist in .agents/skills/", async () => {
     const root = cleanRoot();
     const ex = dualSourceExecutor();
     await installSkills({ root, source: "mattpocock/skills", execute: ex.fn });

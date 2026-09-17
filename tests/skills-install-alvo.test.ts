@@ -4,11 +4,11 @@ import { projectWithSkills, fakeExecutor, SPECSFY_SET, MATTPOCOCK_SET } from "./
 import { readdirSync } from "node:fs";
 import { join } from "node:path";
 
-const skillsOf = (root: string) => readdirSync(join(root, ".claude", "skills")).sort();
+const skillsOf = (root: string) => readdirSync(join(root, ".agents", "skills")).sort();
 
 describe("AC-020 — a single setup leaves both installed", () => {
   // SPECSFY: US-020 FR-020 AC-020
-  it("mattpocock's skills reach .claude/skills/", async () => {
+  it("mattpocock's skills reach .agents/skills/ (canonical since SPEC-0024)", async () => {
     const root = projectWithSkills();
     const ex = fakeExecutor("success", root);
     await installSkills({ root, source: "mattpocock/skills", execute: ex.fn });
@@ -35,7 +35,8 @@ describe("AC-020 — a single setup leaves both installed", () => {
     const args = ex.calls.at(0) ?? [];
     expect(args).toContain("mattpocock/skills");
     expect(args).toContain("--copy");
-    expect(args.join(" ")).toMatch(/claude-code/);
+    // SPEC-0024: the canonical agent is `universal` (`.agents/skills`); the Claude Code copy is a projection.
+    expect(args.join(" ")).toMatch(/\buniversal\b/);
     expect(args).not.toContain("--global");
     expect(args).not.toContain("-g");
     expect(SPECSFY_SET.length).toBe(3);

@@ -2,7 +2,7 @@ import { existsSync, lstatSync, readdirSync } from "node:fs";
 import { join } from "node:path";
 
 /** Where skill sets live, relative to the project root. */
-export const SKILLS_DIR = ".claude/skills";
+export const SKILLS_DIR = ".agents/skills";
 
 export interface SkillsInspection {
   /** Names of present sets, relative to `SKILLS_DIR`. */

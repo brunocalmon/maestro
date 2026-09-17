@@ -9,9 +9,9 @@ spec.
 
 | Campo | Valor |
 | --- | --- |
-| Nível atual | A confirmar |
-| Fonte da confirmação | A confirmar |
-| Última confirmação | A confirmar |
+| Nível atual | experiente |
+| Fonte da confirmação | Declaração inequívoca na conversa: discussão técnica direta sobre dialetos de JSON Schema, conversão Zod v3/v4 no SDK MCP, mecanismo de extensões locais e schema de `.maestro/config.yaml` |
+| Última confirmação | 2026-09-16 |
 
 Valores permitidos: `iniciante`, `intermediário` e `experiente`.
 

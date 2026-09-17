@@ -15,6 +15,8 @@
  * more reliable than hoping the same name resolves again later, elsewhere.
  */
 
+import { buildDispatchCommand } from "./shim.js";
+
 /** Binary name (the hook's first token) → resolved absolute path, or null to keep relying on PATH. */
 export type DependencyResolution = Record<string, string | null>;
 
@@ -38,4 +40,34 @@ export function resolveHookCommand(script: string, resolution: DependencyResolut
   const resolved = resolution[bin];
   if (!resolved) return script;
   return `${shellQuote(resolved)}${rest}`;
+}
+
+/**
+ * Same resolution as `resolveHookCommand`, but the result is the runtime
+ * shim: the recorded path when it still exists, else the same name on
+ * `PATH` (SPEC-0022, FR-008). Used for dispatch hooks; a script hook's
+ * fragment doesn't start with a binary and passes through unchanged.
+ */
+export function resolveDispatchCommand(script: string, resolution: DependencyResolution): string {
+  const match = /^(\S+)([\s\S]*)$/.exec(script);
+  if (!match) return script;
+  const bin = match[1];
+  const rest = match[2] ?? "";
+  if (bin === undefined) return script;
+  const resolved = resolution[bin];
+  if (!resolved) return script;
+  return buildDispatchCommand(bin, resolved, rest);
+}
+
+/**
+ * Shell assignments a script fragment can read to find a dependency the
+ * setup already located: `MAESTRO_BIN_<name>='<path>'`, with every
+ * non-alphanumeric character of the name folded to `_`. Unresolved names
+ * produce nothing, so the fragment's own `command -v` fallback applies
+ * (SPEC-0023, FR-007).
+ */
+export function binVariables(resolution: DependencyResolution): string[] {
+  return Object.entries(resolution)
+    .filter((entry): entry is [string, string] => typeof entry[1] === "string" && entry[1].length > 0)
+    .map(([bin, path]) => `MAESTRO_BIN_${bin.replace(/[^A-Za-z0-9]/g, "_")}=${shellQuote(path)}`);
 }

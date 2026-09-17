@@ -1,5 +1,29 @@
-/** Canonical event a hook declares, before any translation. */
-export type CanonicalEvent = "before-shell" | "after-file-edit" | "stop" | "session-start";
+/**
+ * Canonical event a hook declares, before any translation.
+ *
+ * The first four are the original vocabulary; the generic ones
+ * (`before-tool`, `after-tool`, `before-compact`, `on-prompt`) exist
+ * because the context-mode upstream needs events the narrow set never
+ * expressed (SPEC-0022, FR-007). Each target adapter declares which of
+ * these it supports; the rest are reported as skipped, never silenced.
+ */
+export type CanonicalEvent =
+  | "before-shell"
+  | "after-file-edit"
+  | "stop"
+  | "session-start"
+  | "before-tool"
+  | "after-tool"
+  | "before-compact"
+  | "on-prompt";
+
+/**
+ * `script`: a fragment that sets `decision`/`message` and needs the
+ * wrapper. `dispatch`: a bare command (`raw_command`) that reads the
+ * event JSON itself — it gets no wrapper, so stdin and exit code reach it
+ * intact (SPEC-0022, FR-005).
+ */
+export type HookKind = "script" | "dispatch";
 
 export interface Hook {
   name: string;
@@ -7,9 +31,21 @@ export interface Hook {
   event: CanonicalEvent;
   blocking: boolean;
   script: string;
+  /** Tool-name regex the target should match; overrides the per-event default (FR-001). */
+  tools?: string;
+  kind: HookKind;
 }
 
-const EVENTS: readonly CanonicalEvent[] = ["before-shell", "after-file-edit", "stop", "session-start"];
+const EVENTS: readonly CanonicalEvent[] = [
+  "before-shell",
+  "after-file-edit",
+  "stop",
+  "session-start",
+  "before-tool",
+  "after-tool",
+  "before-compact",
+  "on-prompt",
+];
 
 /** Extracts a frontmatter key's scalar value, ignoring the YAML block. */
 function scalar(frontmatter: string, key: string): string | null {
@@ -57,6 +93,7 @@ export function readHook(raw: string): Hook {
   // `raw_command` in the frontmatter instead of a body with a block.
   const fromBody = scriptFrom(body);
   const script = fromBody.length > 0 ? fromBody : (scalar(frontmatter, "raw_command") ?? "");
+  const tools = scalar(frontmatter, "tools");
 
   return {
     name,
@@ -64,5 +101,7 @@ export function readHook(raw: string): Hook {
     event: event as CanonicalEvent,
     blocking: scalar(frontmatter, "blocking") === "true",
     script,
+    ...(tools ? { tools } : {}),
+    kind: fromBody.length > 0 ? "script" : "dispatch",
   };
 }

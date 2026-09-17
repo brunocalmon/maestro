@@ -24,10 +24,11 @@ describe("AC-118 — a JSON document run uses the same registry", () => {
     run(root, approved);
     expect(existsSync(join(root, ".maestro", "approved-commands.json"))).toBe(true);
 
-    rmSync(join(root, ".claude", "skills"), { recursive: true, force: true });
+    // SPEC-0024: the installer writes to .agents/skills; that is what drift is measured against.
+    rmSync(join(root, ".agents", "skills"), { recursive: true, force: true });
 
     const second = run(root, "");
     expect(second.status).toBe(0);
-    expect(existsSync(join(root, ".claude", "skills"))).toBe(true);
+    expect(existsSync(join(root, ".agents", "skills"))).toBe(true);
   }, 180_000);
 });

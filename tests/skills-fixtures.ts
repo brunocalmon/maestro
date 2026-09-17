@@ -5,13 +5,15 @@ import { join } from "node:path";
 export const SPECSFY_SET = ["specsfy-01-inbox", "specsfy-04-validate", "specsfy-setup"];
 export const MATTPOCOCK_SET = ["ask-matt", "code-review", "writing-shape"];
 
-/** Disposable root with what `specsfy` already occupies in `.claude/skills/`. */
+/** Disposable root with what `specsfy` already occupies in `.agents/skills/` (the canonical directory since SPEC-0024). */
 export function projectWithSkills(prefix = "crs-sk-"): string {
   const root = mkdtempSync(join(tmpdir(), prefix));
   writeFileSync(join(root, "package.json"), '{"name":"disposable"}\n');
+  // A Claude Code project: `.claude/` is the detection evidence; skills live in `.agents/skills`.
+  mkdirSync(join(root, ".claude"), { recursive: true });
   for (const n of SPECSFY_SET) {
-    mkdirSync(join(root, ".claude", "skills", n), { recursive: true });
-    writeFileSync(join(root, ".claude", "skills", n, "SKILL.md"), `---\nname: ${n}\n---\nbody\n`);
+    mkdirSync(join(root, ".agents", "skills", n), { recursive: true });
+    writeFileSync(join(root, ".agents", "skills", n, "SKILL.md"), `---\nname: ${n}\n---\nbody\n`);
   }
   return root;
 }
@@ -34,7 +36,7 @@ export function fileTree(root: string): string[] {
 /** Replaces a skill directory with a link pointing outside the project. */
 export function replaceWithSymlink(root: string, name: string): void {
   const target = mkdtempSync(join(tmpdir(), "crs-foreign-"));
-  symlinkSync(target, join(root, ".claude", "skills", name + "-linked"), "dir");
+  symlinkSync(target, join(root, ".agents", "skills", name + "-linked"), "dir");
 }
 
 export type Result = { status: number; skills?: string[] } | null;
@@ -59,12 +61,12 @@ export function fakeExecutor(mode: "success" | "absent" | "error", root: string)
     if (args.includes("--list")) return { status: 0, skills: [...MATTPOCOCK_SET] };
     if (mode === "error") {
       // Leaves half written, so the case proves partial never becomes complete.
-      mkdirSync(join(root, ".claude", "skills", MATTPOCOCK_SET[0]!), { recursive: true });
+      mkdirSync(join(root, ".agents", "skills", MATTPOCOCK_SET[0]!), { recursive: true });
       return { status: 1 };
     }
     for (const n of MATTPOCOCK_SET) {
-      mkdirSync(join(root, ".claude", "skills", n), { recursive: true });
-      writeFileSync(join(root, ".claude", "skills", n, "SKILL.md"), `---\nname: ${n}\n---\nbody\n`);
+      mkdirSync(join(root, ".agents", "skills", n), { recursive: true });
+      writeFileSync(join(root, ".agents", "skills", n, "SKILL.md"), `---\nname: ${n}\n---\nbody\n`);
     }
     writeLock(root, MATTPOCOCK_SET);
     return { status: 0 };
@@ -110,8 +112,8 @@ export function dualSourceExecutor(failFor?: string) {
     const set = source === "mattpocock/skills" ? MATTPOCOCK_SET : SPECSFY_SET;
     if (args.includes("--list")) return { status: 0, skills: [...set] };
     for (const n of set) {
-      mkdirSync(join(cwd, ".claude", "skills", n), { recursive: true });
-      writeFileSync(join(cwd, ".claude", "skills", n, "SKILL.md"), `---\nname: ${n}\n---\nbody\n`);
+      mkdirSync(join(cwd, ".agents", "skills", n), { recursive: true });
+      writeFileSync(join(cwd, ".agents", "skills", n, "SKILL.md"), `---\nname: ${n}\n---\nbody\n`);
     }
     writeLock(cwd, set, source);
     return { status: 0 };
@@ -129,7 +131,9 @@ export function dualSourceExecutor(failFor?: string) {
  */
 export function outsideProject(): { topLevel: number; global: string[] } {
   const topLevel = existsSync(homedir()) ? readdirSync(homedir()).length : 0;
-  const globalDir = join(homedir(), ".claude", "skills");
-  const global = existsSync(globalDir) ? readdirSync(globalDir).sort() : [];
+  // Both global skill directories the `skills` CLI could write to; the setup must touch neither.
+  const global = [join(homedir(), ".claude", "skills"), join(homedir(), ".agents", "skills")]
+    .flatMap((dir) => (existsSync(dir) ? readdirSync(dir).map((n) => `${dir}:${n}`) : []))
+    .sort();
   return { topLevel, global };
 }

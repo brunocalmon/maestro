@@ -5,6 +5,19 @@
 # CLI Architecture and Interface Design
 
 <!-- specsfy:documentator:start -->
+## Superfícies observadas
+
+- Componentes, páginas ou views: 0.
+- Tailwind: não identificado.
+- Tokens CSS: não identificados.
+
+| Arquivo |
+| --- |
+| Nenhuma superfície frontend identificada |
+<!-- specsfy:documentator:end -->
+
+<!-- O bloco specsfy:documentator acima é o inventário mecânico gerado pelo Specsfy e é reescrito a cada build (findings/external/FIND-EXT-001). A documentação do projeto vive fora dele, a partir daqui. -->
+
 ## Interface Overview
 
 **Maestro** is a strictly **Headless** application (command-line interface and protocol server). It **does not contain** a graphical web interface, React components, HTML pages, CSS stylesheets, or visual utility frameworks such as TailwindCSS.
@@ -58,4 +71,3 @@ Output printed to the terminal is formatted for human scannability:
 - **Health Report (`maestro doctor`)**: Tabular alignment with clear status indicators (`ok`, `divergent`, `missing`).
 - **Approval Plans (`maestro plan`)**: Hierarchical display of dependency commands to be executed, featuring ANSI color highlighting for binaries and arguments.
 - **Telemetry Report (`maestro report`)**: Clean summary of execution metrics, durations, and subprocess exit codes.
-<!-- specsfy:documentator:end -->

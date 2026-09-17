@@ -27,6 +27,22 @@ export function insertAnchor(fileContent: string, category: string, name: string
   return fileContent.slice(0, existing.from) + block + fileContent.slice(existing.to);
 }
 
+/**
+ * Removes the block with the given marker, and the single blank line that
+ * would otherwise be left behind. Content outside the block is untouched;
+ * a file without the block is returned as is (SPEC-0024, FR-002).
+ */
+export function removeAnchor(fileContent: string, category: string, name: string): string {
+  const { start, end } = anchorMarkers(category, name);
+  const range = readAnchorRange(fileContent, start, end);
+  if (range === null) return fileContent;
+  let to = range.to;
+  if (fileContent[to] === "\n") to += 1;
+  let from = range.from;
+  if (fileContent[from - 1] === "\n" && fileContent[from - 2] === "\n") from -= 1;
+  return fileContent.slice(0, from) + fileContent.slice(to);
+}
+
 export function readAnchor(fileContent: string, category: string, name: string): string | null {
   const { start, end } = anchorMarkers(category, name);
   const range = readAnchorRange(fileContent, start, end);

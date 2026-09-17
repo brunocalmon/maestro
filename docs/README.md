@@ -5,6 +5,23 @@
 # Technical Documentation Portal (`@brunocalmon/maestro`)
 
 <!-- specsfy:documentator:start -->
+## Visão geral
+
+- Frameworks detectados: não identificados.
+- Arquivos de código: 320.
+- Arquivos de teste: 229.
+
+## Roteiro
+
+- [Arquitetura](architecture.md)
+- [Aplicação](application.md)
+- [Banco de dados](database.md)
+- [Testes](testing.md)
+- [Pacotes](packages.md)
+<!-- specsfy:documentator:end -->
+
+<!-- O bloco specsfy:documentator acima é o inventário mecânico gerado pelo Specsfy e é reescrito a cada build (findings/external/FIND-EXT-001). A documentação do projeto vive fora dele, a partir daqui. -->
+
 ## Overview
 
 **Maestro** (`@brunocalmon/maestro`) is a CLI orchestrator and MCP Server that manages AI coding agents and development subsystems through a verifiable dependency contract. It functions as a control and coordination layer over existing tools (such as `pi`, `agy`, `claude`, `codex`, `goose`, `specsfy`, `context-mode`, and `code-review-graph`), without reimplementing their native capabilities.
@@ -43,4 +60,3 @@ Navigate the technical documentation by topic area:
    - Vitest deterministic testing strategy, mock environments, and inventory of all 200 test files.
 9. **[Dependencies & Package Inventory](packages.md)**
    - Core production dependency roles and complete npm package inventory.
-<!-- specsfy:documentator:end -->

@@ -106,3 +106,4 @@ dist/
 
 # Relatório de cobertura do Vitest (`vitest run --coverage`), regenerável.
 coverage/
+.maestro/state/

@@ -1,4 +1,5 @@
 import { describe, it, expect } from "vitest";
+import { installedHookCount } from "./helpers-spec-0022";
 import { mkdirSync, mkdtempSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
@@ -18,7 +19,7 @@ describe("AC-004 — the record names what was written", () => {
   // SPECSFY: US-003 FR-004 FR-005 AC-004
   it("records the seven installed hooks", () => {
     const r = readRecord(runSetup({ env, root: project(), write: true }).record);
-    expect(r.hooks).toHaveLength(8);
+    expect(r.hooks).toHaveLength(installedHookCount());
   });
 
   // SPECSFY: US-003 FR-004 AC-004

@@ -8,8 +8,8 @@ import { projectWithSkills, fakeExecutor, MATTPOCOCK_SET } from "./skills-fixtur
 function withConflict(): string {
   const root = projectWithSkills();
   const name = MATTPOCOCK_SET[0]!;
-  mkdirSync(join(root, ".claude", "skills", name), { recursive: true });
-  writeFileSync(join(root, ".claude", "skills", name, "SKILL.md"), "preexisting-content\n");
+  mkdirSync(join(root, ".agents", "skills", name), { recursive: true });
+  writeFileSync(join(root, ".agents", "skills", name, "SKILL.md"), "preexisting-content\n");
   return root;
 }
 
@@ -32,7 +32,7 @@ describe("AC-027 — two sets compete for the same directory name", () => {
   it("the existing directory's content remains", async () => {
     const root = withConflict();
     await installSkills({ root, source: "mattpocock/skills", execute: fakeExecutor("success", root).fn });
-    const p = join(root, ".claude", "skills", MATTPOCOCK_SET[0]!, "SKILL.md");
+    const p = join(root, ".agents", "skills", MATTPOCOCK_SET[0]!, "SKILL.md");
     expect(readFileSync(p, "utf8")).toContain("preexisting-content");
   });
 });

@@ -1,4 +1,5 @@
 import { describe, it, expect } from "vitest";
+import { installedHookCount } from "./helpers-spec-0022";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { runSetup } from "../src/setup/run";
@@ -29,7 +30,7 @@ describe("Edge case — generator that returns an empty value", () => {
   // SPECSFY: US-040 FR-040 AC-040
   it("the rest of the record remains", () => {
     const { rec } = record();
-    expect((rec["hooks"] as unknown[]).length).toBe(8);
+    expect((rec["hooks"] as unknown[]).length).toBe(installedHookCount());
     for (const h of rec["hooks"] as { installedAt: string }[]) expect(h.installedAt).toBe(FIXED_INSTANT);
   });
 });

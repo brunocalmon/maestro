@@ -1,4 +1,5 @@
 import { describe, it, expect } from "vitest";
+import { installedHookCount } from "./helpers-spec-0022";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { executeSetup } from "../src/mcp/tool";
@@ -19,7 +20,7 @@ describe("AC-007 — the second call recognizes the state", () => {
     await executeSetup({ project_root: root });
     await executeSetup({ project_root: root });
     const rec = JSON.parse(readFileSync(join(root, ".maestro", "install.json"), "utf8"));
-    expect(rec.hooks).toHaveLength(8);
+    expect(rec.hooks).toHaveLength(installedHookCount());
   });
 
   // SPECSFY: US-003 FR-004 AC-007

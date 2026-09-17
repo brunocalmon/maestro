@@ -10,8 +10,8 @@ describe("AC-032 — refusal, conflict and rerun preserve what exists", () => {
   it("a conflict refusal deletes nothing", async () => {
     const root = projectWithSkills();
     const name = MATTPOCOCK_SET[0]!;
-    mkdirSync(join(root, ".claude", "skills", name), { recursive: true });
-    writeFileSync(join(root, ".claude", "skills", name, "SKILL.md"), "preexisting\n");
+    mkdirSync(join(root, ".agents", "skills", name), { recursive: true });
+    writeFileSync(join(root, ".agents", "skills", name, "SKILL.md"), "preexisting\n");
     const before = fileTree(root);
     await installSkills({ root, source: "mattpocock/skills", execute: fakeExecutor("success", root).fn });
     for (const path of before) expect(fileTree(root)).toContain(path);

@@ -103,3 +103,23 @@ próximo `specsfy install`.
 **Alcance.** Vale para qualquer documentação, especificação, artefato ou resposta com diagramas no repositório.
 
 
+
+## Hook primeiro, regra só como fallback sem overlap
+
+Confirmado pela pessoa responsável em 2026-09-17 (SPEC-0023).
+
+- Tudo que pode ser automatizado por hook é automatizado por hook, sem gastar contexto no caminho feliz: nenhum hook escreve em stdout, exceto a dica única por sessão do `graph-hint` e as mensagens de bloqueio em stderr.
+- Todo hook é resistente à ferramenta: o preâmbulo extrai o comando de `command`, `code` (+`language`) ou `commands[]` e os guards casam `Bash|mcp__.*(execute|run_in_terminal|shell).*`; edições são detectadas pelo hash do working tree, não pelo nome da ferramenta.
+- Uma regra em texto sobre hooks só existe como fallback condicional ao `maestro doctor` ("o hook X garante Y; se o doctor reportar X ausente ou inerte, faça Y manualmente") e vive no bloco `maestro: hooks fallback`, com no máximo três itens. Com o hook ativo, a regra é inerte por construção — nunca repete o que o hook faz.
+
+## code-review-graph antes e depois de cada tarefa de código
+
+Confirmado pela pessoa responsável em 2026-09-17.
+
+- Toda tarefa `[CODE]` registra `code-review-graph status` no PREP e `code-review-graph update --brief` + `detect-changes --base HEAD --brief` no VERIFY, com o delta (nós, arestas, arquivos, risco, test gaps) na evidência — sem depender do hook `code-review-graph-update`, que é a garantia automática, não a evidência.
+
+## Documentator do Specsfy só com --check
+
+Confirmado pela pessoa responsável em 2026-09-17 (`findings/external/FIND-EXT-001`).
+
+- `build_documentation.mjs` sem `--check` reescreve o bloco `specsfy:documentator` de cada arquivo com um esqueleto e é bloqueado pelo hook `guard-docs`. A documentação real de `docs/` vive fora desse bloco; o bloco é só o inventário mecânico. Uma reescrita deliberada usa o prefixo `MAESTRO_ALLOW_DOCS_BUILD=1` e é seguida de `--check`.

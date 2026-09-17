@@ -1,9 +1,11 @@
 import { describe, it, expect } from "vitest";
+import { installedHookCount } from "./helpers-spec-0022";
 import { existsSync, mkdirSync, mkdtempSync, readFileSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import { runSetup, TARGET_SETTINGS } from "../src/setup/run";
 import { RECORD_PATH } from "../src/setup/record";
+import { isMaestroEntry } from "../src/hooks/identity";
 
 const env = { hasClaudeCode: true, files: [".claude/settings.json"] };
 
@@ -34,11 +36,12 @@ describe("AC-001 — installation actually writes to disk", () => {
   it("writes the seven hooks into the written file", () => {
     const root = project();
     runSetup({ env, root, write: true });
+    // SPEC-0022: identity lives in the command (script path or dispatch marker), never in `matcher`.
     const written = JSON.parse(readFileSync(resolve(root, TARGET_SETTINGS), "utf8")) as {
-      hooks: Record<string, { matcher: string }[]>;
+      hooks: Record<string, { hooks: { command: string }[] }[]>;
     };
-    const names = Object.values(written.hooks).flat().map((e) => e.matcher);
-    expect(names).toHaveLength(8);
+    const names = Object.values(written.hooks).flat().map((e) => isMaestroEntry(e)).filter((n) => n !== null);
+    expect(names).toHaveLength(installedHookCount());
   });
 
   // SPECSFY: US-001 FR-002 NFR-002 AC-001

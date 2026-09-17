@@ -1,4 +1,5 @@
 import { describe, it, expect } from "vitest";
+import { installedHookCount } from "./helpers-spec-0022";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { runSetup } from "../src/setup/run";
@@ -38,6 +39,6 @@ describe("AC-023 — the project record keeps the sets' provenance", () => {
   // SPECSFY: US-021 FR-023 AC-023
   it("the hooks list stays as it was", () => {
     const rec = writtenRecord();
-    expect((rec["hooks"] as unknown[]).length).toBe(8);
+    expect((rec["hooks"] as unknown[]).length).toBe(installedHookCount());
   });
 });

@@ -5,6 +5,7 @@ description: >-
   Stop a commit that carries an AI co-author trailer before it is written,
   complementing the commit-msg hook that strips them.
 event: before-shell
+tools: Bash|mcp__.*(execute|run_in_terminal|shell).*
 blocking: true
 self_check:
   - Does this leave human co-author trailers alone?

@@ -17,7 +17,7 @@ describe("AC-009 — translation preserves blocking semantics", () => {
 
   // SPECSFY: US-002 FR-002 FR-006 AC-009
   it("makes a non-blocking hook produce an entry that only observes", () => {
-    for (const n of ["context-mode-posttooluse", "code-review-graph-update"]) {
+    for (const n of ["code-review-graph-update"]) {
       expect(translateForClaudeCode(hook(n)).blocking).toBe(false);
     }
   });
@@ -26,6 +26,7 @@ describe("AC-009 — translation preserves blocking semantics", () => {
   it("maps each canonical event to the name the target uses", () => {
     expect(translateForClaudeCode(hook("guard-secrets")).event).toBe("PreToolUse");
     expect(translateForClaudeCode(hook("code-review-graph-update")).event).toBe("PostToolUse");
-    expect(translateForClaudeCode(hook("context-mode-stop")).event).toBe("Stop");
+    // SPEC-0022: the context-mode Markdown hooks were removed (FR-006); Stop is exercised by a synthetic hook.
+    expect(translateForClaudeCode({ name: "stop-probe", description: "", event: "stop", blocking: false, script: "echo x", kind: "dispatch" }).event).toBe("Stop");
   });
 });

@@ -24,7 +24,10 @@ export function diagnoseExtensions(
 
   for (const artifact of registry.artifacts) {
     const path = resolveTargetPath(artifact.target);
-    const realContent = readAnchor(targetEnv.read(path), artifact.category, artifact.name);
+    // A hook script (SPEC-0022) is the whole file, not an anchored block.
+    const realContent = artifact.category === "hook"
+      ? (targetEnv.read(path) || null)
+      : readAnchor(targetEnv.read(path), artifact.category, artifact.name);
     const realChecksum = realContent === null ? null : computeChecksum(realContent);
     if (realChecksum !== artifact.checksum) {
       divergent.push({ name: artifact.name, target: artifact.target, reason: "checksum-mismatch" });

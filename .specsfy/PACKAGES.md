@@ -6,15 +6,15 @@
 | Gerenciador | Escopo | Pacote | Versão | Finalidade | Fonte |
 | --- | --- | --- | --- | --- | --- |
 | npm | produção | @modelcontextprotocol/sdk | 1.30.0 | Model Context Protocol implementation for TypeScript | https://github.com/modelcontextprotocol/typescript-sdk |
-| npm | produção | @promovaweb/specsfy | 0.22.2 | CLI e TUI do Specsfy para instalar skills e acompanhar especificações. | https://github.com/promovaweb/specsfy |
+| npm | produção | @promovaweb/specsfy | 0.23.0 | CLI e TUI do Specsfy para instalar skills e acompanhar especificações. | https://github.com/promovaweb/specsfy |
 | npm | produção | context-mode | 1.0.169 | MCP plugin that saves 98% of your context window. Works with Claude Code, Gemini CLI, VS Code Copilot, OpenCode, and Codex CLI. Sandboxed code execution, FTS5 knowledge base, and intent-driven search. | https://github.com/mksglu/context-mode |
-| npm | produção | skills | 1.5.23 | The open agent skills ecosystem | https://github.com/vercel-labs/skills |
-| npm | produção | yaml | 2.9.0 | JavaScript parser and stringifier for YAML | github:eemeli/yaml |
-| npm | produção | zod | 3.25.76 | TypeScript-first schema declaration and validation library with static type inference | https://github.com/colinhacks/zod |
+| npm | produção | skills | 1.5.26 | The open agent skills ecosystem | https://github.com/vercel-labs/skills |
+| npm | produção | yaml | 2.9.1 | JavaScript parser and stringifier for YAML | github:eemeli/yaml |
+| npm | produção | zod | 4.6.5 | TypeScript-first schema declaration and validation library with static type inference | https://github.com/colinhacks/zod |
 | npm | desenvolvimento | @types/node | 26.3.0 | TypeScript definitions for node | https://github.com/DefinitelyTyped/DefinitelyTyped |
-| npm | desenvolvimento | @vitest/coverage-v8 | 4.1.11 | V8 coverage provider for Vitest | https://github.com/vitest-dev/vitest |
+| npm | desenvolvimento | @vitest/coverage-v8 | 5.0.1 | V8 coverage provider for Vitest | https://github.com/vitest-dev/vitest |
 | npm | desenvolvimento | typescript | 7.0.2 | TypeScript is a language for application scale JavaScript development | https://github.com/microsoft/TypeScript |
-| npm | desenvolvimento | vitest | 4.1.11 | Next generation testing framework powered by Vite | https://github.com/vitest-dev/vitest |
+| npm | desenvolvimento | vitest | 5.0.1 | Next generation testing framework powered by Vite | https://github.com/vitest-dev/vitest |
 | npm | transitiva | @babel/helper-string-parser | 7.29.7 | A utility package to parse strings | https://github.com/babel/babel |
 | npm | transitiva | @babel/helper-validator-identifier | 7.29.7 | Validate identifier/keywords name | https://github.com/babel/babel |
 | npm | transitiva | @babel/parser | 7.29.8 | A JavaScript parser | https://github.com/babel/babel |
@@ -26,30 +26,29 @@
 | npm | transitiva | @hono/node-server | 2.1.1 | Node.js Adapter for Hono | https://github.com/honojs/node-server |
 | npm | transitiva | @isaacs/fs-minipass | 4.0.1 | fs read and write streams based on minipass | https://github.com/npm/fs-minipass |
 | npm | transitiva | @jridgewell/resolve-uri | 3.1.2 | Resolve a URI relative to an optional base URI | https://github.com/jridgewell/resolve-uri |
-| npm | transitiva | @jridgewell/sourcemap-codec | 1.5.5 | Encode/decode sourcemap mappings | https://github.com/jridgewell/sourcemaps |
+| npm | transitiva | @jridgewell/sourcemap-codec | 1.6.0 | Encode/decode sourcemap mappings | https://github.com/jridgewell/sourcemaps |
 | npm | transitiva | @jridgewell/trace-mapping | 0.3.31 | Trace the original position through a source map | https://github.com/jridgewell/sourcemaps |
 | npm | transitiva | @mixmark-io/domino | 2.2.0 | Server-side DOM implementation based on Mozilla's dom.js | https://github.com/mixmark-io/domino |
 | npm | transitiva | @modelcontextprotocol/sdk | 1.30.0 | Model Context Protocol implementation for TypeScript | https://github.com/modelcontextprotocol/typescript-sdk |
-| npm | transitiva | @oxc-project/types | 0.146.0 | Types for Oxc AST nodes | https://github.com/oxc-project/oxc |
-| npm | transitiva | @promovaweb/specsfy | 0.22.2 | CLI e TUI do Specsfy para instalar skills e acompanhar especificações. | https://github.com/promovaweb/specsfy |
-| npm | transitiva | @rolldown/binding-android-arm-eabi | 1.2.5 | Finalidade não descrita nos metadados locais. |  |
-| npm | transitiva | @rolldown/binding-android-arm64 | 1.2.5 | Finalidade não descrita nos metadados locais. |  |
-| npm | transitiva | @rolldown/binding-darwin-arm64 | 1.2.5 | Finalidade não descrita nos metadados locais. |  |
-| npm | transitiva | @rolldown/binding-darwin-x64 | 1.2.5 | Finalidade não descrita nos metadados locais. |  |
-| npm | transitiva | @rolldown/binding-freebsd-x64 | 1.2.5 | Finalidade não descrita nos metadados locais. |  |
-| npm | transitiva | @rolldown/binding-linux-arm-gnueabihf | 1.2.5 | Finalidade não descrita nos metadados locais. |  |
-| npm | transitiva | @rolldown/binding-linux-arm64-gnu | 1.2.5 | Finalidade não descrita nos metadados locais. |  |
-| npm | transitiva | @rolldown/binding-linux-arm64-musl | 1.2.5 | Finalidade não descrita nos metadados locais. |  |
-| npm | transitiva | @rolldown/binding-linux-ppc64-gnu | 1.2.5 | Finalidade não descrita nos metadados locais. |  |
-| npm | transitiva | @rolldown/binding-linux-s390x-gnu | 1.2.5 | Finalidade não descrita nos metadados locais. |  |
-| npm | transitiva | @rolldown/binding-linux-x64-gnu | 1.2.5 | Fast JavaScript/TypeScript bundler in Rust with Rollup-compatible API. | https://github.com/rolldown/rolldown |
-| npm | transitiva | @rolldown/binding-linux-x64-musl | 1.2.5 | Fast JavaScript/TypeScript bundler in Rust with Rollup-compatible API. | https://github.com/rolldown/rolldown |
-| npm | transitiva | @rolldown/binding-openharmony-arm64 | 1.2.5 | Finalidade não descrita nos metadados locais. |  |
-| npm | transitiva | @rolldown/binding-win32-arm64-msvc | 1.2.5 | Finalidade não descrita nos metadados locais. |  |
-| npm | transitiva | @rolldown/binding-win32-x64-msvc | 1.2.5 | Finalidade não descrita nos metadados locais. |  |
+| npm | transitiva | @oxc-project/types | 0.149.0 | Types for Oxc AST nodes | https://github.com/oxc-project/oxc |
+| npm | transitiva | @promovaweb/specsfy | 0.23.0 | CLI e TUI do Specsfy para instalar skills e acompanhar especificações. | https://github.com/promovaweb/specsfy |
+| npm | transitiva | @rolldown/binding-android-arm-eabi | 1.2.8 | Finalidade não descrita nos metadados locais. |  |
+| npm | transitiva | @rolldown/binding-android-arm64 | 1.2.8 | Finalidade não descrita nos metadados locais. |  |
+| npm | transitiva | @rolldown/binding-darwin-arm64 | 1.2.8 | Finalidade não descrita nos metadados locais. |  |
+| npm | transitiva | @rolldown/binding-darwin-x64 | 1.2.8 | Finalidade não descrita nos metadados locais. |  |
+| npm | transitiva | @rolldown/binding-freebsd-x64 | 1.2.8 | Finalidade não descrita nos metadados locais. |  |
+| npm | transitiva | @rolldown/binding-linux-arm-gnueabihf | 1.2.8 | Finalidade não descrita nos metadados locais. |  |
+| npm | transitiva | @rolldown/binding-linux-arm64-gnu | 1.2.8 | Finalidade não descrita nos metadados locais. |  |
+| npm | transitiva | @rolldown/binding-linux-arm64-musl | 1.2.8 | Finalidade não descrita nos metadados locais. |  |
+| npm | transitiva | @rolldown/binding-linux-ppc64-gnu | 1.2.8 | Finalidade não descrita nos metadados locais. |  |
+| npm | transitiva | @rolldown/binding-linux-s390x-gnu | 1.2.8 | Finalidade não descrita nos metadados locais. |  |
+| npm | transitiva | @rolldown/binding-linux-x64-gnu | 1.2.8 | Fast JavaScript/TypeScript bundler in Rust with Rollup-compatible API. | https://github.com/rolldown/rolldown |
+| npm | transitiva | @rolldown/binding-linux-x64-musl | 1.2.8 | Finalidade não descrita nos metadados locais. |  |
+| npm | transitiva | @rolldown/binding-openharmony-arm64 | 1.2.8 | Finalidade não descrita nos metadados locais. |  |
+| npm | transitiva | @rolldown/binding-win32-arm64-msvc | 1.2.8 | Finalidade não descrita nos metadados locais. |  |
+| npm | transitiva | @rolldown/binding-win32-x64-msvc | 1.2.8 | Finalidade não descrita nos metadados locais. |  |
 | npm | transitiva | @rolldown/pluginutils | 1.0.1 | Plugin utilities for Rolldown | https://github.com/rolldown/plugins |
 | npm | transitiva | @sindresorhus/is | 4.6.0 | Type check values | sindresorhus/is |
-| npm | transitiva | @standard-schema/spec | 1.1.0 | A family of specs for interoperable TypeScript | https://github.com/standard-schema/standard-schema |
 | npm | transitiva | @types/chai | 5.2.3 | TypeScript definitions for chai | https://github.com/DefinitelyTyped/DefinitelyTyped |
 | npm | transitiva | @types/deep-eql | 4.0.2 | TypeScript definitions for deep-eql | https://github.com/DefinitelyTyped/DefinitelyTyped |
 | npm | transitiva | @types/estree | 1.0.9 | TypeScript definitions for estree | https://github.com/DefinitelyTyped/DefinitelyTyped |
@@ -74,14 +73,11 @@
 | npm | transitiva | @typescript/typescript-sunos-x64 | 7.0.2 | Finalidade não descrita nos metadados locais. |  |
 | npm | transitiva | @typescript/typescript-win32-arm64 | 7.0.2 | Finalidade não descrita nos metadados locais. |  |
 | npm | transitiva | @typescript/typescript-win32-x64 | 7.0.2 | Finalidade não descrita nos metadados locais. |  |
-| npm | transitiva | @vitest/coverage-v8 | 4.1.11 | V8 coverage provider for Vitest | https://github.com/vitest-dev/vitest |
-| npm | transitiva | @vitest/expect | 4.1.11 | Jest's expect matchers as a Chai plugin | https://github.com/vitest-dev/vitest |
-| npm | transitiva | @vitest/mocker | 4.1.11 | Vitest module mocker implementation | https://github.com/vitest-dev/vitest |
-| npm | transitiva | @vitest/pretty-format | 4.1.11 | Fork of pretty-format with support for ESM | https://github.com/vitest-dev/vitest |
-| npm | transitiva | @vitest/runner | 4.1.11 | Vitest test runner | https://github.com/vitest-dev/vitest |
-| npm | transitiva | @vitest/snapshot | 4.1.11 | Vitest snapshot manager | https://github.com/vitest-dev/vitest |
-| npm | transitiva | @vitest/spy | 4.1.11 | Lightweight Jest compatible spy implementation | https://github.com/vitest-dev/vitest |
-| npm | transitiva | @vitest/utils | 4.1.11 | Shared Vitest utility functions | https://github.com/vitest-dev/vitest |
+| npm | transitiva | @vitest/coverage-v8 | 5.0.1 | V8 coverage provider for Vitest | https://github.com/vitest-dev/vitest |
+| npm | transitiva | @vitest/istanbul-lib-coverage | 1.0.1 | Data library for istanbul coverage objects | https://github.com/vitest-dev/istanbuljs |
+| npm | transitiva | @vitest/istanbul-lib-report | 1.0.1 | Base reporting library and report generators for istanbul | https://github.com/vitest-dev/istanbuljs |
+| npm | transitiva | @vitest/mocker | 5.0.1 | Vitest module mocker implementation | https://github.com/vitest-dev/vitest |
+| npm | transitiva | @vitest/spy | 5.0.1 | Lightweight Jest compatible spy implementation | https://github.com/vitest-dev/vitest |
 | npm | transitiva | accepts | 2.0.0 | Higher-level content negotiation | jshttp/accepts |
 | npm | transitiva | ajv | 8.20.0 | Another JSON Schema Validator | ajv-validator/ajv |
 | npm | transitiva | ajv-formats | 3.0.1 | Format validation for Ajv v7+ | https://github.com/ajv-validator/ajv-formats |
@@ -115,7 +111,7 @@
 | npm | transitiva | content-disposition | 1.1.0 | Create and parse Content-Disposition header | jshttp/content-disposition |
 | npm | transitiva | content-type | 1.0.5 | Create and parse HTTP Content-Type header | jshttp/content-type |
 | npm | transitiva | context-mode | 1.0.169 | MCP plugin that saves 98% of your context window. Works with Claude Code, Gemini CLI, VS Code Copilot, OpenCode, and Codex CLI. Sandboxed code execution, FTS5 knowledge base, and intent-driven search. | https://github.com/mksglu/context-mode |
-| npm | transitiva | convert-source-map | 2.0.0 | Converts a source-map from/to  different formats and allows adding/changing properties. | git://github.com/thlorenz/convert-source-map |
+| npm | transitiva | zod | 3.25.76 | TypeScript-first schema declaration and validation library with static type inference | https://github.com/colinhacks/zod |
 | npm | transitiva | cookie | 0.7.2 | HTTP server cookie parsing and serialization | jshttp/cookie |
 | npm | transitiva | cookie-signature | 1.2.2 | Sign and unsign cookies | https://github.com/visionmedia/node-cookie-signature |
 | npm | transitiva | cors | 2.8.6 | Node.js CORS middleware | expressjs/cors |
@@ -169,7 +165,6 @@
 | npm | transitiva | hasown | 2.0.4 | A robust, ES3 compatible, "has own property" predicate. | https://github.com/inspect-js/hasOwn |
 | npm | transitiva | highlight.js | 10.7.3 | Syntax highlighting with language autodetection. | git://github.com/highlightjs/highlight.js |
 | npm | transitiva | hono | 4.13.4 | Web framework built on Web Standards | https://github.com/honojs/hono |
-| npm | transitiva | html-escaper | 2.0.2 | fast and safe way to escape and unescape &<>'" chars | https://github.com/WebReflection/html-escaper |
 | npm | transitiva | http-errors | 2.0.1 | Create HTTP error objects | jshttp/http-errors |
 | npm | transitiva | iconv-lite | 0.7.3 | Convert character encodings in pure javascript. | https://github.com/pillarjs/iconv-lite |
 | npm | transitiva | ieee754 | 1.2.1 | Read/write IEEE754 floating point numbers from/to a Buffer or array-like object | git://github.com/feross/ieee754 |
@@ -180,9 +175,6 @@
 | npm | transitiva | is-fullwidth-code-point | 3.0.0 | Check if the character represented by a given Unicode code point is fullwidth | sindresorhus/is-fullwidth-code-point |
 | npm | transitiva | is-promise | 4.0.0 | Test whether an object looks like a promises-a+ promise | https://github.com/then/is-promise |
 | npm | transitiva | isexe | 2.0.0 | Minimal module to check if a file is executable. | https://github.com/isaacs/isexe |
-| npm | transitiva | istanbul-lib-coverage | 3.2.2 | Data library for istanbul coverage objects | ssh://git@github.com/istanbuljs/istanbuljs |
-| npm | transitiva | istanbul-lib-report | 3.0.1 | Base reporting library for istanbul | ssh://git@github.com/istanbuljs/istanbuljs |
-| npm | transitiva | istanbul-reports | 3.2.0 | istanbul reports | ssh://git@github.com/istanbuljs/istanbuljs |
 | npm | transitiva | jose | 6.2.10 | JWA, JWS, JWE, JWT, JWK, JWKS for Node.js, Browser, Cloudflare Workers, Deno, Bun, and other Web-interoperable runtimes | panva/jose |
 | npm | transitiva | js-tokens | 10.0.0 | Tiny JavaScript tokenizer. | lydell/js-tokens |
 | npm | transitiva | json-schema-traverse | 1.0.0 | Traverse JSON Schema passing each schema object to callback | https://github.com/epoberezkin/json-schema-traverse |
@@ -199,9 +191,8 @@
 | npm | transitiva | lightningcss-linux-x64-musl | 1.33.0 | A CSS parser, transformer, and minifier written in Rust | https://github.com/parcel-bundler/lightningcss |
 | npm | transitiva | lightningcss-win32-arm64-msvc | 1.33.0 | Finalidade não descrita nos metadados locais. |  |
 | npm | transitiva | lightningcss-win32-x64-msvc | 1.33.0 | Finalidade não descrita nos metadados locais. |  |
-| npm | transitiva | magic-string | 0.30.21 | Modify strings, generate sourcemaps | https://github.com/Rich-Harris/magic-string |
+| npm | transitiva | magic-string | 1.4.1 | Modify strings, generate sourcemaps | https://github.com/Rich-Harris/magic-string |
 | npm | transitiva | magicast | 0.5.4 | Modify a JS/TS file and write back magically just like JSON! | unjs/magicast |
-| npm | transitiva | make-dir | 4.0.0 | Make a directory and its parents if needed - Think `mkdir -p` | sindresorhus/make-dir |
 | npm | transitiva | marked | 15.0.12 | A markdown parser built for speed | git://github.com/markedjs/marked |
 | npm | transitiva | marked-terminal | 7.3.0 | A custom render for marked to output to the Terminal | https://github.com/mikaelbr/marked-terminal |
 | npm | transitiva | math-intrinsics | 1.1.0 | ES Math-related intrinsics and helpers, robustly cached. | https://github.com/es-shims/math-intrinsics |
@@ -216,7 +207,7 @@
 | npm | transitiva | mkdirp-classic | 0.5.3 | Mirror of mkdirp 0.5.2 | https://github.com/mafintosh/mkdirp-classic |
 | npm | transitiva | ms | 2.1.3 | Tiny millisecond conversion utility | vercel/ms |
 | npm | transitiva | mz | 2.7.0 | modernize node.js to current ECMAScript standards | normalize/mz |
-| npm | transitiva | nanoid | 3.3.18 | A tiny (116 bytes), secure URL-friendly unique string ID generator | ai/nanoid |
+| npm | transitiva | nanoid | 3.3.19 | A tiny (116 bytes), secure URL-friendly unique string ID generator | ai/nanoid |
 | npm | transitiva | napi-build-utils | 2.0.0 | A set of utilities to assist developers of tools that build N-API native add-ons | https://github.com/inspiredware/napi-build-utils |
 | npm | transitiva | negotiator | 1.1.0 | HTTP content negotiation | jshttp/negotiator |
 | npm | transitiva | neo-blessed | 0.2.0 | A high-level terminal interface library for node.js. | git://github.com/embark-framework/neo-blessed |
@@ -224,7 +215,7 @@
 | npm | transitiva | node-emoji | 2.2.0 | Friendly emoji lookups and parsing utilities for Node.js. 💖 | https://github.com/omnidan/node-emoji |
 | npm | transitiva | object-assign | 4.1.1 | ES2015 `Object.assign()` ponyfill | sindresorhus/object-assign |
 | npm | transitiva | object-inspect | 1.13.4 | string representations of objects in node and the browser | git://github.com/inspect-js/object-inspect |
-| npm | transitiva | obug | 2.1.4 | A lightweight JavaScript debugging utility, forked from debug, featuring TypeScript and ESM support. | https://github.com/sxzz/obug |
+| npm | transitiva | obug | 2.2.1 | A lightweight JavaScript debugging utility, forked from debug, featuring TypeScript and ESM support. | https://github.com/sxzz/obug |
 | npm | transitiva | on-finished | 2.4.1 | Execute a callback when a request closes, finishes, or errors | jshttp/on-finished |
 | npm | transitiva | once | 1.4.0 | Run a function exactly one time | git://github.com/isaacs/once |
 | npm | transitiva | parse5 | 5.1.1 | HTML parser and serializer. | git://github.com/inikulin/parse5 |
@@ -233,11 +224,10 @@
 | npm | transitiva | parseurl | 1.3.3 | parse a url with memoization | pillarjs/parseurl |
 | npm | transitiva | path-key | 3.1.1 | Get the PATH environment variable key cross-platform | sindresorhus/path-key |
 | npm | transitiva | path-to-regexp | 8.4.2 | Express style path to RegExp utility | https://github.com/pillarjs/path-to-regexp |
-| npm | transitiva | pathe | 2.0.3 | Universal filesystem path utils | unjs/pathe |
 | npm | transitiva | picocolors | 1.1.1 | The tiniest and the fastest library for terminal output formatting with ANSI colors | alexeyraspopov/picocolors |
 | npm | transitiva | picomatch | 4.0.7 | Blazing fast and accurate glob matcher written in JavaScript, with no dependencies and full support for standard and extended Bash glob features, including braces, extglobs, POSIX brackets, and regular expressions. | micromatch/picomatch |
 | npm | transitiva | pkce-challenge | 5.0.1 | Generate or verify a Proof Key for Code Exchange (PKCE) challenge pair | https://github.com/crouchcd/pkce-challenge |
-| npm | transitiva | postcss | 8.5.26 | Tool for transforming styles with JS plugins | postcss/postcss |
+| npm | transitiva | postcss | 8.5.28 | Tool for transforming styles with JS plugins | postcss/postcss |
 | npm | transitiva | prebuild-install | 7.1.3 | A command line tool to easily install prebuilt binaries for multiple version of node/iojs on a specific platform | https://github.com/prebuild/prebuild-install |
 | npm | transitiva | proxy-addr | 2.0.7 | Determine address of proxied request | jshttp/proxy-addr |
 | npm | transitiva | pump | 3.0.4 | pipe streams together and close all of them if one of them closes | git://github.com/mafintosh/pump |
@@ -248,7 +238,7 @@
 | npm | transitiva | readable-stream | 3.6.2 | Streams3, a user-land copy of the stream library from Node.js | git://github.com/nodejs/readable-stream |
 | npm | transitiva | require-directory | 2.1.1 | Recursively iterates over specified directory, require()'ing each file, and returning a nested hash structure containing those modules. | git://github.com/troygoode/node-require-directory |
 | npm | transitiva | require-from-string | 2.0.2 | Require module from string | floatdrop/require-from-string |
-| npm | transitiva | rolldown | 1.2.5 | Fast JavaScript/TypeScript bundler in Rust with Rollup-compatible API. | https://github.com/rolldown/rolldown |
+| npm | transitiva | rolldown | 1.2.8 | Fast JavaScript/TypeScript bundler in Rust with Rollup-compatible API. | https://github.com/rolldown/rolldown |
 | npm | transitiva | router | 2.2.0 | Simple middleware-style router | pillarjs/router |
 | npm | transitiva | safe-buffer | 5.2.1 | Safer Node.js Buffer API | git://github.com/feross/safe-buffer |
 | npm | transitiva | safer-buffer | 2.1.2 | Modern Buffer API polyfill without footguns | https://github.com/ChALkeR/safer-buffer |
@@ -266,7 +256,7 @@
 | npm | transitiva | simple-concat | 1.0.1 | Super-minimalist version of `concat-stream`. Less than 15 lines! | git://github.com/feross/simple-concat |
 | npm | transitiva | simple-get | 4.0.1 | Simplest way to make http get requests. Supports HTTPS, redirects, gzip/deflate, streams in < 100 lines. | git://github.com/feross/simple-get |
 | npm | transitiva | sisteransi | 1.0.5 | ANSI escape codes for some terminal swag | https://github.com/terkelg/sisteransi |
-| npm | transitiva | skills | 1.5.23 | The open agent skills ecosystem | https://github.com/vercel-labs/skills |
+| npm | transitiva | skills | 1.5.26 | The open agent skills ecosystem | https://github.com/vercel-labs/skills |
 | npm | transitiva | skin-tone | 2.0.0 | Change the skin tone of an emoji 👌👌🏻👌🏼👌🏽👌🏾👌🏿 | sindresorhus/skin-tone |
 | npm | transitiva | source-map-js | 1.2.1 | Generates and consumes source maps | 7rulnik/source-map-js |
 | npm | transitiva | stackback | 0.0.2 | return list of CallSite objects from a captured stacktrace | git://github.com/shtylman/node-stackback |
@@ -285,7 +275,7 @@
 | npm | transitiva | tar-stream | 2.2.0 | tar-stream is a streaming tar parser and generator and nothing else. It is streams2 and operates purely using streams which means you can easily extract/parse tarballs without ever hitting the file system. | https://github.com/mafintosh/tar-stream |
 | npm | transitiva | thenify | 3.3.1 | Promisify a callback-based function | thenables/thenify |
 | npm | transitiva | thenify-all | 1.6.0 | Promisifies all the selected functions in an object | thenables/thenify-all |
-| npm | transitiva | tinybench | 2.9.0 | Finalidade não descrita nos metadados locais. | tinylibs/tinybench |
+| npm | transitiva | tinybench | 6.1.4 | 🔎 A simple, tiny and lightweight benchmarking library! | tinylibs/tinybench |
 | npm | transitiva | tinyexec | 1.3.0 | A minimal library for executing processes in Node | https://github.com/tinylibs/tinyexec |
 | npm | transitiva | tinyglobby | 0.2.17 | A fast and minimal alternative to globby and fast-glob | https://github.com/SuperchupuDev/tinyglobby |
 | npm | transitiva | tinyrainbow | 3.1.1 | A small library to print colourful messages. | https://github.com/tinylibs/tinyrainbow |
@@ -300,17 +290,21 @@
 | npm | transitiva | unpipe | 1.0.0 | Unpipe a stream from all destinations | stream-utils/unpipe |
 | npm | transitiva | util-deprecate | 1.0.2 | The Node.js `util.deprecate()` function with browser support | git://github.com/TooTallNate/util-deprecate |
 | npm | transitiva | vary | 1.1.2 | Manipulate the HTTP Vary header | jshttp/vary |
-| npm | transitiva | vite | 8.2.2 | Native-ESM powered web dev build tool | https://github.com/vitejs/vite |
-| npm | transitiva | vitest | 4.1.11 | Next generation testing framework powered by Vite | https://github.com/vitest-dev/vitest |
+| npm | transitiva | vite | 8.3.0 | Native-ESM powered web dev build tool | https://github.com/vitejs/vite |
+| npm | transitiva | vitest | 5.0.1 | Next generation testing framework powered by Vite | https://github.com/vitest-dev/vitest |
 | npm | transitiva | which | 2.0.2 | Like which(1) unix command. Find the first instance of an executable in the PATH. | git://github.com/isaacs/node-which |
 | npm | transitiva | why-is-node-running | 2.3.0 | Node is running but you don't know why? why-is-node-running is here to help you. | https://github.com/mafintosh/why-is-node-running |
 | npm | transitiva | wrap-ansi | 7.0.0 | Wordwrap a string with ANSI escape codes | chalk/wrap-ansi |
 | npm | transitiva | wrappy | 1.0.2 | Callback wrapping utility | https://github.com/npm/wrappy |
 | npm | transitiva | y18n | 5.0.8 | the bare-bones internationalization library used by yargs | yargs/y18n |
 | npm | transitiva | yallist | 5.0.0 | Yet Another Linked List | https://github.com/isaacs/yallist |
-| npm | transitiva | yaml | 2.9.0 | JavaScript parser and stringifier for YAML | github:eemeli/yaml |
+| npm | transitiva | yaml | 2.9.1 | JavaScript parser and stringifier for YAML | github:eemeli/yaml |
 | npm | transitiva | yargs | 16.2.2 | yargs the modern, pirate-themed, successor to optimist. | https://github.com/yargs/yargs |
 | npm | transitiva | yargs-parser | 20.2.9 | the mighty option parser used by yargs | https://github.com/yargs/yargs-parser |
-| npm | transitiva | zod | 3.25.76 | TypeScript-first schema declaration and validation library with static type inference | https://github.com/colinhacks/zod |
+| npm | transitiva | zod | 4.6.5 | TypeScript-first schema declaration and validation library with static type inference | https://github.com/colinhacks/zod |
 | npm | transitiva | zod-to-json-schema | 3.25.2 | Converts Zod schemas to Json Schemas | https://github.com/StefanTerdell/zod-to-json-schema |
 <!-- specsfy:documentator:end -->
+
+## Notas
+
+- 2026-09-17 — release 2.1.23 do próprio pacote (`@brunocalmon/maestro`), sem alteração de dependências: o bump existe porque a guarda de checksum do `npm run build` exige versão nova (SPEC-0022). O inventário gerenciado acima permanece válido.

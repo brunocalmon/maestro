@@ -25,11 +25,12 @@ describe("setup delivers .maestro/config.yaml and the language instruction", () 
     expect(config).toContain("system:");
     expect(config).toContain("git:");
 
+    // SPEC-0024: the language block lives in AGENTS.md; CLAUDE.md imports it.
     const claudeMd = readFileSync(join(root, "CLAUDE.md"), "utf8");
-    expect(claudeMd).toMatch(/maestro: language/);
-    expect(claudeMd).toMatch(/config\.yaml/);
+    expect(claudeMd).toMatch(/@AGENTS\.md/);
 
     const agentsMd = readFileSync(join(root, "AGENTS.md"), "utf8");
     expect(agentsMd).toMatch(/maestro: language/);
+    expect(agentsMd).toMatch(/config\.yaml/);
   });
 });

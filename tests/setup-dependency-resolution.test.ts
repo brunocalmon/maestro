@@ -5,7 +5,6 @@ import { resolve } from "node:path";
 import { runSetup } from "../src/setup/run";
 import { realBridgeEnvironment } from "../src/setup/bridge";
 import { packageRoot } from "../src/setup/bridge";
-import { unwrap } from "../src/hooks/claude-code";
 import { disposableProject } from "./mcp-fixtures";
 
 const env = { hasClaudeCode: true, files: [".claude/settings.json"] };
@@ -31,12 +30,15 @@ describe("AC-014 — the installed hook doesn't depend on PATH for a dependency 
     const root = disposableProject();
     runSetup({ env, root, write: true, bridgeEnv: realBridgeEnvironment() });
 
-    const contextModeCommands = commandsIn(root).filter((c) => c.includes("hook claude-code"));
+    // SPEC-0022 (FR-006): the context-mode hooks are projected from the
+    // package's own manifest, so what gets embedded is the absolute path of
+    // the package's hook scripts — same guarantee, no reliance on PATH.
+    const pkg = resolve(packageRoot(), "node_modules", "context-mode");
+    const contextModeCommands = commandsIn(root).filter((c) => c.includes("context-mode/hooks/"));
     expect(contextModeCommands.length).toBeGreaterThan(0);
     for (const command of contextModeCommands) {
-      const fragment = unwrap(command).trim();
-      expect(fragment).toContain(bin);
-      expect(fragment.startsWith("context-mode ")).toBe(false);
+      expect(command).toContain(pkg);
+      expect(command.trim().startsWith("context-mode ")).toBe(false);
     }
   });
 
@@ -48,7 +50,7 @@ describe("AC-014 — the installed hook doesn't depend on PATH for a dependency 
     const root = disposableProject();
     runSetup({ env, root, write: true, bridgeEnv: realBridgeEnvironment() });
 
-    const [command] = commandsIn(root).filter((c) => c.includes("hook claude-code pretooluse"));
+    const [command] = commandsIn(root).filter((c) => c.includes("hooks/pretooluse.mjs"));
     expect(command).toBeDefined();
 
     // A PATH with none of context-mode's real directories — proves the
@@ -57,7 +59,8 @@ describe("AC-014 — the installed hook doesn't depend on PATH for a dependency 
     const r = spawnSync("bash", ["-c", command!], {
       input: '{"tool_input":{"command":"echo x"}}',
       encoding: "utf8",
-      env: { ...process.env, PATH: "/usr/bin:/bin" },
+      // node itself must stay reachable; only context-mode's own bin dirs are gone.
+      env: { ...process.env, PATH: `${resolve(process.execPath, "..")}:/usr/bin:/bin` },
       timeout: 25_000,
     });
     expect(r.error).toBeUndefined();
@@ -74,8 +77,10 @@ describe("AC-014 — the installed hook doesn't depend on PATH for a dependency 
     const root = disposableProject();
     runSetup({ env, root, write: true, bridgeEnv: realBridgeEnvironment() });
 
-    const [command] = commandsIn(root).filter((c) => c.includes("update --brief"));
-    expect(command).toBeDefined();
-    expect(unwrap(command!).trim().startsWith("code-review-graph ")).toBe(true);
+    // SPEC-0023: the update hook is a script; with only a global copy, the
+    // script must not receive a MAESTRO_BIN_* path and must fall back to PATH.
+    const script = readFileSync(resolve(root, ".maestro", "hooks", "code-review-graph-update.sh"), "utf8");
+    expect(script).not.toContain("MAESTRO_BIN_code_review_graph=");
+    expect(script).toContain("command -v code-review-graph");
   });
 });

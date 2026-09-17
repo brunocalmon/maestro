@@ -16,15 +16,19 @@ describe("AC-137 — AGENTS.md gets a minimal pointer, without duplicating CLAUD
       approval: { source: fixedDecision(true) },
     });
 
+    // SPEC-0024 inverted the direction: the router's text now lives in
+    // AGENTS.md and CLAUDE.md holds the minimal side — a single `@AGENTS.md`
+    // import — so neither file repeats the other.
     const agentsPath = join(root, "AGENTS.md");
     expect(existsSync(agentsPath)).toBe(true);
     const agentsContent = readFileSync(agentsPath, "utf8");
-    expect(agentsContent).toContain("<!-- maestro:extension:agents-pointer:start -->");
-    expect(agentsContent.toLowerCase()).toContain("claude.md");
+    expect(agentsContent).toContain("<!-- maestro:extension:router:start -->");
+    expect(agentsContent).not.toContain("agents-pointer");
 
     const claudeContent = readFileSync(join(root, "CLAUDE.md"), "utf8");
-    const routerLines = claudeContent.split("\n").filter((l) => l.trim().length > 0);
-    for (const line of routerLines) {
+    expect(claudeContent).toContain("@AGENTS.md");
+    const claudeLines = claudeContent.split("\n").filter((l) => l.trim().length > 0 && !l.startsWith("<!--"));
+    for (const line of claudeLines) {
       expect(agentsContent.includes(line) && line.length > 40).toBe(false);
     }
   });

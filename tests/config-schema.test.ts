@@ -1,5 +1,10 @@
 import { describe, it, expect } from "vitest";
+import { mkdtempSync, mkdirSync, writeFileSync, readFileSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import { buildDefaultConfig, SCHEMA_KEYS } from "../src/config/schema";
+import { backfillConfigFile } from "../src/config/write";
+import { buildDocumentationBlock } from "../src/extensions/router";
 
 const FORBIDDEN_KEY_TERMS = ["token", "secret", "password", "credential"];
 
@@ -94,5 +99,68 @@ describe("AC-003 — a field with no available evidence stays empty, never absen
     expect(doc.system.ram_gb).toBeNull();
     expect(doc.system.baremetal).toBeNull();
     expect(doc.system.container).toBeNull();
+  });
+});
+
+describe("AC-004 — the default config.yaml no longer forces docs/ into pt_BR", () => {
+  // SPECSFY: US-001 FR-002 AC-004
+  it("keeps only the specs/**/spec.md exception, none for docs/**/*.md", () => {
+    const doc = buildDefaultConfig({ platform: () => "linux" });
+    const paths = doc.language.exceptions.map((e) => e.paths.join(","));
+    expect(paths).toContain("specs/**/spec.md");
+    expect(paths.some((p) => p.includes("docs/**/*.md"))).toBe(false);
+  });
+
+  // SPECSFY: US-001 FR-002 AC-004
+  it("has exactly one language exception by default", () => {
+    const doc = buildDefaultConfig({ platform: () => "linux" });
+    expect(doc.language.exceptions).toHaveLength(1);
+  });
+});
+
+describe("AC-005 — a person's customized exception is never overwritten by setup", () => {
+  // SPECSFY: FR-002 US-001 AC-005
+  it("preserves a hand-added docs/ exception across a rerun of backfillConfigFile", () => {
+    const root = mkdtempSync(join(tmpdir(), "maestro-config-docs-exception-"));
+    const path = join(root, ".maestro", "config.yaml");
+    mkdirSync(join(root, ".maestro"), { recursive: true });
+    writeFileSync(
+      path,
+      [
+        "language:",
+        "  default: en_US",
+        "  exceptions:",
+        "    - id: specsfy_specs",
+        "      paths: [specs/**/spec.md]",
+        "      language: pt_BR",
+        "      reason: upstream validator",
+        "    - id: my_custom_docs_exception",
+        "      paths: [docs/**/*.md]",
+        "      language: es_ES",
+        "      reason: a pessoa escolheu manter docs em espanhol",
+        "",
+      ].join("\n"),
+      "utf8",
+    );
+
+    backfillConfigFile(root);
+
+    const after = readFileSync(path, "utf8");
+    expect(after).toMatch(/my_custom_docs_exception/);
+    expect(after).toMatch(/es_ES/);
+  });
+});
+
+describe("AC-006 — the documentation rule points at language.default, never a fixed language", () => {
+  // SPECSFY: FR-002 US-001 AC-006
+  it("references language.default as the source of truth", () => {
+    const text = buildDocumentationBlock();
+    expect(text).toMatch(/language\.default/);
+  });
+
+  // SPECSFY: FR-002 US-001 AC-006
+  it("never hardcodes a fixed target language for docs/", () => {
+    const text = buildDocumentationBlock();
+    expect(text.toLowerCase()).not.toMatch(/sempre em (inglês|português)|always in (english|portuguese)/);
   });
 });

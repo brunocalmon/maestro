@@ -1,4 +1,5 @@
 import { describe, it, expect } from "vitest";
+import { installedHookCount } from "./helpers-spec-0022";
 import { existsSync } from "node:fs";
 import { join } from "node:path";
 import { runSetup } from "../src/setup/run";
@@ -18,7 +19,7 @@ describe("AC-062 — what gets written is what was presented", () => {
   it("the written hooks match the presented plan's", () => {
     const root = project();
     const r = runSetup({ env: detectEnvironment(root), root, write: true, approval: { source: fixedDecision(true) } });
-    expect(r.installed.length).toBe(8);
+    expect(r.installed.length).toBe(installedHookCount());
   });
 
   // SPECSFY: US-060 NFR-062 AC-062

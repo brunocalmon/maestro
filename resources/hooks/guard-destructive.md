@@ -4,6 +4,7 @@ name: guard-destructive
 description: >-
   Ask for confirmation before shell commands that discard work irreversibly.
 event: before-shell
+tools: Bash|mcp__.*(execute|run_in_terminal|shell).*
 blocking: true
 self_check:
   - Does this ask rather than deny, so deliberate use stays possible?

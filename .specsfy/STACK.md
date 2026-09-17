@@ -468,3 +468,15 @@ Introduzida pela `SPEC-0020`, fatia MA-6 do épico (`BACKLOG-0009`).
 | Leitura | `maestro report <trace>`, mesmo padrão de `maestro plan`/`maestro run`; trace sem registro é recusado nomeando a ausência | `src/telemetry/render.ts`, `formatTelemetryReport` em `src/cli.ts` |
 | Verificação real | `maestro plan` → `maestro run` → `maestro report` com um agente `cli` real sobre `goose` nesta máquina | Registro gravado bateu exatamente com o resultado real do spawn; nenhum stdout/stderr no arquivo |
 | Achado do desenho de teste | Os primeiros casos de AC-005/AC-007/AC-011 passavam mesmo sem a funcionalidade existir (asserção só de ausência) | Refinados para gravar com `cli` no mesmo teste antes de afirmar ausência para `native`/`auto` — sem isso não provavam RED de verdade |
+
+## Hooks do Claude Code como scripts gerenciados (SPEC-0022, release 2.1.23)
+
+| Aspecto | Decisão | Evidência |
+| --- | --- | --- |
+| Formato instalado | `.claude/settings.json` só referencia `"$CLAUDE_PROJECT_DIR/.maestro/hooks/<nome>.sh"`; o script vive em `.maestro/hooks/` e é registrado por checksum em `.maestro/extensions.json` (categoria `hook`) | `src/hooks/claude-code.ts`, `src/setup/write.ts` (`writeHookScripts`) |
+| `matcher` | Derivado do evento canônico (`Bash`; `Edit\|Write\|MultiEdit\|NotebookEdit`; nenhum para `Stop`/`SessionStart`/`PreCompact`/`UserPromptSubmit`) ou do `tools:` do frontmatter — nunca o nome do hook | `src/hooks/claude-code.ts` (`MATCHER_MAP`), `src/hooks/source.ts` |
+| Identidade | Caminho do script ou marcador `# maestro:hook=<nome>` no despacho; `matcher` não participa | `src/hooks/identity.ts` |
+| Merge | Substitui só entradas do maestro, preserva terceiros em todo evento, migra o formato inline anterior, quarentena para JSON inválido | `src/setup/write.ts` (`writeSettings`, `hasLegacyEntries`) |
+| context-mode | Hooks projetados de `node_modules/context-mode/hooks/hooks.json` (pacote pinado); os `resources/hooks/context-mode-*.md` deixaram de existir | `src/hooks/upstream.ts` |
+| Binários de despacho | Shim POSIX `sh`: caminho gravado no setup, depois `PATH`, com aviso em stderr | `src/hooks/shim.ts`, `resolveDispatchCommand` em `src/hooks/resolve.ts` |
+| Versão | `package.json` 2.1.22 → 2.1.23 (bump exigido pela guarda de checksum do `build`) | `package.json`, `.version-checksum.json` |

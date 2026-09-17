@@ -34,6 +34,67 @@
         "/home/bcalmon/Projects/common-rules-server",
         "--json"
       ]
+    },
+    {
+      "bin": "/home/bcalmon/Projects/maestro/node_modules/skills/bin/cli.mjs",
+      "args": [
+        "add",
+        "mattpocock/skills",
+        "-a",
+        "claude-code",
+        "--skill",
+        "*",
+        "--copy",
+        "-y"
+      ]
+    },
+    {
+      "bin": "/home/bcalmon/Projects/maestro/node_modules/skills/bin/cli.mjs",
+      "args": [
+        "add",
+        "promovaweb/specsfy",
+        "-a",
+        "claude-code",
+        "--skill",
+        "*",
+        "--copy",
+        "-y"
+      ]
+    },
+    {
+      "bin": "/home/bcalmon/Projects/maestro/node_modules/@promovaweb/specsfy/bin/specsfy.cjs",
+      "args": [
+        "install",
+        "--project",
+        "/home/bcalmon/Projects/maestro",
+        "--json"
+      ]
+    },
+    {
+      "bin": "/home/bcalmon/Projects/maestro/node_modules/skills/bin/cli.mjs",
+      "args": [
+        "add",
+        "mattpocock/skills",
+        "-a",
+        "universal",
+        "--skill",
+        "*",
+        "--copy",
+        "-y"
+      ]
+    },
+    {
+      "bin": "/home/bcalmon/Projects/maestro/node_modules/skills/bin/cli.mjs",
+      "args": [
+        "add",
+        "promovaweb/specsfy",
+        "-a",
+        "universal",
+        "--skill",
+        "*",
+        "--copy",
+        "-y"
+      ]
     }
   ]
 }

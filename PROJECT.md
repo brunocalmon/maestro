@@ -46,18 +46,51 @@ Specsfy is active, the `project` fields that overlap `.specsfy/STACK.md`
 sync automatically from it — `STACK.md` remains the source of truth,
 `config.yaml` never diverges silently.
 
-O `setup` liga os subsistemas ao ciclo do agente e protege o repositório. Sete
-hooks: quatro conectam `context-mode` e `code-review-graph`, dois barram comando
-destrutivo e exibição de credencial, e um preserva a autoria dos commits. Ele só
-escreve quando há evidência de uso do editor, grava um registro do que fez e
-reexecutar não duplica nada.
+O `setup` liga os subsistemas ao ciclo do agente e protege o repositório. Cinco
+hooks canônicos em `resources/hooks/`: dois barram comando destrutivo e
+exibição de credencial, um preserva a autoria dos commits, um avisa no início da
+sessão quando o setup está incompleto e um despacha o `code-review-graph`. Os
+hooks do `context-mode` não são mantidos pelo maestro: são projetados do
+`hooks/hooks.json` do próprio pacote instalado, com os eventos e matchers que o
+upstream declara. Ele só escreve quando há evidência de uso do editor, grava um
+registro do que fez e reexecutar não duplica nada.
+
+**Como um hook chega ao Claude Code (SPEC-0022).** Cada hook com fragmento vira
+um script executável em `.maestro/hooks/<nome>.sh`, registrado por checksum em
+`.maestro/extensions.json`; `.claude/settings.json` só o referencia
+(`"$CLAUDE_PROJECT_DIR/.maestro/hooks/<nome>.sh"`), com `matcher` derivado do
+evento (`Bash` para hooks de shell, `Edit|Write|MultiEdit|NotebookEdit` para
+edição de arquivo, nenhum para `Stop`/`SessionStart`) ou do `tools:` do
+frontmatter — nunca do nome do hook, que o Claude Code não reconhece. Um hook de
+despacho (`raw_command`) entra sem wrapper, para receber o JSON do evento no
+stdin e propagar o próprio exit code, e leva um marcador `# maestro:hook=<nome>`
+como identidade. O merge do `settings.json` substitui somente entradas
+reconhecidas como do maestro e preserva as demais em todos os eventos; entradas
+no formato inline anterior são migradas; um arquivo ilegível vai para
+`.maestro/quarantine/` antes de qualquer escrita, assim como um script alterado
+à mão. O binário de um despacho é resolvido em tempo de execução: caminho
+gravado no setup e, se ele sumiu, o mesmo nome no `PATH`.
+
+**Hooks resistentes a qualquer ferramenta (SPEC-0023).** O preâmbulo de cada
+script extrai o comando de `command` (Bash, terminal MCP), de `code` quando a
+linguagem é shell (`ctx_execute`) ou de `commands[]` (`ctx_batch_execute`), e
+os guards casam `Bash|mcp__.*(execute|run_in_terminal|shell).*` — o mesmo
+veredito em qualquer shell, inclusive em subagentes. `code-review-graph-update`
+roda após qualquer ferramenta e só executa o CLI quando o hash do working tree
+mudou (`.maestro/state/crg-tree.hash`); `code-review-graph-stop` fecha a rodada.
+`graph-hint` lembra o grafo uma única vez por sessão antes de `Grep`/`Glob`, e
+`guard-docs` impede o `build_documentation.mjs` do Specsfy sem `--check`
+(`findings/external/FIND-EXT-001`). As regras em texto se limitam ao bloco
+`maestro: hooks fallback`: três linhas condicionadas ao `maestro doctor`, que
+nunca repetem o que o hook já faz.
 
 Exemplo real de `setup`:
 
 ```text
-7 hooks instalados em .claude/settings.json
+24 hooks installed in .claude/settings.json
   guard-destructive — evento PreToolUse, em .claude/settings.json
   guard-secrets — evento PreToolUse, em .claude/settings.json
+  context-mode-pretooluse-0 — evento PreToolUse, em .claude/settings.json
   ...
 ```
 
@@ -69,14 +102,30 @@ uma sobrescreva a outra. A procedência de cada conjunto fica no registro do
 projeto, e o `doctor` relata a deriva sem repará-la — a referência obtida não é
 fixada pela origem, e dizer isso faz parte do relato.
 
+**Uma direção para as instruções e para as skills (SPEC-0024).** O conteúdo
+do maestro (`router`, `config-language-rule`, `hooks-fallback`) vive em
+`AGENTS.md`, o arquivo genérico que qualquer IDE lê; `CLAUDE.md` recebe do
+maestro uma única linha, `@AGENTS.md` (import nativo do Claude Code), num bloco
+próprio. Projetos instalados por versões anteriores migram sozinhos quando o
+checksum registrado bate; divergência vai para `.maestro/quarantine/`. A seção
+`## Agent skills` que a skill do matt-pocock escreve em `CLAUDE.md` é movida
+para `AGENTS.md` e registrada como conteúdo de terceiro (`foreign`): rastreada
+por checksum, nunca reescrita. Blocos `specsfy:*` e texto sem assinatura
+conhecida não são tocados. As skills têm uma fonte canônica, `.agents/skills`
+(o instalador usa `-a universal`), e o maestro projeta cada uma para
+`.claude/skills` no `setup` (com checksum em `install.json`, sem sobrescrever
+cópia editada à mão) e por dois hooks de cópia aditiva — no início da sessão e
+logo após `skills add`/`specsfy skills` — porque o Claude Code não lê
+`.agents/skills` (`findings/external/FIND-EXT-002`).
+
 Separadamente, o mesmo `setup` executa o instalador de projeto do próprio
 framework Specsfy (`specsfy install --project <raiz>`), deixando `.specsfy/`,
 `.agents/skills/`, `CLAUDE.md` e `AGENTS.md` presentes e atualizados — quem
 compõe o conteúdo desses arquivos é o instalador do próprio Specsfy. Por cima
-disso, o `setup` acrescenta sua própria seção — um roteador minimalista em
-`CLAUDE.md` e um ponteiro mínimo em `AGENTS.md`, ambos gravados pelo mesmo
-caminho único de criação de extensão, ancorados por comentário HTML e
-idempotentes (não reescreve quando já presentes).
+disso, o `setup` acrescenta suas próprias seções em `AGENTS.md` e o import
+`@AGENTS.md` em `CLAUDE.md`, gravados pelo mesmo caminho único de criação de
+extensão, ancorados por comentário HTML e idempotentes (não reescreve quando
+já presentes).
 
 **Extensões locais e reparo assistido.** Um hotfix local — customizar um dos
 sete hooks, adicionar uma regra nova, ou ajustar o próprio roteador — sobrevive
