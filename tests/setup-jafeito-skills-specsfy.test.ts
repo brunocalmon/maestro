@@ -44,26 +44,35 @@ describe("AC-079 — nothing absent preserves the original short-circuit", () =>
   });
 
   // SPECSFY: US-020 US-023 FR-030 AC-079
-  it("hooks, skills and framework intact: no executor is invoked on the second run", () => {
+  it("hooks intact and skills/specsfy configured: the approval source is not consulted again (SPEC-0025, FR-004)", () => {
+    // SPEC-0025 changed what "intact" means for skills and Specsfy: their
+    // installers are idempotent and now run on every call where they're
+    // configured, so reconciliation never depends on a filesystem guess.
+    // What the second run must still not do is ask for approval again over
+    // a command it already approved (`FR-072`, unaffected by this spec).
     const { root, env, previous } = configured();
+    const skillsEx = dualSourceExecutor();
+    const specsfyEx = fakeSpecsfyExecutor(root);
     expect(() => runSetup({
       env, root, write: true, previous,
-      skills: { execute: () => { throw new Error("shouldn't be called: skills intact"); } },
-      specsfy: { execute: specsfyExecutorThatThrowsIfCalled() },
+      skills: { execute: skillsEx.fn },
+      specsfy: { execute: specsfyEx.fn },
       approval: { source: decisionThatThrowsIfCalled() },
     })).not.toThrow();
   });
 
   // SPECSFY: US-020 US-023 FR-030 AC-079
-  it("the report states it was already configured", () => {
+  it("the report states hooks unchanged", () => {
     const { root, env, previous } = configured();
+    const skillsEx = dualSourceExecutor();
+    const specsfyEx = fakeSpecsfyExecutor(root);
     const second = runSetup({
       env, root, write: true, previous,
-      skills: { execute: () => { throw new Error("shouldn't be called: skills intact"); } },
-      specsfy: { execute: specsfyExecutorThatThrowsIfCalled() },
+      skills: { execute: skillsEx.fn },
+      specsfy: { execute: specsfyEx.fn },
       approval: { source: decisionThatThrowsIfCalled() },
     });
-    expect(second.report).toMatch(/already configured/i);
+    expect(second.report).toMatch(/hooks/i);
     expect(second.exitCode).toBe(0);
   });
 });

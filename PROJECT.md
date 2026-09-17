@@ -12,7 +12,7 @@ Pacote npm `@brunocalmon/maestro`, binário `maestro`.
 | Comando | O que faz |
 | --- | --- |
 | `maestro --version` | Imprime a versão declarada no manifesto |
-| `maestro doctor` | Relata as três dependências do projeto e os backends de agente detectados, com camada, origem resolvida e versão, os conjuntos de skills registrados, nomeando o que divergiu, cada extensão local divergente do que a CLI gravou, e o identificador da última execução |
+| `maestro doctor` | Relata as três dependências do projeto e os backends de agente detectados, com camada, origem resolvida e versão, os conjuntos de skills registrados, nomeando o que divergiu, cada extensão local divergente do que a CLI gravou, e o identificador da última execução. Desde a SPEC-0025, também orquestra os diagnósticos dos quatro subsistemas (`specsfy doctor`, `context-mode doctor`, `skills list`, `code-review-graph status`, cada um com seu próprio status) e adiciona uma camada própria: hooks com entrada legada ou script ausente, blocos na direção antiga, marcadores de âncora sem par, seções não padronizadas em `CLAUDE.md`, projeções de skills divergentes, cobertura entre `hooks-fallback` e os scripts instalados, e rastros pendentes do `specsfy-setup`/`setup-matt-pocock-skills`. Só reporta — nunca escreve — e sai com código diferente de zero somente para achados `FAIL`; achados `WARN` (configuração conversacional pendente, conteúdo não padronizado) nunca afetam o código de saída. |
 | `maestro setup` | Instala os sete hooks no editor detectado, instala os dois conjuntos de skills e o framework Specsfy, escreve o roteador do `maestro` em `CLAUDE.md`/`AGENTS.md`, e registra o que escreveu, identificando a execução e o momento. Also creates and keeps `.maestro/config.yaml` always complete. |
 | `maestro recommend` | Recomenda um backend de agente presente e, quando o `ollama` está disponível, o maior modelo local que cabe na memória livre, com override humano opcional |
 | `maestro extension create` | Cria um artefato de extensão local (`override`/`extension`, nunca `new` para um dos sete hooks gerenciados) — hook, regra ou o próprio roteador — que sobrevive a uma reinstalação |
@@ -83,6 +83,24 @@ mudou (`.maestro/state/crg-tree.hash`); `code-review-graph-stop` fecha a rodada.
 (`findings/external/FIND-EXT-001`). As regras em texto se limitam ao bloco
 `maestro: hooks fallback`: três linhas condicionadas ao `maestro doctor`, que
 nunca repetem o que o hook já faz.
+
+**"Instalado" não é "configurado" (SPEC-0025).** `.maestro/install.json` e
+`.specsfy/` existirem prova que os arquivos foram gravados, não que as skills
+conversacionais que configuram o projeto (`specsfy-setup`, que produz
+`PROJECT.md`, `.specsfy/STACK.md`, `.specsfy/RULES.md`,
+`.specsfy/USER-PROFILE.md`; `setup-matt-pocock-skills`, que produz a seção
+`## Agent skills` em `AGENTS.md`) já rodaram — só um agente as executa, e
+nenhum comando do `maestro` pode substituí-las. O hook `setup-check` verifica
+esses rastros no início da sessão e nomeia exatamente qual skill falta;
+README gerado e relatório do `setup` repetem a mesma orientação
+(`next: run /specsfy-setup and/or /setup-matt-pocock-skills in your agent`)
+enquanto algo estiver pendente. Os instaladores de skills e do framework
+Specsfy passaram a rodar em todo `setup` onde estão configurados — são
+idempotentes por construção — em vez de um atalho por presença de diretório
+que não distinguia "nada mudou" de "apagado por fora e precisa reconciliar".
+O layout esperado (hooks, blocos, rastros) vem de uma única função pura
+(`src/setup/layout.ts`), importada tanto pelo `setup` quanto pelo `doctor`,
+para que os dois nunca discordem sobre o que "esperado" significa.
 
 Exemplo real de `setup`:
 

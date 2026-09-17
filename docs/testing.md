@@ -7,7 +7,7 @@
 <!-- specsfy:documentator:start -->
 ## Resumo
 
-- Arquivos de teste: 229.
+- Arquivos de teste: 234.
 - Runner: Vitest.
 - Scripts: prepare: node scripts/install-git-hooks.mjs; prebuild: node scripts/check-version-checksum.mjs; build: tsc; test:tdd: vitest run; verify: node scripts/cycle.mjs.
 
@@ -84,8 +84,10 @@
 | tests/doctor-camada-agent-texto.test.ts |
 | tests/doctor-cli-nomeia-extensao-divergente.test.ts |
 | tests/doctor-documentation-issues.test.ts |
+| tests/doctor-maestro-layer.test.ts |
 | tests/doctor-missing.test.ts |
 | tests/doctor-ok.test.ts |
+| tests/doctor-subsystems.test.ts |
 | tests/documentation-diagnose.test.ts |
 | tests/extensions-checksum-ausente.test.ts |
 | tests/extensions-conflito-nome.test.ts |
@@ -173,6 +175,7 @@
 | tests/scripts.test.ts |
 | tests/setup-antigravity.test.ts |
 | tests/setup-bridge.test.ts |
+| tests/setup-check-configured.test.ts |
 | tests/setup-delivers-bundled-skill.test.ts |
 | tests/setup-delivers-config-yaml.test.ts |
 | tests/setup-dependency-resolution.test.ts |
@@ -181,10 +184,12 @@
 | tests/setup-dryrun.test.ts |
 | tests/setup-idempotent.test.ts |
 | tests/setup-install.test.ts |
+| tests/setup-installers-always.test.ts |
 | tests/setup-instructions-direction.test.ts |
 | tests/setup-jafeito-skills-specsfy.test.ts |
 | tests/setup-merge-settings.test.ts |
 | tests/setup-migrate-inline-hooks.test.ts |
+| tests/setup-next-steps.test.ts |
 | tests/setup-readme-homepage.test.ts |
 | tests/setup-record.test.ts |
 | tests/setup-revert.test.ts |

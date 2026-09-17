@@ -45,7 +45,8 @@ export function installSpecsfy(opts: InstallOptions): InstallResult {
     return failure("the Specsfy framework installer isn't available: nothing was installed");
   }
   if (result.status !== 0) {
-    return failure(`the Specsfy framework installer exited with code ${result.status}: nothing was installed`);
+    const reason = result.reason ? `: ${result.reason}` : "";
+    return failure(`the Specsfy framework installer exited with code ${result.status}: nothing was installed${reason}`);
   }
   const changed = result.changed ?? 0;
   const paths = result.paths ?? [];

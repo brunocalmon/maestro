@@ -171,7 +171,12 @@ export function renderReport(report: Report): string {
   // sairia silencioso sobre o motivo, e "sair com 1 sem dizer por quê" é
   // justamente a falha silenciosa que o projeto trata como cara (`AC-010`).
   const agents = formatAgentProblems(report.divergentAgents ?? []);
-  return [...lines, ...divergent, ...agents].join("\n");
+  const subsystems = (report.subsystems ?? []).map((s) => {
+    const status = s.status === "OK" ? "ok     " : s.status === "ABSENT" ? "absent " : "fail   ";
+    return `${status} ${s.name}${s.detail ? ` — ${s.detail}` : ""}`;
+  });
+  const maestro = (report.maestro ?? []).map((f) => `${f.level.padEnd(6)} ${f.area} — ${f.message}`);
+  return [...lines, ...divergent, ...agents, ...subsystems, ...maestro].join("\n");
 }
 
 function formatReport(args: readonly string[] = []): CommandOutcome {

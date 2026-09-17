@@ -23,7 +23,14 @@ export function diagnoseExtensions(
   const divergent: DivergentArtifact[] = [];
 
   for (const artifact of registry.artifacts) {
-    const path = resolveTargetPath(artifact.target);
+    // A hook script's `target` (SPEC-0022, `.maestro/hooks/<name>.sh`) is
+    // already the real path — `resolveTargetPath` only knows the router
+    // files and its own `.maestro/extensions/` convention, and running a
+    // hook's target through it produced a path nothing ever wrote to,
+    // so every hook looked divergent on every `doctor` run (SPEC-0025,
+    // found running this check for real). Everything else keeps going
+    // through `resolveTargetPath` as before.
+    const path = artifact.category === "hook" ? artifact.target : resolveTargetPath(artifact.target);
     // A hook script (SPEC-0022) is the whole file, not an anchored block.
     const realContent = artifact.category === "hook"
       ? (targetEnv.read(path) || null)

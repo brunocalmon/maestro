@@ -95,18 +95,36 @@ export function sanitizeDocBackLinks(content: string): string {
     .replace(/\(\.\/([a-zA-Z0-9_-]+\.md)\)/g, "($1)");
 }
 
+const NEXT_STEPS_HEADING = "## Next steps";
+
+/**
+ * Folds the `next:` orientation (SPEC-0025, FR-003) into README content, as
+ * its own section — appended once, replaced in place on later runs while it
+ * still applies, and left out entirely once configuration is complete.
+ */
+function withNextSteps(content: string, note: string | null): string {
+  const withoutSection = content.replace(new RegExp(`\\n*${NEXT_STEPS_HEADING}\\n\\n[^\\n]*\\n?`), "");
+  if (!note) return withoutSection;
+  const separator = withoutSection.endsWith("\n") ? "\n" : "\n\n";
+  return `${withoutSection}${separator}${NEXT_STEPS_HEADING}\n\n${note}\n`;
+}
+
 /**
  * Ensures the root `README.md` exists as a project homepage pointing to `./docs/`,
  * and validates that documentation relative links use proper `./docs/` and `../README.md` paths.
+ *
+ * `nextNote`, when configuration is incomplete, is folded in as its own
+ * section so a project's very first README already says what to run next
+ * (SPEC-0025, FR-003); `null` removes that section once nothing is pending.
  */
-export function ensureReadmeHomepage(root: string): void {
+export function ensureReadmeHomepage(root: string, nextNote: string | null = null): void {
   const rootReadmePath = join(root, "README.md");
 
   if (!existsSync(rootReadmePath)) {
-    writeFileSync(rootReadmePath, DEFAULT_ROOT_README, "utf8");
+    writeFileSync(rootReadmePath, withNextSteps(DEFAULT_ROOT_README, nextNote), "utf8");
   } else {
     const existing = readFileSync(rootReadmePath, "utf8");
-    const sanitized = sanitizeRootReadmeLinks(existing);
+    const sanitized = withNextSteps(sanitizeRootReadmeLinks(existing), nextNote);
     if (sanitized !== existing) {
       writeFileSync(rootReadmePath, sanitized, "utf8");
     }

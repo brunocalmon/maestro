@@ -14,7 +14,7 @@ import { realSource, type TraceSource } from "../telemetry/trace.js";
 import { installSkills, type Executor as SkillsExecutor, type InstallResult as SkillsInstallResult } from "../skills/install.js";
 import { OFFICIAL_SOURCES } from "../skills/source.js";
 import { readLock, toRecordEntries } from "../skills/record.js";
-import { inspectSkills, SKILLS_DIR } from "../skills/inventory.js";
+import { SKILLS_DIR } from "../skills/inventory.js";
 import { projectSkills } from "../skills/project.js";
 import { installSpecsfy, type Executor as SpecsfyExecutor } from "../specsfy/install.js";
 import { describeSpecsfyCommand } from "../specsfy/executor.js";
@@ -39,6 +39,7 @@ import { ensureConfigFile, backfillConfigFile } from "../config/write.js";
 import { seedAgentDefaults } from "../agents/seed.js";
 import { syncProjectFromStack } from "../config/sync.js";
 import { ensureReadmeHomepage } from "./readme.js";
+import { assessConfiguration, nextStepsNote } from "./layout.js";
 
 /** Where the target's file is written, relative to the project. */
 export const TARGET_SETTINGS = ".claude/settings.json";
@@ -128,12 +129,12 @@ export interface SetupResult {
  * have to exist for the configuration to resolve. Seeding only writes what's
  * absent, for the same reason the config itself does.
  */
-function ensureConfigYaml(root: string): void {
+function ensureConfigYaml(root: string, nextNote: string | null = null): void {
   ensureConfigFile(root);
   backfillConfigFile(root);
   seedAgentDefaults(root);
   syncProjectFromStack(root);
-  ensureReadmeHomepage(root);
+  ensureReadmeHomepage(root, nextNote);
 }
 
 /** Where hooks keep per-session state (graph hash, one-time hints). Never versioned (SPEC-0023, DEC-006). */
@@ -312,18 +313,16 @@ export function runSetup(opts: SetupOptions): SetupResult {
     matches(opts.previous ?? null, hookNames, version) &&
     !(adapter.settingsPath && hasLegacyEntries(root, adapter.settingsPath, hookNames)) &&
     !missingScripts();
-  const previousSkills = opts.previous?.skills ?? [];
-  // A missing previous record isn't "already done" — it's "never
-  // attempted." A project whose hooks were recorded before `skills`
-  // existed (or outside this mechanism) had `previousSkills.length === 0`
-  // treated as trivially done, and `maestro setup` would never
-  // install any skill, even with `opts.skills` configured — a real bug,
-  // found by running it for real in this very repository.
-  const skillsAlreadyDone =
-    !opts.skills || (previousSkills.length > 0 && previousSkills.every((s) => inspectSkills(root).dirs.includes(s.name)));
-  const specsfyAlreadyDone = !opts.specsfy || existsSync(join(root, ".specsfy"));
 
-  const alreadyDone = hooksAlreadyDone && skillsAlreadyDone && specsfyAlreadyDone && !bridgePending;
+  // Hooks matching is the only fast path. Skills and the Specsfy framework
+  // installers run on every call where they're configured — they're
+  // idempotent by construction (SPEC-0025, FR-004), and a filesystem check
+  // here can't tell "nothing to do" from "deleted outside setup and needs
+  // reconciling" without literally reinstalling to find out. What used to
+  // gate on that check now only gates asking for approval again, via the
+  // approval registry below: a command already approved once, with the
+  // same binary and argv, is skipped there regardless of this shortcut.
+  const alreadyDone = hooksAlreadyDone && !opts.skills && !opts.specsfy && !bridgePending;
   if (alreadyDone) {
     // The router is idempotent via `createExtension` itself (refuses on a
     // name conflict) and isn't a third-party command, so it neither
@@ -332,6 +331,7 @@ export function runSetup(opts: SetupOptions): SetupResult {
     let scripts: WriteHookScriptsResult = { written: [], unchanged: [], quarantined: [] };
     let instructions: string[] = [];
     let projection: ReturnType<typeof projectSkills> = { copied: [], updated: [], kept: [], skipped: [], records: [] };
+    let nextNote: string | null = null;
     if (opts.write) {
       adapter.ensureDirectoryStructure(root);
       ensureStateDir(root);
@@ -342,7 +342,8 @@ export function runSetup(opts: SetupOptions): SetupResult {
       if (projection.records.length > 0 || (opts.previous?.projections?.length ?? 0) > 0) {
         writeRecordFile(root, RECORD_PATH, { ...readRecord(opts.previous ?? null), projections: projection.records });
       }
-      ensureConfigYaml(root);
+      nextNote = nextStepsNote(assessConfiguration(root, adapter.name === "claude-code" ? "claude-code" : "antigravity"));
+      ensureConfigYaml(root, nextNote);
     }
     const quarantined = scripts.quarantined.map((q) => q.quarantinePath);
     return {
@@ -355,6 +356,7 @@ export function runSetup(opts: SetupOptions): SetupResult {
         ...projectionNotes(projection),
         skippedNote,
         upstreamNote,
+        nextNote,
       ].filter(Boolean).join("; "),
     };
   }
@@ -365,12 +367,11 @@ export function runSetup(opts: SetupOptions): SetupResult {
   // bridge would do.
   //
   // Skills and Specsfy enter as candidates whenever configured — the same
-  // pattern as `installSkills`/`installSpecsfy` below, which already run
-  // unconditionally when `alreadyDone` is false, leaving real idempotency
-  // inside each installer. `skillsAlreadyDone`/`specsfyAlreadyDone` only
-  // decide whether there's SOMETHING pending overall (above); what
-  // decides whether THIS specific command was already approved before is
-  // the registry, via `partitionByApproval` — not this check.
+  // pattern as `installSkills`/`installSpecsfy` below, which run
+  // unconditionally whenever they're configured (SPEC-0025, FR-004),
+  // leaving real idempotency inside each installer. What decides whether
+  // THIS specific command was already approved before is the registry,
+  // via `partitionByApproval` — not the hooks shortcut above.
   const candidates: CommandCandidate[] = [];
   if (opts.skills) {
     for (const source of opts.skills.sources ?? OFFICIAL_SOURCES) {
@@ -481,6 +482,7 @@ export function runSetup(opts: SetupOptions): SetupResult {
   let migrated = 0;
   const quarantined: string[] = [];
   const notes: string[] = [];
+  let nextNote: string | null = null;
   if (opts.write) {
     adapter.ensureDirectoryStructure(root);
     ensureStateDir(root);
@@ -512,7 +514,8 @@ export function runSetup(opts: SetupOptions): SetupResult {
       record.projections = projection.records;
       writeRecordFile(root, RECORD_PATH, record);
     }
-    ensureConfigYaml(root);
+    nextNote = nextStepsNote(assessConfiguration(root, adapter.name === "claude-code" ? "claude-code" : "antigravity"));
+    ensureConfigYaml(root, nextNote);
   }
 
   // Approved (or with no `approval` required), the bridge actually runs
@@ -539,6 +542,7 @@ export function runSetup(opts: SetupOptions): SetupResult {
       ...setsBySource.map((c) => c.report),
       framework?.report,
       bridge.refused ? `Python bridge: ${bridge.refused}` : null,
+      nextNote,
       `run ${trace}`,
     ].filter(Boolean).join("; "),
     bridged: bridge.executed,

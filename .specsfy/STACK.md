@@ -480,3 +480,7 @@ Introduzida pela `SPEC-0020`, fatia MA-6 do épico (`BACKLOG-0009`).
 | context-mode | Hooks projetados de `node_modules/context-mode/hooks/hooks.json` (pacote pinado); os `resources/hooks/context-mode-*.md` deixaram de existir | `src/hooks/upstream.ts` |
 | Binários de despacho | Shim POSIX `sh`: caminho gravado no setup, depois `PATH`, com aviso em stderr | `src/hooks/shim.ts`, `resolveDispatchCommand` em `src/hooks/resolve.ts` |
 | Versão | `package.json` 2.1.22 → 2.1.23 (bump exigido pela guarda de checksum do `build`) | `package.json`, `.version-checksum.json` |
+
+## Release 2.1.28-2.1.29 (SPEC-0025)
+
+- 2026-09-17 — bumps de versão do próprio pacote (`@brunocalmon/maestro`), sem alteração de dependências: exigidos pela guarda de checksum do `npm run build` a cada mudança de `src/`/`resources/` (SPEC-0022/0023/0024/0025). O inventário gerenciado acima permanece válido.

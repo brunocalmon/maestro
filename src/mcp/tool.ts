@@ -59,7 +59,7 @@ export const inputShape = {
 export const outputShape = {
   root: z.string().describe("Project root that received the configuration."),
   target: z.string().describe("Path, relative to the root, of the target's configuration file."),
-  changed: z.boolean().describe("False when the project was already configured and nothing was written."),
+  changed: z.boolean().describe("False only on a dry run or when nothing is configured to install; SPEC-0025 made the skills/Specsfy installers reconcile on every call, so a normal call with them configured always reports true."),
   hooks: z
     .array(z.object({ name: z.string(), event: z.string() }))
     .describe("Installed hooks, with the event each one was registered under."),

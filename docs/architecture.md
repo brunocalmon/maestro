@@ -9,8 +9,8 @@
 
 | Tipo | Quantidade |
 | --- | --- |
-| Código | 320 |
-| Testes | 229 |
+| Código | 328 |
+| Testes | 234 |
 
 ## Diagramas
 

@@ -27,6 +27,8 @@ import { readExtensionRegistry, realChecksumEnvironment } from "./extensions/reg
 import { realTargetFileEnvironment, listPresentExtensionNames } from "./extensions/create.js";
 import { diagnoseExtensions, type DivergentArtifact } from "./extensions/diagnose.js";
 import { diagnoseAgents, type ProfileProblem } from "./agents/diagnose.js";
+import { runSubsystemDoctors, realSubsystemExecutor, type SubsystemResult } from "./doctor/subsystems.js";
+import { diagnoseMaestroProject, type MaestroFinding } from "./doctor/maestro.js";
 
 export interface Report {
   results: DependencyResult[];
@@ -41,6 +43,10 @@ export interface Report {
   divergentExtensions?: DivergentArtifact[];
   /** Agent profile divergence, when a root is given — same read-only contract (`SPEC-0015`, `FR-004`). */
   divergentAgents?: ProfileProblem[];
+  /** Each subsystem's own diagnostic (`specsfy doctor`, `context-mode doctor`, `skills list`, `code-review-graph status`), when a root is given (`SPEC-0025`, `FR-005`). */
+  subsystems?: SubsystemResult[];
+  /** What the maestro itself guarantees — hooks, instruction direction, projections, configuration traces (`SPEC-0025`, `FR-006`). `FAIL` items move `exitCode`; `WARN` items never do. */
+  maestro?: MaestroFinding[];
 }
 
 /**
@@ -88,6 +94,8 @@ export function inspectDependencies(
   backendEnv: BackendEnvironment = realBackendEnvironment(),
   diagnoseExtensionsFn: (root: string) => DivergentArtifact[] = realDiagnoseExtensions,
   diagnoseAgentsFn: (root: string) => ProfileProblem[] = (r) => diagnoseAgents(r),
+  subsystemsFn: (root: string) => SubsystemResult[] = (r) => runSubsystemDoctors(r, realSubsystemExecutor),
+  maestroFn: (root: string) => MaestroFinding[] = diagnoseMaestroProject,
 ): Report {
   const results: DependencyResult[] = [];
 
@@ -138,6 +146,19 @@ export function inspectDependencies(
   // the exitCode directly (`SPEC-0015`, `FR-004`).
   const divergentAgents = diagnoseAgentsFn(root);
 
+  // Each sub-doctor is its own subsystem's judgment, not this project's —
+  // same treatment as the dependency layer above: absence or failure
+  // enters the exit code (`SPEC-0025`, `FR-005`), same as an npm/python
+  // dependency that isn't present.
+  const subsystems = subsystemsFn(root);
+  const subsystemsOk = subsystems.every((s) => s.status === "OK");
+
+  // The maestro's own guarantees. Only `FAIL` moves the exit code — `WARN`
+  // is a pending conversational step or third-party content, never a
+  // defect the maestro can repair by itself (`SPEC-0025`, `PR-004`).
+  const maestro = maestroFn(root);
+  const maestroOk = maestro.every((f) => f.level !== "FAIL");
+
   return {
     results,
     skills: sets.results,
@@ -145,8 +166,12 @@ export function inspectDependencies(
     trace: readTrace(root),
     divergentExtensions: divergent,
     divergentAgents,
+    subsystems,
+    maestro,
     exitCode:
-      dependenciesOk && sets.exitCode === 0 && divergent.length === 0 && divergentAgents.length === 0 ? 0 : 1,
+      dependenciesOk && sets.exitCode === 0 && divergent.length === 0 && divergentAgents.length === 0 && subsystemsOk && maestroOk
+        ? 0
+        : 1,
   };
 }
 

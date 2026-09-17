@@ -46,6 +46,8 @@ Relação: relaciona cada arquivo observado à sua superfície.
 | Outras fontes | src/delegation/cli-spawn.ts | SpawnOptions, spawnCliAgent |
 | Outras fontes | src/delegation/cli-tools.ts | checkToolsSupport |
 | Outras fontes | src/delegation/run.ts | TelemetryHooks, CliRuntimeContext, renderNativeAgent, runCliAgent, runDelegation |
+| Outras fontes | src/doctor/maestro.ts | MaestroFinding, diagnoseMaestro, diagnoseMaestroProject |
+| Outras fontes | src/doctor/subsystems.ts | SubsystemResult, SpawnOutcome, SubsystemSpec, subsystemSpecs, SUBSYSTEM_TIMEOUT_MS, runSubsystemDoctors |
 | Outras fontes | src/doctor.ts | DependencyResult, Report, Environment, NPM_SUBSYSTEMS, PYTHON_SUBSYSTEM, NPM_HINT, PYTHON_HINT, pick |
 | Outras fontes | src/extensions/anchor.ts | anchorMarkers, insertAnchor, removeAnchor, readAnchor, readAnchorRange, computeChecksum |
 | Outras fontes | src/extensions/create.ts | TargetFileEnvironment, ROUTER_FILES, resolveTargetPath, EXTENSIONS_DIR, realTargetFileEnvironment, listPresentExtensionNames, CreateOptions, CreateResult |
@@ -80,7 +82,8 @@ Relação: relaciona cada arquivo observado à sua superfície.
 | Outras fontes | src/setup/bridge.ts | PYTHON_SUBSYSTEM, PINNED_VERSION, VENV_DIR, BridgeEnvironment, BridgeResult, bridgePythonSubsystem, realBridgeEnvironment |
 | Outras fontes | src/setup/dependency-resolution.ts | CONTEXT_MODE, only, buildDependencyResolution, codeReviewGraphWillBeLocal |
 | Outras fontes | src/setup/env.ts | detectEnvironment |
-| Outras fontes | src/setup/readme.ts | DEFAULT_ROOT_README, sanitizeRootReadmeLinks, sanitizeDocBackLinks, ensureReadmeHomepage |
+| Outras fontes | src/setup/layout.ts | SPECSFY_SETUP_TRACES, AGENT_SKILLS_HEADING, SHARED_INSTRUCTION_BLOCKS, ExpectedLayout, expectedLayout, DivergentProjection, UncoveredFallbackHook, ConfigurationAssessment |
+| Outras fontes | src/setup/readme.ts | DEFAULT_ROOT_README, sanitizeRootReadmeLinks, sanitizeDocBackLinks, NEXT_STEPS_HEADING, withNextSteps, ensureReadmeHomepage |
 | Outras fontes | src/setup/record.ts | RecordEntry, SkillsRecordEntry, InstallRecord, RECORD_PATH, readRecord, writeRecord, entriesToRemove, matches |
 | Outras fontes | src/setup/run.ts | TARGET_SETTINGS, SetupOptions, SetupResult, ensureConfigYaml, STATE_DIR, ensureStateDir, BUNDLED_SKILLS, SKILL_TARGET_DIRS |
 | Outras fontes | src/setup/write.ts | WriteSettingsResult, writeSettings, hasLegacyEntries, realQuarantine, WriteHookScriptsResult, hookScriptPath, writeHookScripts, writeRecordFile |
@@ -174,8 +177,10 @@ Relação: relaciona cada arquivo observado à sua superfície.
 | Testes | tests/doctor-camada-agent-texto.test.ts | — |
 | Testes | tests/doctor-cli-nomeia-extensao-divergente.test.ts | — |
 | Testes | tests/doctor-documentation-issues.test.ts | rootWithDocumentationIssue |
+| Testes | tests/doctor-maestro-layer.test.ts | configuredProject, walk, hashTree |
 | Testes | tests/doctor-missing.test.ts | — |
 | Testes | tests/doctor-ok.test.ts | — |
+| Testes | tests/doctor-subsystems.test.ts | — |
 | Testes | tests/documentation-diagnose.test.ts | mktemp, withSpecsfy, walk, hashTree |
 | Testes | tests/extensions-checksum-ausente.test.ts | — |
 | Testes | tests/extensions-conflito-nome.test.ts | — |
@@ -258,11 +263,6 @@ Relação: relaciona cada arquivo observado à sua superfície.
 | Testes | tests/rename-commit-convention.test.ts | — |
 | Testes | tests/rename-completed-specs-untouched.test.ts | ROOT, walk, predatesRename, hashTree, EXPECTED_COMPLETED_SPECS_HASH |
 | Testes | tests/rename-package-identity.test.ts | — |
-| Testes | tests/rename-setup-directory.test.ts | project, LEGACY_RECORD |
-| Testes | tests/run-command.test.ts | — |
-| Testes | tests/scripts.test.ts | — |
-| Testes | tests/setup-antigravity.test.ts | — |
-| Testes | tests/setup-bridge.test.ts | — |
 <!-- specsfy:documentator:end -->
 
 <!-- O bloco specsfy:documentator acima é o inventário mecânico gerado pelo Specsfy e é reescrito a cada build (findings/external/FIND-EXT-001). A documentação do projeto vive fora dele, a partir daqui. -->

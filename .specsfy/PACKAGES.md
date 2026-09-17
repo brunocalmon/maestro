@@ -308,3 +308,4 @@
 ## Notas
 
 - 2026-09-17 — release 2.1.23 do próprio pacote (`@brunocalmon/maestro`), sem alteração de dependências: o bump existe porque a guarda de checksum do `npm run build` exige versão nova (SPEC-0022). O inventário gerenciado acima permanece válido.
+- 2026-09-17 — releases 2.1.26 a 2.1.29 do próprio pacote (`@brunocalmon/maestro`), sem alteração de dependências: mesmo motivo do SPEC-0022 (guarda de checksum do build). O inventário gerenciado acima permanece válido.
