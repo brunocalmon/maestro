@@ -1,4 +1,5 @@
 import { assessConfiguration, nextStepsNote, type ConfigurationAssessment } from "../setup/layout.js";
+import { isDeferralActive } from "../setup/defer.js";
 
 export type FindingLevel = "FAIL" | "WARN";
 
@@ -57,5 +58,24 @@ export function diagnoseMaestro(assessment: ConfigurationAssessment): MaestroFin
 
 /** Read-only entry point: reads the disk once, diagnoses, never writes (PR-001). */
 export function diagnoseMaestroProject(root: string, target: "claude-code" | "antigravity" = "claude-code"): MaestroFinding[] {
-  return diagnoseMaestro(assessConfiguration(root, target));
+  const findings = diagnoseMaestro(assessConfiguration(root, target));
+  if (!isDeferralActive(root)) return findings;
+
+  // A deliberate `maestro setup --defer-conversational` turns setup-gate's
+  // block off (SPEC-0026), but the doctor never goes quiet about the
+  // underlying gap the way a silent flag would (NFR-003) — it swaps the
+  // plain "missing, run X" wording for one that names the deferral, so a
+  // never-configured project and a deliberately-deferred one read
+  // differently in the same report.
+  const withoutConfigurationWarnings = findings.filter((f) => f.area !== "configuration");
+  return [
+    ...withoutConfigurationWarnings,
+    {
+      level: "WARN",
+      area: "configuration",
+      message:
+        "conversational setup (specsfy-setup and/or setup-matt-pocock-skills) is still incomplete, " +
+        "but deliberately deferred via `maestro setup --defer-conversational` — the chat gate is off for now.",
+    },
+  ];
 }

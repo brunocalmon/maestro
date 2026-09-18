@@ -148,6 +148,10 @@ const PREAMBLE = [
   "_hook_str() { printf '%s' \"$_hook_flat\" | sed -n \"s/.*\\\"$1\\\"[[:space:]]*:[[:space:]]*\\\"\\\\(\\\\([^\\\"\\\\\\\\]\\\\|\\\\\\\\.\\\\)*\\\\)\\\".*/\\\\1/p\" | head -n 1; }",
   "HOOK_TOOL=$(_hook_str tool_name)",
   "HOOK_SESSION=$(_hook_str session_id)",
+  // `UserPromptSubmit` (`on-prompt`) carries the user's message in `prompt`
+  // (SPEC-0026, R-002) — same single-field extraction pattern as the fields
+  // above, so an `on-prompt` hook can inspect the message before deciding.
+  "HOOK_PROMPT=$(_hook_str prompt)",
   "HOOK_FILE=$(_hook_str file_path)",
   "[ -n \"$HOOK_FILE\" ] || HOOK_FILE=$(_hook_str path)",
   // The command reaches a hook in different fields depending on the tool

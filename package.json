@@ -1,6 +1,6 @@
 {
   "name": "@brunocalmon/maestro",
-  "version": "2.1.28",
+  "version": "2.1.30",
   "description": "Wrapper de linha de comando que orquestra subsistemas e agentes de codificação a partir de um contrato verificável de dependências.",
   "private": true,
   "repository": {

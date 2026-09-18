@@ -10,11 +10,12 @@ const names = () =>
 
 describe("AC-013 — the seven real hooks survive the round trip", () => {
   // SPECSFY: US-002 FR-005 AC-013
-  it("finds exactly the seven ported hooks", () => {
+  it("finds exactly the ported hooks", () => {
     // SPEC-0022 replaced the three context-mode Markdown hooks by the upstream
     // projection; SPEC-0023 added guard-docs, graph-hint and code-review-graph-stop;
-    // SPEC-0024 added skills-project and skills-project-session.
-    expect(names()).toHaveLength(10);
+    // SPEC-0024 added skills-project and skills-project-session; SPEC-0026
+    // added setup-gate and guard-defer-conversational.
+    expect(names()).toHaveLength(12);
   });
 
   // SPECSFY: US-002 FR-002 NFR-003 AC-013
