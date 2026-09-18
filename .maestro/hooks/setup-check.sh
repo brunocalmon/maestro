@@ -8,6 +8,7 @@ _hook_flat=$(printf '%s' "$HOOK_INPUT" | tr '\n' ' ')
 _hook_str() { printf '%s' "$_hook_flat" | sed -n "s/.*\"$1\"[[:space:]]*:[[:space:]]*\"\\(\\([^\"\\\\]\\|\\\\.\\)*\\)\".*/\\1/p" | head -n 1; }
 HOOK_TOOL=$(_hook_str tool_name)
 HOOK_SESSION=$(_hook_str session_id)
+HOOK_PROMPT=$(_hook_str prompt)
 HOOK_FILE=$(_hook_str file_path)
 [ -n "$HOOK_FILE" ] || HOOK_FILE=$(_hook_str path)
 HOOK_COMMAND=$(_hook_str command)
@@ -29,6 +30,24 @@ if [ ! -f "$PROJECT_DIR/.maestro/install.json" ] || [ ! -d "$PROJECT_DIR/.specsf
   cat <<'EOF'
 maestro: this project hasn't completed setup yet (missing .maestro/install.json or .specsfy/). Run the `setup` tool (or `maestro setup` from a terminal) before relying on its hooks, skills or the Specsfy framework — some of what's configured so far may be partial.
 EOF
+else
+  _missing=""
+  for _trace in PROJECT.md .specsfy/STACK.md .specsfy/RULES.md .specsfy/USER-PROFILE.md; do
+    [ -f "$PROJECT_DIR/$_trace" ] || _missing="$_missing $_trace"
+  done
+  _skills_section=1
+  [ -f "$PROJECT_DIR/AGENTS.md" ] && grep -q '^## Agent skills' "$PROJECT_DIR/AGENTS.md" && _skills_section=0
+
+  if [ -n "$_missing" ] || [ "$_skills_section" = "1" ]; then
+    _next=""
+    [ -n "$_missing" ] && _next="/specsfy-setup"
+    if [ "$_skills_section" = "1" ]; then
+      if [ -n "$_next" ]; then _next="$_next and /setup-matt-pocock-skills"; else _next="/setup-matt-pocock-skills"; fi
+    fi
+    echo "maestro: this project is installed but not fully configured. Run $_next in this agent."
+    [ -n "$_missing" ] && echo "maestro: missing from /specsfy-setup:$_missing"
+    [ "$_skills_section" = "1" ] && echo "maestro: missing from /setup-matt-pocock-skills: \"## Agent skills\" section in AGENTS.md"
+  fi
 fi
 
 # <<< hook fragment

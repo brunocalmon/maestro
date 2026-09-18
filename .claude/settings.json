@@ -44,6 +44,16 @@
         "hooks": [
           {
             "type": "command",
+            "command": "\"$CLAUDE_PROJECT_DIR/.maestro/hooks/guard-defer-conversational.sh\"",
+            "blocking": true
+          }
+        ]
+      },
+      {
+        "matcher": "Bash|mcp__.*(execute|run_in_terminal|shell).*",
+        "hooks": [
+          {
+            "type": "command",
             "command": "\"$CLAUDE_PROJECT_DIR/.maestro/hooks/guard-destructive.sh\"",
             "blocking": true
           }
@@ -216,6 +226,14 @@
       }
     ],
     "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"$CLAUDE_PROJECT_DIR/.maestro/hooks/setup-gate.sh\""
+          }
+        ]
+      },
       {
         "hooks": [
           {

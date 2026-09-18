@@ -8,6 +8,7 @@ _hook_flat=$(printf '%s' "$HOOK_INPUT" | tr '\n' ' ')
 _hook_str() { printf '%s' "$_hook_flat" | sed -n "s/.*\"$1\"[[:space:]]*:[[:space:]]*\"\\(\\([^\"\\\\]\\|\\\\.\\)*\\)\".*/\\1/p" | head -n 1; }
 HOOK_TOOL=$(_hook_str tool_name)
 HOOK_SESSION=$(_hook_str session_id)
+HOOK_PROMPT=$(_hook_str prompt)
 HOOK_FILE=$(_hook_str file_path)
 [ -n "$HOOK_FILE" ] || HOOK_FILE=$(_hook_str path)
 HOOK_COMMAND=$(_hook_str command)

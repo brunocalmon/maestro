@@ -66,3 +66,17 @@ These hooks run on their own; each line applies only in the condition it names.
 - `code-review-graph-update` keeps the code graph current after any edit and `graph-hint` points at it once per session; if `maestro doctor` reports them absent or inert, refresh the graph yourself after editing and prefer it over bulk Grep.
 - `guard-docs` keeps the Specsfy documentator build from overwriting docs/; if `maestro doctor` reports it absent or inert, run that script only with `--check`.
 <!-- maestro:extension:hooks-fallback:end -->
+
+## Agent skills
+
+### Issue tracker
+
+GitHub Issues (brunocalmon/maestro), via `gh` CLI. See `docs/agents/issue-tracker.md`.
+
+### Triage labels
+
+Default canonical labels (needs-triage, needs-info, ready-for-agent, ready-for-human, wontfix). See `docs/agents/triage-labels.md`.
+
+### Domain docs
+
+Single-context (CONTEXT.md + docs/adr/ at repo root). See `docs/agents/domain.md`.

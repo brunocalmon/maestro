@@ -1,13 +1,13 @@
 {
   "target": "claude-code",
-  "version": "2.1.25",
-  "trace": "19aa0aadd0b1701610a817c47504a788",
+  "version": "2.1.30",
+  "trace": "7fdee1e908bb256d7a00ddbd7e44f526",
   "hooks": [
     {
       "name": "code-review-graph-stop",
       "target": ".claude/settings.json",
-      "version": "2.1.25",
-      "installedAt": "2026-09-17T15:59:00.056Z",
+      "version": "2.1.30",
+      "installedAt": "2026-09-18T17:05:53.226Z",
       "event": "Stop",
       "kind": "script",
       "canonicalEvent": "stop",
@@ -16,8 +16,8 @@
     {
       "name": "code-review-graph-update",
       "target": ".claude/settings.json",
-      "version": "2.1.25",
-      "installedAt": "2026-09-17T15:59:00.056Z",
+      "version": "2.1.30",
+      "installedAt": "2026-09-18T17:05:53.226Z",
       "event": "PostToolUse",
       "kind": "script",
       "canonicalEvent": "after-tool",
@@ -26,18 +26,28 @@
     {
       "name": "graph-hint",
       "target": ".claude/settings.json",
-      "version": "2.1.25",
-      "installedAt": "2026-09-17T15:59:00.056Z",
+      "version": "2.1.30",
+      "installedAt": "2026-09-18T17:05:53.226Z",
       "event": "PreToolUse",
       "kind": "script",
       "canonicalEvent": "before-tool",
       "path": ".maestro/hooks/graph-hint.sh"
     },
     {
+      "name": "guard-defer-conversational",
+      "target": ".claude/settings.json",
+      "version": "2.1.30",
+      "installedAt": "2026-09-18T17:05:53.226Z",
+      "event": "PreToolUse",
+      "kind": "script",
+      "canonicalEvent": "before-tool",
+      "path": ".maestro/hooks/guard-defer-conversational.sh"
+    },
+    {
       "name": "guard-destructive",
       "target": ".claude/settings.json",
-      "version": "2.1.25",
-      "installedAt": "2026-09-17T15:59:00.056Z",
+      "version": "2.1.30",
+      "installedAt": "2026-09-18T17:05:53.226Z",
       "event": "PreToolUse",
       "kind": "script",
       "canonicalEvent": "before-shell",
@@ -46,8 +56,8 @@
     {
       "name": "guard-docs",
       "target": ".claude/settings.json",
-      "version": "2.1.25",
-      "installedAt": "2026-09-17T15:59:00.056Z",
+      "version": "2.1.30",
+      "installedAt": "2026-09-18T17:05:53.226Z",
       "event": "PreToolUse",
       "kind": "script",
       "canonicalEvent": "before-tool",
@@ -56,8 +66,8 @@
     {
       "name": "guard-secrets",
       "target": ".claude/settings.json",
-      "version": "2.1.25",
-      "installedAt": "2026-09-17T15:59:00.056Z",
+      "version": "2.1.30",
+      "installedAt": "2026-09-18T17:05:53.226Z",
       "event": "PreToolUse",
       "kind": "script",
       "canonicalEvent": "before-shell",
@@ -66,8 +76,8 @@
     {
       "name": "protect-authorship",
       "target": ".claude/settings.json",
-      "version": "2.1.25",
-      "installedAt": "2026-09-17T15:59:00.056Z",
+      "version": "2.1.30",
+      "installedAt": "2026-09-18T17:05:53.226Z",
       "event": "PreToolUse",
       "kind": "script",
       "canonicalEvent": "before-shell",
@@ -76,18 +86,28 @@
     {
       "name": "setup-check",
       "target": ".claude/settings.json",
-      "version": "2.1.25",
-      "installedAt": "2026-09-17T15:59:00.056Z",
+      "version": "2.1.30",
+      "installedAt": "2026-09-18T17:05:53.226Z",
       "event": "SessionStart",
       "kind": "script",
       "canonicalEvent": "session-start",
       "path": ".maestro/hooks/setup-check.sh"
     },
     {
+      "name": "setup-gate",
+      "target": ".claude/settings.json",
+      "version": "2.1.30",
+      "installedAt": "2026-09-18T17:05:53.226Z",
+      "event": "UserPromptSubmit",
+      "kind": "script",
+      "canonicalEvent": "on-prompt",
+      "path": ".maestro/hooks/setup-gate.sh"
+    },
+    {
       "name": "skills-project-session",
       "target": ".claude/settings.json",
-      "version": "2.1.25",
-      "installedAt": "2026-09-17T15:59:00.056Z",
+      "version": "2.1.30",
+      "installedAt": "2026-09-18T17:05:53.226Z",
       "event": "SessionStart",
       "kind": "script",
       "canonicalEvent": "session-start",
@@ -96,8 +116,8 @@
     {
       "name": "skills-project",
       "target": ".claude/settings.json",
-      "version": "2.1.25",
-      "installedAt": "2026-09-17T15:59:00.056Z",
+      "version": "2.1.30",
+      "installedAt": "2026-09-18T17:05:53.226Z",
       "event": "PostToolUse",
       "kind": "script",
       "canonicalEvent": "after-tool",
@@ -106,8 +126,8 @@
     {
       "name": "context-mode-posttooluse-0",
       "target": ".claude/settings.json",
-      "version": "2.1.25",
-      "installedAt": "2026-09-17T15:59:00.056Z",
+      "version": "2.1.30",
+      "installedAt": "2026-09-18T17:05:53.226Z",
       "event": "PostToolUse",
       "kind": "dispatch",
       "canonicalEvent": "after-tool",
@@ -116,8 +136,8 @@
     {
       "name": "context-mode-precompact-0",
       "target": ".claude/settings.json",
-      "version": "2.1.25",
-      "installedAt": "2026-09-17T15:59:00.056Z",
+      "version": "2.1.30",
+      "installedAt": "2026-09-18T17:05:53.226Z",
       "event": "PreCompact",
       "kind": "dispatch",
       "canonicalEvent": "before-compact",
@@ -126,8 +146,8 @@
     {
       "name": "context-mode-pretooluse-0",
       "target": ".claude/settings.json",
-      "version": "2.1.25",
-      "installedAt": "2026-09-17T15:59:00.056Z",
+      "version": "2.1.30",
+      "installedAt": "2026-09-18T17:05:53.226Z",
       "event": "PreToolUse",
       "kind": "dispatch",
       "canonicalEvent": "before-tool",
@@ -136,8 +156,8 @@
     {
       "name": "context-mode-pretooluse-1",
       "target": ".claude/settings.json",
-      "version": "2.1.25",
-      "installedAt": "2026-09-17T15:59:00.056Z",
+      "version": "2.1.30",
+      "installedAt": "2026-09-18T17:05:53.226Z",
       "event": "PreToolUse",
       "kind": "dispatch",
       "canonicalEvent": "before-tool",
@@ -146,8 +166,8 @@
     {
       "name": "context-mode-pretooluse-2",
       "target": ".claude/settings.json",
-      "version": "2.1.25",
-      "installedAt": "2026-09-17T15:59:00.056Z",
+      "version": "2.1.30",
+      "installedAt": "2026-09-18T17:05:53.226Z",
       "event": "PreToolUse",
       "kind": "dispatch",
       "canonicalEvent": "before-tool",
@@ -156,8 +176,8 @@
     {
       "name": "context-mode-pretooluse-3",
       "target": ".claude/settings.json",
-      "version": "2.1.25",
-      "installedAt": "2026-09-17T15:59:00.056Z",
+      "version": "2.1.30",
+      "installedAt": "2026-09-18T17:05:53.226Z",
       "event": "PreToolUse",
       "kind": "dispatch",
       "canonicalEvent": "before-tool",
@@ -166,8 +186,8 @@
     {
       "name": "context-mode-pretooluse-4",
       "target": ".claude/settings.json",
-      "version": "2.1.25",
-      "installedAt": "2026-09-17T15:59:00.056Z",
+      "version": "2.1.30",
+      "installedAt": "2026-09-18T17:05:53.226Z",
       "event": "PreToolUse",
       "kind": "dispatch",
       "canonicalEvent": "before-tool",
@@ -176,8 +196,8 @@
     {
       "name": "context-mode-pretooluse-5",
       "target": ".claude/settings.json",
-      "version": "2.1.25",
-      "installedAt": "2026-09-17T15:59:00.056Z",
+      "version": "2.1.30",
+      "installedAt": "2026-09-18T17:05:53.226Z",
       "event": "PreToolUse",
       "kind": "dispatch",
       "canonicalEvent": "before-tool",
@@ -186,8 +206,8 @@
     {
       "name": "context-mode-pretooluse-6",
       "target": ".claude/settings.json",
-      "version": "2.1.25",
-      "installedAt": "2026-09-17T15:59:00.056Z",
+      "version": "2.1.30",
+      "installedAt": "2026-09-18T17:05:53.226Z",
       "event": "PreToolUse",
       "kind": "dispatch",
       "canonicalEvent": "before-tool",
@@ -196,8 +216,8 @@
     {
       "name": "context-mode-pretooluse-7",
       "target": ".claude/settings.json",
-      "version": "2.1.25",
-      "installedAt": "2026-09-17T15:59:00.056Z",
+      "version": "2.1.30",
+      "installedAt": "2026-09-18T17:05:53.226Z",
       "event": "PreToolUse",
       "kind": "dispatch",
       "canonicalEvent": "before-tool",
@@ -206,8 +226,8 @@
     {
       "name": "context-mode-pretooluse-8",
       "target": ".claude/settings.json",
-      "version": "2.1.25",
-      "installedAt": "2026-09-17T15:59:00.056Z",
+      "version": "2.1.30",
+      "installedAt": "2026-09-18T17:05:53.226Z",
       "event": "PreToolUse",
       "kind": "dispatch",
       "canonicalEvent": "before-tool",
@@ -216,8 +236,8 @@
     {
       "name": "context-mode-userpromptsubmit-0",
       "target": ".claude/settings.json",
-      "version": "2.1.25",
-      "installedAt": "2026-09-17T15:59:00.056Z",
+      "version": "2.1.30",
+      "installedAt": "2026-09-18T17:05:53.226Z",
       "event": "UserPromptSubmit",
       "kind": "dispatch",
       "canonicalEvent": "on-prompt",
@@ -226,8 +246,8 @@
     {
       "name": "context-mode-sessionstart-0",
       "target": ".claude/settings.json",
-      "version": "2.1.25",
-      "installedAt": "2026-09-17T15:59:00.056Z",
+      "version": "2.1.30",
+      "installedAt": "2026-09-18T17:05:53.226Z",
       "event": "SessionStart",
       "kind": "dispatch",
       "canonicalEvent": "session-start",
@@ -236,8 +256,8 @@
     {
       "name": "context-mode-stop-0",
       "target": ".claude/settings.json",
-      "version": "2.1.25",
-      "installedAt": "2026-09-17T15:59:00.056Z",
+      "version": "2.1.30",
+      "installedAt": "2026-09-18T17:05:53.226Z",
       "event": "Stop",
       "kind": "dispatch",
       "canonicalEvent": "stop",
@@ -251,7 +271,7 @@
       "sourceType": "github",
       "skillPath": "skills/engineering/ask-matt/SKILL.md",
       "computedHash": "0cd14026efa0330083cbc7adf590976c162b60e02f696a8dcce96f0b4dab8a72",
-      "installedAt": "2026-09-17T15:59:00.056Z"
+      "installedAt": "2026-09-18T17:05:53.226Z"
     },
     {
       "name": "claude-handoff",
@@ -259,7 +279,7 @@
       "sourceType": "github",
       "skillPath": "skills/in-progress/claude-handoff/SKILL.md",
       "computedHash": "f8c4754a25aa4e12601ce69db4388bb0d30ca526b225351180c5b0d2a4649a95",
-      "installedAt": "2026-09-17T15:59:00.056Z"
+      "installedAt": "2026-09-18T17:05:53.226Z"
     },
     {
       "name": "code-review",
@@ -267,7 +287,7 @@
       "sourceType": "github",
       "skillPath": "skills/engineering/code-review/SKILL.md",
       "computedHash": "caa9a086baaf9e0f7cd71f64edfa83da6821c05e826b083221f3d02e3d6a1905",
-      "installedAt": "2026-09-17T15:59:00.056Z"
+      "installedAt": "2026-09-18T17:05:53.226Z"
     },
     {
       "name": "codebase-design",
@@ -275,7 +295,7 @@
       "sourceType": "github",
       "skillPath": "skills/engineering/codebase-design/SKILL.md",
       "computedHash": "5a17552cc1482f1a40124bf4e6c9dbd90ac0dbb47e71c07d47369f9e5f2ae3b5",
-      "installedAt": "2026-09-17T15:59:00.056Z"
+      "installedAt": "2026-09-18T17:05:53.226Z"
     },
     {
       "name": "diagnosing-bugs",
@@ -283,7 +303,7 @@
       "sourceType": "github",
       "skillPath": "skills/engineering/diagnosing-bugs/SKILL.md",
       "computedHash": "37b5e9c624513551da790b52864dc8c84bff996a6d03a380cc6facdcc0a88354",
-      "installedAt": "2026-09-17T15:59:00.056Z"
+      "installedAt": "2026-09-18T17:05:53.226Z"
     },
     {
       "name": "domain-modeling",
@@ -291,7 +311,7 @@
       "sourceType": "github",
       "skillPath": "skills/engineering/domain-modeling/SKILL.md",
       "computedHash": "a11713c0ff7870efa3c331b2e273f09116158485246edc89ae5088eefd1b0b48",
-      "installedAt": "2026-09-17T15:59:00.056Z"
+      "installedAt": "2026-09-18T17:05:53.226Z"
     },
     {
       "name": "git-guardrails-claude-code",
@@ -299,7 +319,7 @@
       "sourceType": "github",
       "skillPath": "skills/misc/git-guardrails-claude-code/SKILL.md",
       "computedHash": "ccf581d304132095c2787b0a3bcb7b4ff125863c9f796fb16311d8f1cacef470",
-      "installedAt": "2026-09-17T15:59:00.056Z"
+      "installedAt": "2026-09-18T17:05:53.226Z"
     },
     {
       "name": "grill-me",
@@ -307,7 +327,7 @@
       "sourceType": "github",
       "skillPath": "skills/productivity/grill-me/SKILL.md",
       "computedHash": "9cdbb4b8f7a3aeaef82e6230c9e823500d4a8a1214c726cf342cf9829d34fc7d",
-      "installedAt": "2026-09-17T15:59:00.056Z"
+      "installedAt": "2026-09-18T17:05:53.226Z"
     },
     {
       "name": "grill-with-docs",
@@ -315,7 +335,7 @@
       "sourceType": "github",
       "skillPath": "skills/engineering/grill-with-docs/SKILL.md",
       "computedHash": "35e62aa423aaeab6a414bcac273f56dfb17802ef2334b41b6a3b00f28196c8cf",
-      "installedAt": "2026-09-17T15:59:00.056Z"
+      "installedAt": "2026-09-18T17:05:53.226Z"
     },
     {
       "name": "grilling",
@@ -323,7 +343,7 @@
       "sourceType": "github",
       "skillPath": "skills/productivity/grilling/SKILL.md",
       "computedHash": "4dd886b0196bf43729d954ae326016f2bd9f5f79d892500b407c33a753362f14",
-      "installedAt": "2026-09-17T15:59:00.056Z"
+      "installedAt": "2026-09-18T17:05:53.226Z"
     },
     {
       "name": "handoff",
@@ -331,7 +351,7 @@
       "sourceType": "github",
       "skillPath": "skills/productivity/handoff/SKILL.md",
       "computedHash": "20e5f4afdef502637510bc5c64d27645d3c85c88df9cb006824bbb0980166319",
-      "installedAt": "2026-09-17T15:59:00.056Z"
+      "installedAt": "2026-09-18T17:05:53.226Z"
     },
     {
       "name": "implement",
@@ -339,7 +359,7 @@
       "sourceType": "github",
       "skillPath": "skills/engineering/implement/SKILL.md",
       "computedHash": "2139cfedf24791adbc839aaab6019cff158af1e28bfead020ec6e0ce01b3e74d",
-      "installedAt": "2026-09-17T15:59:00.056Z"
+      "installedAt": "2026-09-18T17:05:53.226Z"
     },
     {
       "name": "implement-spec",
@@ -347,7 +367,7 @@
       "sourceType": "github",
       "skillPath": "skills/in-progress/implement-spec/SKILL.md",
       "computedHash": "91670f6f5239fc64da91c2b2f6ada62a27d2f0e8e18215fefe53feeea7a43801",
-      "installedAt": "2026-09-17T15:59:00.056Z"
+      "installedAt": "2026-09-18T17:05:53.226Z"
     },
     {
       "name": "improve-codebase-architecture",
@@ -355,7 +375,7 @@
       "sourceType": "github",
       "skillPath": "skills/engineering/improve-codebase-architecture/SKILL.md",
       "computedHash": "2449db6ab1ded9581f69fcc56c1f64818112d05e271fd4c5da23c6523f9d3d9d",
-      "installedAt": "2026-09-17T15:59:00.056Z"
+      "installedAt": "2026-09-18T17:05:53.226Z"
     },
     {
       "name": "loop-me",
@@ -363,7 +383,7 @@
       "sourceType": "github",
       "skillPath": "skills/in-progress/loop-me/SKILL.md",
       "computedHash": "72e01a16929dbf6583afc469a49d64b28b1be4a6034c900decd94cd5a69ba6e6",
-      "installedAt": "2026-09-17T15:59:00.056Z"
+      "installedAt": "2026-09-18T17:05:53.226Z"
     },
     {
       "name": "migrate-to-shoehorn",
@@ -371,15 +391,15 @@
       "sourceType": "github",
       "skillPath": "skills/misc/migrate-to-shoehorn/SKILL.md",
       "computedHash": "6397731ced114f3657aa88b55ed13d1344a56d77ca449c568e3200c21740fa99",
-      "installedAt": "2026-09-17T15:59:00.056Z"
+      "installedAt": "2026-09-18T17:05:53.226Z"
     },
     {
       "name": "pr",
       "source": "mattpocock/skills",
       "sourceType": "github",
       "skillPath": "skills/in-progress/pr/SKILL.md",
-      "computedHash": "f44d9f871fcb390f9c1e7a5c5235f9f5b876a670facc1eb0cf94e6375549649f",
-      "installedAt": "2026-09-17T15:59:00.056Z"
+      "computedHash": "169ba493271c91983d16d15fea8c05a38af849228c019d8b20c7d4d1a15765e4",
+      "installedAt": "2026-09-18T17:05:53.226Z"
     },
     {
       "name": "prototype",
@@ -387,7 +407,7 @@
       "sourceType": "github",
       "skillPath": "skills/engineering/prototype/SKILL.md",
       "computedHash": "d3fc74689bd993e39c44bfae510d014eecffbeec2922764b065377fd1327c0f6",
-      "installedAt": "2026-09-17T15:59:00.056Z"
+      "installedAt": "2026-09-18T17:05:53.226Z"
     },
     {
       "name": "research",
@@ -395,7 +415,7 @@
       "sourceType": "github",
       "skillPath": "skills/engineering/research/SKILL.md",
       "computedHash": "c8c1cba327a6f824b554cd978079a3dadd7406d73174f8fb9bfef58824691970",
-      "installedAt": "2026-09-17T15:59:00.056Z"
+      "installedAt": "2026-09-18T17:05:53.226Z"
     },
     {
       "name": "resolving-merge-conflicts",
@@ -403,7 +423,7 @@
       "sourceType": "github",
       "skillPath": "skills/engineering/resolving-merge-conflicts/SKILL.md",
       "computedHash": "63b2dcadbe9124caeb3448f1378286fe18dcefb2494f60e136831b8b4986ca27",
-      "installedAt": "2026-09-17T15:59:00.056Z"
+      "installedAt": "2026-09-18T17:05:53.226Z"
     },
     {
       "name": "retro",
@@ -411,7 +431,7 @@
       "sourceType": "github",
       "skillPath": "skills/in-progress/retro/SKILL.md",
       "computedHash": "b8d55851a2909e26c2dbb2e8563719c87b3b700559f604e4df344f8c27e21047",
-      "installedAt": "2026-09-17T15:59:00.056Z"
+      "installedAt": "2026-09-18T17:05:53.226Z"
     },
     {
       "name": "scaffold-exercises",
@@ -419,7 +439,7 @@
       "sourceType": "github",
       "skillPath": "skills/misc/scaffold-exercises/SKILL.md",
       "computedHash": "354c91f6dbc9b058632f30594aacb4edc6d25012596585abb00402af8d7ec5e9",
-      "installedAt": "2026-09-17T15:59:00.056Z"
+      "installedAt": "2026-09-18T17:05:53.226Z"
     },
     {
       "name": "setup-matt-pocock-skills",
@@ -427,7 +447,7 @@
       "sourceType": "github",
       "skillPath": "skills/engineering/setup-matt-pocock-skills/SKILL.md",
       "computedHash": "552b0f48b9fe054aa93c5d432fefbd7bd9645e3f2d20b4e22432453a81800b21",
-      "installedAt": "2026-09-17T15:59:00.056Z"
+      "installedAt": "2026-09-18T17:05:53.226Z"
     },
     {
       "name": "setup-pre-commit",
@@ -435,7 +455,7 @@
       "sourceType": "github",
       "skillPath": "skills/misc/setup-pre-commit/SKILL.md",
       "computedHash": "7fc7b680161a5cb834b165e36efc2378ff63a1f80df0a9efd18448d366bea98a",
-      "installedAt": "2026-09-17T15:59:00.056Z"
+      "installedAt": "2026-09-18T17:05:53.226Z"
     },
     {
       "name": "setup-ts-deep-modules",
@@ -443,70 +463,70 @@
       "sourceType": "github",
       "skillPath": "skills/in-progress/setup-ts-deep-modules/SKILL.md",
       "computedHash": "61508216ede38d8cfa712879197a76f75f4896615dbf7abc3f62571f8f5923cc",
-      "installedAt": "2026-09-17T15:59:00.056Z"
+      "installedAt": "2026-09-18T17:05:53.226Z"
     },
     {
       "name": "specsfy-02-backlog",
       "source": "../../../../tmp/specsfy-install-S6jgg0/checkout/skills",
       "sourceType": "local",
       "computedHash": "fee2d9aaf1a2c581031c89eca17b7c82a88fce0dfd279b36e1262a626ba13884",
-      "installedAt": "2026-09-17T15:59:00.056Z"
+      "installedAt": "2026-09-18T17:05:53.226Z"
     },
     {
       "name": "specsfy-03-specify",
       "source": "../../../../tmp/specsfy-install-S6jgg0/checkout/skills",
       "sourceType": "local",
       "computedHash": "64b416da2adf128af6c4dae1c060203eea3d955b2e6faa2c77c2e82676db977e",
-      "installedAt": "2026-09-17T15:59:00.056Z"
+      "installedAt": "2026-09-18T17:05:53.226Z"
     },
     {
       "name": "specsfy-04-validate",
       "source": "../../../../tmp/specsfy-install-xnoam8/checkout/skills",
       "sourceType": "local",
       "computedHash": "b0b6185e933fbe70eaa9347de3c65f84fccf2ba716418ecbd9bb854106f8b1a9",
-      "installedAt": "2026-09-17T15:59:00.056Z"
+      "installedAt": "2026-09-18T17:05:53.226Z"
     },
     {
       "name": "specsfy-05-tasks",
       "source": "../../../../tmp/specsfy-install-xnoam8/checkout/skills",
       "sourceType": "local",
       "computedHash": "7ddeaff4d2fb1ba956f15fb2cf532b469b103012149bc7a96e243ee1ed179690",
-      "installedAt": "2026-09-17T15:59:00.056Z"
+      "installedAt": "2026-09-18T17:05:53.226Z"
     },
     {
       "name": "specsfy-06-tdd-bdd",
       "source": "../../../../tmp/specsfy-install-xnoam8/checkout/skills",
       "sourceType": "local",
       "computedHash": "efcc6adbfca283e225052694b181b626f249c9e7dbbb7b6df1e887fa3051e49a",
-      "installedAt": "2026-09-17T15:59:00.056Z"
+      "installedAt": "2026-09-18T17:05:53.226Z"
     },
     {
       "name": "specsfy-07-implement",
       "source": "../../../../tmp/specsfy-install-xnoam8/checkout/skills",
       "sourceType": "local",
       "computedHash": "2f9adaef1e00aea2bad4f4f3cf1bcc19b76f8e48abd6f2a5cea74f9bee52d3a7",
-      "installedAt": "2026-09-17T15:59:00.056Z"
+      "installedAt": "2026-09-18T17:05:53.226Z"
     },
     {
       "name": "specsfy-data-discovery",
       "source": "../../../../tmp/specsfy-install-S6jgg0/checkout/skills",
       "sourceType": "local",
       "computedHash": "6519b7fee099658fd73adaf28db363769f808c29f08cfae8ff4df3add7d2009f",
-      "installedAt": "2026-09-17T15:59:00.056Z"
+      "installedAt": "2026-09-18T17:05:53.226Z"
     },
     {
       "name": "specsfy-mvp-milestone-interviewer",
       "source": "../../../../tmp/specsfy-install-S6jgg0/checkout/skills",
       "sourceType": "local",
       "computedHash": "b6736de90add5d231901c698d54c97600142e0ed0245b430f99bedaf8f250fb7",
-      "installedAt": "2026-09-17T15:59:00.056Z"
+      "installedAt": "2026-09-18T17:05:53.226Z"
     },
     {
       "name": "specsfy-setup",
       "source": "../../../../tmp/specsfy-install-xnoam8/checkout/skills",
       "sourceType": "local",
       "computedHash": "a1391b1cf541fcb14f6034755556ddeb71beb84ddde85ca2ced3e741603c34ad",
-      "installedAt": "2026-09-17T15:59:00.056Z"
+      "installedAt": "2026-09-18T17:05:53.226Z"
     },
     {
       "name": "tdd",
@@ -514,7 +534,7 @@
       "sourceType": "github",
       "skillPath": "skills/engineering/tdd/SKILL.md",
       "computedHash": "e753a5da75292bbe59d302d89566bc2c53d0e73944da2f0e944a7578883c07d0",
-      "installedAt": "2026-09-17T15:59:00.056Z"
+      "installedAt": "2026-09-18T17:05:53.226Z"
     },
     {
       "name": "teach",
@@ -522,7 +542,7 @@
       "sourceType": "github",
       "skillPath": "skills/productivity/teach/SKILL.md",
       "computedHash": "b8a69574c7a019bed84e84313dc8bf02e1d1bf925ba43057d433217c63863206",
-      "installedAt": "2026-09-17T15:59:00.056Z"
+      "installedAt": "2026-09-18T17:05:53.226Z"
     },
     {
       "name": "to-questionnaire",
@@ -530,7 +550,7 @@
       "sourceType": "github",
       "skillPath": "skills/productivity/to-questionnaire/SKILL.md",
       "computedHash": "befbec7005695163741a57bc94810dc5048fb766baaa485d5160b1d7f86335c1",
-      "installedAt": "2026-09-17T15:59:00.056Z"
+      "installedAt": "2026-09-18T17:05:53.226Z"
     },
     {
       "name": "to-spec",
@@ -538,7 +558,7 @@
       "sourceType": "github",
       "skillPath": "skills/engineering/to-spec/SKILL.md",
       "computedHash": "3fa1a0695d4ea242fae9e569e4d22aa1788623197abb33bfadafae7315789bbf",
-      "installedAt": "2026-09-17T15:59:00.056Z"
+      "installedAt": "2026-09-18T17:05:53.226Z"
     },
     {
       "name": "to-tickets",
@@ -546,7 +566,7 @@
       "sourceType": "github",
       "skillPath": "skills/engineering/to-tickets/SKILL.md",
       "computedHash": "bf5e6ebcb4f1272de0c188d5b3901f265a03d1fa9935a21a7a56938e21e2e761",
-      "installedAt": "2026-09-17T15:59:00.056Z"
+      "installedAt": "2026-09-18T17:05:53.226Z"
     },
     {
       "name": "triage",
@@ -554,7 +574,7 @@
       "sourceType": "github",
       "skillPath": "skills/engineering/triage/SKILL.md",
       "computedHash": "b954d74c219c805bf353d6642251a713c9b2e9cfdb11babfe588bcfe7dfd16d5",
-      "installedAt": "2026-09-17T15:59:00.056Z"
+      "installedAt": "2026-09-18T17:05:53.226Z"
     },
     {
       "name": "wait-what",
@@ -562,7 +582,7 @@
       "sourceType": "github",
       "skillPath": "skills/productivity/wait-what/SKILL.md",
       "computedHash": "71a9a1f1773d4b1ff70a9d496db63855ef83a7fe906c72b70cdebf4815a2c4c1",
-      "installedAt": "2026-09-17T15:59:00.056Z"
+      "installedAt": "2026-09-18T17:05:53.226Z"
     },
     {
       "name": "wayfinder",
@@ -570,7 +590,7 @@
       "sourceType": "github",
       "skillPath": "skills/engineering/wayfinder/SKILL.md",
       "computedHash": "fa790eb4255b13d24d7e33ff4891ccd3d621558cc0ab87ae226777538ea16a8f",
-      "installedAt": "2026-09-17T15:59:00.056Z"
+      "installedAt": "2026-09-18T17:05:53.226Z"
     },
     {
       "name": "wizard",
@@ -578,7 +598,7 @@
       "sourceType": "github",
       "skillPath": "skills/engineering/wizard/SKILL.md",
       "computedHash": "dee7f1a523994a1e063c69fe09c2f5b4da97a41ad68107722664e6e472cb2423",
-      "installedAt": "2026-09-17T15:59:00.056Z"
+      "installedAt": "2026-09-18T17:05:53.226Z"
     },
     {
       "name": "writing-beats",
@@ -586,7 +606,7 @@
       "sourceType": "github",
       "skillPath": "skills/in-progress/writing-beats/SKILL.md",
       "computedHash": "220b163698de9c1e551b801795cc8ca38132b69018f82188875b3675226fc888",
-      "installedAt": "2026-09-17T15:59:00.056Z"
+      "installedAt": "2026-09-18T17:05:53.226Z"
     },
     {
       "name": "writing-for-agents",
@@ -594,7 +614,7 @@
       "sourceType": "github",
       "skillPath": "skills/productivity/writing-for-agents/SKILL.md",
       "computedHash": "95da47fc97af998e85b7d7e6d57b3ac76727c1e290cfe9ea09005aacb826959f",
-      "installedAt": "2026-09-17T15:59:00.056Z"
+      "installedAt": "2026-09-18T17:05:53.226Z"
     },
     {
       "name": "writing-fragments",
@@ -602,7 +622,7 @@
       "sourceType": "github",
       "skillPath": "skills/in-progress/writing-fragments/SKILL.md",
       "computedHash": "cbd8c4ed24ebc292017831ef76bc8798719b3adcd18f7781a632a37844a1c369",
-      "installedAt": "2026-09-17T15:59:00.056Z"
+      "installedAt": "2026-09-18T17:05:53.226Z"
     },
     {
       "name": "writing-shape",
@@ -610,7 +630,7 @@
       "sourceType": "github",
       "skillPath": "skills/in-progress/writing-shape/SKILL.md",
       "computedHash": "0d0ac1150c4d65f8370ad194fc097ee17855247f6e5943d05f075806980e7401",
-      "installedAt": "2026-09-17T15:59:00.056Z"
+      "installedAt": "2026-09-18T17:05:53.226Z"
     }
   ],
   "projections": [
