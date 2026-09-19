@@ -67,6 +67,7 @@ These hooks run on their own; each line applies only in the condition it names.
 - `guard-docs` keeps the Specsfy documentator build from overwriting docs/; if `maestro doctor` reports it absent or inert, run that script only with `--check`.
 <!-- maestro:extension:hooks-fallback:end -->
 
+<!-- maestro:foreign:foreign:agent-skills:start -->
 ## Agent skills
 
 ### Issue tracker
@@ -80,3 +81,4 @@ Default canonical labels (needs-triage, needs-info, ready-for-agent, ready-for-h
 ### Domain docs
 
 Single-context (CONTEXT.md + docs/adr/ at repo root). See `docs/agents/domain.md`.
+<!-- maestro:foreign:foreign:agent-skills:end -->

@@ -33,20 +33,23 @@ export function diagnoseExtensions(
     // through `resolveTargetPath` as before.
     const path = artifact.category === "hook" ? artifact.target : resolveTargetPath(artifact.target);
     // A hook script (SPEC-0022) is the whole file, not an anchored block.
-    // Foreign content (SPEC-0024) is recognized by its heading text, not an
-    // anchor comment — the third-party skill that writes it doesn't know the
-    // maestro's `<!-- category:name:start -->` syntax, so `readAnchor` never
-    // finds it there and every registered `foreign` artifact looked
-    // divergent on every `doctor` run, checksum match or not.
+    // Foreign content (SPEC-0024) is wrapped in the same maestro anchor as
+    // everything else once `relocateForeignSections` has run on it, so the
+    // generic `readAnchor` branch below already covers it. The
+    // `extractSection`-by-heading fallback only matters for the transient
+    // window before that migration runs on an older, unwrapped registration
+    // — without it, a registered-but-not-yet-anchored artifact would report
+    // a false divergence until the next `maestro setup`.
     let realContent: string | null;
     if (artifact.category === "hook") {
       realContent = targetEnv.read(path) || null;
-    } else if (artifact.category === "foreign") {
-      const sig = FOREIGN_SIGNATURES.find((s) => s.name === artifact.name);
-      const section = sig ? extractSection(targetEnv.read(path), sig.heading) : null;
-      realContent = section ? section.text : null;
     } else {
       realContent = readAnchor(targetEnv.read(path), artifact.category, artifact.name);
+      if (realContent === null && artifact.category === "foreign") {
+        const sig = FOREIGN_SIGNATURES.find((s) => s.name === artifact.name);
+        const section = sig ? extractSection(targetEnv.read(path), sig.heading) : null;
+        realContent = section ? section.text.replace(/\n$/, "") : null;
+      }
     }
     const realChecksum = realContent === null ? null : computeChecksum(realContent);
     if (realChecksum !== artifact.checksum) {

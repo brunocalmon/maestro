@@ -1,4 +1,4 @@
-import { computeChecksum } from "./anchor.js";
+import { anchorMarkers, computeChecksum, readAnchor } from "./anchor.js";
 import { readExtensionRegistry, writeExtensionRegistry, type ChecksumEnvironment, type ExtensionArtifact } from "./registry.js";
 import { resolveTargetPath, type TargetFileEnvironment } from "./create.js";
 
@@ -50,9 +50,14 @@ const removeRange = (markdown: string, from: number, to: number): string =>
   (markdown.slice(0, from) + markdown.slice(to)).replace(/\n{3,}/g, "\n\n");
 
 /**
- * Moves known third-party sections from CLAUDE.md to AGENTS.md and records
- * them as `foreign` — tracked by checksum so drift is visible, never
- * rewritten, repaired or quarantined by the maestro (FR-003, FR-004).
+ * Moves known third-party sections from CLAUDE.md to AGENTS.md, wraps them
+ * in the same `<!-- maestro:foreign:<name>:start/end -->` anchor every other
+ * managed block uses, and records them as `foreign` — tracked by checksum so
+ * drift is visible, never rewritten, repaired or quarantined by the maestro
+ * (FR-003, FR-004). Wrapping is a deliberate standardization, not a content
+ * change: the anchor sits around the third-party text as-is, in its
+ * original position, so `AGENTS.md` looks and diffs the same as any other
+ * maestro-managed section (owner requirement, follow-up to SPEC-0024).
  */
 export function relocateForeignSections(envs: { registryEnv: ChecksumEnvironment; targetEnv: TargetFileEnvironment; now?: () => string }): RelocationResult {
   const result: RelocationResult = { moved: [], deduplicated: [], conflicting: [], drifted: [] };
@@ -87,23 +92,37 @@ export function relocateForeignSections(envs: { registryEnv: ChecksumEnvironment
       }
     }
 
-    // Whatever ended up in AGENTS.md — moved here just now, already there
-    // from a prior run, or written there directly because CLAUDE.md didn't
-    // exist yet when the third-party skill ran — must be tracked so drift
-    // has something to compare against. Without this, content that never
-    // touched CLAUDE.md (the common case) was silently never registered,
-    // and `drifted` could never fire for it (SPEC-0024 gap).
-    const current = extractSection(agents, sig.heading);
-    if (current) {
+    // Standardize: whatever plain (unanchored) text now sits in AGENTS.md —
+    // moved here just now, already there from a prior run, or written there
+    // directly because CLAUDE.md didn't exist when the third-party skill ran
+    // — gets wrapped in place with the anchor, without moving it to the end
+    // of the file or touching anything outside its own range.
+    if (readAnchor(agents, "foreign", sig.name) === null) {
+      const plain = extractSection(agents, sig.heading);
+      if (plain) {
+        const { start, end } = anchorMarkers("foreign", sig.name);
+        const content = plain.text.replace(/\n$/, "");
+        const block = `${start}\n${content}\n${end}\n`;
+        agents = agents.slice(0, plain.from) + block + agents.slice(plain.to);
+        agentsChanged = true;
+      }
+    }
+
+    // Whatever ended up in AGENTS.md must be tracked so drift has something
+    // to compare against. Without this, content that never touched
+    // CLAUDE.md (the common case) was silently never registered, and
+    // `drifted` could never fire for it (SPEC-0024 gap).
+    const current = readAnchor(agents, "foreign", sig.name);
+    if (current !== null) {
       if (!registered) {
         const artifact: ExtensionArtifact = {
           category: "foreign", name: sig.name, target: "AGENTS.md", origin: sig.origin,
-          content: current.text, checksum: computeChecksum(current.text),
+          content: current, checksum: computeChecksum(current),
           createdAt: (envs.now ?? (() => new Date().toISOString()))(),
         };
         registry.artifacts = [...registry.artifacts, artifact];
         registryChanged = true;
-      } else if (computeChecksum(current.text) !== registered.checksum) {
+      } else if (computeChecksum(current) !== registered.checksum) {
         // Drift is only reported: the content is the other tool's (PR-002).
         result.drifted.push(sig.heading);
       }

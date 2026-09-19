@@ -27,16 +27,17 @@ describe("AC-133/AC-135 — disk presence is resolved by target, not by name", (
   });
 });
 
-describe("AC-136 — foreign content is compared by its heading, not by an anchor comment", () => {
-  // `readAnchor` looks for `<!-- foreign:<name>:start -->`, which a
-  // third-party skill never writes — comparing that way made every intact
-  // `foreign` artifact look divergent regardless of its actual checksum.
+describe("AC-136 — foreign content wrapped in its maestro anchor diagnoses like any other block", () => {
+  // Since relocateForeignSections now wraps every `## Agent skills` it sees
+  // in the standard `<!-- maestro:foreign:<name>:start/end -->` anchor, the
+  // generic readAnchor branch already covers the steady state.
   it("an intact foreign artifact, matching checksum, is not reported as divergent", () => {
     const sig = FOREIGN_SIGNATURES[0]!;
-    const content = `${sig.heading}\n\nsome third-party content.\n`;
-    const targetEnv = targetEnvFake({ "AGENTS.md": content });
+    const inner = `${sig.heading}\n\nsome third-party content.`;
+    const anchored = insertAnchor("", "foreign", sig.name, inner);
+    const targetEnv = targetEnvFake({ "AGENTS.md": anchored });
     const registry = registryFake([
-      { category: "foreign", name: sig.name, target: "AGENTS.md", origin: sig.origin, content, checksum: computeChecksum(content), createdAt: "2026-09-02T00:00:00.000Z" },
+      { category: "foreign", name: sig.name, target: "AGENTS.md", origin: sig.origin, content: inner, checksum: computeChecksum(inner), createdAt: "2026-09-02T00:00:00.000Z" },
     ]);
 
     const divergent = diagnoseExtensions(registry, targetEnv, []);
@@ -45,14 +46,30 @@ describe("AC-136 — foreign content is compared by its heading, not by an ancho
 
   it("a foreign artifact whose content actually changed is reported as divergent", () => {
     const sig = FOREIGN_SIGNATURES[0]!;
-    const original = `${sig.heading}\n\noriginal content.\n`;
-    const changed = `${sig.heading}\n\nchanged content.\n`;
-    const targetEnv = targetEnvFake({ "AGENTS.md": changed });
+    const original = `${sig.heading}\n\noriginal content.`;
+    const changed = `${sig.heading}\n\nchanged content.`;
+    const targetEnv = targetEnvFake({ "AGENTS.md": insertAnchor("", "foreign", sig.name, changed) });
     const registry = registryFake([
       { category: "foreign", name: sig.name, target: "AGENTS.md", origin: sig.origin, content: original, checksum: computeChecksum(original), createdAt: "2026-09-02T00:00:00.000Z" },
     ]);
 
     const divergent = diagnoseExtensions(registry, targetEnv, []);
     expect(divergent).toEqual([{ name: sig.name, target: "AGENTS.md", reason: "checksum-mismatch" }]);
+  });
+
+  // Transient state: a registration made before this anchor-wrapping existed
+  // (or the anchor was hand-removed) — the heading-based fallback still has
+  // to find it, so a stale artifact doesn't look divergent for no reason
+  // right up until the next `maestro setup` re-wraps it.
+  it("falls back to heading-based matching for content not yet wrapped in an anchor", () => {
+    const sig = FOREIGN_SIGNATURES[0]!;
+    const inner = `${sig.heading}\n\nsome third-party content.`;
+    const targetEnv = targetEnvFake({ "AGENTS.md": `${inner}\n` });
+    const registry = registryFake([
+      { category: "foreign", name: sig.name, target: "AGENTS.md", origin: sig.origin, content: inner, checksum: computeChecksum(inner), createdAt: "2026-09-02T00:00:00.000Z" },
+    ]);
+
+    const divergent = diagnoseExtensions(registry, targetEnv, []);
+    expect(divergent).toHaveLength(0);
   });
 });

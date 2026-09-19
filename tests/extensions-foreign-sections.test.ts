@@ -105,6 +105,48 @@ describe("AC-012 — seção já nascida em AGENTS.md também é registrada como
   });
 });
 
+describe("AC-013 — ## Agent skills fica envolta pelo anchor padrão do maestro em AGENTS.md", () => {
+  // Owner requirement: standardize on the same <!-- maestro:...:start/end -->
+  // convention every other managed block uses, whether the section was just
+  // moved from CLAUDE.md or was already sitting in AGENTS.md.
+  it("seção movida de CLAUDE.md fica com o anchor em AGENTS.md, sem anchor em CLAUDE.md", () => {
+    const root = project();
+    writeFileSync(resolve(root, "CLAUDE.md"), `# Projeto\n\n${AGENT_SKILLS_SECTION}`);
+    runSetup({ env: claudeEnv, root, write: true, ...opts });
+    const agents = read(root, "AGENTS.md");
+    const f = foreign(root)!;
+    expect(agents).toContain(`<!-- maestro:foreign:${f.name}:start -->`);
+    expect(agents).toContain(`<!-- maestro:foreign:${f.name}:end -->`);
+    expect(read(root, "CLAUDE.md")).not.toContain("maestro:foreign");
+  });
+
+  it("seção já nascida em AGENTS.md também recebe o anchor, no mesmo lugar do arquivo", () => {
+    const root = project();
+    writeFileSync(resolve(root, "AGENTS.md"), `## Outra coisa\n\nantes.\n\n${AGENT_SKILLS_SECTION}\n## Depois\n\ndepois.\n`);
+    runSetup({ env: claudeEnv, root, write: true, ...opts });
+    const agents = read(root, "AGENTS.md");
+    const f = foreign(root)!;
+    const start = `<!-- maestro:foreign:${f.name}:start -->`;
+    const end = `<!-- maestro:foreign:${f.name}:end -->`;
+    expect(agents).toContain(start);
+    expect(agents).toContain(end);
+    // Position preserved: still between "Outra coisa" and "Depois", not appended at the end.
+    expect(agents.indexOf("## Outra coisa")).toBeLessThan(agents.indexOf(start));
+    expect(agents.indexOf(end)).toBeLessThan(agents.indexOf("## Depois"));
+  });
+
+  it("uma segunda execução não duplica o anchor nem move a seção de novo", () => {
+    const root = project();
+    writeFileSync(resolve(root, "AGENTS.md"), `${AGENT_SKILLS_SECTION}`);
+    runSetup({ env: claudeEnv, root, write: true, ...opts });
+    const first = read(root, "AGENTS.md");
+    runSetup({ env: claudeEnv, root, write: true, ...opts });
+    const second = read(root, "AGENTS.md");
+    expect(second).toBe(first);
+    expect(count(second, "## Agent skills")).toBe(1);
+  });
+});
+
 describe("AC-011 — router instrui skills que editam CLAUDE.md", () => {
   // SPECSFY: US-002 FR-003 NFR-003 AC-011
   it("texto do router menciona AGENTS.md e @AGENTS.md", () => {
