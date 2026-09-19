@@ -54,7 +54,7 @@ if [ "$_is_setup_command" != "1" ]; then
   _skills_ok=0
   if [ -e "$PROJECT_DIR/AGENTS.md" ]; then
     if cat "$PROJECT_DIR/AGENTS.md" >/dev/null 2>&1; then
-      grep -q '^## Agent skills' "$PROJECT_DIR/AGENTS.md" 2>/dev/null && _skills_ok=1
+      grep -q '<!-- maestro:extension:agent-skills:start -->' "$PROJECT_DIR/AGENTS.md" 2>/dev/null && _skills_ok=1
     else
       _fail_open=1
     fi

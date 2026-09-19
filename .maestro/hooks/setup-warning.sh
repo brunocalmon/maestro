@@ -27,7 +27,7 @@ for _trace in PROJECT.md .specsfy/STACK.md .specsfy/RULES.md .specsfy/USER-PROFI
 done
 
 if [ -e "$PROJECT_DIR/AGENTS.md" ]; then
-  grep -q '^## Agent skills' "$PROJECT_DIR/AGENTS.md" 2>/dev/null && _skills_ok=1
+  grep -q '<!-- maestro:extension:agent-skills:start -->' "$PROJECT_DIR/AGENTS.md" 2>/dev/null && _skills_ok=1
 fi
 
 # Build warning message based on what's incomplete
