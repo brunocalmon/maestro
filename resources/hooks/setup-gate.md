@@ -35,6 +35,17 @@ turn the block off without touching any of this file — it only adds a
 `conversationalGateDeferral` entry to `.maestro/install.json` that this hook
 compares against today's configuration contract hash.
 
+Only the exact command that *starts* `specsfy-setup` or
+`setup-matt-pocock-skills` was ever on the allowlist — every reply the
+person then typed back to that skill's own numbered questions ("1", "Avançar",
+free text) was an ordinary prompt to this hook, and got denied mid-flow,
+breaking the very skill the block exists to push someone toward. A
+per-session marker file, written the moment the start command is seen and
+read (never trusted blindly) on every later prompt, keeps the gate open for
+the rest of that flow without weakening the gate itself: a new session still
+opens locked, and this session stops trusting the marker the instant the
+real traces show configuration finished (SPEC-0026 follow-up).
+
 ## Script
 
 ```sh
@@ -43,6 +54,15 @@ case "$HOOK_PROMPT" in
   "/specsfy-setup"|"/specsfy-setup "*|"/setup-matt-pocock-skills"|"/setup-matt-pocock-skills "*)
     _is_setup_command=1 ;;
 esac
+
+_setup_marker=""
+[ -n "$HOOK_SESSION" ] && _setup_marker="$PROJECT_DIR/.maestro/state/setup-in-progress-${HOOK_SESSION}"
+if [ "$_is_setup_command" = "1" ] && [ -n "$_setup_marker" ]; then
+  mkdir -p "$(dirname "$_setup_marker")" 2>/dev/null
+  : > "$_setup_marker" 2>/dev/null
+fi
+_in_setup_flow=0
+[ -n "$_setup_marker" ] && [ -f "$_setup_marker" ] && _in_setup_flow=1
 
 if [ "$_is_setup_command" != "1" ]; then
   _fail_open=0
@@ -72,7 +92,13 @@ if [ "$_is_setup_command" != "1" ]; then
     fi
   fi
 
-  if [ "$_fail_open" != "1" ] && { [ "$_specsfy_ok" != "1" ] || [ "$_skills_ok" != "1" ]; }; then
+  # Configuration finished: stop trusting the marker so a later abandoned
+  # setup in the same session goes back through the normal live check.
+  if [ "$_specsfy_ok" = "1" ] && [ "$_skills_ok" = "1" ] && [ -n "$_setup_marker" ] && [ -f "$_setup_marker" ]; then
+    rm -f "$_setup_marker" 2>/dev/null
+  fi
+
+  if [ "$_in_setup_flow" != "1" ] && [ "$_fail_open" != "1" ] && { [ "$_specsfy_ok" != "1" ] || [ "$_skills_ok" != "1" ]; }; then
     # Same material as `configurationContractId` in src/setup/defer.ts — keep
     # the two in sync if SPECSFY_SETUP_TRACES or AGENT_SKILLS_HEADING change.
     _contract_material='PROJECT.md

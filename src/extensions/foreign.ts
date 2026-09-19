@@ -77,13 +77,6 @@ export function relocateForeignSections(envs: { registryEnv: ChecksumEnvironment
         agentsChanged = true;
         claude = removeRange(claude, inClaude.from, inClaude.to);
         claudeChanged = true;
-        const artifact: ExtensionArtifact = {
-          category: "foreign", name: sig.name, target: "AGENTS.md", origin: sig.origin,
-          content: inClaude.text, checksum: computeChecksum(inClaude.text),
-          createdAt: (envs.now ?? (() => new Date().toISOString()))(),
-        };
-        registry.artifacts = registered ? registry.artifacts.map((a) => (a === registered ? artifact : a)) : [...registry.artifacts, artifact];
-        registryChanged = true;
         result.moved.push(sig.heading);
       } else if (inAgents.text.trim() === inClaude.text.trim()) {
         claude = removeRange(claude, inClaude.from, inClaude.to);
@@ -94,9 +87,27 @@ export function relocateForeignSections(envs: { registryEnv: ChecksumEnvironment
       }
     }
 
-    // Drift is only reported: the content is the other tool's (PR-002).
+    // Whatever ended up in AGENTS.md — moved here just now, already there
+    // from a prior run, or written there directly because CLAUDE.md didn't
+    // exist yet when the third-party skill ran — must be tracked so drift
+    // has something to compare against. Without this, content that never
+    // touched CLAUDE.md (the common case) was silently never registered,
+    // and `drifted` could never fire for it (SPEC-0024 gap).
     const current = extractSection(agents, sig.heading);
-    if (registered && current && computeChecksum(current.text) !== registered.checksum) result.drifted.push(sig.heading);
+    if (current) {
+      if (!registered) {
+        const artifact: ExtensionArtifact = {
+          category: "foreign", name: sig.name, target: "AGENTS.md", origin: sig.origin,
+          content: current.text, checksum: computeChecksum(current.text),
+          createdAt: (envs.now ?? (() => new Date().toISOString()))(),
+        };
+        registry.artifacts = [...registry.artifacts, artifact];
+        registryChanged = true;
+      } else if (computeChecksum(current.text) !== registered.checksum) {
+        // Drift is only reported: the content is the other tool's (PR-002).
+        result.drifted.push(sig.heading);
+      }
+    }
   }
 
   if (claudeChanged) envs.targetEnv.write(claudePath, claude);

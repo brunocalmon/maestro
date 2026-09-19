@@ -69,6 +69,42 @@ describe("AC-010 — só assinaturas conhecidas são movidas; duplicata idêntic
   });
 });
 
+describe("AC-012 — seção já nascida em AGENTS.md também é registrada como foreign", () => {
+  // Content that never touched CLAUDE.md (e.g. CLAUDE.md didn't exist yet
+  // when setup-matt-pocock-skills ran) must still be tracked, or drift can
+  // never be detected for the common case.
+  it("registra o artefato mesmo sem nenhum conteúdo em CLAUDE.md", () => {
+    const root = project();
+    writeFileSync(resolve(root, "AGENTS.md"), `${AGENT_SKILLS_SECTION}`);
+    runSetup({ env: claudeEnv, root, write: true, ...opts });
+    const f = foreign(root);
+    expect(f).toBeDefined();
+    expect(f!.origin).toBe("mattpocock/skills");
+    expect(f!.target).toBe("AGENTS.md");
+    expect(f!.checksum).toBe(computeChecksum(f!.content));
+    expect(f!.content.trim()).toBe(AGENT_SKILLS_SECTION.trim());
+  });
+
+  it("dedupe também registra o artefato", () => {
+    const root = project();
+    writeFileSync(resolve(root, "AGENTS.md"), `${AGENT_SKILLS_SECTION}`);
+    writeFileSync(resolve(root, "CLAUDE.md"), `${AGENT_SKILLS_SECTION}`);
+    runSetup({ env: claudeEnv, root, write: true, ...opts });
+    expect(foreign(root)).toBeDefined();
+  });
+
+  it("uma vez registrado, mudança no conteúdo é relatada como drift, nunca sobrescrita", () => {
+    const root = project();
+    writeFileSync(resolve(root, "AGENTS.md"), `${AGENT_SKILLS_SECTION}`);
+    runSetup({ env: claudeEnv, root, write: true, ...opts });
+    const before = foreign(root)!.checksum;
+    writeFileSync(resolve(root, "AGENTS.md"), read(root, "AGENTS.md").replace("Issues live in GitHub.", "Issues live in Linear."));
+    const result = runSetup({ env: claudeEnv, root, write: true, ...opts });
+    expect(foreign(root)!.checksum).toBe(before);
+    expect(result.report).toMatch(/foreign|terceiro/i);
+  });
+});
+
 describe("AC-011 — router instrui skills que editam CLAUDE.md", () => {
   // SPECSFY: US-002 FR-003 NFR-003 AC-011
   it("texto do router menciona AGENTS.md e @AGENTS.md", () => {

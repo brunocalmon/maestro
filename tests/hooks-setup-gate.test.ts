@@ -1,8 +1,8 @@
 import { describe, it, expect, afterEach } from "vitest";
-import { mkdirSync, writeFileSync, chmodSync } from "node:fs";
+import { existsSync, mkdirSync, writeFileSync, chmodSync } from "node:fs";
 import { resolve } from "node:path";
 import { project as freshProject } from "./helpers-spec-0022";
-import { scriptFor, runScript } from "./helpers-spec-0023";
+import { scriptFor, runScript, stateFile } from "./helpers-spec-0023";
 
 /** Writes the 4 traces `specsfy-setup` leaves behind (SPEC-0025, SPECSFY_SETUP_TRACES). */
 function withSpecsfyTraces(root: string): void {
@@ -152,6 +152,53 @@ describe("NFR-001 — checagem ao vivo custa menos de 50ms de execução de shel
     const r = runScript(script, promptEvent("qualquer mensagem", root), root);
     expect(r.status).toBe(0);
     expect(r.ms).toBeLessThan(50);
+  });
+});
+
+describe("AC-020 — respostas dentro de um fluxo de setup já iniciado não são bloqueadas", () => {
+  it("libera uma resposta numerada logo após /specsfy-setup, na mesma sessão", () => {
+    const root = freshProject();
+    const script = scriptFor("setup-gate");
+    const started = runScript(script, promptEvent("/specsfy-setup", root), root);
+    expect(started.status).toBe(0);
+    const reply = runScript(script, promptEvent("1", root), root);
+    expect(reply.status).toBe(0);
+  });
+
+  it("libera várias respostas seguidas dentro do mesmo fluxo, mesmo sem nenhum traço ainda", () => {
+    const root = freshProject();
+    const script = scriptFor("setup-gate");
+    runScript(script, promptEvent("/setup-matt-pocock-skills", root), root);
+    const r1 = runScript(script, promptEvent("1. GitHub", root), root);
+    const r2 = runScript(script, promptEvent("Avançar", root), root);
+    expect(r1.status).toBe(0);
+    expect(r2.status).toBe(0);
+  });
+
+  it("uma sessão nova continua bloqueada mesmo que outra sessão tenha iniciado o setup", () => {
+    const root = freshProject();
+    const script = scriptFor("setup-gate");
+    runScript(script, { session_id: "s-abandoned", prompt: "/specsfy-setup", cwd: root }, root);
+    const r = runScript(script, { session_id: "s-new", prompt: "segue com outra coisa", cwd: root }, root);
+    expect(r.status).toBe(2);
+  });
+
+  it("mensagem fora do fluxo, sem nunca ter rodado o comando de setup, continua bloqueada", () => {
+    const root = freshProject();
+    const script = scriptFor("setup-gate");
+    const r = runScript(script, promptEvent("conserta esse bug", root), root);
+    expect(r.status).toBe(2);
+  });
+
+  it("o marcador é limpo assim que a configuração completa, dentro da mesma sessão", () => {
+    const root = freshProject();
+    const script = scriptFor("setup-gate");
+    runScript(script, promptEvent("/specsfy-setup", root), root);
+    expect(existsSync(stateFile(root, "setup-in-progress-s-test"))).toBe(true);
+    withSpecsfyTraces(root);
+    withAgentSkillsSection(root);
+    runScript(script, promptEvent("terminei", root), root);
+    expect(existsSync(stateFile(root, "setup-in-progress-s-test"))).toBe(false);
   });
 });
 

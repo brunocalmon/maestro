@@ -1,4 +1,0 @@
-setup:
-  suppress_warnings:
-    specsfy: false
-    matt_pocock: false
