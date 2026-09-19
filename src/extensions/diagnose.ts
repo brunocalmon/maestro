@@ -2,6 +2,7 @@ import type { ExtensionRegistry } from "./registry.js";
 import type { TargetFileEnvironment } from "./create.js";
 import { resolveTargetPath } from "./create.js";
 import { readAnchor, computeChecksum } from "./anchor.js";
+import { extractSection, FOREIGN_SIGNATURES } from "./foreign.js";
 
 export interface DivergentArtifact {
   name: string;
@@ -32,9 +33,21 @@ export function diagnoseExtensions(
     // through `resolveTargetPath` as before.
     const path = artifact.category === "hook" ? artifact.target : resolveTargetPath(artifact.target);
     // A hook script (SPEC-0022) is the whole file, not an anchored block.
-    const realContent = artifact.category === "hook"
-      ? (targetEnv.read(path) || null)
-      : readAnchor(targetEnv.read(path), artifact.category, artifact.name);
+    // Foreign content (SPEC-0024) is recognized by its heading text, not an
+    // anchor comment — the third-party skill that writes it doesn't know the
+    // maestro's `<!-- category:name:start -->` syntax, so `readAnchor` never
+    // finds it there and every registered `foreign` artifact looked
+    // divergent on every `doctor` run, checksum match or not.
+    let realContent: string | null;
+    if (artifact.category === "hook") {
+      realContent = targetEnv.read(path) || null;
+    } else if (artifact.category === "foreign") {
+      const sig = FOREIGN_SIGNATURES.find((s) => s.name === artifact.name);
+      const section = sig ? extractSection(targetEnv.read(path), sig.heading) : null;
+      realContent = section ? section.text : null;
+    } else {
+      realContent = readAnchor(targetEnv.read(path), artifact.category, artifact.name);
+    }
     const realChecksum = realContent === null ? null : computeChecksum(realContent);
     if (realChecksum !== artifact.checksum) {
       divergent.push({ name: artifact.name, target: artifact.target, reason: "checksum-mismatch" });
