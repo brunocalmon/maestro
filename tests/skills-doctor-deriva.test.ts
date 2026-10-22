@@ -18,20 +18,20 @@ function divergentProject(): { root: string; missing: string } {
 }
 
 describe("AC-025 — content changed after installation", () => {
-  // SPECSFY: US-021 FR-024 AC-025
+  // TRACEABILITY: US-021 FR-024 AC-025
   it("names the divergent set", () => {
     const { root, missing } = divergentProject();
     const diverged = reportSkills(root).results.filter((r) => r.diverged).map((r) => r.name);
     expect(diverged).toContain(missing);
   });
 
-  // SPECSFY: US-021 FR-024 AC-025
+  // TRACEABILITY: US-021 FR-024 AC-025
   it("exits with a non-zero code", () => {
     const { root } = divergentProject();
     expect(reportSkills(root).exitCode).not.toBe(0);
   });
 
-  // SPECSFY: US-021 NFR-020 AC-025
+  // TRACEABILITY: US-021 NFR-020 AC-025
   it("no file is created, changed or removed", () => {
     const { root } = divergentProject();
     const before = fileTree(root);

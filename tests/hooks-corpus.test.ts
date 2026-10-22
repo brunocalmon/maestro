@@ -8,17 +8,17 @@ const CORPUS = resolve(__dirname, "../resources/hooks");
 const names = () =>
   readdirSync(CORPUS).filter((f) => f.endsWith(".md") && f !== "README.md").map((f) => f.slice(0, -3));
 
-describe("AC-013 — the seven real hooks survive the round trip", () => {
-  // SPECSFY: US-002 FR-005 AC-013
+describe("AC-013 — the eight remaining hooks survive the round trip", () => {
+  // TRACEABILITY: US-002 FR-005 AC-013
   it("finds exactly the ported hooks", () => {
     // SPEC-0022 replaced the three context-mode Markdown hooks by the upstream
     // projection; SPEC-0023 added guard-docs, graph-hint and code-review-graph-stop;
     // SPEC-0024 added skills-project and skills-project-session; SPEC-0026
     // added setup-gate and guard-defer-conversational.
-    expect(names()).toHaveLength(12);
+    expect(names()).toHaveLength(8);
   });
 
-  // SPECSFY: US-002 FR-002 NFR-003 AC-013
+  // TRACEABILITY: US-002 FR-002 NFR-003 AC-013
   it("recovers the seven scripts identical to the originals", () => {
     // SPEC-0022: the settings entry now carries a reference to the script
     // file; the round trip is checked on the script body itself.
@@ -30,7 +30,7 @@ describe("AC-013 — the seven real hooks survive the round trip", () => {
     }
   });
 
-  // SPECSFY: US-002 FR-002 NFR-003 AC-013
+  // TRACEABILITY: US-002 FR-002 NFR-003 AC-013
   it("preserves the count of hostile characters in each one", () => {
     const hostile = (s: string) => (s.match(/["'\\$]/g) ?? []).length;
     for (const n of names()) {
@@ -43,7 +43,7 @@ describe("AC-013 — the seven real hooks survive the round trip", () => {
 });
 
 describe("AC-021 (SPEC-0022) — round-trip do fragmento é fiel byte a byte", () => {
-  // SPECSFY: NFR-003 FR-002 FR-005 AC-021
+  // TRACEABILITY: NFR-003 FR-002 FR-005 AC-021
   it("scripts recuperam o bloco original; despachos não recebem wrapper", () => {
     for (const n of names()) {
       const original = readHook(readFileSync(resolve(CORPUS, `${n}.md`), "utf8"));

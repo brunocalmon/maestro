@@ -5,7 +5,7 @@ const BASE = "# padrão\nApresente o plano antes de executar.";
 const files = { ".maestro/subagents/maestro/behavior.md": BASE, ".maestro/subagents/git/behavior.md": "# git\nSó mexe em git." };
 
 describe("AC-007 — o briefing traz o comportamento já composto", () => {
-  // SPECSFY: US-001 FR-003 NFR-001 AC-007
+  // TRACEABILITY: US-001 FR-003 NFR-001 AC-007
   it("contém o texto, não o caminho", async () => {
     const { buildBriefs } = await import("../src/delegation/brief");
     const config = { maestro: profile("maestro", { behavior: ".maestro/subagents/maestro/behavior.md" }), subagents: [] };
@@ -18,24 +18,24 @@ describe("AC-007 — o briefing traz o comportamento já composto", () => {
 });
 
 describe("AC-008 — o briefing declara capacidades e modelo", () => {
-  // SPECSFY: US-001 FR-003 NFR-001 AC-008
+  // TRACEABILITY: US-001 FR-003 NFR-001 AC-008
   it("nomeia o modelo do plano e lista skills e tools", async () => {
     const { buildBriefs, renderBriefs } = await import("../src/delegation/brief");
     const config = {
-      maestro: profile("maestro", { skills: [".agents/skills/specsfy-05-tasks"], tools: ["Read", "Bash"] }),
+      maestro: profile("maestro", { skills: [".agents/skills/framework-05-tasks"], tools: ["Read", "Bash"] }),
       subagents: [],
     };
 
     const text = renderBriefs(buildBriefs(plan([{ profile: "maestro", model: "qwen3:8b", runtime: "native" }]), config, reader(files), BASE));
 
     expect(text).toContain("qwen3:8b");
-    expect(text).toContain("specsfy-05-tasks");
+    expect(text).toContain("framework-05-tasks");
     expect(text).toContain("Bash");
   });
 });
 
 describe("AC-009 — um briefing por agente planejado", () => {
-  // SPECSFY: US-001 FR-003 NFR-001 AC-009
+  // TRACEABILITY: US-001 FR-003 NFR-001 AC-009
   it("plano com dois agentes gera dois blocos, cada um nomeando seu perfil", async () => {
     const { buildBriefs, renderBriefs } = await import("../src/delegation/brief");
     const config = { maestro: profile("maestro"), subagents: [profile("git", { behavior: ".maestro/subagents/git/behavior.md" })] };

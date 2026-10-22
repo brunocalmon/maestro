@@ -6,12 +6,12 @@ import { toRecordEntries, readLock } from "../src/skills/record";
 import { projectWithSkills, writeLock, MATTPOCOCK_SET } from "./skills-fixtures";
 
 describe("AC-034 — the source written in the record is the official one", () => {
-  // SPECSFY: US-021 FR-025 AC-034
+  // TRACEABILITY: US-021 FR-025 AC-034
   it("the official source is accepted", () => {
     expect(resolveSource(OFFICIAL_SOURCE).ok).toBe(true);
   });
 
-  // SPECSFY: US-021 FR-023 AC-034
+  // TRACEABILITY: US-021 FR-023 AC-034
   it("the record's entries carry the source read from the lockfile", () => {
     const root = projectWithSkills();
     writeLock(root, MATTPOCOCK_SET);
@@ -20,7 +20,7 @@ describe("AC-034 — the source written in the record is the official one", () =
     for (const e of entries) expect(e.source).toBe(OFFICIAL_SOURCE);
   });
 
-  // SPECSFY: US-021 FR-023 FR-025 AC-034
+  // TRACEABILITY: US-021 FR-023 FR-025 AC-034
   it("no other source appears in the record", () => {
     const root = projectWithSkills();
     writeLock(root, MATTPOCOCK_SET);

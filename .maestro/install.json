@@ -34,16 +34,6 @@
       "path": ".maestro/hooks/graph-hint.sh"
     },
     {
-      "name": "guard-defer-conversational",
-      "target": ".claude/settings.json",
-      "version": "2.1.34",
-      "installedAt": "2026-09-19T21:54:31.719Z",
-      "event": "PreToolUse",
-      "kind": "script",
-      "canonicalEvent": "before-tool",
-      "path": ".maestro/hooks/guard-defer-conversational.sh"
-    },
-    {
       "name": "guard-destructive",
       "target": ".claude/settings.json",
       "version": "2.1.34",
@@ -52,16 +42,6 @@
       "kind": "script",
       "canonicalEvent": "before-shell",
       "path": ".maestro/hooks/guard-destructive.sh"
-    },
-    {
-      "name": "guard-docs",
-      "target": ".claude/settings.json",
-      "version": "2.1.34",
-      "installedAt": "2026-09-19T21:54:31.719Z",
-      "event": "PreToolUse",
-      "kind": "script",
-      "canonicalEvent": "before-tool",
-      "path": ".maestro/hooks/guard-docs.sh"
     },
     {
       "name": "guard-secrets",
@@ -82,26 +62,6 @@
       "kind": "script",
       "canonicalEvent": "before-shell",
       "path": ".maestro/hooks/protect-authorship.sh"
-    },
-    {
-      "name": "setup-check",
-      "target": ".claude/settings.json",
-      "version": "2.1.34",
-      "installedAt": "2026-09-19T21:54:31.719Z",
-      "event": "SessionStart",
-      "kind": "script",
-      "canonicalEvent": "session-start",
-      "path": ".maestro/hooks/setup-check.sh"
-    },
-    {
-      "name": "setup-gate",
-      "target": ".claude/settings.json",
-      "version": "2.1.34",
-      "installedAt": "2026-09-19T21:54:31.719Z",
-      "event": "UserPromptSubmit",
-      "kind": "script",
-      "canonicalEvent": "on-prompt",
-      "path": ".maestro/hooks/setup-gate.sh"
     },
     {
       "name": "skills-project-session",
@@ -466,69 +426,6 @@
       "installedAt": "2026-09-19T21:54:31.719Z"
     },
     {
-      "name": "specsfy-02-backlog",
-      "source": "../../../../tmp/specsfy-install-S6jgg0/checkout/skills",
-      "sourceType": "local",
-      "computedHash": "fee2d9aaf1a2c581031c89eca17b7c82a88fce0dfd279b36e1262a626ba13884",
-      "installedAt": "2026-09-19T21:54:31.719Z"
-    },
-    {
-      "name": "specsfy-03-specify",
-      "source": "../../../../tmp/specsfy-install-S6jgg0/checkout/skills",
-      "sourceType": "local",
-      "computedHash": "64b416da2adf128af6c4dae1c060203eea3d955b2e6faa2c77c2e82676db977e",
-      "installedAt": "2026-09-19T21:54:31.719Z"
-    },
-    {
-      "name": "specsfy-04-validate",
-      "source": "../../../../tmp/specsfy-install-xnoam8/checkout/skills",
-      "sourceType": "local",
-      "computedHash": "b0b6185e933fbe70eaa9347de3c65f84fccf2ba716418ecbd9bb854106f8b1a9",
-      "installedAt": "2026-09-19T21:54:31.719Z"
-    },
-    {
-      "name": "specsfy-05-tasks",
-      "source": "../../../../tmp/specsfy-install-xnoam8/checkout/skills",
-      "sourceType": "local",
-      "computedHash": "7ddeaff4d2fb1ba956f15fb2cf532b469b103012149bc7a96e243ee1ed179690",
-      "installedAt": "2026-09-19T21:54:31.719Z"
-    },
-    {
-      "name": "specsfy-06-tdd-bdd",
-      "source": "../../../../tmp/specsfy-install-xnoam8/checkout/skills",
-      "sourceType": "local",
-      "computedHash": "efcc6adbfca283e225052694b181b626f249c9e7dbbb7b6df1e887fa3051e49a",
-      "installedAt": "2026-09-19T21:54:31.719Z"
-    },
-    {
-      "name": "specsfy-07-implement",
-      "source": "../../../../tmp/specsfy-install-xnoam8/checkout/skills",
-      "sourceType": "local",
-      "computedHash": "2f9adaef1e00aea2bad4f4f3cf1bcc19b76f8e48abd6f2a5cea74f9bee52d3a7",
-      "installedAt": "2026-09-19T21:54:31.719Z"
-    },
-    {
-      "name": "specsfy-data-discovery",
-      "source": "../../../../tmp/specsfy-install-S6jgg0/checkout/skills",
-      "sourceType": "local",
-      "computedHash": "6519b7fee099658fd73adaf28db363769f808c29f08cfae8ff4df3add7d2009f",
-      "installedAt": "2026-09-19T21:54:31.719Z"
-    },
-    {
-      "name": "specsfy-mvp-milestone-interviewer",
-      "source": "../../../../tmp/specsfy-install-S6jgg0/checkout/skills",
-      "sourceType": "local",
-      "computedHash": "b6736de90add5d231901c698d54c97600142e0ed0245b430f99bedaf8f250fb7",
-      "installedAt": "2026-09-19T21:54:31.719Z"
-    },
-    {
-      "name": "specsfy-setup",
-      "source": "../../../../tmp/specsfy-install-xnoam8/checkout/skills",
-      "sourceType": "local",
-      "computedHash": "a1391b1cf541fcb14f6034755556ddeb71beb84ddde85ca2ced3e741603c34ad",
-      "installedAt": "2026-09-19T21:54:31.719Z"
-    },
-    {
       "name": "tdd",
       "source": "mattpocock/skills",
       "sourceType": "github",
@@ -741,86 +638,6 @@
     {
       "name": "setup-ts-deep-modules",
       "checksum": "12ec6066097949fefa9918ffdfe28b7133a82dade54b1b2b4c5c59d8f51540ab"
-    },
-    {
-      "name": "specsfy-01-inbox",
-      "checksum": "16f978ca04dd8499aaece9100c6ca152395cd3aeac4f5386a16fcf2d4be5a96f"
-    },
-    {
-      "name": "specsfy-02-backlog",
-      "checksum": "89af6245b7f5712dee2b49aeed5453f94853c96ef29f9dcb1ebde0005024b74b"
-    },
-    {
-      "name": "specsfy-03-specify",
-      "checksum": "3bf9f127d75c3d21bcfe2c20914e690f9469946b947783e6ea951e55ff122029"
-    },
-    {
-      "name": "specsfy-04-validate",
-      "checksum": "5e2f77c335ed75f2fe761f06f4f27d9cdee67061d25a01bf77f4650579445b57"
-    },
-    {
-      "name": "specsfy-05-tasks",
-      "checksum": "5d38bd591274cd7a221470024e2558384b2a2b0855560e62b1aa137706c6dc7f"
-    },
-    {
-      "name": "specsfy-06-tdd-bdd",
-      "checksum": "e541f5e91d6db3e486c008a35bc74de4538895f5b82b9023476ae014dc57c657"
-    },
-    {
-      "name": "specsfy-07-implement",
-      "checksum": "e25dafabe2579fbf4c25d5fb4c2bff0b8855dd7e9f081fa4aac0b29f10c023ef"
-    },
-    {
-      "name": "specsfy-aux-database",
-      "checksum": "25e52ac4c021e4ffbdfcc70d90117fccb33a9b594e42ad578292dea8584eb68a"
-    },
-    {
-      "name": "specsfy-aux-rules",
-      "checksum": "dca2b437f6977c90ff64ad315307201660b0e7b0179a35f8f40daf404d3b454c"
-    },
-    {
-      "name": "specsfy-aux-stack",
-      "checksum": "d634ef13979d71df1a6fbca26024474e2e935ad09c4423021f3548d532996424"
-    },
-    {
-      "name": "specsfy-data-discovery",
-      "checksum": "ba50c7a8611840b6adc9bd04cb46c8e822ca00ef0fb844d01c96837084536546"
-    },
-    {
-      "name": "specsfy-documentator",
-      "checksum": "129d9b179788b3b7b3274ee96490cde15e9d9426317cbb78be8445fdc9907cf7"
-    },
-    {
-      "name": "specsfy-interviewer",
-      "checksum": "0463f0292b2156f7dc590146533eca5cb8c8f38c38c1220543c460a96eee0203"
-    },
-    {
-      "name": "specsfy-milestone-governor",
-      "checksum": "33bcaafaffcb1d7743b2b0c528c24b5d83bb74c378e11640d4571884e11f3147"
-    },
-    {
-      "name": "specsfy-mvp-milestone-interviewer",
-      "checksum": "a0fd6419dfa4f5bcf6e0060b8256cd4ed2ea8c13d2f5e263ffa00d1f3f6ae7e6"
-    },
-    {
-      "name": "specsfy-progress",
-      "checksum": "3a6bd9cb2993f84b7418bee6e5f18f3874626a943009adbb4f285b37e2fe7f7c"
-    },
-    {
-      "name": "specsfy-roadmap-milestone-interviewer",
-      "checksum": "82dbdf5f6f9ad92cac38a40f3c300c66b9e80bfe703e08995c88103289c8fe2f"
-    },
-    {
-      "name": "specsfy-setup",
-      "checksum": "6208bd3b61f0f28a0c551f0ce847221d73e5ae21f7f9bc1602b17dd56bd17158"
-    },
-    {
-      "name": "specsfy-specialist-docker",
-      "checksum": "7f0c595ed471cd45428fc074266082a5332904d027f9ec93213de0d5a2c1d09d"
-    },
-    {
-      "name": "specsfy-update-spec",
-      "checksum": "84e9525cbdcf1882bbc3ee108cd46a5bc7911982296346ef49ada7e4217de33f"
     },
     {
       "name": "tdd",

@@ -6,7 +6,7 @@ import { claudeEnv, project } from "./helpers-spec-0022";
 import { scriptFor, runScript, gitRepo, fakeCrg, stateFile } from "./helpers-spec-0023";
 
 describe("AC-021 — estado por sessão fica em .maestro/state/ e é ignorado pelo git", () => {
-  // SPECSFY: FR-007 NFR-001 NFR-003 AC-021
+  // TRACEABILITY: FR-007 NFR-001 NFR-003 AC-021
   it("setup cria a pasta e a linha única no .gitignore, idempotente", () => {
     const root = project();
     writeFileSync(resolve(root, ".gitignore"), "node_modules/\n");
@@ -23,7 +23,7 @@ describe("AC-021 — estado por sessão fica em .maestro/state/ e é ignorado pe
 });
 
 describe("AC-022 — estado não gravável não bloqueia os hooks", () => {
-  // SPECSFY: FR-007 FR-003 FR-004 AC-022
+  // TRACEABILITY: FR-007 FR-003 FR-004 AC-022
   it("update executa sempre e a dica é emitida quando .maestro/state/ é somente leitura", () => {
     const root = gitRepo();
     const crg = fakeCrg();

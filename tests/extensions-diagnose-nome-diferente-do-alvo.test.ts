@@ -5,7 +5,7 @@ import { computeChecksum, insertAnchor } from "../src/extensions/anchor";
 import { FOREIGN_SIGNATURES } from "../src/extensions/foreign";
 
 describe("AC-133/AC-135 — disk presence is resolved by target, not by name", () => {
-  // SPECSFY: US-081 FR-083 NFR-080 NFR-082 AC-133 AC-135
+  // TRACEABILITY: US-081 FR-083 NFR-080 NFR-082 AC-133 AC-135
   it("an intact artifact whose name differs from its target isn't falsely reported as an orphan", () => {
     const content = "# original content";
     const anchored = insertAnchor("", "extension", "my-extension", content);

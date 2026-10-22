@@ -7,17 +7,17 @@ const manifest = () => JSON.parse(readFileSync(resolve(ROOT, "package.json"), "u
 const scriptPath = resolve(ROOT, "scripts", "cycle.mjs");
 
 describe("AC-011 — a freshly obtained clone goes green with one command", () => {
-  // SPECSFY: US-001 FR-003 FR-007 AC-011
+  // TRACEABILITY: US-001 FR-003 FR-007 AC-011
   it("exposes the verify script in the manifest", () => {
     expect(manifest().scripts?.verify).toBeDefined();
   });
 
-  // SPECSFY: US-001 FR-007 AC-011
+  // TRACEABILITY: US-001 FR-007 AC-011
   it("points verify at the cycle runner", () => {
     expect(String(manifest().scripts.verify)).toContain("cycle.mjs");
   });
 
-  // SPECSFY: US-001 FR-007 AC-011
+  // TRACEABILITY: US-001 FR-007 AC-011
   it("has the cycle runner present in the repository", () => {
     expect(existsSync(scriptPath)).toBe(true);
   });

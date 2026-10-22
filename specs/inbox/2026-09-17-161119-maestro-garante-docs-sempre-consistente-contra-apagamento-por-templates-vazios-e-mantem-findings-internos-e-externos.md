@@ -15,7 +15,7 @@
 
 ## Texto original
 
-o specsfy cria o docs, e lembro que por algum motivo ele fica apagando tudo que tenho ali com templates vazios, não sei se isso é bug ou quê, mas eu quero que o maestro resolva isso e garanta que o ./docs esteja sempre consistente e atualizado sem permitir que algum bug (se for bug) do specsfy ou matt_pocock estrague isso, se for bug, documente isso como findings, eu quero findings internos para relativos ao maestro e externo par arelativos a dependencia externas, que dependerão de um PR upstream no repositorio alvo, sempre que algo for achado deve ser doucmentado e mantido, e quando identificado o fix, removido, ou arquivado em archived dentro de fidings.
+o framework cria o docs, e lembro que por algum motivo ele fica apagando tudo que tenho ali com templates vazios, não sei se isso é bug ou quê, mas eu quero que o maestro resolva isso e garanta que o ./docs esteja sempre consistente e atualizado sem permitir que algum bug (se for bug) do framework ou matt_pocock estrague isso, se for bug, documente isso como findings, eu quero findings internos para relativos ao maestro e externo par arelativos a dependencia externas, que dependerão de um PR upstream no repositorio alvo, sempre que algo for achado deve ser doucmentado e mantido, e quando identificado o fix, removido, ou arquivado em archived dentro de fidings.
 
 ## Contexto consultado
 
@@ -23,17 +23,17 @@ Nenhuma fonte contextual consultada.
 
 ## Resumo processado
 
-**Inferência:** O maestro deve garantir que ./docs fique sempre consistente e atualizado, impedindo que um bug do Specsfy ou do matt-pocock apague conteúdo real com templates vazios, e manter um registro de findings separados em internos (maestro) e externos (dependências, resolvidos por PR upstream), removidos ou arquivados quando corrigidos.
+**Inferência:** O maestro deve garantir que ./docs fique sempre consistente e atualizado, impedindo que um bug do former project tool ou do matt-pocock apague conteúdo real com templates vazios, e manter um registro de findings separados em internos (maestro) e externos (dependências, resolvidos por PR upstream), removidos ou arquivados quando corrigidos.
 
 ## Análise inicial
 
 ### Problema ou oportunidade
 
-**Declaração ou inferência identificada:** Observado hoje (2026-09-17): o script mecânico build_documentation.mjs do specsfy-documentator substitui o conteúdo real de docs/*.md e .specsfy/PACKAGES.md por um esqueleto em português (858 inserções / 787 remoções num único --project .), e o --check acusa docs desatualizado por comparação com o esqueleto, não com o código; o mesmo achado já está registrado como R-001 da SPEC-0021. Não existe hoje no maestro um lugar para registrar, manter e arquivar findings sobre o próprio maestro nem sobre dependências externas.
+**Declaração ou inferência identificada:** Observado hoje (2026-09-17): o script mecânico build_documentation.mjs do framework-documentator substitui o conteúdo real de docs/*.md e .project-context/PACKAGES.md por um esqueleto em português (858 inserções / 787 remoções num único --project .), e o --check acusa docs desatualizado por comparação com o esqueleto, não com o código; o mesmo achado já está registrado como R-001 da SPEC-0021. Não existe hoje no maestro um lugar para registrar, manter e arquivar findings sobre o próprio maestro nem sobre dependências externas.
 
 ### Pessoas afetadas ou beneficiadas
 
-**Declaração ou inferência identificada:** O mantenedor do maestro e qualquer projeto consumidor que use o specsfy-documentator ou skills do matt-pocock que editam docs/README.
+**Declaração ou inferência identificada:** O mantenedor do maestro e qualquer projeto consumidor que use o framework-documentator ou skills do matt-pocock que editam docs/README.
 
 ### Resultado ou valor esperado
 
@@ -41,7 +41,7 @@ Nenhuma fonte contextual consultada.
 
 ### Sinais de escopo, regras ou solução
 
-**Sinais extraídos, não decisões:** Declaração: o maestro deve resolver e garantir docs consistente e atualizado, sem permitir que bug do specsfy ou do matt_pocock estrague. Declaração: se for bug, documentar como finding. Declaração: findings internos (maestro) e externos (dependências externas, dependem de PR upstream no repositório alvo). Declaração: todo achado deve ser documentado e mantido; quando identificado o fix, removido ou arquivado em archived dentro de findings. Inferência: relação direta com BACKLOG-0010/SPEC-0021 (governança de docs/README pelo maestro) e com o doctor da BACKLOG-0013 (checagem read-only); evidência concreta de hoje: reversão manual via git checkout após o build_documentation.mjs.
+**Sinais extraídos, não decisões:** Declaração: o maestro deve resolver e garantir docs consistente e atualizado, sem permitir que bug do framework ou do matt_pocock estrague. Declaração: se for bug, documentar como finding. Declaração: findings internos (maestro) e externos (dependências externas, dependem de PR upstream no repositório alvo). Declaração: todo achado deve ser documentado e mantido; quando identificado o fix, removido ou arquivado em archived dentro de findings. Inferência: relação direta com BACKLOG-0010/SPEC-0021 (governança de docs/README pelo maestro) e com o doctor da BACKLOG-0013 (checagem read-only); evidência concreta de hoje: reversão manual via git checkout após o build_documentation.mjs.
 
 ### Informações que talvez precisem ser guardadas
 
@@ -49,7 +49,7 @@ Nenhuma fonte contextual consultada.
 
 ### Riscos e dependências
 
-**Análise preliminar:** Risco: o documentator do Specsfy é upstream (pacote @promovaweb/specsfy); a correção definitiva depende de PR lá — o maestro só pode proteger (backup/quarentena/recusa de sobrescrita de conteúdo não vazio) e documentar. Dependência: SPEC-0021 já em Planned trata parte do problema (README, idioma, doctor de docs). Conflito potencial: duplicar governança de docs em duas specs.
+**Análise preliminar:** Risco: o documentator do former project tool é upstream (pacote removed-project-integration); a correção definitiva depende de PR lá — o maestro só pode proteger (backup/quarentena/recusa de sobrescrita de conteúdo não vazio) e documentar. Dependência: SPEC-0021 já em Planned trata parte do problema (README, idioma, doctor de docs). Conflito potencial: duplicar governança de docs em duas specs.
 
 ## Possíveis direções futuras
 
@@ -67,4 +67,4 @@ Nenhuma fonte contextual consultada.
 
 ## Próximo passo
 
-Manter em `specs/inbox/` ou refinar com `$specsfy-02-backlog`.
+Manter em `specs/inbox/` ou refinar com `$framework-02-backlog`.

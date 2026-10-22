@@ -5,7 +5,7 @@ import { detectEnvironment } from "../src/setup/env";
 import { project, fixedDecision } from "./aprovacao-fixtures";
 
 describe("AC-060 — the plan reaches the decision-maker before any write", () => {
-  // SPECSFY: US-060 FR-060 AC-060
+  // TRACEABILITY: US-060 FR-060 AC-060
   it("the source receives the plan before the command writes", () => {
     const root = project();
     const received: { name: string; target: string; event: string }[][] = [];
@@ -13,7 +13,7 @@ describe("AC-060 — the plan reaches the decision-maker before any write", () =
     expect(received.length).toBe(1);
   });
 
-  // SPECSFY: US-060 FR-063 FR-065 AC-060
+  // TRACEABILITY: US-060 FR-063 FR-065 AC-060
   it("the plan describes each hook with name, target and event", () => {
     const root = project();
     const received: { name: string; target: string; event: string }[][] = [];
@@ -26,7 +26,7 @@ describe("AC-060 — the plan reaches the decision-maker before any write", () =
     }
   });
 
-  // SPECSFY: US-060 FR-060 AC-060
+  // TRACEABILITY: US-060 FR-060 AC-060
   it("the source is consulted exactly once", () => {
     const root = project();
     const received: { name: string; target: string; event: string }[][] = [];

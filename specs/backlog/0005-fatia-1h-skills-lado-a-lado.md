@@ -1,4 +1,4 @@
-# Backlog: Fatia 1h: instalar specsfy e mattpocock lado a lado, com registro
+# Backlog: Fatia 1h: instalar framework e mattpocock lado a lado, com registro
 
 | Metainformação | Valor |
 | --- | --- |
@@ -15,7 +15,7 @@
 
 ## Ideia original
 
-Formulação da pessoa responsável: "quero as skills do mattpocock/skills como dependência do common-rules, instaladas pelo setup e disponíveis junto com o specsfy, o context-mode e o code-review-graph — descobri que o autor não publica no npm e o caminho oficial é o instalador skills da vercel-labs". E, ao dirigir o refinamento: "o objetivo é manter o funcionamento de ambas as specsfy e mattpocock na íntegra, com a instalação real, e o commonrules orquestra com extensão no CLAUDE.md e AGENTS.md, não escolher".
+Formulação da pessoa responsável: "quero as skills do mattpocock/skills como dependência do common-rules, instaladas pelo setup e disponíveis junto com o framework, o context-mode e o code-review-graph — descobri que o autor não publica no npm e o caminho oficial é o instalador skills da vercel-labs". E, ao dirigir o refinamento: "o objetivo é manter o funcionamento de ambas as framework e mattpocock na íntegra, com a instalação real, e o commonrules orquestra com extensão no CLAUDE.md e AGENTS.md, não escolher".
 
 ## Problema percebido
 
@@ -46,9 +46,9 @@ Deriva da captura specs/inbox/2026-08-29-155551. O common-rules não escolhe ent
 ## Comportamento esperado
 
 O `setup` passa a instalar, além do que já faz, os dois conjuntos de skills. O
-`specsfy` continua vindo pelo npm, como hoje. As skills de `mattpocock/skills`
+`framework` continua vindo pelo npm, como hoje. As skills de `mattpocock/skills`
 vêm pelo instalador oficial `skills`, da vercel-labs, que grava em
-`.claude/skills/` no escopo de projeto — o mesmo diretório onde o `specsfy` já
+`.claude/skills/` no escopo de projeto — o mesmo diretório onde o `framework` já
 mantém seus vinte subdiretórios. Convivem como irmãos, e o Claude Code hidrata
 os dois nativamente.
 
@@ -70,7 +70,7 @@ o `doctor` relata.
 Scenario: os dois conjuntos convivem depois de um único setup
   Given um projeto com evidência de uso do alvo
   When o setup roda
-  Then as skills do specsfy estão em .claude/skills/
+  Then as skills do framework estão em .claude/skills/
   And as skills de mattpocock estão em .claude/skills/
   And nenhuma sobrescreveu a outra
 
@@ -107,7 +107,7 @@ Scenario: origem não oficial é recusada
 ## Situações de erro
 
 - Instalador ausente ou falhando → relatar e seguir com o que der para fazer, sem afirmar sucesso do que não ocorreu.
-- Conflito de nome entre um diretório do `specsfy` e um de `mattpocock` → recusar e nomear o conflito, em vez de sobrescrever.
+- Conflito de nome entre um diretório do `framework` e um de `mattpocock` → recusar e nomear o conflito, em vez de sobrescrever.
 - Rede indisponível → relatar que o conjunto não foi instalado, sem deixar instalação parcial passando por completa.
 
 ## Escopo
@@ -143,5 +143,5 @@ Especificar como fatia 1h da Phase 1. Independe de 1c, 1d e 1e, e pode vir antes
 
 ## Reaberturas registradas
 
-- **2026-08-30, primeira reabertura**: `common-rules setup` nunca instalava nada de verdade — nenhum `Executor` real existia em produção, e `src/cli.ts` nunca fornecia `opts.skills`/`opts.specsfy` a `runSetup`. Corrigido com executores reais para `skills` e para `specsfy install`, e uma segunda origem oficial (`promovaweb/specsfy`) para as skills do próprio framework. Ver `specs/completed/0005-fatia-1h-skills-lado-a-lado/spec.md`, seção 13.
-- **2026-08-30, segunda reabertura**: `runSetup` considera "já configurado" olhando só os hooks, então apagar `.claude/skills/` ou `.specsfy/` manualmente e rodar `setup` de novo não restaura nada — reproduzido de verdade. Captura em `specs/inbox/2026-08-30-122232-setup-nao-resincroniza-skills-nem-framework-quando-hooks-ja-batem.md`.
+- **2026-08-30, primeira reabertura**: `common-rules setup` nunca instalava nada de verdade — nenhum `Executor` real existia em produção, e `src/cli.ts` nunca fornecia `opts.skills`/`opts.project-context` a `runSetup`. Corrigido com executores reais para `skills` e para `former tool install`, e uma segunda origem oficial (`removed-project-integration`) para as skills do próprio framework. Ver `specs/completed/0005-fatia-1h-skills-lado-a-lado/spec.md`, seção 13.
+- **2026-08-30, segunda reabertura**: `runSetup` considera "já configurado" olhando só os hooks, então apagar `.claude/skills/` ou `.project-context/` manualmente e rodar `setup` de novo não restaura nada — reproduzido de verdade. Captura em `specs/inbox/2026-08-30-122232-setup-nao-resincroniza-skills-nem-framework-quando-hooks-ja-batem.md`.

@@ -27,19 +27,19 @@ const identical = (path) => () => {
 
 // Uma condição por caminho, para que a falha nomeie exatamente o que se perdeu.
 assert("assert-preserved-set", [
-  // SPECSFY: US-001 FR-003 AC-003
+  // TRACEABILITY: US-001 FR-003 AC-003
   [`branch ${WORK_BRANCH} existe`, () =>
     refExists(WORK_BRANCH) || `referência ${WORK_BRANCH} não encontrada`],
 
-  // SPECSFY: US-001 FR-003 NFR-003 AC-003 AC-009
+  // TRACEABILITY: US-001 FR-003 NFR-003 AC-003 AC-009
   ["specs preservado no commit raiz", identical("specs")],
 
-  // SPECSFY: US-001 FR-003 NFR-003 AC-003 AC-009
+  // TRACEABILITY: US-001 FR-003 NFR-003 AC-003 AC-009
   [".claude preservado no commit raiz", identical(".claude")],
 
-  // SPECSFY: US-001 FR-003 NFR-003 AC-003 AC-009
-  [".specsfy preservado no commit raiz", identical(".specsfy")],
+  // TRACEABILITY: US-001 FR-003 NFR-003 AC-003 AC-009
+  [".project-context preservado no commit raiz", identical(".project-context")],
 
-  // SPECSFY: US-001 FR-003 NFR-003 AC-003 AC-009
+  // TRACEABILITY: US-001 FR-003 NFR-003 AC-003 AC-009
   [".agents preservado no commit raiz", identical(".agents")],
 ]);

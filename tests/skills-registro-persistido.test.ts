@@ -19,14 +19,14 @@ function writtenRecord(): Record<string, unknown> {
 }
 
 describe("AC-023 — the project record keeps the sets' provenance", () => {
-  // SPECSFY: US-021 FR-023 AC-023
+  // TRACEABILITY: US-021 FR-023 AC-023
   it("the skills list exists in the written file", () => {
     const rec = writtenRecord();
     expect(Array.isArray(rec["skills"])).toBe(true);
     expect((rec["skills"] as unknown[]).length).toBe(MATTPOCOCK_SET.length);
   });
 
-  // SPECSFY: US-021 FR-023 AC-023
+  // TRACEABILITY: US-021 FR-023 AC-023
   it("each entry carries name, source, provenance and instant", () => {
     for (const e of writtenRecord()["skills"] as Record<string, unknown>[]) {
       expect(typeof e["name"]).toBe("string");
@@ -36,7 +36,7 @@ describe("AC-023 — the project record keeps the sets' provenance", () => {
     }
   });
 
-  // SPECSFY: US-021 FR-023 AC-023
+  // TRACEABILITY: US-021 FR-023 AC-023
   it("the hooks list stays as it was", () => {
     const rec = writtenRecord();
     expect((rec["hooks"] as unknown[]).length).toBe(installedHookCount());

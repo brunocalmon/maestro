@@ -10,7 +10,7 @@ const adapter = (over: Partial<CliBackendAdapter>): CliBackendAdapter => ({
 });
 
 describe("AC-007 — tools required não suportável é recusado", () => {
-  // SPECSFY: US-001 FR-003 NFR-002 AC-007
+  // TRACEABILITY: US-001 FR-003 NFR-002 AC-007
   it("recusa nomeando o backend e a limitação", async () => {
     const { checkToolsSupport } = await import("../src/delegation/cli-tools");
     const limited = adapter({ name: "agy", supportsToolsAllowlist: false });
@@ -26,7 +26,7 @@ describe("AC-007 — tools required não suportável é recusado", () => {
 });
 
 describe("AC-008 — tools required suportável é aplicado", () => {
-  // SPECSFY: US-001 FR-003 NFR-001 AC-008
+  // TRACEABILITY: US-001 FR-003 NFR-001 AC-008
   it("a lista de tools aparece na flag de allowlist daquele backend", async () => {
     const { checkToolsSupport } = await import("../src/delegation/cli-tools");
     const { resolveAdapter } = await import("../src/delegation/cli-backends/registry");
@@ -41,7 +41,7 @@ describe("AC-008 — tools required suportável é aplicado", () => {
 });
 
 describe("AC-009 — tools sem exigência não bloqueia backend limitado", () => {
-  // SPECSFY: US-001 FR-003 NFR-001 AC-009
+  // TRACEABILITY: US-001 FR-003 NFR-001 AC-009
   it("sem tools declaradas, prossegue normalmente mesmo sem allowlist", async () => {
     const { checkToolsSupport } = await import("../src/delegation/cli-tools");
     const limited = adapter({ name: "codex", supportsToolsAllowlist: false });

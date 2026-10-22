@@ -9,18 +9,18 @@ describe("AC-023 — each set appears with its provenance", () => {
     return root;
   };
 
-  // SPECSFY: US-021 FR-023 AC-023
+  // TRACEABILITY: US-021 FR-023 AC-023
   it("each installed set appears named", () => {
     const names = toRecordEntries(readLock(prepare())).map((e) => e.name).sort();
     expect(names).toEqual([...MATTPOCOCK_SET].sort());
   });
 
-  // SPECSFY: US-021 FR-023 AC-023
+  // TRACEABILITY: US-021 FR-023 AC-023
   it("carries the source it came from", () => {
     for (const e of toRecordEntries(readLock(prepare()))) expect(e.source).toBe("mattpocock/skills");
   });
 
-  // SPECSFY: US-021 FR-023 AC-023
+  // TRACEABILITY: US-021 FR-023 AC-023
   it("carries the provenance read from the lockfile, without recomputing", () => {
     for (const e of toRecordEntries(readLock(prepare()))) {
       expect(e.computedHash).toBe(`hash-${e.name}`);

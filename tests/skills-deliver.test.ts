@@ -7,7 +7,7 @@ function writeEnvFake() {
 }
 
 describe("maestro-extension-creator ships as a bundled skill", () => {
-  // SPECSFY: US-080 US-082 FR-088 AC-140
+  // TRACEABILITY: US-080 US-082 FR-088 AC-140
   it("reads the real SKILL.md from resources/skills/", () => {
     const files = readBundledSkill("maestro-extension-creator");
     expect(files).toHaveLength(1);
@@ -15,12 +15,12 @@ describe("maestro-extension-creator ships as a bundled skill", () => {
     expect(files[0].content).toMatch(/maestro extension create/);
   });
 
-  // SPECSFY: US-080 US-082 FR-088 AC-140
+  // TRACEABILITY: US-080 US-082 FR-088 AC-140
   it("returns an empty list for a skill that isn't bundled", () => {
     expect(readBundledSkill("does-not-exist")).toEqual([]);
   });
 
-  // SPECSFY: US-080 US-082 FR-088 AC-140
+  // TRACEABILITY: US-080 US-082 FR-088 AC-140
   it("delivers every file into every target directory", () => {
     const env = writeEnvFake();
     const files = [{ relativePath: "SKILL.md", content: "# hello" }];

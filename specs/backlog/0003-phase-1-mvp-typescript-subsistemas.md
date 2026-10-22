@@ -1,4 +1,4 @@
-# Backlog: Phase 1: MVP TypeScript core com subsistemas integrados (specsfy, context-mode, code-review-graph, pi.dev)
+# Backlog: Phase 1: MVP TypeScript core com subsistemas integrados (framework, context-mode, code-review-graph, pi.dev)
 
 | Metainformação | Valor |
 | --- | --- |
@@ -15,15 +15,15 @@
 
 ## Ideia original
 
-Primeira fase de desenvolvimento: TypeScript core + CLI. Dependências fixadas via npm: specsfy, context-mode, code-review-graph, pi.dev (common-rules vence conflitos). Hybrid setup: MCP setup() tool + CLI common-rules setup (mesma lógica). Approval workflow hybrid (interativo terminal / JSON stdin CI/CD). Graceful degradation: detecção setup-time (which), cache .env, runtime revalidação se usuário pedir backend detectado como indisponível. Stock built-in IDE agents por padrão. Orchestrator model selection: análise completa (disponíveis via ollama ls etc, custo, capacidade máquina, plan usage Claude, recomendação + user override).
+Primeira fase de desenvolvimento: TypeScript core + CLI. Dependências fixadas via npm: framework, context-mode, code-review-graph, pi.dev (common-rules vence conflitos). Hybrid setup: MCP setup() tool + CLI common-rules setup (mesma lógica). Approval workflow hybrid (interativo terminal / JSON stdin CI/CD). Graceful degradation: detecção setup-time (which), cache .env, runtime revalidação se usuário pedir backend detectado como indisponível. Stock built-in IDE agents por padrão. Orchestrator model selection: análise completa (disponíveis via ollama ls etc, custo, capacidade máquina, plan usage Claude, recomendação + user override).
 
 ## Problema percebido
 
-v0.2.8 é Python pesado. Oportunidade: MVP rápido em TypeScript com subsistemas já testados (specsfy, context-mode, code-review-graph, pi.dev). Valida wrapper/delegation pattern sem fazer tudo do zero. Graceful degradation prova robustez em ambientes heterogêneos.
+v0.2.8 é Python pesado. Oportunidade: MVP rápido em TypeScript com subsistemas já testados (framework, context-mode, code-review-graph, pi.dev). Valida wrapper/delegation pattern sem fazer tudo do zero. Graceful degradation prova robustez em ambientes heterogêneos.
 
 ## Pessoa afetada ou beneficiada
 
-Desenvolvedores iterando rápido em TypeScript; times com specsfy/context-mode/code-review-graph já instalados; usuários em ambientes com ollama/agy/claude disponível; CI/CD sem UI interativa.
+Desenvolvedores iterando rápido em TypeScript; times com framework/context-mode/code-review-graph já instalados; usuários em ambientes com ollama/agy/claude disponível; CI/CD sem UI interativa.
 
 ## Resultado ou valor esperado
 
@@ -39,7 +39,7 @@ O backlog assumia quatro dependências fixadas via npm. A verificação contra o
 
 | Nome no backlog | Pacote real | Versão | Forma |
 | --- | --- | --- | --- |
-| `specsfy` | `@promovaweb/specsfy` | 0.10.2 | npm, com escopo |
+| `framework` | `removed-project-integration` | 0.10.2 | npm, com escopo |
 | `context-mode` | `context-mode` | 1.0.169 | npm |
 | `pi.dev` | `@earendil-works/pi-coding-agent` | 0.84.3 | npm, binário `pi` |
 | `code-review-graph` | `code-review-graph` | 2.3.7 | **Python**, instalado por `uv tool` |
@@ -63,7 +63,7 @@ A Phase 1 empacotava seis entregas. Cada uma é comparável em tamanho à Phase 
 | 1e | Seleção de modelo pelo Orchestrator | **SPEC-0009, concluída** |
 | 1f | Servidor MCP com a tool `setup` única | **SPEC-0004, concluída** |
 | 1g | Telemetria por `trace_id` no registro auditável | **SPEC-0006, concluída** |
-| 1h | Instalar specsfy e mattpocock lado a lado, com registro | **SPEC-0005, concluída** |
+| 1h | Instalar framework e mattpocock lado a lado, com registro | **SPEC-0005, concluída** |
 | 1i | Aprovação em lote dos comandos das dependências, no `setup` | **SPEC-0010, concluída** |
 
 Decisões desta fatia: pacote `@brunocalmon/common-rules` com binário `common-rules`, porque `common-rules` sem escopo está ocupado no npm por um pacote abandonado desde 2023. Runner Vitest. ESM e Node maior ou igual a 20 como defaults reversíveis.
@@ -72,7 +72,7 @@ Decisões desta fatia: pacote `@brunocalmon/common-rules` com binário `common-r
 
 ## Decisões da fatia 1b, refinadas em 2026-08-24
 
-O `setup` da v0.2.8 existia para resolver `{{PLACEHOLDER}}` dentro de 47 recursos e colocar guidance por IDE. Os recursos foram removidos na Phase 0 e o specsfy assumiu o motor de skills, de modo que o propósito precisou ser redefinido antes de especificar.
+O `setup` da v0.2.8 existia para resolver `{{PLACEHOLDER}}` dentro de 47 recursos e colocar guidance por IDE. Os recursos foram removidos na Phase 0 e o framework assumiu o motor de skills, de modo que o propósito precisou ser redefinido antes de especificar.
 
 **Trabalho do setup.** Ligar subsistemas ao ciclo do agente e proteger o repositório. É o que só o common-rules pode fazer: ele não reimplementa `context-mode` nem `code-review-graph`, mas é quem os conecta.
 
@@ -84,7 +84,7 @@ O `setup` da v0.2.8 existia para resolver `{{PLACEHOLDER}}` dentro de 47 recurso
 | Guardrails | `guard-destructive`, `guard-secrets` | Segurança, independente de motor de skills |
 | Autoria | `protect-authorship` | Preserva a autoria dos commits |
 
-Os três restantes — `orchestration-briefing`, `completion-gate` e `format-after-edit` — ficam fora: pressupõem o kit de recursos que deixou de existir, e orquestração é território do specsfy. As fontes seguem consultáveis em `archived`.
+Os três restantes — `orchestration-briefing`, `completion-gate` e `format-after-edit` — ficam fora: pressupõem o kit de recursos que deixou de existir, e orquestração é território do framework. As fontes seguem consultáveis em `archived`.
 
 **Persistência.** O `setup` grava um registro do que fez: quais hooks instalou, em qual alvo, quando e em que versão. Sem memória ele não seria idempotente nem reversível, e não responderia "o que essa ferramenta mexeu na minha máquina". Não guarda cache de resolução de dependências: `doctor` resolve em milissegundos e cache divergente reintroduz a diferença silenciosa que a coluna de origem existe para expor.
 
@@ -158,7 +158,7 @@ A esclarecer.
 
 ## Próximo passo
 
-Aprofundar nesta etapa até o item ficar pronto para `$specsfy-03-specify`.
+Aprofundar nesta etapa até o item ficar pronto para `$framework-03-specify`.
 
 **Fatia 1h, acrescentada em 2026-08-29.** O `setup` passa a instalar também os
 dois conjuntos de skills, íntegros e lado a lado em `.claude/skills/`, sem que o

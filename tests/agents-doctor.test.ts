@@ -51,7 +51,7 @@ function brokenProject(): string {
 }
 
 describe("AC-010 — o doctor relata referência quebrada", () => {
-  // SPECSFY: US-001 FR-004 NFR-002 AC-010
+  // TRACEABILITY: US-001 FR-004 NFR-002 AC-010
   it("o relatório que a pessoa lê nomeia o perfil e o caminho, com saída diferente de zero", async () => {
     const { diagnoseAgents } = await import("../src/agents/diagnose");
     const { renderReport } = await import("../src/cli");
@@ -72,7 +72,7 @@ describe("AC-010 — o doctor relata referência quebrada", () => {
 });
 
 describe("AC-011 — o doctor não altera nada", () => {
-  // SPECSFY: US-001 FR-004 NFR-002 AC-011
+  // TRACEABILITY: US-001 FR-004 NFR-002 AC-011
   it("a árvore do projeto permanece idêntica depois do diagnóstico", async () => {
     const { diagnoseAgents } = await import("../src/agents/diagnose");
     const root = brokenProject();
@@ -85,7 +85,7 @@ describe("AC-011 — o doctor não altera nada", () => {
 });
 
 describe("AC-012 — config íntegra passa limpa pelo doctor", () => {
-  // SPECSFY: US-001 FR-004 NFR-001 AC-012
+  // TRACEABILITY: US-001 FR-004 NFR-001 AC-012
   it("nenhuma divergência de perfil de agente num projeto recém-configurado", async () => {
     const { diagnoseAgents } = await import("../src/agents/diagnose");
     const root = project();

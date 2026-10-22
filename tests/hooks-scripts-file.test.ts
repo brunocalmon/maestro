@@ -8,11 +8,11 @@ import { claudeEnv, project, readSettings, entriesFor, corpusHook } from "./help
 const QUARANTINE = ".maestro/quarantine";
 
 describe("AC-004 — script em arquivo e referência no settings.json", () => {
-  // SPECSFY: US-001 FR-002 NFR-003 AC-004
+  // TRACEABILITY: US-001 FR-002 NFR-003 AC-004
   it("grava .maestro/hooks/<name>.sh executável com o fragmento byte a byte", () => {
     const root = project();
     runSetup({ env: claudeEnv, root, write: true });
-    for (const name of ["guard-destructive", "guard-secrets", "protect-authorship", "setup-check"]) {
+    for (const name of ["guard-destructive", "guard-secrets", "protect-authorship"]) {
       const path = resolve(root, ".maestro", "hooks", `${name}.sh`);
       expect(existsSync(path), name).toBe(true);
       expect(statSync(path).mode & 0o111, `${name} executável`).not.toBe(0);
@@ -24,7 +24,7 @@ describe("AC-004 — script em arquivo e referência no settings.json", () => {
 });
 
 describe("AC-005 — script editado à mão vai para quarentena e é restaurado", () => {
-  // SPECSFY: US-001 FR-002 NFR-003 AC-005
+  // TRACEABILITY: US-001 FR-002 NFR-003 AC-005
   it("detecta drift por checksum, preserva o conteúdo alterado e relata", () => {
     const root = project();
     runSetup({ env: claudeEnv, root, write: true });
@@ -42,7 +42,7 @@ describe("AC-005 — script editado à mão vai para quarentena e é restaurado"
 });
 
 describe("AC-020 — segunda execução não reescreve scripts nem o registro", () => {
-  // SPECSFY: NFR-001 FR-002 AC-020
+  // TRACEABILITY: NFR-001 FR-002 AC-020
   it("mantém mtime dos scripts e o conteúdo de .maestro/extensions.json", async () => {
     const root = project();
     runSetup({ env: claudeEnv, root, write: true });

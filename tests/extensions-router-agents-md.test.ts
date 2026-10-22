@@ -6,7 +6,7 @@ import { detectEnvironment } from "../src/setup/env";
 import { project, fixedDecision } from "./aprovacao-fixtures";
 
 describe("AC-137 — AGENTS.md gets a minimal pointer, without duplicating CLAUDE.md", () => {
-  // SPECSFY: US-082 FR-086 FR-087 NFR-083 AC-137
+  // TRACEABILITY: US-082 FR-086 FR-087 NFR-083 AC-137
   it("setup runs and AGENTS.md gets the pointer, without repeating the router text", () => {
     const root = project();
     runSetup({

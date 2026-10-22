@@ -27,7 +27,7 @@ MAESTRO_BIN_context_mode='/home/bcalmon/Projects/maestro/node_modules/.bin/conte
 
 # >>> hook fragment
 case "$HOOK_COMMAND" in
-  *"skills add"*|*"specsfy skills"*) _hook_install=1 ;;
+  *"skills add"*|*"former tool skills"*) _hook_install=1 ;;
   *) _hook_install="" ;;
 esac
 if [ -n "$_hook_install" ] && [ -d "$PROJECT_DIR/.claude" ] && [ -d "$PROJECT_DIR/.agents/skills" ]; then

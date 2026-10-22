@@ -12,17 +12,17 @@ function traceWith(id: string): string {
 }
 
 describe("AC-044 — the identifier comes from the given generator", () => {
-  // SPECSFY: US-042 FR-043 AC-044
+  // TRACEABILITY: US-042 FR-043 AC-044
   it("the recorded value is exactly the generator's", () => {
     expect(traceWith("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")).toBe("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
   });
 
-  // SPECSFY: US-042 NFR-040 AC-044
+  // TRACEABILITY: US-042 NFR-040 AC-044
   it("a different generator produces a different recorded value", () => {
     expect(traceWith("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb")).toBe("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb");
   });
 
-  // SPECSFY: US-042 FR-043 NFR-040 AC-044
+  // TRACEABILITY: US-042 FR-043 NFR-040 AC-044
   it("injection replaces the real source completely", () => {
     const a = traceWith("cccccccccccccccccccccccccccccccc");
     const b = traceWith("cccccccccccccccccccccccccccccccc");

@@ -2,7 +2,7 @@
 
 | Campo | Valor |
 | --- | --- |
-| Formato | Specsfy/2.0 |
+| Formato | former project tool/2.0 |
 | ID | SPEC-0007 |
 | Slug | 0007-fatia-1c-aprovacao-do-plano |
 | Status | Complete |
@@ -581,7 +581,7 @@ O ponto sensível é que esta fatia introduz um caminho em que **não** escrever
 #### Gate do Ato I — Definição
 
 - **Resultado**: READY (2026-08-29), reconfirmado no aceite final em 2026-08-29
-- **Comando**: `node .claude/skills/specsfy-04-validate/scripts/validate_spec.mjs specs/completed/0007-fatia-1c-aprovacao-do-plano/spec.md`
+- **Comando**: `node .claude/skills/framework-04-validate/scripts/validate_spec.mjs specs/completed/0007-fatia-1c-aprovacao-do-plano/spec.md`
 - **Cobertura**: 3 US, 6 FR, 3 NFR, 15 AC, 6 DEC; mínimo de 3 AC por ID satisfeito nos doze. Identificadores de 060 a 074.
 - **Research**: `load_research.mjs` em `PASSED`, com `R-060` verificado e um artefato indexado.
 
@@ -607,10 +607,10 @@ O ponto sensível é que esta fatia introduz um caminho em que **não** escrever
 #### Gate do Ato II — Plano
 
 - **Resultado**: Passed (2026-08-29)
-- **Comando**: `node .claude/skills/specsfy-05-tasks/scripts/validate_tasks.mjs specs/completed/0007-fatia-1c-aprovacao-do-plano/spec.md`
+- **Comando**: `node .claude/skills/framework-05-tasks/scripts/validate_tasks.mjs specs/completed/0007-fatia-1c-aprovacao-do-plano/spec.md`
 - **Plano**: 22 tarefas — 15 `[TEST] [TDD]`, 4 `[CODE]`, 2 `[DOC]`, 1 `[OPS]`; 110 itens de checklist; 27 de 27 IDs cobertos.
 - **Correção durante o planejamento**: `T017` tinha só dois predecessores TDD rastreáveis. Acrescentei `T003` (`AC-062`) como terceiro, por exercitar o fluxo completo de renderização, decisão e escrita.
-- **RED**: `npm run test:tdd` com 15 arquivos e 26 casos em RED, e os 232 casos anteriores verdes. 47 casos marcados com `SPECSFY`, cobrindo os quinze `AC`.
+- **RED**: `npm run test:tdd` com 15 arquivos e 26 casos em RED, e os 232 casos anteriores verdes. 47 casos marcados com `TRACEABILITY`, cobrindo os quinze `AC`.
 - **Rastreabilidade**: 27 de 27 identificadores desta fatia cobertos.
 
 **Quatro falsos-verdes corrigidos durante a materialização do RED.** Como `runSetup` hoje ignora qualquer opção desconhecida e escreve incondicionalmente, quatro asserções passavam sem exercitar coisa alguma: elas conferiam o resultado de uma escrita que já acontecia antes desta fatia existir, e não se a aprovação foi de fato consultada.
@@ -632,14 +632,14 @@ Nenhum desses quatro apareceria como falha se eu tivesse aceitado o RED superfic
 
 **Quatro falsos-verdes corrigidos no plano, e reincidiram no fechamento como controles a ajustar.** Os dois testes de controle acrescentados para `AC-073` e `AC-074` esperavam que uma fonte que lança propagasse a exceção; o desenho correto de `interpret()` — exigido por `FR-064` — captura qualquer exceção da fonte e a trata como negativa, então a exceção nunca escapa. Os controles foram reescritos para conferir o `exitCode`, e não a propagação.
 
-**Gap de wiring registrado, não escondido.** `src/cli.ts` ainda não passa `approval` real ao chamar `runSetup`, no mesmo padrão do gap que `skills` já tinha antes da fatia 1h. A garantia desta fatia vale hoje na biblioteca; o comando `common-rules setup` em produção ainda não gate a escrita por aprovação. Registrado em `.specsfy/STACK.md` e `PROJECT.md`, e não apresentado como concluído ponta a ponta.
+**Gap de wiring registrado, não escondido.** `src/cli.ts` ainda não passa `approval` real ao chamar `runSetup`, no mesmo padrão do gap que `skills` já tinha antes da fatia 1h. A garantia desta fatia vale hoje na biblioteca; o comando `common-rules setup` em produção ainda não gate a escrita por aprovação. Registrado em `.project-context/STACK.md` e `PROJECT.md`, e não apresentado como concluído ponta a ponta.
 
 **Rastreabilidade com ressalva conhecida.** 27 de 27 identificadores desta fatia cobertos. `check_traceability` acusa 84 marcadores órfãos, todos das cinco specs anteriores — a colisão de identificadores continua sendo o único item vermelho do repositório.
 
 #### Gate do Ato II — Plano da reabertura 2026-08-30
 
 - **Resultado**: Passed
-- **Comando**: `node .agents/skills/specsfy-05-tasks/scripts/validate_tasks.mjs specs/completed/0007-fatia-1c-aprovacao-do-plano/spec.md --allow-draft`
+- **Comando**: `node .agents/skills/framework-05-tasks/scripts/validate_tasks.mjs specs/completed/0007-fatia-1c-aprovacao-do-plano/spec.md --allow-draft`
 - **Plano**: 5 tarefas novas (T024–T028) — 1 `[TEST] [TDD]`, 2 `[CODE]`/`[TEST]` de wiring, 1 `[DOC]`, 1 `[OPS]`; 28 tarefas no total, 29 IDs próprios cobertos.
 - **RED**: `T024` observou RED real no segundo caso — entrada padrão vazia contra `dist/cli.js setup` real não impedia escrita alguma, porque `approval` nunca era consultado em produção. O primeiro caso (aprovação) já passava mesmo sem a correção, confirmando que a lacuna estava exclusivamente na ausência do gate, não na escrita em si.
 - **Ajuste no ciclo de validação**: `T025`, desenhada inicialmente com um único predecessor `[TEST] [TDD]` (`T024`), precisou de três — acrescentados `T002` (`AC-061`, recusa preserva) e `T013` (`AC-072`, real quando ausente), duas tarefas já concluídas que exercitam exatamente o comportamento que `T025` ativa em produção.
@@ -649,9 +649,9 @@ Nenhum desses quatro apareceria como falha se eu tivesse aceitado o RED superfic
 - **Resultado**: Passed
 - **Verificação**: `npm run test:tdd` em exit 0, com **306 casos em 97 arquivos** (era 284/86 no fechamento anterior); `npx tsc --noEmit` e `npm run build` em exit 0; `npm run verify` em exit 0 a partir de clone limpo (install 5s, build 1s, test 18s, total 24s).
 - **Auditorias**: `check_traceability.mjs` em 29/29 IDs próprios cobertos; `verify_acceptance.mjs` em `QA: PASSED`.
-- **Verificação manual real**: `node dist/cli.js setup`, num projeto descartável, com `{"approved":true}` pela entrada padrão — hooks, skills das duas origens e o framework Specsfy escritos, código de saída zero; a mesma execução com entrada padrão vazia — nada escrito, relato `não escrito: recusado`, código de saída 1.
+- **Verificação manual real**: `node dist/cli.js setup`, num projeto descartável, com `{"approved":true}` pela entrada padrão — hooks, skills das duas origens e o framework former project tool escritos, código de saída zero; a mesma execução com entrada padrão vazia — nada escrito, relato `não escrito: recusado`, código de saída 1.
 - **Efeito colateral corrigido**: `tests/cli-setup-real.test.ts` (SPEC-0005) parou de provar instalação real assim que `approval` passou a gate a escrita — sua chamada ao `dist/cli.js setup` não alimentava a entrada padrão, o que agora é lido como documento vazio. `T026` corrigiu passando `input: JSON.stringify({approved:true})`; é o único teste pré-existente que a reabertura tocou, de 306.
-- **Documentação**: `docs/` reconstruído por `$specsfy-documentator`, `--check` em exit 0, monitor de contexto em `CURRENT`; `.specsfy/STACK.md` e `PROJECT.md` deixaram de descrever o wiring como pendência e passaram a descrever o comportamento real.
+- **Documentação**: `docs/` reconstruído por `$framework-documentator`, `--check` em exit 0, monitor de contexto em `CURRENT`; `.project-context/STACK.md` e `PROJECT.md` deixaram de descrever o wiring como pendência e passaram a descrever o comportamento real.
 
 #### Suposições
 
@@ -677,119 +677,119 @@ Quinze tarefas, uma por `AC`, cada uma em arquivo próprio de `tests/`. Nenhuma 
 
 - [x] T001 [P] [TEST] [TDD] [US-060] Derivar de AC-060 o caso em tests/aprovacao-plano-apresentado.test.ts — Refs: US-060, FR-060, FR-063, FR-065, AC-060 — Depends: none
   - [x] **PREP**: Ler o Gherkin de AC-060 e fixar o critério: a fonte injetada recebe o plano com nome, destino e evento de cada hook antes de qualquer escrita.
-  - [x] **EXECUTE**: Escrever o caso em `tests/aprovacao-plano-apresentado.test.ts`, com marcador `SPECSFY` por asserção, raízes em diretório temporário e contexto ou fonte de decisão injetados.
+  - [x] **EXECUTE**: Escrever o caso em `tests/aprovacao-plano-apresentado.test.ts`, com marcador `TRACEABILITY` por asserção, raízes em diretório temporário e contexto ou fonte de decisão injetados.
   - [x] **VERIFY**: RED observado — três arquivos reprovam por `Cannot find module` sobre `src/approval/context` e `src/approval/render`, e os demais reprovam em asserção porque `runSetup` ainda ignora a opção `approval` e escreve incondicionalmente.
-  - [x] **EVIDENCE**: `npm run test:tdd` com 15 arquivos e 26 casos em RED, e os 232 casos anteriores verdes; 47 casos marcados com `SPECSFY` sobre os quinze `AC`. Registrado na seção 12.
+  - [x] **EVIDENCE**: `npm run test:tdd` com 15 arquivos e 26 casos em RED, e os 232 casos anteriores verdes; 47 casos marcados com `TRACEABILITY` sobre os quinze `AC`. Registrado na seção 12.
   - [x] **IMPROVE**: Conferir o conteúdo do plano recebido pela fonte, e não apenas que ela foi chamada, para que o caso prove fidelidade e não só invocação.
 
 - [x] T002 [P] [TEST] [TDD] [US-060] Derivar de AC-061 o caso em tests/aprovacao-recusa-preserva.test.ts — Refs: US-060, FR-060, NFR-060, AC-061 — Depends: none
   - [x] **PREP**: Ler o Gherkin de AC-061 e fixar o critério: uma decisão negativa não produz escrita alguma, e o relato informa a falta de aprovação.
-  - [x] **EXECUTE**: Escrever o caso em `tests/aprovacao-recusa-preserva.test.ts`, com marcador `SPECSFY` por asserção, raízes em diretório temporário e contexto ou fonte de decisão injetados.
+  - [x] **EXECUTE**: Escrever o caso em `tests/aprovacao-recusa-preserva.test.ts`, com marcador `TRACEABILITY` por asserção, raízes em diretório temporário e contexto ou fonte de decisão injetados.
   - [x] **VERIFY**: RED observado — três arquivos reprovam por `Cannot find module` sobre `src/approval/context` e `src/approval/render`, e os demais reprovam em asserção porque `runSetup` ainda ignora a opção `approval` e escreve incondicionalmente.
-  - [x] **EVIDENCE**: `npm run test:tdd` com 15 arquivos e 26 casos em RED, e os 232 casos anteriores verdes; 47 casos marcados com `SPECSFY` sobre os quinze `AC`. Registrado na seção 12.
+  - [x] **EVIDENCE**: `npm run test:tdd` com 15 arquivos e 26 casos em RED, e os 232 casos anteriores verdes; 47 casos marcados com `TRACEABILITY` sobre os quinze `AC`. Registrado na seção 12.
   - [x] **IMPROVE**: Comparar a árvore do projeto antes e depois, porque conferir apenas o relato deixaria passar uma implementação que escreve e relata negativa ao mesmo tempo.
 
 - [x] T003 [P] [TEST] [TDD] [US-060] Derivar de AC-062 o caso em tests/aprovacao-libera-escrita.test.ts — Refs: US-060, FR-060, NFR-062, AC-062 — Depends: none
   - [x] **PREP**: Ler o Gherkin de AC-062 e fixar o critério: aprovação positiva libera a escrita e o registro passa a existir.
-  - [x] **EXECUTE**: Escrever o caso em `tests/aprovacao-libera-escrita.test.ts`, com marcador `SPECSFY` por asserção, raízes em diretório temporário e contexto ou fonte de decisão injetados.
+  - [x] **EXECUTE**: Escrever o caso em `tests/aprovacao-libera-escrita.test.ts`, com marcador `TRACEABILITY` por asserção, raízes em diretório temporário e contexto ou fonte de decisão injetados.
   - [x] **VERIFY**: RED observado — três arquivos reprovam por `Cannot find module` sobre `src/approval/context` e `src/approval/render`, e os demais reprovam em asserção porque `runSetup` ainda ignora a opção `approval` e escreve incondicionalmente.
-  - [x] **EVIDENCE**: `npm run test:tdd` com 15 arquivos e 26 casos em RED, e os 232 casos anteriores verdes; 47 casos marcados com `SPECSFY` sobre os quinze `AC`. Registrado na seção 12.
+  - [x] **EVIDENCE**: `npm run test:tdd` com 15 arquivos e 26 casos em RED, e os 232 casos anteriores verdes; 47 casos marcados com `TRACEABILITY` sobre os quinze `AC`. Registrado na seção 12.
   - [x] **IMPROVE**: Conferir hooks escritos e registro juntos, porque a aprovação vale para a execução inteira.
 
 - [x] T004 [P] [TEST] [TDD] [US-060] Derivar de AC-063 o caso em tests/aprovacao-contexto-terminal.test.ts — Refs: US-060, FR-061, AC-063 — Depends: none
   - [x] **PREP**: Ler o Gherkin de AC-063 e fixar o critério: com terminal declarado na entrada padrão, o canal escolhido é o interativo.
-  - [x] **EXECUTE**: Escrever o caso em `tests/aprovacao-contexto-terminal.test.ts`, com marcador `SPECSFY` por asserção, raízes em diretório temporário e contexto ou fonte de decisão injetados.
+  - [x] **EXECUTE**: Escrever o caso em `tests/aprovacao-contexto-terminal.test.ts`, com marcador `TRACEABILITY` por asserção, raízes em diretório temporário e contexto ou fonte de decisão injetados.
   - [x] **VERIFY**: RED observado — três arquivos reprovam por `Cannot find module` sobre `src/approval/context` e `src/approval/render`, e os demais reprovam em asserção porque `runSetup` ainda ignora a opção `approval` e escreve incondicionalmente.
-  - [x] **EVIDENCE**: `npm run test:tdd` com 15 arquivos e 26 casos em RED, e os 232 casos anteriores verdes; 47 casos marcados com `SPECSFY` sobre os quinze `AC`. Registrado na seção 12.
+  - [x] **EVIDENCE**: `npm run test:tdd` com 15 arquivos e 26 casos em RED, e os 232 casos anteriores verdes; 47 casos marcados com `TRACEABILITY` sobre os quinze `AC`. Registrado na seção 12.
   - [x] **IMPROVE**: Injetar o contexto em vez de depender do ambiente real de execução do teste, que pode variar entre CI e máquina local.
 
 - [x] T005 [P] [TEST] [TDD] [US-061] Derivar de AC-064 o caso em tests/aprovacao-contexto-canalizado.test.ts — Refs: US-061, FR-061, AC-064 — Depends: none
   - [x] **PREP**: Ler o Gherkin de AC-064 e fixar o critério: sem terminal na entrada padrão, o canal escolhido é o de documento.
-  - [x] **EXECUTE**: Escrever o caso em `tests/aprovacao-contexto-canalizado.test.ts`, com marcador `SPECSFY` por asserção, raízes em diretório temporário e contexto ou fonte de decisão injetados.
+  - [x] **EXECUTE**: Escrever o caso em `tests/aprovacao-contexto-canalizado.test.ts`, com marcador `TRACEABILITY` por asserção, raízes em diretório temporário e contexto ou fonte de decisão injetados.
   - [x] **VERIFY**: RED observado — três arquivos reprovam por `Cannot find module` sobre `src/approval/context` e `src/approval/render`, e os demais reprovam em asserção porque `runSetup` ainda ignora a opção `approval` e escreve incondicionalmente.
-  - [x] **EVIDENCE**: `npm run test:tdd` com 15 arquivos e 26 casos em RED, e os 232 casos anteriores verdes; 47 casos marcados com `SPECSFY` sobre os quinze `AC`. Registrado na seção 12.
+  - [x] **EVIDENCE**: `npm run test:tdd` com 15 arquivos e 26 casos em RED, e os 232 casos anteriores verdes; 47 casos marcados com `TRACEABILITY` sobre os quinze `AC`. Registrado na seção 12.
   - [x] **IMPROVE**: Injetar a ausência de terminal, pelo mesmo motivo do caso anterior.
 
 - [x] T006 [P] [TEST] [TDD] [US-061] Derivar de AC-065 o caso em tests/aprovacao-documento-aprova.test.ts — Refs: US-061, FR-062, AC-065 — Depends: none
   - [x] **PREP**: Ler o Gherkin de AC-065 e fixar o critério: um documento JSON aprovando o plano libera a execução e os arquivos previstos existem.
-  - [x] **EXECUTE**: Escrever o caso em `tests/aprovacao-documento-aprova.test.ts`, com marcador `SPECSFY` por asserção, raízes em diretório temporário e contexto ou fonte de decisão injetados.
+  - [x] **EXECUTE**: Escrever o caso em `tests/aprovacao-documento-aprova.test.ts`, com marcador `TRACEABILITY` por asserção, raízes em diretório temporário e contexto ou fonte de decisão injetados.
   - [x] **VERIFY**: RED observado — três arquivos reprovam por `Cannot find module` sobre `src/approval/context` e `src/approval/render`, e os demais reprovam em asserção porque `runSetup` ainda ignora a opção `approval` e escreve incondicionalmente.
-  - [x] **EVIDENCE**: `npm run test:tdd` com 15 arquivos e 26 casos em RED, e os 232 casos anteriores verdes; 47 casos marcados com `SPECSFY` sobre os quinze `AC`. Registrado na seção 12.
+  - [x] **EVIDENCE**: `npm run test:tdd` com 15 arquivos e 26 casos em RED, e os 232 casos anteriores verdes; 47 casos marcados com `TRACEABILITY` sobre os quinze `AC`. Registrado na seção 12.
   - [x] **IMPROVE**: Fornecer o documento como texto de entrada padrão simulada, e não como objeto já interpretado, para exercitar o parse de verdade.
 
 - [x] T007 [P] [TEST] [TDD] [US-061] Derivar de AC-066 o caso em tests/aprovacao-documento-recusa.test.ts — Refs: US-061, FR-062, FR-064, AC-066 — Depends: none
   - [x] **PREP**: Ler o Gherkin de AC-066 e fixar o critério: um documento JSON recusando o plano impede a escrita e o relato informa a recusa.
-  - [x] **EXECUTE**: Escrever o caso em `tests/aprovacao-documento-recusa.test.ts`, com marcador `SPECSFY` por asserção, raízes em diretório temporário e contexto ou fonte de decisão injetados.
+  - [x] **EXECUTE**: Escrever o caso em `tests/aprovacao-documento-recusa.test.ts`, com marcador `TRACEABILITY` por asserção, raízes em diretório temporário e contexto ou fonte de decisão injetados.
   - [x] **VERIFY**: RED observado — três arquivos reprovam por `Cannot find module` sobre `src/approval/context` e `src/approval/render`, e os demais reprovam em asserção porque `runSetup` ainda ignora a opção `approval` e escreve incondicionalmente.
-  - [x] **EVIDENCE**: `npm run test:tdd` com 15 arquivos e 26 casos em RED, e os 232 casos anteriores verdes; 47 casos marcados com `SPECSFY` sobre os quinze `AC`. Registrado na seção 12.
+  - [x] **EVIDENCE**: `npm run test:tdd` com 15 arquivos e 26 casos em RED, e os 232 casos anteriores verdes; 47 casos marcados com `TRACEABILITY` sobre os quinze `AC`. Registrado na seção 12.
   - [x] **IMPROVE**: Comparar a árvore antes e depois, pela mesma razão de T002.
 
 - [x] T008 [P] [TEST] [TDD] [US-061] Derivar de AC-067 o caso em tests/aprovacao-documento-malformado.test.ts — Refs: US-061, FR-062, FR-064, NFR-060, AC-067 — Depends: none
   - [x] **PREP**: Ler o Gherkin de AC-067 e fixar o critério: texto que não é JSON válido é tratado como negativa e nada é escrito.
-  - [x] **EXECUTE**: Escrever o caso em `tests/aprovacao-documento-malformado.test.ts`, com marcador `SPECSFY` por asserção, raízes em diretório temporário e contexto ou fonte de decisão injetados.
+  - [x] **EXECUTE**: Escrever o caso em `tests/aprovacao-documento-malformado.test.ts`, com marcador `TRACEABILITY` por asserção, raízes em diretório temporário e contexto ou fonte de decisão injetados.
   - [x] **VERIFY**: RED observado — três arquivos reprovam por `Cannot find module` sobre `src/approval/context` e `src/approval/render`, e os demais reprovam em asserção porque `runSetup` ainda ignora a opção `approval` e escreve incondicionalmente.
-  - [x] **EVIDENCE**: `npm run test:tdd` com 15 arquivos e 26 casos em RED, e os 232 casos anteriores verdes; 47 casos marcados com `SPECSFY` sobre os quinze `AC`. Registrado na seção 12.
+  - [x] **EVIDENCE**: `npm run test:tdd` com 15 arquivos e 26 casos em RED, e os 232 casos anteriores verdes; 47 casos marcados com `TRACEABILITY` sobre os quinze `AC`. Registrado na seção 12.
   - [x] **IMPROVE**: Usar texto claramente inválido como JSON, e não um objeto malformado por acidente, para que o caso prove o caminho de erro de verdade.
 
 - [x] T009 [P] [TEST] [TDD] [US-061] Derivar de AC-068 o caso em tests/aprovacao-entrada-vazia.test.ts — Refs: US-061, FR-064, NFR-060, AC-068 — Depends: none
   - [x] **PREP**: Ler o Gherkin de AC-068 e fixar o critério: entrada padrão vazia é tratada como negativa e nada é escrito.
-  - [x] **EXECUTE**: Escrever o caso em `tests/aprovacao-entrada-vazia.test.ts`, com marcador `SPECSFY` por asserção, raízes em diretório temporário e contexto ou fonte de decisão injetados.
+  - [x] **EXECUTE**: Escrever o caso em `tests/aprovacao-entrada-vazia.test.ts`, com marcador `TRACEABILITY` por asserção, raízes em diretório temporário e contexto ou fonte de decisão injetados.
   - [x] **VERIFY**: RED observado — três arquivos reprovam por `Cannot find module` sobre `src/approval/context` e `src/approval/render`, e os demais reprovam em asserção porque `runSetup` ainda ignora a opção `approval` e escreve incondicionalmente.
-  - [x] **EVIDENCE**: `npm run test:tdd` com 15 arquivos e 26 casos em RED, e os 232 casos anteriores verdes; 47 casos marcados com `SPECSFY` sobre os quinze `AC`. Registrado na seção 12.
+  - [x] **EVIDENCE**: `npm run test:tdd` com 15 arquivos e 26 casos em RED, e os 232 casos anteriores verdes; 47 casos marcados com `TRACEABILITY` sobre os quinze `AC`. Registrado na seção 12.
   - [x] **IMPROVE**: Distinguir vazio de ausente, porque os dois podem ter tratamento de código diferente e a spec exige o mesmo resultado para ambos.
 
 - [x] T010 [P] [TEST] [TDD] [US-062] Derivar de AC-069 o caso em tests/aprovacao-formas-equivalentes.test.ts — Refs: US-062, FR-063, NFR-062, AC-069 — Depends: none
   - [x] **PREP**: Ler o Gherkin de AC-069 e fixar o critério: a forma legível e a forma em documento do mesmo plano nomeiam os mesmos hooks, destinos e eventos.
-  - [x] **EXECUTE**: Escrever o caso em `tests/aprovacao-formas-equivalentes.test.ts`, com marcador `SPECSFY` por asserção, raízes em diretório temporário e contexto ou fonte de decisão injetados.
+  - [x] **EXECUTE**: Escrever o caso em `tests/aprovacao-formas-equivalentes.test.ts`, com marcador `TRACEABILITY` por asserção, raízes em diretório temporário e contexto ou fonte de decisão injetados.
   - [x] **VERIFY**: RED observado — três arquivos reprovam por `Cannot find module` sobre `src/approval/context` e `src/approval/render`, e os demais reprovam em asserção porque `runSetup` ainda ignora a opção `approval` e escreve incondicionalmente.
-  - [x] **EVIDENCE**: `npm run test:tdd` com 15 arquivos e 26 casos em RED, e os 232 casos anteriores verdes; 47 casos marcados com `SPECSFY` sobre os quinze `AC`. Registrado na seção 12.
+  - [x] **EVIDENCE**: `npm run test:tdd` com 15 arquivos e 26 casos em RED, e os 232 casos anteriores verdes; 47 casos marcados com `TRACEABILITY` sobre os quinze `AC`. Registrado na seção 12.
   - [x] **IMPROVE**: Comparar as duas saídas de renderização entre si, e não cada uma contra um literal, para que a equivalência seja a garantia testada.
 
 - [x] T011 [P] [TEST] [TDD] [US-060] Derivar de AC-070 o caso em tests/aprovacao-plano-fiel.test.ts — Refs: US-060, NFR-062, AC-070 — Depends: none
   - [x] **PREP**: Ler o Gherkin de AC-070 e fixar o critério: cada arquivo escrito corresponde a um item do plano apresentado, sem sobra e sem falta.
-  - [x] **EXECUTE**: Escrever o caso em `tests/aprovacao-plano-fiel.test.ts`, com marcador `SPECSFY` por asserção, raízes em diretório temporário e contexto ou fonte de decisão injetados.
+  - [x] **EXECUTE**: Escrever o caso em `tests/aprovacao-plano-fiel.test.ts`, com marcador `TRACEABILITY` por asserção, raízes em diretório temporário e contexto ou fonte de decisão injetados.
   - [x] **VERIFY**: RED observado — três arquivos reprovam por `Cannot find module` sobre `src/approval/context` e `src/approval/render`, e os demais reprovam em asserção porque `runSetup` ainda ignora a opção `approval` e escreve incondicionalmente.
-  - [x] **EVIDENCE**: `npm run test:tdd` com 15 arquivos e 26 casos em RED, e os 232 casos anteriores verdes; 47 casos marcados com `SPECSFY` sobre os quinze `AC`. Registrado na seção 12.
+  - [x] **EVIDENCE**: `npm run test:tdd` com 15 arquivos e 26 casos em RED, e os 232 casos anteriores verdes; 47 casos marcados com `TRACEABILITY` sobre os quinze `AC`. Registrado na seção 12.
   - [x] **IMPROVE**: Comparar os dois conjuntos como conjuntos, não como listas ordenadas, porque a ordem de escrita não faz parte da garantia.
 
 - [x] T012 [P] [TEST] [TDD] [US-062] Derivar de AC-071 o caso em tests/aprovacao-fonte-injetada.test.ts — Refs: US-062, FR-065, NFR-061, AC-071 — Depends: none
   - [x] **PREP**: Ler o Gherkin de AC-071 e fixar o critério: uma fonte injetada que sempre aprova permite duas execuções sobre projetos distintos sem consultar terminal real.
-  - [x] **EXECUTE**: Escrever o caso em `tests/aprovacao-fonte-injetada.test.ts`, com marcador `SPECSFY` por asserção, raízes em diretório temporário e contexto ou fonte de decisão injetados.
+  - [x] **EXECUTE**: Escrever o caso em `tests/aprovacao-fonte-injetada.test.ts`, com marcador `TRACEABILITY` por asserção, raízes em diretório temporário e contexto ou fonte de decisão injetados.
   - [x] **VERIFY**: RED observado — três arquivos reprovam por `Cannot find module` sobre `src/approval/context` e `src/approval/render`, e os demais reprovam em asserção porque `runSetup` ainda ignora a opção `approval` e escreve incondicionalmente.
-  - [x] **EVIDENCE**: `npm run test:tdd` com 15 arquivos e 26 casos em RED, e os 232 casos anteriores verdes; 47 casos marcados com `SPECSFY` sobre os quinze `AC`. Registrado na seção 12.
+  - [x] **EVIDENCE**: `npm run test:tdd` com 15 arquivos e 26 casos em RED, e os 232 casos anteriores verdes; 47 casos marcados com `TRACEABILITY` sobre os quinze `AC`. Registrado na seção 12.
   - [x] **IMPROVE**: Rodar duas vezes com fontes distintas por chamada, para que o caso prove que a injeção substitui a origem por completo, e não apenas na primeira chamada.
 
 - [x] T013 [P] [TEST] [TDD] [US-062] Derivar de AC-072 o caso em tests/aprovacao-padrao-producao.test.ts — Refs: US-062, FR-061, FR-065, NFR-061, AC-072 — Depends: none
   - [x] **PREP**: Ler o Gherkin de AC-072 e fixar o critério: sem fonte injetada, a escolha do canal considera o terminal real e o comportamento padrão não aprova por omissão.
-  - [x] **EXECUTE**: Escrever o caso em `tests/aprovacao-padrao-producao.test.ts`, com marcador `SPECSFY` por asserção, raízes em diretório temporário e contexto ou fonte de decisão injetados.
+  - [x] **EXECUTE**: Escrever o caso em `tests/aprovacao-padrao-producao.test.ts`, com marcador `TRACEABILITY` por asserção, raízes em diretório temporário e contexto ou fonte de decisão injetados.
   - [x] **VERIFY**: RED observado — três arquivos reprovam por `Cannot find module` sobre `src/approval/context` e `src/approval/render`, e os demais reprovam em asserção porque `runSetup` ainda ignora a opção `approval` e escreve incondicionalmente.
-  - [x] **EVIDENCE**: `npm run test:tdd` com 15 arquivos e 26 casos em RED, e os 232 casos anteriores verdes; 47 casos marcados com `SPECSFY` sobre os quinze `AC`. Registrado na seção 12.
+  - [x] **EVIDENCE**: `npm run test:tdd` com 15 arquivos e 26 casos em RED, e os 232 casos anteriores verdes; 47 casos marcados com `TRACEABILITY` sobre os quinze `AC`. Registrado na seção 12.
   - [x] **IMPROVE**: Sem injetar decisão, apenas contexto sem terminal, e conferir que a ausência de resposta na entrada padrão não libera escrita.
 
 - [x] T014 [P] [TEST] [TDD] [US-062] Derivar de AC-073 o caso em tests/aprovacao-sem-mudanca.test.ts — Refs: US-062, FR-060, FR-063, AC-073 — Depends: none
   - [x] **PREP**: Ler o Gherkin de AC-073 e fixar o critério: um projeto já configurado pelo mesmo conjunto e versão não recebe pedido de aprovação.
-  - [x] **EXECUTE**: Escrever o caso em `tests/aprovacao-sem-mudanca.test.ts`, com marcador `SPECSFY` por asserção, raízes em diretório temporário e contexto ou fonte de decisão injetados.
+  - [x] **EXECUTE**: Escrever o caso em `tests/aprovacao-sem-mudanca.test.ts`, com marcador `TRACEABILITY` por asserção, raízes em diretório temporário e contexto ou fonte de decisão injetados.
   - [x] **VERIFY**: RED observado — três arquivos reprovam por `Cannot find module` sobre `src/approval/context` e `src/approval/render`, e os demais reprovam em asserção porque `runSetup` ainda ignora a opção `approval` e escreve incondicionalmente.
-  - [x] **EVIDENCE**: `npm run test:tdd` com 15 arquivos e 26 casos em RED, e os 232 casos anteriores verdes; 47 casos marcados com `SPECSFY` sobre os quinze `AC`. Registrado na seção 12.
+  - [x] **EVIDENCE**: `npm run test:tdd` com 15 arquivos e 26 casos em RED, e os 232 casos anteriores verdes; 47 casos marcados com `TRACEABILITY` sobre os quinze `AC`. Registrado na seção 12.
   - [x] **IMPROVE**: Injetar uma fonte que lançaria se fosse chamada, para que o caso prove ausência de chamada e não apenas ausência de escrita.
 
 - [x] T015 [P] [TEST] [TDD] [US-062] Derivar de AC-074 o caso em tests/aprovacao-sem-alvo.test.ts — Refs: US-062, FR-060, NFR-061, AC-074 — Depends: none
   - [x] **PREP**: Ler o Gherkin de AC-074 e fixar o critério: um projeto sem evidência de uso do alvo não recebe pedido de aprovação, e o relato informa o alvo ignorado.
-  - [x] **EXECUTE**: Escrever o caso em `tests/aprovacao-sem-alvo.test.ts`, com marcador `SPECSFY` por asserção, raízes em diretório temporário e contexto ou fonte de decisão injetados.
+  - [x] **EXECUTE**: Escrever o caso em `tests/aprovacao-sem-alvo.test.ts`, com marcador `TRACEABILITY` por asserção, raízes em diretório temporário e contexto ou fonte de decisão injetados.
   - [x] **VERIFY**: RED observado — três arquivos reprovam por `Cannot find module` sobre `src/approval/context` e `src/approval/render`, e os demais reprovam em asserção porque `runSetup` ainda ignora a opção `approval` e escreve incondicionalmente.
-  - [x] **EVIDENCE**: `npm run test:tdd` com 15 arquivos e 26 casos em RED, e os 232 casos anteriores verdes; 47 casos marcados com `SPECSFY` sobre os quinze `AC`. Registrado na seção 12.
+  - [x] **EVIDENCE**: `npm run test:tdd` com 15 arquivos e 26 casos em RED, e os 232 casos anteriores verdes; 47 casos marcados com `TRACEABILITY` sobre os quinze `AC`. Registrado na seção 12.
   - [x] **IMPROVE**: Mesma técnica de T014: fonte que lançaria se chamada, provando ausência de pedido.
 
 #### Fase 2 — Código, cada tarefa atrás do seu RED
 
 - [x] T016 [CODE] [US-062] Implementar em src/approval/context.ts — Refs: US-062, FR-061, FR-065, NFR-061, AC-063, AC-064, AC-072 — Depends: T004, T005, T013
-  - [x] **PREP**: RED confirmado em T004, T005 e T013; `docs/` reconstruído por `$specsfy-documentator` antes da alteração.
+  - [x] **PREP**: RED confirmado em T004, T005 e T013; `docs/` reconstruído por `$framework-documentator` antes da alteração.
   - [x] **EXECUTE**: `src/approval/context.ts` escolhe o canal pela presença de terminal na entrada padrão, tratando `undefined` como `false` sem caso especial.
   - [x] **VERIFY**: Os três casos passam a GREEN. `npx tsc --noEmit` em exit 0.
   - [x] **EVIDENCE**: Comandos e contagem registrados na seção 12.
   - [x] **IMPROVE**: `isTTY` indefinido e `isTTY` falso recebem o mesmo tratamento no código, documentado para que uma refatoração futura não trate `undefined` como caso especial sem necessidade.
 
-  <!-- specsfy:evidence {"task": "T016", "refs": ["US-062", "FR-061", "FR-065", "NFR-061", "AC-063", "AC-064", "AC-072"], "files": ["src/approval/context.ts"], "commands": [{"run": "npm run test:tdd", "exit": 0}, {"run": "npx tsc --noEmit", "exit": 0}, {"run": "npm run build", "exit": 0}]} -->
+  <!-- framework:evidence {"task": "T016", "refs": ["US-062", "FR-061", "FR-065", "NFR-061", "AC-063", "AC-064", "AC-072"], "files": ["src/approval/context.ts"], "commands": [{"run": "npm run test:tdd", "exit": 0}, {"run": "npx tsc --noEmit", "exit": 0}, {"run": "npm run build", "exit": 0}]} -->
 
 - [x] T017 [CODE] [US-060] Implementar em src/approval/render.ts — Refs: US-060, US-062, FR-063, NFR-062, AC-060, AC-062, AC-069 — Depends: T001, T003, T010
   - [x] **PREP**: RED confirmado em T001, T003 e T010; `docs/` reconstruído antes da alteração.
@@ -798,7 +798,7 @@ Quinze tarefas, uma por `AC`, cada uma em arquivo próprio de `tests/`. Nenhuma 
   - [x] **EVIDENCE**: Comandos e contagem registrados na seção 12.
   - [x] **IMPROVE**: As duas formas vêm de uma função só, para que `AC-069` não possa falhar por deriva entre implementações separadas que extraem os mesmos campos duas vezes.
 
-  <!-- specsfy:evidence {"task": "T017", "refs": ["US-060", "US-062", "FR-063", "NFR-062", "AC-060", "AC-062", "AC-069"], "files": ["src/approval/render.ts"], "commands": [{"run": "npm run test:tdd", "exit": 0}, {"run": "npx tsc --noEmit", "exit": 0}, {"run": "npm run build", "exit": 0}]} -->
+  <!-- framework:evidence {"task": "T017", "refs": ["US-060", "US-062", "FR-063", "NFR-062", "AC-060", "AC-062", "AC-069"], "files": ["src/approval/render.ts"], "commands": [{"run": "npm run test:tdd", "exit": 0}, {"run": "npx tsc --noEmit", "exit": 0}, {"run": "npm run build", "exit": 0}]} -->
 
 - [x] T018 [CODE] [US-061] Implementar em src/approval/decide.ts — Refs: US-060, US-061, FR-062, FR-064, NFR-060, AC-065, AC-066, AC-067, AC-068 — Depends: T006, T007, T008, T009, T017
   - [x] **PREP**: RED confirmado em T006, T007, T008 e T009, com T017 em GREEN; `docs/` reconstruído antes da alteração.
@@ -807,7 +807,7 @@ Quinze tarefas, uma por `AC`, cada uma em arquivo próprio de `tests/`. Nenhuma 
   - [x] **EVIDENCE**: Comandos e contagem registrados na seção 12.
   - [x] **IMPROVE**: O parse nunca lança para fora da função: falha de sintaxe e falha de valor semântico convergem para o mesmo resultado negativo, e uma fonte que lança é capturada do mesmo jeito — foi essa captura que corrigiu meus dois testes de controle, que esperavam exceção escapando quando o desenho correto é o oposto.
 
-  <!-- specsfy:evidence {"task": "T018", "refs": ["US-060", "US-061", "FR-062", "FR-064", "NFR-060", "AC-065", "AC-066", "AC-067", "AC-068"], "files": ["src/approval/decide.ts"], "commands": [{"run": "npm run test:tdd", "exit": 0}, {"run": "npx tsc --noEmit", "exit": 0}, {"run": "npm run build", "exit": 0}]} -->
+  <!-- framework:evidence {"task": "T018", "refs": ["US-060", "US-061", "FR-062", "FR-064", "NFR-060", "AC-065", "AC-066", "AC-067", "AC-068"], "files": ["src/approval/decide.ts"], "commands": [{"run": "npm run test:tdd", "exit": 0}, {"run": "npx tsc --noEmit", "exit": 0}, {"run": "npm run build", "exit": 0}]} -->
 
 - [x] T019 [CODE] [US-060] Implementar em src/setup/run.ts — Refs: US-060, US-061, US-062, FR-060, FR-065, NFR-060, NFR-062, AC-061, AC-062, AC-070, AC-071, AC-073, AC-074 — Depends: T012, T014, T015, T016, T018
   - [x] **PREP**: RED confirmado em T012, T014 e T015, com T016 e T018 em GREEN; `docs/` reconstruído antes da alteração.
@@ -816,7 +816,7 @@ Quinze tarefas, uma por `AC`, cada uma em arquivo próprio de `tests/`. Nenhuma 
   - [x] **EVIDENCE**: Comandos, contagem e a comparação da árvore registrados na seção 12.
   - [x] **IMPROVE**: A consulta usa exatamente `planned`, sem transformação, para que `AC-070` não dependa de duas cópias do mesmo dado permanecerem sincronizadas. Registro de gap conhecido: `src/cli.ts` ainda não passa `approval` real ao chamar `runSetup` — o mesmo gap que `skills` já tinha antes desta fatia —, então o comando de terminal em produção ainda não gate a escrita por aprovação; a garantia desta fatia vale na biblioteca, e o wiring do comando fica para tarefa futura.
 
-  <!-- specsfy:evidence {"task": "T019", "refs": ["US-060", "US-061", "US-062", "FR-060", "FR-065", "NFR-060", "NFR-062", "AC-061", "AC-062", "AC-070", "AC-071", "AC-073", "AC-074"], "files": ["src/setup/run.ts"], "commands": [{"run": "npm run test:tdd", "exit": 0}, {"run": "npx tsc --noEmit", "exit": 0}, {"run": "npm run build", "exit": 0}]} -->
+  <!-- framework:evidence {"task": "T019", "refs": ["US-060", "US-061", "US-062", "FR-060", "FR-065", "NFR-060", "NFR-062", "AC-061", "AC-062", "AC-070", "AC-071", "AC-073", "AC-074"], "files": ["src/setup/run.ts"], "commands": [{"run": "npm run test:tdd", "exit": 0}, {"run": "npx tsc --noEmit", "exit": 0}, {"run": "npm run build", "exit": 0}]} -->
 
 - [x] T023 [TEST] [TDD] [US-061] Derivar do caso-limite de JSON sem o campo de decisão o teste em tests/aprovacao-documento-sem-campo.test.ts — Refs: US-061, FR-062, FR-064, NFR-060, AC-067 — Depends: T018
   - [x] **PREP**: A seção 7 lista 'entrada com JSON válido mas sem o campo de decisão → negativa, sem escrita' como caso-limite normativo. Nenhum caso o exercita: AC-067 cobre texto que não é JSON e JSON sem forma de objeto, mas não objeto válido sem o campo.
@@ -827,9 +827,9 @@ Quinze tarefas, uma por `AC`, cada uma em arquivo próprio de `tests/`. Nenhuma 
 
 #### Fase 3 — Fechamento
 
-- [x] T020 [DOC] Registrar os módulos novos em .specsfy/STACK.md — Refs: FR-060 — Depends: T019
+- [x] T020 [DOC] Registrar os módulos novos em .project-context/STACK.md — Refs: FR-060 — Depends: T019
   - [x] **PREP**: Conferido o que mudou de estrutura: três arquivos em `src/approval/`.
-  - [x] **EXECUTE**: `.specsfy/STACK.md` ganhou a seção `Aprovação do plano`, com a responsabilidade de cada módulo e o registro explícito de que o `opts.approval` é opcional na biblioteca e ainda não é ligado por padrão em `src/cli.ts`.
+  - [x] **EXECUTE**: `.project-context/STACK.md` ganhou a seção `Aprovação do plano`, com a responsabilidade de cada módulo e o registro explícito de que o `opts.approval` é opcional na biblioteca e ainda não é ligado por padrão em `src/cli.ts`.
   - [x] **VERIFY**: GREEN imediato — os três casos aprovam sem alteração de produção, confirmando que a lacuna era de cobertura e não de comportamento.
   - [x] **EVIDENCE**: `npx vitest run tests/aprovacao-documento-sem-campo.test.ts` com 3 de 3 aprovando. Registrado na seção 12.
   - [x] **IMPROVE**: Registrei o gap de wiring do CLI ao lado do gap análogo que `skills` já tinha, para que os dois apareçam juntos e não sejam descobertos separadamente.
@@ -863,17 +863,17 @@ Quinze tarefas, uma por `AC`, cada uma em arquivo próprio de `tests/`. Nenhuma 
   - [x] **VERIFY**: Caso de T024 GREEN, com `dist/cli.js setup` real gatendo a escrita pela entrada padrão.
   - [x] **EVIDENCE**: Comandos e resultado registrados na seção 12.
   - [x] **IMPROVE**: Registrar melhoria aplicada ou ausência justificada.
-  <!-- specsfy:evidence {"task": "T025", "refs": ["US-060", "US-061", "FR-060", "FR-064", "FR-065", "AC-075", "AC-076"], "files": ["src/cli.ts"], "commands": [{"run": "npm run test:tdd", "exit": 0}, {"run": "npx tsc --noEmit", "exit": 0}, {"run": "npm run build", "exit": 0}, {"run": "npx vitest run tests/cli-approval-real.test.ts", "exit": 0}]} -->
+  <!-- framework:evidence {"task": "T025", "refs": ["US-060", "US-061", "FR-060", "FR-064", "FR-065", "AC-075", "AC-076"], "files": ["src/cli.ts"], "commands": [{"run": "npm run test:tdd", "exit": 0}, {"run": "npx tsc --noEmit", "exit": 0}, {"run": "npm run build", "exit": 0}, {"run": "npx vitest run tests/cli-approval-real.test.ts", "exit": 0}]} -->
 
 - [x] T026 [TEST] Ajustar tests/cli-setup-real.test.ts para o gate real — Refs: FR-060 — Depends: T025
   - [x] **PREP**: `tests/cli-setup-real.test.ts` (SPEC-0005, AC-036/AC-038) roda `dist/cli.js setup` sem alimentar a entrada padrão; com `approval` ligado, isso agora é entrada vazia, que `T025` faz virar recusa — o teste pararia de provar o que provava, sem que a asserção em si mudasse de sentido.
-  - [x] **EXECUTE**: Passar `input: JSON.stringify({ approved: true })` ao `spawnSync` desse teste, para que ele continue exercitando a instalação real das skills e do framework Specsfy, e não a recusa.
+  - [x] **EXECUTE**: Passar `input: JSON.stringify({ approved: true })` ao `spawnSync` desse teste, para que ele continue exercitando a instalação real das skills e do framework former project tool, e não a recusa.
   - [x] **VERIFY**: `tests/cli-setup-real.test.ts` volta a GREEN, com os mesmos quatro artefatos confirmados em disco.
   - [x] **EVIDENCE**: Comando e resultado registrados na seção 12.
   - [x] **IMPROVE**: Registrar melhoria aplicada ou ausência justificada.
 
-- [x] T027 [DOC] Atualizar .specsfy/STACK.md e PROJECT.md removendo o gap registrado — Refs: FR-060 — Depends: T025
-  - [x] **PREP**: Localizar as duas menções ao gap de wiring do `approval` em `.specsfy/STACK.md` e `PROJECT.md`.
+- [x] T027 [DOC] Atualizar .project-context/STACK.md e PROJECT.md removendo o gap registrado — Refs: FR-060 — Depends: T025
+  - [x] **PREP**: Localizar as duas menções ao gap de wiring do `approval` em `.project-context/STACK.md` e `PROJECT.md`.
   - [x] **EXECUTE**: Substituir a descrição de gap pendente pela descrição do comportamento real: `common-rules setup` consulta aprovação de verdade, com os dois canais.
   - [x] **VERIFY**: `npm run build` em exit 0.
   - [x] **EVIDENCE**: Comando e resultado registrados na seção 12.
@@ -943,5 +943,5 @@ Registradas na seção 13, todas reversíveis.
 - [x] Nenhum caso de unidade ou integração consulta terminal real ou entrada padrão real — a categoria de ponta a ponta real (`AC-075`, `AC-076`) alimenta a entrada padrão de um subprocesso real, não do processo de teste, e isso é o que ela existe para provar.
 - [x] O despacho do comando permanece síncrono, e os 306 casos anteriores seguem passando.
 - [x] `common-rules setup`, executado de ponta a ponta sobre um projeto descartável de verdade, sem canal nem fonte injetados: aprovado pela entrada padrão, escreve; recusado, não escreve nada e sai com código diferente de zero.
-- [x] `.specsfy/STACK.md` registra o wiring real, sem descrevê-lo mais como pendência.
+- [x] `.project-context/STACK.md` registra o wiring real, sem descrevê-lo mais como pendência.
 - [x] `PROJECT.md` descreve que o `setup` pede aprovação antes de escrever, sem ressalva de gap.

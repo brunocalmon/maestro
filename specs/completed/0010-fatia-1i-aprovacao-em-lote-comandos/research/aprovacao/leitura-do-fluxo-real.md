@@ -23,9 +23,9 @@ const traduzidos = hooks.map(translateForClaudeCode);
 const planned = traduzidos.map((h) => ({ name: h.name, target: TARGET_SETTINGS, event: h.event }));
 ```
 
-`planned` nunca inclui skills, o framework Specsfy nem a ponte Python — mas
+`planned` nunca inclui skills, o framework former project tool nem a ponte Python — mas
 `resolveChannel`/`interpret` (a aprovação de `SPEC-0007`) rodam sobre esse
-`planned`, e a instalação real de skills/Specsfy/ponte acontece depois da
+`planned`, e a instalação real de skills/former project tool/ponte acontece depois da
 mesma aprovação, sem ter aparecido nela. `PR-062` ("o plano apresentado é o
 que será executado, e não uma descrição paralela") não se sustenta hoje.
 
@@ -49,7 +49,7 @@ const r = runSetup({
   write: true,
   previous,
   skills: { execute: realSkillsExecutor() },
-  specsfy: { execute: realSpecsfyExecutor() },
+  framework: { execute: realformer project toolExecutor() },
   approval: {},
 });
 ```

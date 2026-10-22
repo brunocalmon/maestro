@@ -26,7 +26,7 @@ function walk(dir: string, acc: string[] = []): string[] {
 }
 
 describe("AC-004 — os arquivos de fábrica existem fisicamente", () => {
-  // SPECSFY: US-001 FR-002 NFR-001 AC-004
+  // TRACEABILITY: US-001 FR-002 NFR-001 AC-004
   it("cria description.md e behavior.md do maestro com conteúdo", () => {
     const root = project();
     setup(root);
@@ -40,7 +40,7 @@ describe("AC-004 — os arquivos de fábrica existem fisicamente", () => {
 });
 
 describe("AC-005 — nenhum comportamento padrão vive embutido no código", () => {
-  // SPECSFY: US-001 FR-002 NFR-001 AC-005
+  // TRACEABILITY: US-001 FR-002 NFR-001 AC-005
   it("o comportamento padrão vive em resources/, não como string em src/", () => {
     const resource = resolve(ROOT, "resources", "agents", "maestro", "behavior.md");
     expect(existsSync(resource)).toBe(true);
@@ -54,7 +54,7 @@ describe("AC-005 — nenhum comportamento padrão vive embutido no código", () 
 });
 
 describe("AC-006 — a semeadura não apaga arquivo de comportamento já editado", () => {
-  // SPECSFY: US-001 FR-002 NFR-002 AC-006
+  // TRACEABILITY: US-001 FR-002 NFR-002 AC-006
   it("preserva behavior.md editado à mão numa segunda execução", () => {
     const root = project();
     setup(root);

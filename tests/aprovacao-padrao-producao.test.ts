@@ -13,13 +13,13 @@ describe("AC-072 — absence of injection doesn't approve by default", () => {
     approval: { context: { hasTerminal: () => false }, stdin: { read: () => "" } },
   });
 
-  // SPECSFY: US-062 FR-061 NFR-061 AC-072
+  // TRACEABILITY: US-062 FR-061 NFR-061 AC-072
   it("the channel choice considers the real context given", () => {
     const root = project();
     expect(run(root).exitCode).not.toBe(0);
   });
 
-  // SPECSFY: US-062 FR-065 NFR-061 AC-072
+  // TRACEABILITY: US-062 FR-065 NFR-061 AC-072
   it("the default behavior, with no explicit source, doesn't approve", () => {
     const root = project();
     const before = fileTree(root);
@@ -27,7 +27,7 @@ describe("AC-072 — absence of injection doesn't approve by default", () => {
     expect(fileTree(root)).toEqual(before);
   });
 
-  // SPECSFY: US-062 FR-061 AC-072
+  // TRACEABILITY: US-062 FR-061 AC-072
   it("the real document-reading implementation is what decides, not a value fixed in code", () => {
     const emptyRoot = project("crs-ap-empty-");
     const refusedRoot = project("crs-ap-refused-");

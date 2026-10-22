@@ -17,7 +17,7 @@ const record = (): TelemetryRecord => ({
 });
 
 describe("AC-008 — maestro report apresenta os registros de um trace", () => {
-  // SPECSFY: US-002 FR-004 NFR-001 AC-008
+  // TRACEABILITY: US-002 FR-004 NFR-001 AC-008
   it("nomeia agente, backend, modelo e resultado de cada registro", async () => {
     const { renderTelemetry } = await import("../src/telemetry/render");
 
@@ -31,7 +31,7 @@ describe("AC-008 — maestro report apresenta os registros de um trace", () => {
 });
 
 describe("AC-014 — relatório com só recusas ainda é legível", () => {
-  // SPECSFY: US-002 FR-004 NFR-001 AC-014
+  // TRACEABILITY: US-002 FR-004 NFR-001 AC-014
   it("nomeia cada recusa e seu motivo, sem exigir nenhum registro ran", async () => {
     const { renderTelemetry } = await import("../src/telemetry/render");
     const refusedOnly: TelemetryRecord = {
@@ -58,7 +58,7 @@ describe("AC-014 — relatório com só recusas ainda é legível", () => {
 });
 
 describe("AC-009 — trace sem telemetria é recusado nomeando a ausência", () => {
-  // SPECSFY: US-002 FR-004 NFR-002 AC-009
+  // TRACEABILITY: US-002 FR-004 NFR-002 AC-009
   it("formatReport recusa nomeando a ausência, código de saída diferente de zero", async () => {
     const { mkdtempSync } = await import("node:fs");
     const { tmpdir } = await import("node:os");

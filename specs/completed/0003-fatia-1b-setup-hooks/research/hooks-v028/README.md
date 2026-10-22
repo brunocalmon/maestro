@@ -28,4 +28,4 @@ tarefas. Foi essa medição que motivou separar o servidor MCP para a fatia 1f.
 
 `orchestration-briefing`, `completion-gate` e `format-after-edit` não foram
 copiados. Pressupõem o kit de 47 recursos removido na Phase 0, e orquestração
-passou a ser território do `specsfy`. Seguem consultáveis em `archived`.
+passou a ser território do `framework`. Seguem consultáveis em `archived`.

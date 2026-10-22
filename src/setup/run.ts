@@ -16,8 +16,6 @@ import { OFFICIAL_SOURCES } from "../skills/source.js";
 import { readLock, toRecordEntries } from "../skills/record.js";
 import { SKILLS_DIR } from "../skills/inventory.js";
 import { projectSkills } from "../skills/project.js";
-import { installSpecsfy, type Executor as SpecsfyExecutor } from "../specsfy/install.js";
-import { describeSpecsfyCommand } from "../specsfy/executor.js";
 import { describeSkillsCommand } from "../skills/executor.js";
 import { bridgePythonSubsystem, VENV_DIR, type BridgeEnvironment } from "./bridge.js";
 import { buildDependencyResolution, codeReviewGraphWillBeLocal } from "./dependency-resolution.js";
@@ -37,7 +35,6 @@ import { realChecksumEnvironment } from "../extensions/registry.js";
 import { readBundledSkill, deliverBundledSkill, realSkillWriteEnvironment } from "../skills/deliver.js";
 import { ensureConfigFile, backfillConfigFile } from "../config/write.js";
 import { seedAgentDefaults } from "../agents/seed.js";
-import { syncProjectFromStack } from "../config/sync.js";
 import { ensureReadmeHomepage } from "./readme.js";
 import { assessConfiguration, nextStepsNote } from "./layout.js";
 
@@ -73,11 +70,6 @@ export interface SetupOptions {
    * single source in isolation.
    */
   skills?: { execute: SkillsExecutor; sources?: readonly string[] };
-  /**
-   * Executor for the Specsfy framework's project installer. Absent,
-   * installation is skipped, same pattern as `skills`.
-   */
-  specsfy?: { execute: SpecsfyExecutor };
   /**
    * Source of the instant and identifier. Absent, the real one is used.
    *
@@ -120,8 +112,7 @@ export interface SetupResult {
 
 /**
  * Ensures `.maestro/config.yaml` is present and complete (FR-001,
- * FR-008), then syncs `project.*` from `.specsfy/STACK.md` when Specsfy is
- * active (FR-007) — never overwrites a value the person already set
+ * FR-008) — never overwrites a value the person already set
  * (FR-005).
  *
  * Also seeds each agent's factory files (`SPEC-0015`, `FR-002`): the
@@ -133,7 +124,6 @@ function ensureConfigYaml(root: string, nextNote: string | null = null): void {
   ensureConfigFile(root);
   backfillConfigFile(root);
   seedAgentDefaults(root);
-  syncProjectFromStack(root);
   ensureReadmeHomepage(root, nextNote);
 }
 
@@ -300,7 +290,7 @@ export function runSetup(opts: SetupOptions): SetupResult {
     adapter.settingsPath !== null && translated.some((h) => h.kind === "script" && !existsSync(join(root, hookScriptPath(h.name))));
 
   // Already configured with the same set and version: nothing to do — but
-  // matching hooks isn't enough. Skills and the Specsfy framework may have
+  // matching hooks isn't enough. Skills and the Maestro-owned setup may have
   // been deleted outside `setup`, and "already configured" needs to be a
   // claim about the disk, not just about the record. The two extra checks
   // are cheap — filesystem, no subprocess — because calling the real
@@ -314,15 +304,15 @@ export function runSetup(opts: SetupOptions): SetupResult {
     !(adapter.settingsPath && hasLegacyEntries(root, adapter.settingsPath, hookNames)) &&
     !missingScripts();
 
-  // Hooks matching is the only fast path. Skills and the Specsfy framework
-  // installers run on every call where they're configured — they're
+  // Hooks matching is the only fast path. The skills installer runs on
+  // every call where configured — it is
   // idempotent by construction (SPEC-0025, FR-004), and a filesystem check
   // here can't tell "nothing to do" from "deleted outside setup and needs
   // reconciling" without literally reinstalling to find out. What used to
   // gate on that check now only gates asking for approval again, via the
   // approval registry below: a command already approved once, with the
   // same binary and argv, is skipped there regardless of this shortcut.
-  const alreadyDone = hooksAlreadyDone && !opts.skills && !opts.specsfy && !bridgePending;
+  const alreadyDone = hooksAlreadyDone && !opts.skills && !bridgePending;
   if (alreadyDone) {
     // The router is idempotent via `createExtension` itself (refuses on a
     // name conflict) and isn't a third-party command, so it neither
@@ -363,11 +353,11 @@ export function runSetup(opts: SetupOptions): SetupResult {
 
   // Dependency candidates: bin/args resolved without running anything
   // (fatia 1i, `PR-062`) — this is what makes the approval plan show the
-  // real command, not a parallel description of what skills/Specsfy/the
+  // real command, not a parallel description of what skills/the
   // bridge would do.
   //
-  // Skills and Specsfy enter as candidates whenever configured — the same
-  // pattern as `installSkills`/`installSpecsfy` below, which run
+  // Skills enter as candidates whenever configured — the same
+  // pattern as `installSkills` below, which runs
   // unconditionally whenever they're configured (SPEC-0025, FR-004),
   // leaving real idempotency inside each installer. What decides whether
   // THIS specific command was already approved before is the registry,
@@ -382,14 +372,6 @@ export function runSetup(opts: SetupOptions): SetupResult {
         pending: true,
       });
     }
-  }
-  if (opts.specsfy) {
-    candidates.push({
-      kind: "specsfy",
-      label: "install Specsfy framework",
-      command: describeSpecsfyCommand(root),
-      pending: true,
-    });
   }
   if (bridgePending && bridgePreview.wouldInstall) {
     candidates.push({
@@ -461,7 +443,6 @@ export function runSetup(opts: SetupOptions): SetupResult {
     ? toRecordEntries(readLock(root)).map((e) => ({ ...e, installedAt: now }))
     : undefined;
 
-  const framework = opts.specsfy ? installSpecsfy({ root, execute: opts.specsfy.execute }) : null;
 
 
   // The field is omitted when the identifier comes back empty, instead of
@@ -540,7 +521,6 @@ export function runSetup(opts: SetupOptions): SetupResult {
       skippedNote,
       upstreamNote,
       ...setsBySource.map((c) => c.report),
-      framework?.report,
       bridge.refused ? `Python bridge: ${bridge.refused}` : null,
       nextNote,
       `run ${trace}`,

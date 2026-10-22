@@ -4,7 +4,7 @@ import { readLock } from "../src/skills/record";
 import { projectWithSkills, fakeExecutor } from "./skills-fixtures";
 
 describe("AC-031 — installation is interrupted before finishing", () => {
-  // SPECSFY: US-022 FR-020 AC-031
+  // TRACEABILITY: US-022 FR-020 AC-031
   it("reports that the set wasn't left installed", async () => {
     const root = projectWithSkills();
     const r = await installSkills({ root, source: "mattpocock/skills", execute: fakeExecutor("error", root).fn });
@@ -12,7 +12,7 @@ describe("AC-031 — installation is interrupted before finishing", () => {
     expect(r.installed).toEqual([]);
   });
 
-  // SPECSFY: US-022 NFR-021 AC-031
+  // TRACEABILITY: US-022 NFR-021 AC-031
   it("the record doesn't gain an entry for an incomplete set", async () => {
     const root = projectWithSkills();
     await installSkills({ root, source: "mattpocock/skills", execute: fakeExecutor("error", root).fn });
@@ -20,7 +20,7 @@ describe("AC-031 — installation is interrupted before finishing", () => {
     expect(readLock(root)).toBeNull();
   });
 
-  // SPECSFY: US-022 FR-020 NFR-021 AC-031
+  // TRACEABILITY: US-022 FR-020 NFR-021 AC-031
   it("partial doesn't pass as complete in the report", async () => {
     const root = projectWithSkills();
     const r = await installSkills({ root, source: "mattpocock/skills", execute: fakeExecutor("error", root).fn });

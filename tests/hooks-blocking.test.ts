@@ -25,17 +25,17 @@ function runGuard(name: string, command: string): number {
 }
 
 describe("AC-002 — guards refuse what they should refuse", () => {
-  // SPECSFY: US-002 FR-003 FR-006 AC-002
+  // TRACEABILITY: US-002 FR-003 FR-006 AC-002
   it("refuses destructive removal without confirmation", () => {
     expect(runGuard("guard-destructive", "rm -rf /")).not.toBe(0);
   });
 
-  // SPECSFY: US-002 FR-003 FR-006 AC-002
+  // TRACEABILITY: US-002 FR-003 FR-006 AC-002
   it("refuses a command that would display a credential file", () => {
     expect(runGuard("guard-secrets", "cat .env")).not.toBe(0);
   });
 
-  // SPECSFY: US-002 FR-006 AC-002
+  // TRACEABILITY: US-002 FR-006 AC-002
   it("observes the refusal by running the script, not by reading its text", () => {
     const code = runGuard("guard-destructive", "rm -rf /");
     expect(typeof code).toBe("number");

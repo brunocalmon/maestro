@@ -1,29 +1,13 @@
-# Reply follows the conversation's language. A generated document uses "default", except paths listed in "exceptions".
 language:
   default: en_US
-  exceptions:
-    - id: specsfy_specs
-      paths:
-        - specs/**/spec.md
-      language: pt_BR
-      reason: Specsfy's own validators (validate_spec.mjs, verify_acceptance.mjs)
-        parse Portuguese section titles
-    - id: specsfy_docs_managed_block
-      paths:
-        - docs/**/*.md
-      language: pt_BR
-      reason: build_documentation.mjs generates the managed block (<!--
-        specsfy:documentator:start/end -->) with Portuguese prose hardcoded in
-        the script itself; --check fails if it diverges
-# Project stack metadata. Synced automatically from .specsfy/STACK.md when Specsfy is active — don't hand-edit these fields in that case.
+  exceptions: []
 project:
-  prog_lang: "TypeScript"
-  runtime: "Node.js"
+  prog_lang: TypeScript
+  runtime: Node.js
   package_manager: ""
   framework: ""
-  test_framework: "Vitest"
+  test_framework: Vitest
   documentation_style: ""
-# Machine/environment profile. "os" is auto-detected; the rest can be filled by asking the agent to interview you.
 system:
   os: linux
   distro: ""
@@ -32,7 +16,6 @@ system:
   gpu: ""
   baremetal: null
   container: null
-# Controls what this project ignores in git. "default" applies to any group without an explicit "ignored".
 git:
   default: ignored
   groups:
@@ -48,19 +31,9 @@ git:
         - .maestro/extensions.json
         - .maestro/quarantine/
       ignored: true
-    specsfy:
-      description: Specsfy artifacts — already treated as versioned normative source
-        by the framework's own contract
-      paths:
-        - .specsfy/
-        - specs/
-        - PROJECT.md
-        - INTERFACE.md
-        - DESIGNSYSTEM.MD
-      ignored: false
     installed_skills:
-      description: Skills delivered by maestro, mattpocock or Specsfy — reinstallable,
-        like dependencies
+      description: Skills installed for agents —
+        reinstallable, like dependencies
       paths:
         - .claude/skills/
         - .agents/skills/

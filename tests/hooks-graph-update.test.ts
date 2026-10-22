@@ -12,7 +12,7 @@ const treeHash = (root: string): string => {
 };
 
 describe("AC-007 — edição via Bash atualiza o grafo", () => {
-  // SPECSFY: US-002 FR-003 FR-007 NFR-001 AC-007
+  // TRACEABILITY: US-002 FR-003 FR-007 NFR-001 AC-007
   it("dispara update --brief silencioso e grava o hash", () => {
     const root = gitRepo();
     const crg = fakeCrg();
@@ -27,7 +27,7 @@ describe("AC-007 — edição via Bash atualiza o grafo", () => {
 });
 
 describe("AC-008 — sem mudança no working tree, o CLI não executa", () => {
-  // SPECSFY: US-002 FR-003 FR-007 NFR-001 AC-008
+  // TRACEABILITY: US-002 FR-003 FR-007 NFR-001 AC-008
   it("segunda chamada sem edição não invoca o binário", () => {
     const root = gitRepo();
     const crg = fakeCrg();
@@ -41,7 +41,7 @@ describe("AC-008 — sem mudança no working tree, o CLI não executa", () => {
 });
 
 describe("AC-009 — Stop fecha a rodada", () => {
-  // SPECSFY: US-002 FR-003 NFR-001 AC-009
+  // TRACEABILITY: US-002 FR-003 NFR-001 AC-009
   it("edição fora do ciclo de ferramentas é capturada no Stop", () => {
     const root = gitRepo();
     const crg = fakeCrg();
@@ -55,7 +55,7 @@ describe("AC-009 — Stop fecha a rodada", () => {
 });
 
 describe("AC-010 — PostToolUse amplo instalado com o matcher correto", () => {
-  // SPECSFY: US-002 FR-003 AC-010
+  // TRACEABILITY: US-002 FR-003 AC-010
   it("settings.json referencia os dois scripts", () => {
     const root = project();
     runSetup({ env: claudeEnv, root, write: true, upstream: { contextModeHooksJson: null } });
@@ -69,7 +69,7 @@ describe("AC-010 — PostToolUse amplo instalado com o matcher correto", () => {
 });
 
 describe("AC-020 — resoluções de binário chegam ao fragmento", () => {
-  // SPECSFY: US-002 FR-003 FR-007 AC-020
+  // TRACEABILITY: US-002 FR-003 FR-007 AC-020
   it("preâmbulo define MAESTRO_BIN_code_review_graph e cai para command -v sem resolução", () => {
     const withBin = scriptFor("code-review-graph-update", { "code-review-graph": "/opt/x/code-review-graph" });
     expect(readFileSync(withBin, "utf8")).toContain("MAESTRO_BIN_code_review_graph='/opt/x/code-review-graph'");
@@ -82,7 +82,7 @@ describe("AC-020 — resoluções de binário chegam ao fragmento", () => {
 });
 
 describe("AC-024 — latência do PostToolUse amplo sem mudança", () => {
-  // SPECSFY: NFR-001 FR-003 AC-024
+  // TRACEABILITY: NFR-001 FR-003 AC-024
   it("mediana abaixo de 200 ms e nenhuma invocação", () => {
     const root = gitRepo();
     const crg = fakeCrg();

@@ -16,18 +16,18 @@ function consistentProject(): string {
 }
 
 describe("AC-024 — doctor enumerates the sets", () => {
-  // SPECSFY: US-021 FR-024 AC-024
+  // TRACEABILITY: US-021 FR-024 AC-024
   it("names each set", () => {
     const names = reportSkills(consistentProject()).results.map((r) => r.name).sort();
     expect(names).toEqual([...MATTPOCOCK_SET].sort());
   });
 
-  // SPECSFY: US-021 FR-024 AC-024
+  // TRACEABILITY: US-021 FR-024 AC-024
   it("names each one's source", () => {
     for (const r of reportSkills(consistentProject()).results) expect(r.origin).toBe("mattpocock/skills");
   });
 
-  // SPECSFY: US-021 FR-024 AC-024
+  // TRACEABILITY: US-021 FR-024 AC-024
   it("exits with zero when nothing diverged", () => {
     expect(reportSkills(consistentProject()).exitCode).toBe(0);
   });

@@ -15,7 +15,7 @@ const SUITE = [
 
 const failures = [];
 for (const name of SUITE) {
-  // SPECSFY: US-001 US-002 AC-010
+  // TRACEABILITY: US-001 US-002 AC-010
   try {
     execFileSync("node", [resolve(__dirname, `${name}.cjs`)], { stdio: ["ignore", "pipe", "pipe"] });
     console.log(`  ✓ ${name}`);

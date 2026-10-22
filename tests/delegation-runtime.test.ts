@@ -14,7 +14,7 @@ const BASE = "# padrão\nApresente o plano antes de executar.";
 const files = { ".maestro/subagents/maestro/behavior.md": BASE };
 
 describe("AC-010 — cli sem contexto de execução é recusado", () => {
-  // SPECSFY: US-001 FR-004 NFR-002 AC-010
+  // TRACEABILITY: US-001 FR-004 NFR-002 AC-010
   it("recusa nomeando a ausência do contexto de execução, sem rodar às cegas", async () => {
     const { runDelegation } = await import("../src/delegation/run");
     const config = { maestro: profile("maestro"), subagents: [] };
@@ -45,7 +45,7 @@ describe("AC-010 — cli sem contexto de execução é recusado", () => {
 });
 
 describe("AC-011 — auto resolve para o nativo enquanto for a única via", () => {
-  // SPECSFY: US-001 FR-004 NFR-001 AC-011
+  // TRACEABILITY: US-001 FR-004 NFR-001 AC-011
   it("emite briefing normalmente para runtime auto", async () => {
     const { runDelegation } = await import("../src/delegation/run");
     const config = { maestro: profile("maestro"), subagents: [] };
@@ -57,7 +57,7 @@ describe("AC-011 — auto resolve para o nativo enquanto for a única via", () =
 });
 
 describe("AC-012 — emitir briefing não grava nada", () => {
-  // SPECSFY: US-001 FR-004 NFR-002 AC-012
+  // TRACEABILITY: US-001 FR-004 NFR-002 AC-012
   it("o projeto permanece idêntico depois da emissão", async () => {
     const { runDelegation } = await import("../src/delegation/run");
     const root = project();

@@ -8,7 +8,7 @@ import { scriptFor, runScript, shellEvent, CTX_EXECUTE, CTX_BATCH, TERMINAL, PLA
 const TOOLS_REGEX = "Bash|mcp__.*(execute|run_in_terminal|shell).*";
 
 describe("AC-001 — comando destrutivo via ctx_execute shell é bloqueado", () => {
-  // SPECSFY: US-001 FR-001 FR-002 FR-006 NFR-002 AC-001
+  // TRACEABILITY: US-001 FR-001 FR-002 FR-006 NFR-002 AC-001
   it("mesmo veredito e mensagem do Bash", () => {
     const root = project();
     const script = scriptFor("guard-destructive");
@@ -21,7 +21,7 @@ describe("AC-001 — comando destrutivo via ctx_execute shell é bloqueado", () 
 });
 
 describe("AC-002 — trailer de IA via run_in_terminal é bloqueado", () => {
-  // SPECSFY: US-001 FR-001 FR-002 FR-006 NFR-002 AC-002
+  // TRACEABILITY: US-001 FR-001 FR-002 FR-006 NFR-002 AC-002
   it("git commit com trailer de agente pelo terminal MCP", () => {
     const root = project();
     const script = scriptFor("protect-authorship");
@@ -38,7 +38,7 @@ describe("AC-002 — trailer de IA via run_in_terminal é bloqueado", () => {
 });
 
 describe("AC-003 — código não-shell em ctx_execute não é avaliado como comando", () => {
-  // SPECSFY: US-001 FR-001 NFR-002 AC-003
+  // TRACEABILITY: US-001 FR-001 NFR-002 AC-003
   it("javascript que menciona rm -rf passa", () => {
     const root = project();
     const script = scriptFor("guard-destructive");
@@ -51,7 +51,7 @@ describe("AC-003 — código não-shell em ctx_execute não é avaliado como com
 });
 
 describe("AC-004 — ctx_batch_execute avalia cada comando da lista", () => {
-  // SPECSFY: US-001 FR-001 FR-002 AC-004
+  // TRACEABILITY: US-001 FR-001 FR-002 AC-004
   it("cat .env no meio do lote é bloqueado", () => {
     const root = project();
     const script = scriptFor("guard-secrets");
@@ -62,7 +62,7 @@ describe("AC-004 — ctx_batch_execute avalia cada comando da lista", () => {
 });
 
 describe("AC-005 — os três guards declaram tools: cobrindo as ferramentas de shell", () => {
-  // SPECSFY: US-001 FR-002 AC-005
+  // TRACEABILITY: US-001 FR-002 AC-005
   it("matcher no settings.json e regex que exclui o playwright", () => {
     const root = project();
     runSetup({ env: claudeEnv, root, write: true, upstream: { contextModeHooksJson: null } });
@@ -82,7 +82,7 @@ describe("AC-005 — os três guards declaram tools: cobrindo as ferramentas de 
 });
 
 describe("AC-006 — hooks valem para subagentes (verificação manual registrada)", () => {
-  // SPECSFY: US-001 FR-006 AC-006
+  // TRACEABILITY: US-001 FR-006 AC-006
   it("a seção 11 da spec registra a verificação manual com data e responsável", () => {
     const specsDir = resolve(__dirname, "..", "specs");
     const states = readdirSync(specsDir).filter((d) => !d.includes("."));

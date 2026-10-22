@@ -14,21 +14,21 @@ function withConflict(): string {
 }
 
 describe("AC-027 — two sets compete for the same directory name", () => {
-  // SPECSFY: US-022 FR-026 AC-027
+  // TRACEABILITY: US-022 FR-026 AC-027
   it("refuses instead of overwriting", async () => {
     const root = withConflict();
     const r = await installSkills({ root, source: "mattpocock/skills", execute: fakeExecutor("success", root).fn });
     expect(r.isError).toBe(true);
   });
 
-  // SPECSFY: US-022 FR-026 AC-027
+  // TRACEABILITY: US-022 FR-026 AC-027
   it("names the conflict", async () => {
     const root = withConflict();
     const r = await installSkills({ root, source: "mattpocock/skills", execute: fakeExecutor("success", root).fn });
     expect(r.report).toContain(MATTPOCOCK_SET[0]!);
   });
 
-  // SPECSFY: US-022 NFR-020 AC-027
+  // TRACEABILITY: US-022 NFR-020 AC-027
   it("the existing directory's content remains", async () => {
     const root = withConflict();
     await installSkills({ root, source: "mattpocock/skills", execute: fakeExecutor("success", root).fn });

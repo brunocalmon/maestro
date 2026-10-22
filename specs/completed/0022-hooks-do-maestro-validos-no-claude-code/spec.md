@@ -2,7 +2,7 @@
 
 | Campo | Valor |
 | --- | --- |
-| Formato | Specsfy/2.0 |
+| Formato | former project tool/2.0 |
 | ID | SPEC-0022 |
 | Slug | 0022-hooks-do-maestro-validos-no-claude-code |
 | Status | Complete |
@@ -57,7 +57,7 @@ Cada hook entregue pelo maestro dispara de fato no Claude Code no evento e nas f
 - `specs/completed/0003-fatia-1b-setup-hooks/spec.md` — origem do formato inline e da identidade por matcher.
 - `specs/completed/0011-extensoes-locais-reparo-assistido/spec.md` — registro por checksum e quarentena.
 - `specs/backlog/0011-hooks-do-maestro-validos-no-claude-code-matcher-identidade-merge-e-despacho.md` — brief promovido nesta spec.
-- `specs/inbox/2026-09-17-105213-hooks-do-maestro-com-matcher-invalido-no-claude-code-e-setup-que-instala-sem-configurar-specsfy-e-skills.md` — captura de origem, preservada.
+- `specs/inbox/2026-09-17-105213-hooks-do-maestro-com-matcher-invalido-no-claude-code-e-setup-que-instala-sem-configurar-framework-e-skills.md` — captura de origem, preservada.
 - Sessão de grill em 2026-09-17 (decisões Q1–Q5, Q9, Q18–Q20), registradas na seção 17.
 
 #### Documentação consultada
@@ -710,7 +710,7 @@ tests/
 
 - **Unidade**: `translateForClaudeCode`/`renderSettings` (matcher, kind, command), `isMaestroEntry`/`isLegacyEntry`, `projectContextModeHooks`, `buildDispatchCommand`, `readHook` com `tools`.
 - **Integração/contrato**: `runSetup` em raiz temporária (fixtures de `settings.json`, `hooks.json`, scripts); execução real dos scripts e do shim via `spawnSync` com JSON de evento.
-- **BDD/aceite**: AC-001 a AC-022 na seção 6 orientam um caso TDD por cenário, cada um com marcador próprio `SPECSFY:`.
+- **BDD/aceite**: AC-001 a AC-022 na seção 6 orientam um caso TDD por cenário, cada um com marcador próprio `TRACEABILITY:`.
 - **Runner TDD**: Vitest (`npm run test:tdd`), único runner deste repositório Node; sem PHP.
 - **E2E**: Não aplicável — o disparo real dentro do Claude Code é validado por execução dos scripts com o mesmo contrato de stdin/exit code.
 - **Verificação manual**: uma execução de `maestro setup` neste repositório após GREEN, para confirmar que `git commit` com trailer de IA é bloqueado na sessão (o único passo que depende do host Claude Code).
@@ -719,28 +719,28 @@ tests/
 
 | IDs | BDD de referência | Teste TDD informado pelo BDD | RED observado | GREEN observado | Refactor/regressão |
 | --- | --- | --- | --- | --- | --- |
-| US-001, FR-001, FR-002, NFR-003, AC-001 | AC-001 na seção 6 | caso 1 em tests/hooks-matcher.test.ts com marcador próprio `SPECSFY:` | RED 2026-09-17: `entriesFor(...protect-authorship)` devolve `[]`: nenhuma entrada referencia `.maestro/hooks/` (formato inline atual) | GREEN 2026-09-17: `npm run test:tdd` focal verde | Regressão: suítes de hooks/setup verdes; 11 falhas pré-existentes da SPEC-0021 |
-| US-001, FR-001, AC-002 | AC-002 na seção 6 | caso 2 em tests/hooks-matcher.test.ts com marcador próprio `SPECSFY:` | RED 2026-09-17: `translated.matcher` é `undefined`: a tradução atual não emite matcher por evento e `renderSettings` usa o nome do hook | GREEN 2026-09-17: `npm run test:tdd` focal verde | Regressão: suítes de hooks/setup verdes; 11 falhas pré-existentes da SPEC-0021 |
-| US-001, FR-001, FR-007, AC-003 | AC-003 na seção 6 | caso 3 em tests/hooks-matcher.test.ts com marcador próprio `SPECSFY:` | RED 2026-09-17: `readHook` lança `hook wide declares an unknown event: before-tool` (vocabulário ainda com 4 eventos) | GREEN 2026-09-17: `npm run test:tdd` focal verde | Regressão: suítes de hooks/setup verdes; 11 falhas pré-existentes da SPEC-0021 |
-| US-001, FR-002, NFR-003, AC-004 | AC-004 na seção 6 | caso 1 em tests/hooks-scripts-file.test.ts com marcador próprio `SPECSFY:` | RED 2026-09-17: `.maestro/hooks/guard-destructive.sh` não existe (`expected false to be true`) | GREEN 2026-09-17: `npm run test:tdd` focal verde | Regressão: suítes de hooks/setup verdes; 11 falhas pré-existentes da SPEC-0021 |
-| US-001, FR-002, NFR-003, AC-005 | AC-005 na seção 6 | caso 2 em tests/hooks-scripts-file.test.ts com marcador próprio `SPECSFY:` | RED 2026-09-17: `ENOENT .maestro/hooks/guard-secrets.sh` — scripts em arquivo ainda não existem | GREEN 2026-09-17: `npm run test:tdd` focal verde | Regressão: suítes de hooks/setup verdes; 11 falhas pré-existentes da SPEC-0021 |
-| US-001, FR-002, NFR-001, AC-006 | AC-006 na seção 6 | caso 1 em tests/hooks-identity.test.ts com marcador próprio `SPECSFY:` | RED 2026-09-17: `Cannot find module '../src/hooks/identity'` — módulo ainda não existe | GREEN 2026-09-17: `npm run test:tdd` focal verde | Regressão: suítes de hooks/setup verdes; 11 falhas pré-existentes da SPEC-0021 |
-| US-002, FR-003, NFR-002, AC-007 | AC-007 na seção 6 | caso 1 em tests/setup-merge-settings.test.ts com marcador próprio `SPECSFY:` | RED 2026-09-17: entrada de terceiro com `matcher: Bash` em `PreToolUse` não sobrevive: `writeSettings` substitui o array do evento | GREEN 2026-09-17: `npm run test:tdd` focal verde | Regressão: suítes de hooks/setup verdes; 11 falhas pré-existentes da SPEC-0021 |
-| US-002, FR-003, NFR-001, AC-008 | AC-008 na seção 6 | caso 2 em tests/setup-merge-settings.test.ts com marcador próprio `SPECSFY:` | RED 2026-09-17: após duas execuções a entrada de terceiro sumiu e nenhuma entrada referencia `.maestro/hooks/` (o arquivo é idêntico, mas no formato antigo) | GREEN 2026-09-17: `npm run test:tdd` focal verde | Regressão: suítes de hooks/setup verdes; 11 falhas pré-existentes da SPEC-0021 |
-| US-002, FR-004, NFR-002, AC-009 | AC-009 na seção 6 | caso 1 em tests/setup-migrate-inline-hooks.test.ts com marcador próprio `SPECSFY:` | RED 2026-09-17: 8 entradas com `>>> hook fragment` permanecem (`expected length 0, got 8`): não há migração | GREEN 2026-09-17: `npm run test:tdd` focal verde | Regressão: suítes de hooks/setup verdes; 11 falhas pré-existentes da SPEC-0021 |
-| US-002, FR-004, NFR-002, AC-010 | AC-010 na seção 6 | caso 2 em tests/setup-migrate-inline-hooks.test.ts com marcador próprio `SPECSFY:` | RED 2026-09-17: entrada `matcher: setup-check` + `echo ok` foi apagada pela substituição por evento | GREEN 2026-09-17: `npm run test:tdd` focal verde | Regressão: suítes de hooks/setup verdes; 11 falhas pré-existentes da SPEC-0021 |
-| US-002, FR-003, FR-004, AC-011 | AC-011 na seção 6 | caso 3 em tests/setup-merge-settings.test.ts com marcador próprio `SPECSFY:` | RED 2026-09-17: `.maestro/quarantine/` não existe (`expected false to be true`): JSON inválido é descartado silenciosamente | GREEN 2026-09-17: `npm run test:tdd` focal verde | Regressão: suítes de hooks/setup verdes; 11 falhas pré-existentes da SPEC-0021 |
-| US-003, FR-005, AC-012 | AC-012 na seção 6 | caso 1 em tests/hooks-dispatch.test.ts com marcador próprio `SPECSFY:` | RED 2026-09-17: `t.command` é `undefined`: a tradução atual só expõe `script` com wrapper (`HOOK_INPUT=$(cat)`) | GREEN 2026-09-17: `npm run test:tdd` focal verde | Regressão: suítes de hooks/setup verdes; 11 falhas pré-existentes da SPEC-0021 |
-| US-003, FR-005, AC-013 | AC-013 na seção 6 | caso 2 em tests/hooks-dispatch.test.ts com marcador próprio `SPECSFY:` | RED 2026-09-17: exit observado `127` (command undefined) em vez de `2` | GREEN 2026-09-17: `npm run test:tdd` focal verde | Regressão: suítes de hooks/setup verdes; 11 falhas pré-existentes da SPEC-0021 |
-| US-003, FR-006, FR-007, AC-014 | AC-014 na seção 6 | caso 1 em tests/hooks-upstream-context-mode.test.ts com marcador próprio `SPECSFY:` | RED 2026-09-17: `Cannot find module '../src/hooks/upstream'` — projeção do `hooks.json` ainda não existe | GREEN 2026-09-17: `npm run test:tdd` focal verde | Regressão: suítes de hooks/setup verdes; 11 falhas pré-existentes da SPEC-0021 |
-| US-003, FR-006, AC-015 | AC-015 na seção 6 | caso 2 em tests/hooks-upstream-context-mode.test.ts com marcador próprio `SPECSFY:` | RED 2026-09-17: `Cannot find module '../src/hooks/upstream'` | GREEN 2026-09-17: `npm run test:tdd` focal verde | Regressão: suítes de hooks/setup verdes; 11 falhas pré-existentes da SPEC-0021 |
-| US-003, FR-007, AC-016 | AC-016 na seção 6 | caso 1 em tests/hooks-events-adapter.test.ts com marcador próprio `SPECSFY:` | RED 2026-09-17: `readHook` lança `unknown event: before-compact`; adaptadores não têm `supportedEvents` | GREEN 2026-09-17: `npm run test:tdd` focal verde | Regressão: suítes de hooks/setup verdes; 11 falhas pré-existentes da SPEC-0021 |
-| US-004, FR-008, AC-017 | AC-017 na seção 6 | caso 1 em tests/hooks-shim.test.ts com marcador próprio `SPECSFY:` | RED 2026-09-17: `Cannot find module '../src/hooks/shim'` | GREEN 2026-09-17: `npm run test:tdd` focal verde | Regressão: suítes de hooks/setup verdes; 11 falhas pré-existentes da SPEC-0021 |
-| US-004, FR-008, AC-018 | AC-018 na seção 6 | caso 2 em tests/hooks-shim.test.ts com marcador próprio `SPECSFY:` | RED 2026-09-17: `Cannot find module '../src/hooks/shim'` | GREEN 2026-09-17: `npm run test:tdd` focal verde | Regressão: suítes de hooks/setup verdes; 11 falhas pré-existentes da SPEC-0021 |
-| US-004, FR-008, AC-019 | AC-019 na seção 6 | caso 3 em tests/hooks-shim.test.ts com marcador próprio `SPECSFY:` | RED 2026-09-17: `Cannot find module '../src/hooks/shim'` | GREEN 2026-09-17: `npm run test:tdd` focal verde | Regressão: suítes de hooks/setup verdes; 11 falhas pré-existentes da SPEC-0021 |
-| NFR-001, FR-002, AC-020 | AC-020 na seção 6 | caso 3 em tests/hooks-scripts-file.test.ts com marcador próprio `SPECSFY:` | RED 2026-09-17: `ENOENT scandir .maestro/hooks` — diretório de scripts ainda não é gerado | GREEN 2026-09-17: `npm run test:tdd` focal verde | Regressão: suítes de hooks/setup verdes; 11 falhas pré-existentes da SPEC-0021 |
-| NFR-003, FR-002, FR-005, AC-021 | AC-021 na seção 6 | caso 1 em tests/hooks-corpus.test.ts com marcador próprio `SPECSFY:` | RED 2026-09-17: `code-review-graph-update: expected undefined to be 'dispatch'` — `TranslatedHook` não tem `kind` | GREEN 2026-09-17: `npm run test:tdd` focal verde | Regressão: suítes de hooks/setup verdes; 11 falhas pré-existentes da SPEC-0021 |
-| US-003, FR-006, FR-007, AC-022 | AC-022 na seção 6 | caso 3 em tests/hooks-upstream-context-mode.test.ts com marcador próprio `SPECSFY:` | RED 2026-09-17: `Cannot find module '../src/hooks/upstream'` | GREEN 2026-09-17: `npm run test:tdd` focal verde | Regressão: suítes de hooks/setup verdes; 11 falhas pré-existentes da SPEC-0021 |
+| US-001, FR-001, FR-002, NFR-003, AC-001 | AC-001 na seção 6 | caso 1 em tests/hooks-matcher.test.ts com marcador próprio `TRACEABILITY:` | RED 2026-09-17: `entriesFor(...protect-authorship)` devolve `[]`: nenhuma entrada referencia `.maestro/hooks/` (formato inline atual) | GREEN 2026-09-17: `npm run test:tdd` focal verde | Regressão: suítes de hooks/setup verdes; 11 falhas pré-existentes da SPEC-0021 |
+| US-001, FR-001, AC-002 | AC-002 na seção 6 | caso 2 em tests/hooks-matcher.test.ts com marcador próprio `TRACEABILITY:` | RED 2026-09-17: `translated.matcher` é `undefined`: a tradução atual não emite matcher por evento e `renderSettings` usa o nome do hook | GREEN 2026-09-17: `npm run test:tdd` focal verde | Regressão: suítes de hooks/setup verdes; 11 falhas pré-existentes da SPEC-0021 |
+| US-001, FR-001, FR-007, AC-003 | AC-003 na seção 6 | caso 3 em tests/hooks-matcher.test.ts com marcador próprio `TRACEABILITY:` | RED 2026-09-17: `readHook` lança `hook wide declares an unknown event: before-tool` (vocabulário ainda com 4 eventos) | GREEN 2026-09-17: `npm run test:tdd` focal verde | Regressão: suítes de hooks/setup verdes; 11 falhas pré-existentes da SPEC-0021 |
+| US-001, FR-002, NFR-003, AC-004 | AC-004 na seção 6 | caso 1 em tests/hooks-scripts-file.test.ts com marcador próprio `TRACEABILITY:` | RED 2026-09-17: `.maestro/hooks/guard-destructive.sh` não existe (`expected false to be true`) | GREEN 2026-09-17: `npm run test:tdd` focal verde | Regressão: suítes de hooks/setup verdes; 11 falhas pré-existentes da SPEC-0021 |
+| US-001, FR-002, NFR-003, AC-005 | AC-005 na seção 6 | caso 2 em tests/hooks-scripts-file.test.ts com marcador próprio `TRACEABILITY:` | RED 2026-09-17: `ENOENT .maestro/hooks/guard-secrets.sh` — scripts em arquivo ainda não existem | GREEN 2026-09-17: `npm run test:tdd` focal verde | Regressão: suítes de hooks/setup verdes; 11 falhas pré-existentes da SPEC-0021 |
+| US-001, FR-002, NFR-001, AC-006 | AC-006 na seção 6 | caso 1 em tests/hooks-identity.test.ts com marcador próprio `TRACEABILITY:` | RED 2026-09-17: `Cannot find module '../src/hooks/identity'` — módulo ainda não existe | GREEN 2026-09-17: `npm run test:tdd` focal verde | Regressão: suítes de hooks/setup verdes; 11 falhas pré-existentes da SPEC-0021 |
+| US-002, FR-003, NFR-002, AC-007 | AC-007 na seção 6 | caso 1 em tests/setup-merge-settings.test.ts com marcador próprio `TRACEABILITY:` | RED 2026-09-17: entrada de terceiro com `matcher: Bash` em `PreToolUse` não sobrevive: `writeSettings` substitui o array do evento | GREEN 2026-09-17: `npm run test:tdd` focal verde | Regressão: suítes de hooks/setup verdes; 11 falhas pré-existentes da SPEC-0021 |
+| US-002, FR-003, NFR-001, AC-008 | AC-008 na seção 6 | caso 2 em tests/setup-merge-settings.test.ts com marcador próprio `TRACEABILITY:` | RED 2026-09-17: após duas execuções a entrada de terceiro sumiu e nenhuma entrada referencia `.maestro/hooks/` (o arquivo é idêntico, mas no formato antigo) | GREEN 2026-09-17: `npm run test:tdd` focal verde | Regressão: suítes de hooks/setup verdes; 11 falhas pré-existentes da SPEC-0021 |
+| US-002, FR-004, NFR-002, AC-009 | AC-009 na seção 6 | caso 1 em tests/setup-migrate-inline-hooks.test.ts com marcador próprio `TRACEABILITY:` | RED 2026-09-17: 8 entradas com `>>> hook fragment` permanecem (`expected length 0, got 8`): não há migração | GREEN 2026-09-17: `npm run test:tdd` focal verde | Regressão: suítes de hooks/setup verdes; 11 falhas pré-existentes da SPEC-0021 |
+| US-002, FR-004, NFR-002, AC-010 | AC-010 na seção 6 | caso 2 em tests/setup-migrate-inline-hooks.test.ts com marcador próprio `TRACEABILITY:` | RED 2026-09-17: entrada `matcher: setup-check` + `echo ok` foi apagada pela substituição por evento | GREEN 2026-09-17: `npm run test:tdd` focal verde | Regressão: suítes de hooks/setup verdes; 11 falhas pré-existentes da SPEC-0021 |
+| US-002, FR-003, FR-004, AC-011 | AC-011 na seção 6 | caso 3 em tests/setup-merge-settings.test.ts com marcador próprio `TRACEABILITY:` | RED 2026-09-17: `.maestro/quarantine/` não existe (`expected false to be true`): JSON inválido é descartado silenciosamente | GREEN 2026-09-17: `npm run test:tdd` focal verde | Regressão: suítes de hooks/setup verdes; 11 falhas pré-existentes da SPEC-0021 |
+| US-003, FR-005, AC-012 | AC-012 na seção 6 | caso 1 em tests/hooks-dispatch.test.ts com marcador próprio `TRACEABILITY:` | RED 2026-09-17: `t.command` é `undefined`: a tradução atual só expõe `script` com wrapper (`HOOK_INPUT=$(cat)`) | GREEN 2026-09-17: `npm run test:tdd` focal verde | Regressão: suítes de hooks/setup verdes; 11 falhas pré-existentes da SPEC-0021 |
+| US-003, FR-005, AC-013 | AC-013 na seção 6 | caso 2 em tests/hooks-dispatch.test.ts com marcador próprio `TRACEABILITY:` | RED 2026-09-17: exit observado `127` (command undefined) em vez de `2` | GREEN 2026-09-17: `npm run test:tdd` focal verde | Regressão: suítes de hooks/setup verdes; 11 falhas pré-existentes da SPEC-0021 |
+| US-003, FR-006, FR-007, AC-014 | AC-014 na seção 6 | caso 1 em tests/hooks-upstream-context-mode.test.ts com marcador próprio `TRACEABILITY:` | RED 2026-09-17: `Cannot find module '../src/hooks/upstream'` — projeção do `hooks.json` ainda não existe | GREEN 2026-09-17: `npm run test:tdd` focal verde | Regressão: suítes de hooks/setup verdes; 11 falhas pré-existentes da SPEC-0021 |
+| US-003, FR-006, AC-015 | AC-015 na seção 6 | caso 2 em tests/hooks-upstream-context-mode.test.ts com marcador próprio `TRACEABILITY:` | RED 2026-09-17: `Cannot find module '../src/hooks/upstream'` | GREEN 2026-09-17: `npm run test:tdd` focal verde | Regressão: suítes de hooks/setup verdes; 11 falhas pré-existentes da SPEC-0021 |
+| US-003, FR-007, AC-016 | AC-016 na seção 6 | caso 1 em tests/hooks-events-adapter.test.ts com marcador próprio `TRACEABILITY:` | RED 2026-09-17: `readHook` lança `unknown event: before-compact`; adaptadores não têm `supportedEvents` | GREEN 2026-09-17: `npm run test:tdd` focal verde | Regressão: suítes de hooks/setup verdes; 11 falhas pré-existentes da SPEC-0021 |
+| US-004, FR-008, AC-017 | AC-017 na seção 6 | caso 1 em tests/hooks-shim.test.ts com marcador próprio `TRACEABILITY:` | RED 2026-09-17: `Cannot find module '../src/hooks/shim'` | GREEN 2026-09-17: `npm run test:tdd` focal verde | Regressão: suítes de hooks/setup verdes; 11 falhas pré-existentes da SPEC-0021 |
+| US-004, FR-008, AC-018 | AC-018 na seção 6 | caso 2 em tests/hooks-shim.test.ts com marcador próprio `TRACEABILITY:` | RED 2026-09-17: `Cannot find module '../src/hooks/shim'` | GREEN 2026-09-17: `npm run test:tdd` focal verde | Regressão: suítes de hooks/setup verdes; 11 falhas pré-existentes da SPEC-0021 |
+| US-004, FR-008, AC-019 | AC-019 na seção 6 | caso 3 em tests/hooks-shim.test.ts com marcador próprio `TRACEABILITY:` | RED 2026-09-17: `Cannot find module '../src/hooks/shim'` | GREEN 2026-09-17: `npm run test:tdd` focal verde | Regressão: suítes de hooks/setup verdes; 11 falhas pré-existentes da SPEC-0021 |
+| NFR-001, FR-002, AC-020 | AC-020 na seção 6 | caso 3 em tests/hooks-scripts-file.test.ts com marcador próprio `TRACEABILITY:` | RED 2026-09-17: `ENOENT scandir .maestro/hooks` — diretório de scripts ainda não é gerado | GREEN 2026-09-17: `npm run test:tdd` focal verde | Regressão: suítes de hooks/setup verdes; 11 falhas pré-existentes da SPEC-0021 |
+| NFR-003, FR-002, FR-005, AC-021 | AC-021 na seção 6 | caso 1 em tests/hooks-corpus.test.ts com marcador próprio `TRACEABILITY:` | RED 2026-09-17: `code-review-graph-update: expected undefined to be 'dispatch'` — `TranslatedHook` não tem `kind` | GREEN 2026-09-17: `npm run test:tdd` focal verde | Regressão: suítes de hooks/setup verdes; 11 falhas pré-existentes da SPEC-0021 |
+| US-003, FR-006, FR-007, AC-022 | AC-022 na seção 6 | caso 3 em tests/hooks-upstream-context-mode.test.ts com marcador próprio `TRACEABILITY:` | RED 2026-09-17: `Cannot find module '../src/hooks/upstream'` | GREEN 2026-09-17: `npm run test:tdd` focal verde | Regressão: suítes de hooks/setup verdes; 11 falhas pré-existentes da SPEC-0021 |
 
 ### 12. Plano de testes e rastreabilidade
 
@@ -790,22 +790,22 @@ tests/
 #### Gate do Ato I — Definição
 
 - **Resultado**: READY (2026-09-17); aceite final em `review` (2026-09-17): entrega conferida contra cada AC/FR/NFR e a DoD, sem findings abertos — spec movida para `completed`.
-- **Comando**: `node .agents/skills/specsfy-04-validate/scripts/validate_spec.mjs specs/completed/0022-hooks-do-maestro-validos-no-claude-code/spec.md`
+- **Comando**: `node .agents/skills/framework-04-validate/scripts/validate_spec.mjs specs/completed/0022-hooks-do-maestro-validos-no-claude-code/spec.md`
 - **Achados**: estrutura VALID; research PASSED (R-001, R-002 critical verificados, R-003 high verificado); cobertura mínima atendida — 4 US, 8 FR e 3 NFR com ≥3 AC cada, 22 AC no total; NOTE editorial resolvido (a primeira palavra da seção "Resultado desejado" casava o detector de marcadores pendentes por ser homógrafa em português; reescrita como "Cada"). Sem BLOCKER.
 - **FIND-SEC-001** [P3] [Accepted] O fallback do shim para `PATH` (FR-008) pode executar um binário diferente do resolvido no setup se o caminho gravado sumir e outro `context-mode`/`code-review-graph` estiver antes no `PATH` — Refs: FR-008, AC-018 — Evidence: src/hooks/resolve.ts:1 — Effect: hook de despacho executa binário homônimo não aprovado; superfície limitada ao próprio host da pessoa, mesma exposição que existia antes de `resolveHookCommand` — Suggestion: o shim prefere sempre o caminho gravado e, ao cair para `PATH`, escreve em stderr o caminho efetivamente usado; aceito sem bloqueio porque o fallback só ocorre após rename/move e a alternativa (falhar) foi descartada em DEC-006.
 - **FIND-ARCH-001** [P3] [Resolved] O comportamento atual de `writeSettings` para JSON inválido (`current = {}` e reescrita) apaga o arquivo original apesar do comentário "never blindly erased" — Refs: FR-003, AC-011 — Evidence: src/setup/write.ts:22 — Effect: perda silenciosa de hooks de terceiros em arquivo corrompido — Suggestion: quarentena antes da escrita, já exigida por AC-011; resolvido na definição.
-- **FIND-PROD-001** [P3] [Resolved] A seção 14 ainda não tem tarefas materializadas — Refs: AC-001 — Evidence: specs/draft/0022-hooks-do-maestro-validos-no-claude-code/spec.md:1 — Effect: nenhum; decomposição pertence a `$specsfy-05-tasks` — Suggestion: manter a Fase 1 com um caso TDD por AC conforme a seção 11.
+- **FIND-PROD-001** [P3] [Resolved] A seção 14 ainda não tem tarefas materializadas — Refs: AC-001 — Evidence: specs/draft/0022-hooks-do-maestro-validos-no-claude-code/spec.md:1 — Effect: nenhum; decomposição pertence a `$framework-05-tasks` — Suggestion: manter a Fase 1 com um caso TDD por AC conforme a seção 11.
 
 #### Gate do Ato II — Plano
 
 - **Resultado**: Passed (2026-09-17)
-- **Comando**: `node .agents/skills/specsfy-05-tasks/scripts/validate_tasks.mjs specs/completed/0022-hooks-do-maestro-validos-no-claude-code/spec.md`
+- **Comando**: `node .agents/skills/framework-05-tasks/scripts/validate_tasks.mjs specs/completed/0022-hooks-do-maestro-validos-no-claude-code/spec.md`
 - **Achados**: 34 tarefas (22 `[TEST][TDD]`, 10 `[CODE]`, 1 `[TEST]` de regressão, 1 `[DOC]`), 37/37 IDs cobertos; os 22 predecessores TDD concluídos com RED válido registrado na seção 11 (15 por asserção de comportamento ausente, 7 por módulo inexistente). Ciclo 1 corrigiu T023, T025 e T031 com menos de três predecessores. Suíte completa: nenhuma regressão em teste que passava; 11 falhas pré-existentes pertencem à SPEC-0021 (`Planned`).
 
 #### Gate do Ato III — Entrega
 
 - **Resultado**: Pending
-- **Comando**: `node .agents/skills/specsfy-06-tdd-bdd/scripts/check_traceability.mjs specs/completed/0022-hooks-do-maestro-validos-no-claude-code/spec.md .`
+- **Comando**: `node .agents/skills/framework-06-tdd-bdd/scripts/check_traceability.mjs specs/completed/0022-hooks-do-maestro-validos-no-claude-code/spec.md .`
 - **Achados**: Pending.
 
 ### 14. Tarefas
@@ -824,7 +824,7 @@ Cada tarefa possui exatamente este checklist, atualizado durante a execução:
   - [ ] **IMPROVE**: Registrar melhoria aplicada ou ausência justificada.
 ```
 
-Cada tarefa `[CODE]` inclui, no seu **PREP**, acionar `$specsfy-documentator` para
+Cada tarefa `[CODE]` inclui, no seu **PREP**, acionar `$framework-documentator` para
 reconstrução independente de `docs/` antes do **EXECUTE**, mesmo quando a
 documentação já existia antes da mudança. Nenhuma tarefa tem superfície visual:
 a entrega são arquivos de configuração, scripts e relatório textual.
@@ -833,7 +833,7 @@ a entrega são arquivos de configuração, scripts e relatório textual.
 
 - [x] T001 [TEST] [TDD] [US-001] Derivar de AC-001 um caso Vitest falhando em tests/hooks-matcher.test.ts — Refs: US-001, FR-001, FR-002, NFR-003, AC-001 — Depends: none
   - [x] **PREP**: Gherkin de AC-001 lido; IDs e nível confirmados conforme a seção 12.
-  - [x] **EXECUTE**: Caso escrito em tests/hooks-matcher.test.ts com marcador `SPECSFY: … AC-001`; fixtures em tests/helpers-spec-0022.ts e tests/fixtures/spec-0022/; sem `.feature`.
+  - [x] **EXECUTE**: Caso escrito em tests/hooks-matcher.test.ts com marcador `TRACEABILITY: … AC-001`; fixtures em tests/helpers-spec-0022.ts e tests/fixtures/spec-0022/; sem `.feature`.
   - [x] **VERIFY**: RED válido — `entriesFor(...protect-authorship)` devolve `[]`: nenhuma entrada referencia `.maestro/hooks/` (formato inline atual).
   - [x] **VISUAL**: Não aplicável — a tarefa só materializa teste e a spec não tem interface.
   - [x] **EVIDENCE**: `npm run test:tdd -- hooks-matcher` → falha em AC-001 (2026-09-17); linha registrada na tabela da seção 11.
@@ -841,7 +841,7 @@ a entrega são arquivos de configuração, scripts e relatório textual.
 
 - [x] T002 [TEST] [TDD] [US-001] Derivar de AC-002 um caso Vitest falhando em tests/hooks-matcher.test.ts — Refs: US-001, FR-001, AC-002 — Depends: none
   - [x] **PREP**: Gherkin de AC-002 lido; IDs e nível confirmados conforme a seção 12.
-  - [x] **EXECUTE**: Caso escrito em tests/hooks-matcher.test.ts com marcador `SPECSFY: … AC-002`; fixtures em tests/helpers-spec-0022.ts e tests/fixtures/spec-0022/; sem `.feature`.
+  - [x] **EXECUTE**: Caso escrito em tests/hooks-matcher.test.ts com marcador `TRACEABILITY: … AC-002`; fixtures em tests/helpers-spec-0022.ts e tests/fixtures/spec-0022/; sem `.feature`.
   - [x] **VERIFY**: RED válido — `translated.matcher` é `undefined`: a tradução atual não emite matcher por evento e `renderSettings` usa o nome do hook.
   - [x] **VISUAL**: Não aplicável — a tarefa só materializa teste e a spec não tem interface.
   - [x] **EVIDENCE**: `npm run test:tdd -- hooks-matcher` → falha em AC-002 (2026-09-17); linha registrada na tabela da seção 11.
@@ -849,7 +849,7 @@ a entrega são arquivos de configuração, scripts e relatório textual.
 
 - [x] T003 [TEST] [TDD] [US-001] Derivar de AC-003 um caso Vitest falhando em tests/hooks-matcher.test.ts — Refs: US-001, FR-001, FR-007, AC-003 — Depends: none
   - [x] **PREP**: Gherkin de AC-003 lido; IDs e nível confirmados conforme a seção 12.
-  - [x] **EXECUTE**: Caso escrito em tests/hooks-matcher.test.ts com marcador `SPECSFY: … AC-003`; fixtures em tests/helpers-spec-0022.ts e tests/fixtures/spec-0022/; sem `.feature`.
+  - [x] **EXECUTE**: Caso escrito em tests/hooks-matcher.test.ts com marcador `TRACEABILITY: … AC-003`; fixtures em tests/helpers-spec-0022.ts e tests/fixtures/spec-0022/; sem `.feature`.
   - [x] **VERIFY**: RED válido — `readHook` lança `hook wide declares an unknown event: before-tool` (vocabulário ainda com 4 eventos).
   - [x] **VISUAL**: Não aplicável — a tarefa só materializa teste e a spec não tem interface.
   - [x] **EVIDENCE**: `npm run test:tdd -- hooks-matcher` → falha em AC-003 (2026-09-17); linha registrada na tabela da seção 11.
@@ -857,7 +857,7 @@ a entrega são arquivos de configuração, scripts e relatório textual.
 
 - [x] T004 [TEST] [TDD] [US-001] Derivar de AC-004 um caso Vitest falhando em tests/hooks-scripts-file.test.ts — Refs: US-001, FR-002, NFR-003, AC-004 — Depends: none
   - [x] **PREP**: Gherkin de AC-004 lido; IDs e nível confirmados conforme a seção 12.
-  - [x] **EXECUTE**: Caso escrito em tests/hooks-scripts-file.test.ts com marcador `SPECSFY: … AC-004`; fixtures em tests/helpers-spec-0022.ts e tests/fixtures/spec-0022/; sem `.feature`.
+  - [x] **EXECUTE**: Caso escrito em tests/hooks-scripts-file.test.ts com marcador `TRACEABILITY: … AC-004`; fixtures em tests/helpers-spec-0022.ts e tests/fixtures/spec-0022/; sem `.feature`.
   - [x] **VERIFY**: RED válido — `.maestro/hooks/guard-destructive.sh` não existe (`expected false to be true`).
   - [x] **VISUAL**: Não aplicável — a tarefa só materializa teste e a spec não tem interface.
   - [x] **EVIDENCE**: `npm run test:tdd -- hooks-scripts-file` → falha em AC-004 (2026-09-17); linha registrada na tabela da seção 11.
@@ -865,7 +865,7 @@ a entrega são arquivos de configuração, scripts e relatório textual.
 
 - [x] T005 [TEST] [TDD] [US-001] Derivar de AC-005 um caso Vitest falhando em tests/hooks-scripts-file.test.ts — Refs: US-001, FR-002, NFR-003, AC-005 — Depends: none
   - [x] **PREP**: Gherkin de AC-005 lido; IDs e nível confirmados conforme a seção 12.
-  - [x] **EXECUTE**: Caso escrito em tests/hooks-scripts-file.test.ts com marcador `SPECSFY: … AC-005`; fixtures em tests/helpers-spec-0022.ts e tests/fixtures/spec-0022/; sem `.feature`.
+  - [x] **EXECUTE**: Caso escrito em tests/hooks-scripts-file.test.ts com marcador `TRACEABILITY: … AC-005`; fixtures em tests/helpers-spec-0022.ts e tests/fixtures/spec-0022/; sem `.feature`.
   - [x] **VERIFY**: RED válido — `ENOENT .maestro/hooks/guard-secrets.sh` — scripts em arquivo ainda não existem.
   - [x] **VISUAL**: Não aplicável — a tarefa só materializa teste e a spec não tem interface.
   - [x] **EVIDENCE**: `npm run test:tdd -- hooks-scripts-file` → falha em AC-005 (2026-09-17); linha registrada na tabela da seção 11.
@@ -873,7 +873,7 @@ a entrega são arquivos de configuração, scripts e relatório textual.
 
 - [x] T006 [TEST] [TDD] [US-001] Derivar de AC-006 um caso Vitest falhando em tests/hooks-identity.test.ts — Refs: US-001, FR-002, NFR-001, AC-006 — Depends: none
   - [x] **PREP**: Gherkin de AC-006 lido; IDs e nível confirmados conforme a seção 12.
-  - [x] **EXECUTE**: Caso escrito em tests/hooks-identity.test.ts com marcador `SPECSFY: … AC-006`; fixtures em tests/helpers-spec-0022.ts e tests/fixtures/spec-0022/; sem `.feature`.
+  - [x] **EXECUTE**: Caso escrito em tests/hooks-identity.test.ts com marcador `TRACEABILITY: … AC-006`; fixtures em tests/helpers-spec-0022.ts e tests/fixtures/spec-0022/; sem `.feature`.
   - [x] **VERIFY**: RED válido — `Cannot find module '../src/hooks/identity'` — módulo ainda não existe.
   - [x] **VISUAL**: Não aplicável — a tarefa só materializa teste e a spec não tem interface.
   - [x] **EVIDENCE**: `npm run test:tdd -- hooks-identity` → falha em AC-006 (2026-09-17); linha registrada na tabela da seção 11.
@@ -881,7 +881,7 @@ a entrega são arquivos de configuração, scripts e relatório textual.
 
 - [x] T007 [TEST] [TDD] [US-002] Derivar de AC-007 um caso Vitest falhando em tests/setup-merge-settings.test.ts — Refs: US-002, FR-003, NFR-002, AC-007 — Depends: none
   - [x] **PREP**: Gherkin de AC-007 lido; IDs e nível confirmados conforme a seção 12.
-  - [x] **EXECUTE**: Caso escrito em tests/setup-merge-settings.test.ts com marcador `SPECSFY: … AC-007`; fixtures em tests/helpers-spec-0022.ts e tests/fixtures/spec-0022/; sem `.feature`.
+  - [x] **EXECUTE**: Caso escrito em tests/setup-merge-settings.test.ts com marcador `TRACEABILITY: … AC-007`; fixtures em tests/helpers-spec-0022.ts e tests/fixtures/spec-0022/; sem `.feature`.
   - [x] **VERIFY**: RED válido — entrada de terceiro com `matcher: Bash` em `PreToolUse` não sobrevive: `writeSettings` substitui o array do evento.
   - [x] **VISUAL**: Não aplicável — a tarefa só materializa teste e a spec não tem interface.
   - [x] **EVIDENCE**: `npm run test:tdd -- setup-merge-settings` → falha em AC-007 (2026-09-17); linha registrada na tabela da seção 11.
@@ -889,7 +889,7 @@ a entrega são arquivos de configuração, scripts e relatório textual.
 
 - [x] T008 [TEST] [TDD] [US-002] Derivar de AC-008 um caso Vitest falhando em tests/setup-merge-settings.test.ts — Refs: US-002, FR-003, NFR-001, AC-008 — Depends: none
   - [x] **PREP**: Gherkin de AC-008 lido; IDs e nível confirmados conforme a seção 12.
-  - [x] **EXECUTE**: Caso escrito em tests/setup-merge-settings.test.ts com marcador `SPECSFY: … AC-008`; fixtures em tests/helpers-spec-0022.ts e tests/fixtures/spec-0022/; sem `.feature`.
+  - [x] **EXECUTE**: Caso escrito em tests/setup-merge-settings.test.ts com marcador `TRACEABILITY: … AC-008`; fixtures em tests/helpers-spec-0022.ts e tests/fixtures/spec-0022/; sem `.feature`.
   - [x] **VERIFY**: RED válido — após duas execuções a entrada de terceiro sumiu e nenhuma entrada referencia `.maestro/hooks/` (o arquivo é idêntico, mas no formato antigo).
   - [x] **VISUAL**: Não aplicável — a tarefa só materializa teste e a spec não tem interface.
   - [x] **EVIDENCE**: `npm run test:tdd -- setup-merge-settings` → falha em AC-008 (2026-09-17); linha registrada na tabela da seção 11.
@@ -897,7 +897,7 @@ a entrega são arquivos de configuração, scripts e relatório textual.
 
 - [x] T009 [TEST] [TDD] [US-002] Derivar de AC-009 um caso Vitest falhando em tests/setup-migrate-inline-hooks.test.ts — Refs: US-002, FR-004, NFR-002, AC-009 — Depends: none
   - [x] **PREP**: Gherkin de AC-009 lido; IDs e nível confirmados conforme a seção 12.
-  - [x] **EXECUTE**: Caso escrito em tests/setup-migrate-inline-hooks.test.ts com marcador `SPECSFY: … AC-009`; fixtures em tests/helpers-spec-0022.ts e tests/fixtures/spec-0022/; sem `.feature`.
+  - [x] **EXECUTE**: Caso escrito em tests/setup-migrate-inline-hooks.test.ts com marcador `TRACEABILITY: … AC-009`; fixtures em tests/helpers-spec-0022.ts e tests/fixtures/spec-0022/; sem `.feature`.
   - [x] **VERIFY**: RED válido — 8 entradas com `>>> hook fragment` permanecem (`expected length 0, got 8`): não há migração.
   - [x] **VISUAL**: Não aplicável — a tarefa só materializa teste e a spec não tem interface.
   - [x] **EVIDENCE**: `npm run test:tdd -- setup-migrate-inline-hooks` → falha em AC-009 (2026-09-17); linha registrada na tabela da seção 11.
@@ -905,7 +905,7 @@ a entrega são arquivos de configuração, scripts e relatório textual.
 
 - [x] T010 [TEST] [TDD] [US-002] Derivar de AC-010 um caso Vitest falhando em tests/setup-migrate-inline-hooks.test.ts — Refs: US-002, FR-004, NFR-002, AC-010 — Depends: none
   - [x] **PREP**: Gherkin de AC-010 lido; IDs e nível confirmados conforme a seção 12.
-  - [x] **EXECUTE**: Caso escrito em tests/setup-migrate-inline-hooks.test.ts com marcador `SPECSFY: … AC-010`; fixtures em tests/helpers-spec-0022.ts e tests/fixtures/spec-0022/; sem `.feature`.
+  - [x] **EXECUTE**: Caso escrito em tests/setup-migrate-inline-hooks.test.ts com marcador `TRACEABILITY: … AC-010`; fixtures em tests/helpers-spec-0022.ts e tests/fixtures/spec-0022/; sem `.feature`.
   - [x] **VERIFY**: RED válido — entrada `matcher: setup-check` + `echo ok` foi apagada pela substituição por evento.
   - [x] **VISUAL**: Não aplicável — a tarefa só materializa teste e a spec não tem interface.
   - [x] **EVIDENCE**: `npm run test:tdd -- setup-migrate-inline-hooks` → falha em AC-010 (2026-09-17); linha registrada na tabela da seção 11.
@@ -913,7 +913,7 @@ a entrega são arquivos de configuração, scripts e relatório textual.
 
 - [x] T011 [TEST] [TDD] [US-002] Derivar de AC-011 um caso Vitest falhando em tests/setup-merge-settings.test.ts — Refs: US-002, FR-003, FR-004, AC-011 — Depends: none
   - [x] **PREP**: Gherkin de AC-011 lido; IDs e nível confirmados conforme a seção 12.
-  - [x] **EXECUTE**: Caso escrito em tests/setup-merge-settings.test.ts com marcador `SPECSFY: … AC-011`; fixtures em tests/helpers-spec-0022.ts e tests/fixtures/spec-0022/; sem `.feature`.
+  - [x] **EXECUTE**: Caso escrito em tests/setup-merge-settings.test.ts com marcador `TRACEABILITY: … AC-011`; fixtures em tests/helpers-spec-0022.ts e tests/fixtures/spec-0022/; sem `.feature`.
   - [x] **VERIFY**: RED válido — `.maestro/quarantine/` não existe (`expected false to be true`): JSON inválido é descartado silenciosamente.
   - [x] **VISUAL**: Não aplicável — a tarefa só materializa teste e a spec não tem interface.
   - [x] **EVIDENCE**: `npm run test:tdd -- setup-merge-settings` → falha em AC-011 (2026-09-17); linha registrada na tabela da seção 11.
@@ -921,7 +921,7 @@ a entrega são arquivos de configuração, scripts e relatório textual.
 
 - [x] T012 [TEST] [TDD] [US-003] Derivar de AC-012 um caso Vitest falhando em tests/hooks-dispatch.test.ts — Refs: US-003, FR-005, AC-012 — Depends: none
   - [x] **PREP**: Gherkin de AC-012 lido; IDs e nível confirmados conforme a seção 12.
-  - [x] **EXECUTE**: Caso escrito em tests/hooks-dispatch.test.ts com marcador `SPECSFY: … AC-012`; fixtures em tests/helpers-spec-0022.ts e tests/fixtures/spec-0022/; sem `.feature`.
+  - [x] **EXECUTE**: Caso escrito em tests/hooks-dispatch.test.ts com marcador `TRACEABILITY: … AC-012`; fixtures em tests/helpers-spec-0022.ts e tests/fixtures/spec-0022/; sem `.feature`.
   - [x] **VERIFY**: RED válido — `t.command` é `undefined`: a tradução atual só expõe `script` com wrapper (`HOOK_INPUT=$(cat)`).
   - [x] **VISUAL**: Não aplicável — a tarefa só materializa teste e a spec não tem interface.
   - [x] **EVIDENCE**: `npm run test:tdd -- hooks-dispatch` → falha em AC-012 (2026-09-17); linha registrada na tabela da seção 11.
@@ -929,7 +929,7 @@ a entrega são arquivos de configuração, scripts e relatório textual.
 
 - [x] T013 [TEST] [TDD] [US-003] Derivar de AC-013 um caso Vitest falhando em tests/hooks-dispatch.test.ts — Refs: US-003, FR-005, AC-013 — Depends: none
   - [x] **PREP**: Gherkin de AC-013 lido; IDs e nível confirmados conforme a seção 12.
-  - [x] **EXECUTE**: Caso escrito em tests/hooks-dispatch.test.ts com marcador `SPECSFY: … AC-013`; fixtures em tests/helpers-spec-0022.ts e tests/fixtures/spec-0022/; sem `.feature`.
+  - [x] **EXECUTE**: Caso escrito em tests/hooks-dispatch.test.ts com marcador `TRACEABILITY: … AC-013`; fixtures em tests/helpers-spec-0022.ts e tests/fixtures/spec-0022/; sem `.feature`.
   - [x] **VERIFY**: RED válido — exit observado `127` (command undefined) em vez de `2`.
   - [x] **VISUAL**: Não aplicável — a tarefa só materializa teste e a spec não tem interface.
   - [x] **EVIDENCE**: `npm run test:tdd -- hooks-dispatch` → falha em AC-013 (2026-09-17); linha registrada na tabela da seção 11.
@@ -937,7 +937,7 @@ a entrega são arquivos de configuração, scripts e relatório textual.
 
 - [x] T014 [TEST] [TDD] [US-003] Derivar de AC-014 um caso Vitest falhando em tests/hooks-upstream-context-mode.test.ts — Refs: US-003, FR-006, FR-007, AC-014 — Depends: none
   - [x] **PREP**: Gherkin de AC-014 lido; IDs e nível confirmados conforme a seção 12.
-  - [x] **EXECUTE**: Caso escrito em tests/hooks-upstream-context-mode.test.ts com marcador `SPECSFY: … AC-014`; fixtures em tests/helpers-spec-0022.ts e tests/fixtures/spec-0022/; sem `.feature`.
+  - [x] **EXECUTE**: Caso escrito em tests/hooks-upstream-context-mode.test.ts com marcador `TRACEABILITY: … AC-014`; fixtures em tests/helpers-spec-0022.ts e tests/fixtures/spec-0022/; sem `.feature`.
   - [x] **VERIFY**: RED válido — `Cannot find module '../src/hooks/upstream'` — projeção do `hooks.json` ainda não existe.
   - [x] **VISUAL**: Não aplicável — a tarefa só materializa teste e a spec não tem interface.
   - [x] **EVIDENCE**: `npm run test:tdd -- hooks-upstream-context-mode` → falha em AC-014 (2026-09-17); linha registrada na tabela da seção 11.
@@ -945,7 +945,7 @@ a entrega são arquivos de configuração, scripts e relatório textual.
 
 - [x] T015 [TEST] [TDD] [US-003] Derivar de AC-015 um caso Vitest falhando em tests/hooks-upstream-context-mode.test.ts — Refs: US-003, FR-006, AC-015 — Depends: none
   - [x] **PREP**: Gherkin de AC-015 lido; IDs e nível confirmados conforme a seção 12.
-  - [x] **EXECUTE**: Caso escrito em tests/hooks-upstream-context-mode.test.ts com marcador `SPECSFY: … AC-015`; fixtures em tests/helpers-spec-0022.ts e tests/fixtures/spec-0022/; sem `.feature`.
+  - [x] **EXECUTE**: Caso escrito em tests/hooks-upstream-context-mode.test.ts com marcador `TRACEABILITY: … AC-015`; fixtures em tests/helpers-spec-0022.ts e tests/fixtures/spec-0022/; sem `.feature`.
   - [x] **VERIFY**: RED válido — `Cannot find module '../src/hooks/upstream'`.
   - [x] **VISUAL**: Não aplicável — a tarefa só materializa teste e a spec não tem interface.
   - [x] **EVIDENCE**: `npm run test:tdd -- hooks-upstream-context-mode` → falha em AC-015 (2026-09-17); linha registrada na tabela da seção 11.
@@ -953,7 +953,7 @@ a entrega são arquivos de configuração, scripts e relatório textual.
 
 - [x] T016 [TEST] [TDD] [US-003] Derivar de AC-016 um caso Vitest falhando em tests/hooks-events-adapter.test.ts — Refs: US-003, FR-007, AC-016 — Depends: none
   - [x] **PREP**: Gherkin de AC-016 lido; IDs e nível confirmados conforme a seção 12.
-  - [x] **EXECUTE**: Caso escrito em tests/hooks-events-adapter.test.ts com marcador `SPECSFY: … AC-016`; fixtures em tests/helpers-spec-0022.ts e tests/fixtures/spec-0022/; sem `.feature`.
+  - [x] **EXECUTE**: Caso escrito em tests/hooks-events-adapter.test.ts com marcador `TRACEABILITY: … AC-016`; fixtures em tests/helpers-spec-0022.ts e tests/fixtures/spec-0022/; sem `.feature`.
   - [x] **VERIFY**: RED válido — `readHook` lança `unknown event: before-compact`; adaptadores não têm `supportedEvents`.
   - [x] **VISUAL**: Não aplicável — a tarefa só materializa teste e a spec não tem interface.
   - [x] **EVIDENCE**: `npm run test:tdd -- hooks-events-adapter` → falha em AC-016 (2026-09-17); linha registrada na tabela da seção 11.
@@ -961,7 +961,7 @@ a entrega são arquivos de configuração, scripts e relatório textual.
 
 - [x] T017 [TEST] [TDD] [US-004] Derivar de AC-017 um caso Vitest falhando em tests/hooks-shim.test.ts — Refs: US-004, FR-008, AC-017 — Depends: none
   - [x] **PREP**: Gherkin de AC-017 lido; IDs e nível confirmados conforme a seção 12.
-  - [x] **EXECUTE**: Caso escrito em tests/hooks-shim.test.ts com marcador `SPECSFY: … AC-017`; fixtures em tests/helpers-spec-0022.ts e tests/fixtures/spec-0022/; sem `.feature`.
+  - [x] **EXECUTE**: Caso escrito em tests/hooks-shim.test.ts com marcador `TRACEABILITY: … AC-017`; fixtures em tests/helpers-spec-0022.ts e tests/fixtures/spec-0022/; sem `.feature`.
   - [x] **VERIFY**: RED válido — `Cannot find module '../src/hooks/shim'`.
   - [x] **VISUAL**: Não aplicável — a tarefa só materializa teste e a spec não tem interface.
   - [x] **EVIDENCE**: `npm run test:tdd -- hooks-shim` → falha em AC-017 (2026-09-17); linha registrada na tabela da seção 11.
@@ -969,7 +969,7 @@ a entrega são arquivos de configuração, scripts e relatório textual.
 
 - [x] T018 [TEST] [TDD] [US-004] Derivar de AC-018 um caso Vitest falhando em tests/hooks-shim.test.ts — Refs: US-004, FR-008, AC-018 — Depends: none
   - [x] **PREP**: Gherkin de AC-018 lido; IDs e nível confirmados conforme a seção 12.
-  - [x] **EXECUTE**: Caso escrito em tests/hooks-shim.test.ts com marcador `SPECSFY: … AC-018`; fixtures em tests/helpers-spec-0022.ts e tests/fixtures/spec-0022/; sem `.feature`.
+  - [x] **EXECUTE**: Caso escrito em tests/hooks-shim.test.ts com marcador `TRACEABILITY: … AC-018`; fixtures em tests/helpers-spec-0022.ts e tests/fixtures/spec-0022/; sem `.feature`.
   - [x] **VERIFY**: RED válido — `Cannot find module '../src/hooks/shim'`.
   - [x] **VISUAL**: Não aplicável — a tarefa só materializa teste e a spec não tem interface.
   - [x] **EVIDENCE**: `npm run test:tdd -- hooks-shim` → falha em AC-018 (2026-09-17); linha registrada na tabela da seção 11.
@@ -977,7 +977,7 @@ a entrega são arquivos de configuração, scripts e relatório textual.
 
 - [x] T019 [TEST] [TDD] [US-004] Derivar de AC-019 um caso Vitest falhando em tests/hooks-shim.test.ts — Refs: US-004, FR-008, AC-019 — Depends: none
   - [x] **PREP**: Gherkin de AC-019 lido; IDs e nível confirmados conforme a seção 12.
-  - [x] **EXECUTE**: Caso escrito em tests/hooks-shim.test.ts com marcador `SPECSFY: … AC-019`; fixtures em tests/helpers-spec-0022.ts e tests/fixtures/spec-0022/; sem `.feature`.
+  - [x] **EXECUTE**: Caso escrito em tests/hooks-shim.test.ts com marcador `TRACEABILITY: … AC-019`; fixtures em tests/helpers-spec-0022.ts e tests/fixtures/spec-0022/; sem `.feature`.
   - [x] **VERIFY**: RED válido — `Cannot find module '../src/hooks/shim'`.
   - [x] **VISUAL**: Não aplicável — a tarefa só materializa teste e a spec não tem interface.
   - [x] **EVIDENCE**: `npm run test:tdd -- hooks-shim` → falha em AC-019 (2026-09-17); linha registrada na tabela da seção 11.
@@ -985,7 +985,7 @@ a entrega são arquivos de configuração, scripts e relatório textual.
 
 - [x] T020 [TEST] [TDD] Derivar de AC-020 um caso Vitest falhando em tests/hooks-scripts-file.test.ts — Refs: NFR-001, FR-002, AC-020 — Depends: none
   - [x] **PREP**: Gherkin de AC-020 lido; IDs e nível confirmados conforme a seção 12.
-  - [x] **EXECUTE**: Caso escrito em tests/hooks-scripts-file.test.ts com marcador `SPECSFY: … AC-020`; fixtures em tests/helpers-spec-0022.ts e tests/fixtures/spec-0022/; sem `.feature`.
+  - [x] **EXECUTE**: Caso escrito em tests/hooks-scripts-file.test.ts com marcador `TRACEABILITY: … AC-020`; fixtures em tests/helpers-spec-0022.ts e tests/fixtures/spec-0022/; sem `.feature`.
   - [x] **VERIFY**: RED válido — `ENOENT scandir .maestro/hooks` — diretório de scripts ainda não é gerado.
   - [x] **VISUAL**: Não aplicável — a tarefa só materializa teste e a spec não tem interface.
   - [x] **EVIDENCE**: `npm run test:tdd -- hooks-scripts-file` → falha em AC-020 (2026-09-17); linha registrada na tabela da seção 11.
@@ -993,7 +993,7 @@ a entrega são arquivos de configuração, scripts e relatório textual.
 
 - [x] T021 [TEST] [TDD] Derivar de AC-021 um caso Vitest falhando em tests/hooks-corpus.test.ts — Refs: NFR-003, FR-002, FR-005, AC-021 — Depends: none
   - [x] **PREP**: Gherkin de AC-021 lido; IDs e nível confirmados conforme a seção 12.
-  - [x] **EXECUTE**: Caso escrito em tests/hooks-corpus.test.ts com marcador `SPECSFY: … AC-021`; fixtures em tests/helpers-spec-0022.ts e tests/fixtures/spec-0022/; sem `.feature`.
+  - [x] **EXECUTE**: Caso escrito em tests/hooks-corpus.test.ts com marcador `TRACEABILITY: … AC-021`; fixtures em tests/helpers-spec-0022.ts e tests/fixtures/spec-0022/; sem `.feature`.
   - [x] **VERIFY**: RED válido — `code-review-graph-update: expected undefined to be 'dispatch'` — `TranslatedHook` não tem `kind`.
   - [x] **VISUAL**: Não aplicável — a tarefa só materializa teste e a spec não tem interface.
   - [x] **EVIDENCE**: `npm run test:tdd -- hooks-corpus` → falha em AC-021 (2026-09-17); linha registrada na tabela da seção 11.
@@ -1001,7 +1001,7 @@ a entrega são arquivos de configuração, scripts e relatório textual.
 
 - [x] T022 [TEST] [TDD] [US-003] Derivar de AC-022 um caso Vitest falhando em tests/hooks-upstream-context-mode.test.ts — Refs: US-003, FR-006, FR-007, AC-022 — Depends: none
   - [x] **PREP**: Gherkin de AC-022 lido; IDs e nível confirmados conforme a seção 12.
-  - [x] **EXECUTE**: Caso escrito em tests/hooks-upstream-context-mode.test.ts com marcador `SPECSFY: … AC-022`; fixtures em tests/helpers-spec-0022.ts e tests/fixtures/spec-0022/; sem `.feature`.
+  - [x] **EXECUTE**: Caso escrito em tests/hooks-upstream-context-mode.test.ts com marcador `TRACEABILITY: … AC-022`; fixtures em tests/helpers-spec-0022.ts e tests/fixtures/spec-0022/; sem `.feature`.
   - [x] **VERIFY**: RED válido — `Cannot find module '../src/hooks/upstream'`.
   - [x] **VISUAL**: Não aplicável — a tarefa só materializa teste e a spec não tem interface.
   - [x] **EVIDENCE**: `npm run test:tdd -- hooks-upstream-context-mode` → falha em AC-022 (2026-09-17); linha registrada na tabela da seção 11.
@@ -1018,36 +1018,36 @@ a entrega são arquivos de configuração, scripts e relatório textual.
   - [x] **EXECUTE**: `CanonicalEvent` com 8 eventos, `tools?` e `kind` derivado em `readHook`; `HookKind` exportado.
   - [x] **VERIFY**: `npm run test:tdd -- hooks-matcher hooks-raw-command hooks-corpus` → GREEN; `npx tsc --noEmit` sem erros (2026-09-17).
   - [x] **VISUAL**: Não aplicável — sem interface; a mudança é em código, scripts e configuração.
-  - [x] **EVIDENCE**: GREEN registrado nas seções 11–12; `PROJECT.md` revisado e atualizado (seção sobre como um hook chega ao Claude Code); `.specsfy/STACK.md`/`DATABASE.md` sem impacto.
+  - [x] **EVIDENCE**: GREEN registrado nas seções 11–12; `PROJECT.md` revisado e atualizado (seção sobre como um hook chega ao Claude Code); `.project-context/STACK.md`/`DATABASE.md` sem impacto.
   - [x] **IMPROVE**: Nenhuma melhoria adicional além da mudança mínima; sem duplicação introduzida.
-  <!-- specsfy:evidence {"task":"T023","refs":["US-001","FR-001","FR-007","AC-002","AC-003","AC-016","AC-022"],"files":["src/hooks/source.ts"],"commands":[{"run":"npm run test:tdd -- hooks-matcher hooks-raw-command hooks-corpus","exit":0},{"run":"npx tsc --noEmit -p .","exit":0}]} -->
+  <!-- framework:evidence {"task":"T023","refs":["US-001","FR-001","FR-007","AC-002","AC-003","AC-016","AC-022"],"files":["src/hooks/source.ts"],"commands":[{"run":"npm run test:tdd -- hooks-matcher hooks-raw-command hooks-corpus","exit":0},{"run":"npx tsc --noEmit -p .","exit":0}]} -->
 
 - [x] T024 [CODE] [US-001] Traduzir com matcher por evento/tools e command por referência em src/hooks/claude-code.ts — Refs: US-001, FR-001, FR-002, NFR-003, AC-001, AC-002, AC-003, AC-004, AC-021 — Depends: T001, T002, T003, T004, T021, T023
   - [x] **PREP**: RED dos predecessores confirmado na seção 11; `docs/` avaliado antes do EXECUTE — o script mecânico `build_documentation.mjs` substitui o conteúdo real por esqueleto (R-001 da SPEC-0021), então a reconstrução foi feita de forma dirigida em `docs/integrations.md` e `docs/application.md` e o monitor devolve `CURRENT`.
   - [x] **EXECUTE**: `EVENT_MAP` com `PreCompact`/`UserPromptSubmit`, `MATCHER_MAP` por evento, `TranslatedHook` com `matcher?`, `kind`, `command`, `scriptBody?`, `canonicalEvent`; `renderSettings` emite `matcher` só quando definido; `scriptReference()`/`dispatchMarker()`. Testes antigos `hooks-corpus`, `hooks-escape`, `hooks-translate`, `hooks-permissive` adaptados ao novo contrato (round-trip pelo `scriptBody`/registro JSON).
   - [x] **VERIFY**: `npm run test:tdd -- hooks-matcher hooks-corpus hooks-translate hooks-escape hooks-blocking hooks-permissive` → GREEN; `npx tsc --noEmit` sem erros (2026-09-17).
   - [x] **VISUAL**: Não aplicável — sem interface; a mudança é em código, scripts e configuração.
-  - [x] **EVIDENCE**: GREEN registrado nas seções 11–12; `PROJECT.md` revisado e atualizado (seção sobre como um hook chega ao Claude Code); `.specsfy/STACK.md`/`DATABASE.md` sem impacto.
+  - [x] **EVIDENCE**: GREEN registrado nas seções 11–12; `PROJECT.md` revisado e atualizado (seção sobre como um hook chega ao Claude Code); `.project-context/STACK.md`/`DATABASE.md` sem impacto.
   - [x] **IMPROVE**: Nenhuma melhoria adicional além da mudança mínima; sem duplicação introduzida.
-  <!-- specsfy:evidence {"task":"T024","refs":["US-001","FR-001","FR-002","NFR-003","AC-001","AC-002","AC-003","AC-004","AC-021"],"files":["src/hooks/claude-code.ts"],"commands":[{"run":"npm run test:tdd -- hooks-matcher hooks-corpus hooks-translate hooks-escape hooks-blocking hooks-permissive","exit":0},{"run":"npx tsc --noEmit -p .","exit":0}]} -->
+  <!-- framework:evidence {"task":"T024","refs":["US-001","FR-001","FR-002","NFR-003","AC-001","AC-002","AC-003","AC-004","AC-021"],"files":["src/hooks/claude-code.ts"],"commands":[{"run":"npm run test:tdd -- hooks-matcher hooks-corpus hooks-translate hooks-escape hooks-blocking hooks-permissive","exit":0},{"run":"npx tsc --noEmit -p .","exit":0}]} -->
 
 - [x] T025 [CODE] [US-001] Criar reconhecimento de entradas do maestro em src/hooks/identity.ts — Refs: US-001, FR-002, FR-004, NFR-001, AC-006, AC-009, AC-010 — Depends: T006, T009, T010
   - [x] **PREP**: RED dos predecessores confirmado na seção 11; `docs/` avaliado antes do EXECUTE — o script mecânico `build_documentation.mjs` substitui o conteúdo real por esqueleto (R-001 da SPEC-0021), então a reconstrução foi feita de forma dirigida em `docs/integrations.md` e `docs/application.md` e o monitor devolve `CURRENT`.
   - [x] **EXECUTE**: `isMaestroEntry` reconhece caminho `.maestro/hooks/<name>.sh` **ou** marcador `# maestro:hook=<name>` (despachos); `isLegacyEntry` exige matcher ∈ nomes (inclusive `LEGACY_HOOK_NAMES` do context-mode) **e** `>>> hook fragment`.
   - [x] **VERIFY**: `npm run test:tdd -- hooks-identity` → GREEN; `npx tsc --noEmit` sem erros (2026-09-17).
   - [x] **VISUAL**: Não aplicável — sem interface; a mudança é em código, scripts e configuração.
-  - [x] **EVIDENCE**: GREEN registrado nas seções 11–12; `PROJECT.md` revisado e atualizado (seção sobre como um hook chega ao Claude Code); `.specsfy/STACK.md`/`DATABASE.md` sem impacto.
+  - [x] **EVIDENCE**: GREEN registrado nas seções 11–12; `PROJECT.md` revisado e atualizado (seção sobre como um hook chega ao Claude Code); `.project-context/STACK.md`/`DATABASE.md` sem impacto.
   - [x] **IMPROVE**: Marcador `# maestro:hook=<name>` acrescentado aos despachos — sem ele a segunda execução duplicava as entradas upstream (achado real no AC-008).
-  <!-- specsfy:evidence {"task":"T025","refs":["US-001","FR-002","FR-004","NFR-001","AC-006","AC-009","AC-010"],"files":["src/hooks/identity.ts"],"commands":[{"run":"npm run test:tdd -- hooks-identity","exit":0},{"run":"npx tsc --noEmit -p .","exit":0}]} -->
+  <!-- framework:evidence {"task":"T025","refs":["US-001","FR-002","FR-004","NFR-001","AC-006","AC-009","AC-010"],"files":["src/hooks/identity.ts"],"commands":[{"run":"npm run test:tdd -- hooks-identity","exit":0},{"run":"npx tsc --noEmit -p .","exit":0}]} -->
 
 - [x] T026 [CODE] [US-001] Gravar scripts de hook com registro por checksum e quarentena em src/setup/write.ts — Refs: US-001, FR-002, NFR-001, NFR-003, AC-004, AC-005, AC-020 — Depends: T004, T005, T020, T024
   - [x] **PREP**: RED dos predecessores confirmado na seção 11; `docs/` avaliado antes do EXECUTE — o script mecânico `build_documentation.mjs` substitui o conteúdo real por esqueleto (R-001 da SPEC-0021), então a reconstrução foi feita de forma dirigida em `docs/integrations.md` e `docs/application.md` e o monitor devolve `CURRENT`.
   - [x] **EXECUTE**: `writeHookScripts` grava `.maestro/hooks/<name>.sh` (0o755), registra `hook:<name>` por checksum em `.maestro/extensions.json` (categoria `hook`), quarentena de drift e restauração, sem reescrita quando o checksum bate; `diagnoseExtensions` compara o arquivo inteiro para categoria `hook`; `runSetup` chama os scripts antes do `settings.json` e também no caminho *already configured*.
   - [x] **VERIFY**: `npm run test:tdd -- hooks-scripts-file extensions-create-sobrevive-setup setup-idempotent` → GREEN; `npx tsc --noEmit` sem erros (2026-09-17).
   - [x] **VISUAL**: Não aplicável — sem interface; a mudança é em código, scripts e configuração.
-  - [x] **EVIDENCE**: GREEN registrado nas seções 11–12; `PROJECT.md` revisado e atualizado (seção sobre como um hook chega ao Claude Code); `.specsfy/STACK.md`/`DATABASE.md` sem impacto.
+  - [x] **EVIDENCE**: GREEN registrado nas seções 11–12; `PROJECT.md` revisado e atualizado (seção sobre como um hook chega ao Claude Code); `.project-context/STACK.md`/`DATABASE.md` sem impacto.
   - [x] **IMPROVE**: Nenhuma melhoria adicional além da mudança mínima; sem duplicação introduzida.
-  <!-- specsfy:evidence {"task":"T026","refs":["US-001","FR-002","NFR-001","NFR-003","AC-004","AC-005","AC-020"],"files":["src/setup/write.ts","src/setup/run.ts"],"commands":[{"run":"npm run test:tdd -- hooks-scripts-file extensions-create-sobrevive-setup setup-idempotent","exit":0},{"run":"npx tsc --noEmit -p .","exit":0}]} -->
+  <!-- framework:evidence {"task":"T026","refs":["US-001","FR-002","NFR-001","NFR-003","AC-004","AC-005","AC-020"],"files":["src/setup/write.ts","src/setup/run.ts"],"commands":[{"run":"npm run test:tdd -- hooks-scripts-file extensions-create-sobrevive-setup setup-idempotent","exit":0},{"run":"npx tsc --noEmit -p .","exit":0}]} -->
 
 
 **Checkpoint**: `runSetup` numa raiz temporária gera `.maestro/hooks/protect-authorship.sh`; executá-lo com JSON de `PreToolUse`/`Bash` contendo trailer de IA devolve exit 2.
@@ -1062,18 +1062,18 @@ a entrega são arquivos de configuração, scripts e relatório textual.
   - [x] **EXECUTE**: `writeSettings(root, rel, settings, names)` mescla por identidade em todos os eventos, preserva terceiros, quarentena `<stamp>-settings.json` para JSON inválido e devolve `{ preserved, migrated, quarantined }`; `hasLegacyEntries` força reexecução quando o arquivo ainda tem formato antigo.
   - [x] **VERIFY**: `npm run test:tdd -- setup-merge-settings setup-writes setup-idempotent` → GREEN; `npx tsc --noEmit` sem erros (2026-09-17).
   - [x] **VISUAL**: Não aplicável — sem interface; a mudança é em código, scripts e configuração.
-  - [x] **EVIDENCE**: GREEN registrado nas seções 11–12; `PROJECT.md` revisado e atualizado (seção sobre como um hook chega ao Claude Code); `.specsfy/STACK.md`/`DATABASE.md` sem impacto.
+  - [x] **EVIDENCE**: GREEN registrado nas seções 11–12; `PROJECT.md` revisado e atualizado (seção sobre como um hook chega ao Claude Code); `.project-context/STACK.md`/`DATABASE.md` sem impacto.
   - [x] **IMPROVE**: Nenhuma melhoria adicional além da mudança mínima; sem duplicação introduzida.
-  <!-- specsfy:evidence {"task":"T027","refs":["US-002","FR-003","NFR-001","NFR-002","AC-007","AC-008","AC-011"],"files":["src/setup/write.ts"],"commands":[{"run":"npm run test:tdd -- setup-merge-settings setup-writes setup-idempotent","exit":0},{"run":"npx tsc --noEmit -p .","exit":0}]} -->
+  <!-- framework:evidence {"task":"T027","refs":["US-002","FR-003","NFR-001","NFR-002","AC-007","AC-008","AC-011"],"files":["src/setup/write.ts"],"commands":[{"run":"npm run test:tdd -- setup-merge-settings setup-writes setup-idempotent","exit":0},{"run":"npx tsc --noEmit -p .","exit":0}]} -->
 
 - [x] T028 [CODE] [US-002] Migrar entradas inline antigas em src/setup/write.ts e relatar em src/setup/run.ts — Refs: US-002, FR-004, NFR-002, AC-009, AC-010 — Depends: T009, T010, T027
   - [x] **PREP**: RED dos predecessores confirmado na seção 11; `docs/` avaliado antes do EXECUTE — o script mecânico `build_documentation.mjs` substitui o conteúdo real por esqueleto (R-001 da SPEC-0021), então a reconstrução foi feita de forma dirigida em `docs/integrations.md` e `docs/application.md` e o monitor devolve `CURRENT`.
   - [x] **EXECUTE**: Entradas legadas removidas e contadas; relatório `N legacy inline entries migrated`; `hooksAlreadyDone` deixa de valer com entradas legadas ou script ausente.
   - [x] **VERIFY**: `npm run test:tdd -- setup-migrate-inline-hooks setup-revert setup-record` → GREEN; `npx tsc --noEmit` sem erros (2026-09-17).
   - [x] **VISUAL**: Não aplicável — sem interface; a mudança é em código, scripts e configuração.
-  - [x] **EVIDENCE**: GREEN registrado nas seções 11–12; `PROJECT.md` revisado e atualizado (seção sobre como um hook chega ao Claude Code); `.specsfy/STACK.md`/`DATABASE.md` sem impacto.
+  - [x] **EVIDENCE**: GREEN registrado nas seções 11–12; `PROJECT.md` revisado e atualizado (seção sobre como um hook chega ao Claude Code); `.project-context/STACK.md`/`DATABASE.md` sem impacto.
   - [x] **IMPROVE**: Nenhuma melhoria adicional além da mudança mínima; sem duplicação introduzida.
-  <!-- specsfy:evidence {"task":"T028","refs":["US-002","FR-004","NFR-002","AC-009","AC-010"],"files":["src/setup/write.ts","src/setup/run.ts"],"commands":[{"run":"npm run test:tdd -- setup-migrate-inline-hooks setup-revert setup-record","exit":0},{"run":"npx tsc --noEmit -p .","exit":0}]} -->
+  <!-- framework:evidence {"task":"T028","refs":["US-002","FR-004","NFR-002","AC-009","AC-010"],"files":["src/setup/write.ts","src/setup/run.ts"],"commands":[{"run":"npm run test:tdd -- setup-migrate-inline-hooks setup-revert setup-record","exit":0},{"run":"npx tsc --noEmit -p .","exit":0}]} -->
 
 
 **Checkpoint**: fixture com hook manual `matcher: Bash` + 8 entradas antigas → após `runSetup`, o manual permanece e as antigas viram referências a `.maestro/hooks/`.
@@ -1088,27 +1088,27 @@ a entrega são arquivos de configuração, scripts e relatório textual.
   - [x] **EXECUTE**: Despacho sem preâmbulo/postâmbulo: `command = <raw_command> # maestro:hook=<name>`; stdin e exit code passam intactos (AC-012/013 executam via `sh -c`). `hooks-raw-command` adaptado.
   - [x] **VERIFY**: `npm run test:tdd -- hooks-dispatch hooks-corpus hooks-context-mode-comando` → GREEN; `npx tsc --noEmit` sem erros (2026-09-17).
   - [x] **VISUAL**: Não aplicável — sem interface; a mudança é em código, scripts e configuração.
-  - [x] **EVIDENCE**: GREEN registrado nas seções 11–12; `PROJECT.md` revisado e atualizado (seção sobre como um hook chega ao Claude Code); `.specsfy/STACK.md`/`DATABASE.md` sem impacto.
+  - [x] **EVIDENCE**: GREEN registrado nas seções 11–12; `PROJECT.md` revisado e atualizado (seção sobre como um hook chega ao Claude Code); `.project-context/STACK.md`/`DATABASE.md` sem impacto.
   - [x] **IMPROVE**: Nenhuma melhoria adicional além da mudança mínima; sem duplicação introduzida.
-  <!-- specsfy:evidence {"task":"T029","refs":["US-003","FR-005","AC-012","AC-013","AC-021"],"files":["src/hooks/claude-code.ts"],"commands":[{"run":"npm run test:tdd -- hooks-dispatch hooks-corpus hooks-context-mode-comando","exit":0},{"run":"npx tsc --noEmit -p .","exit":0}]} -->
+  <!-- framework:evidence {"task":"T029","refs":["US-003","FR-005","AC-012","AC-013","AC-021"],"files":["src/hooks/claude-code.ts"],"commands":[{"run":"npm run test:tdd -- hooks-dispatch hooks-corpus hooks-context-mode-comando","exit":0},{"run":"npx tsc --noEmit -p .","exit":0}]} -->
 
 - [x] T030 [CODE] [US-003] Projetar hooks do context-mode a partir do hooks.json em src/hooks/upstream.ts e remover resources/hooks/context-mode-*.md — Refs: US-003, FR-006, FR-007, AC-014, AC-015, AC-022 — Depends: T014, T015, T022, T023, T029
   - [x] **PREP**: RED dos predecessores confirmado na seção 11; `docs/` avaliado antes do EXECUTE — o script mecânico `build_documentation.mjs` substitui o conteúdo real por esqueleto (R-001 da SPEC-0021), então a reconstrução foi feita de forma dirigida em `docs/integrations.md` e `docs/application.md` e o monitor devolve `CURRENT`.
   - [x] **EXECUTE**: `projectContextModeHooks(hooksJsonPath)` projeta um hook de despacho por matcher/evento do `hooks.json`, substitui `${CLAUDE_PLUGIN_ROOT}` pelo diretório do pacote e devolve `skipped` quando ausente/inválido; `runSetup` concatena canônicos + upstream (opção `upstream.contextModeHooksJson`); os três `resources/hooks/context-mode-*.md` removidos; `hooks-context-mode-comando.test.ts` reescrito sobre a projeção; `setup-dependency-resolution` adaptado ao caminho absoluto do pacote.
   - [x] **VERIFY**: `npm run test:tdd -- hooks-upstream-context-mode hooks-corpus setup-dependency-resolution` → GREEN; `npx tsc --noEmit` sem erros (2026-09-17).
   - [x] **VISUAL**: Não aplicável — sem interface; a mudança é em código, scripts e configuração.
-  - [x] **EVIDENCE**: GREEN registrado nas seções 11–12; `PROJECT.md` revisado e atualizado (seção sobre como um hook chega ao Claude Code); `.specsfy/STACK.md`/`DATABASE.md` sem impacto.
+  - [x] **EVIDENCE**: GREEN registrado nas seções 11–12; `PROJECT.md` revisado e atualizado (seção sobre como um hook chega ao Claude Code); `.project-context/STACK.md`/`DATABASE.md` sem impacto.
   - [x] **IMPROVE**: Nenhuma melhoria adicional além da mudança mínima; sem duplicação introduzida.
-  <!-- specsfy:evidence {"task":"T030","refs":["US-003","FR-006","FR-007","AC-014","AC-015","AC-022"],"files":["src/hooks/upstream.ts","src/setup/run.ts","tests/hooks-context-mode-comando.test.ts"],"commands":[{"run":"npm run test:tdd -- hooks-upstream-context-mode hooks-corpus setup-dependency-resolution","exit":0},{"run":"npx tsc --noEmit -p .","exit":0}]} -->
+  <!-- framework:evidence {"task":"T030","refs":["US-003","FR-006","FR-007","AC-014","AC-015","AC-022"],"files":["src/hooks/upstream.ts","src/setup/run.ts","tests/hooks-context-mode-comando.test.ts"],"commands":[{"run":"npm run test:tdd -- hooks-upstream-context-mode hooks-corpus setup-dependency-resolution","exit":0},{"run":"npx tsc --noEmit -p .","exit":0}]} -->
 
 - [x] T031 [CODE] [US-003] Declarar eventos suportados por adaptador e reportar pulados em src/targets/adapter.ts, src/targets/claude-code.ts, src/targets/antigravity.ts e src/setup/run.ts — Refs: US-003, FR-006, FR-007, AC-014, AC-016, AC-022 — Depends: T014, T016, T022, T023
   - [x] **PREP**: RED dos predecessores confirmado na seção 11; `docs/` avaliado antes do EXECUTE — o script mecânico `build_documentation.mjs` substitui o conteúdo real por esqueleto (R-001 da SPEC-0021), então a reconstrução foi feita de forma dirigida em `docs/integrations.md` e `docs/application.md` e o monitor devolve `CURRENT`.
   - [x] **EXECUTE**: `supportedEvents` por adaptador, `partitionByEvent`, `formatHooks` devolve `skipped`; `runSetup` exclui pulados e lista `skipped: <nome> (<motivo>)` no relatório (opção `hooksDir` para hook sintético).
   - [x] **VERIFY**: `npm run test:tdd -- hooks-events-adapter setup-antigravity setup-surface` → GREEN; `npx tsc --noEmit` sem erros (2026-09-17).
   - [x] **VISUAL**: Não aplicável — sem interface; a mudança é em código, scripts e configuração.
-  - [x] **EVIDENCE**: GREEN registrado nas seções 11–12; `PROJECT.md` revisado e atualizado (seção sobre como um hook chega ao Claude Code); `.specsfy/STACK.md`/`DATABASE.md` sem impacto.
+  - [x] **EVIDENCE**: GREEN registrado nas seções 11–12; `PROJECT.md` revisado e atualizado (seção sobre como um hook chega ao Claude Code); `.project-context/STACK.md`/`DATABASE.md` sem impacto.
   - [x] **IMPROVE**: Nenhuma melhoria adicional além da mudança mínima; sem duplicação introduzida.
-  <!-- specsfy:evidence {"task":"T031","refs":["US-003","FR-006","FR-007","AC-014","AC-016","AC-022"],"files":["src/targets/adapter.ts","src/targets/claude-code.ts","src/targets/antigravity.ts","src/setup/run.ts"],"commands":[{"run":"npm run test:tdd -- hooks-events-adapter setup-antigravity setup-surface","exit":0},{"run":"npx tsc --noEmit -p .","exit":0}]} -->
+  <!-- framework:evidence {"task":"T031","refs":["US-003","FR-006","FR-007","AC-014","AC-016","AC-022"],"files":["src/targets/adapter.ts","src/targets/claude-code.ts","src/targets/antigravity.ts","src/setup/run.ts"],"commands":[{"run":"npm run test:tdd -- hooks-events-adapter setup-antigravity setup-surface","exit":0},{"run":"npx tsc --noEmit -p .","exit":0}]} -->
 
 
 **Checkpoint**: com um `hooks.json` de fixture, `settings.json` gerado tem `PreToolUse` em `Bash`, `Read`, `Grep` e `WebFetch` apontando para o script do context-mode e o binário recebe o stdin.
@@ -1123,27 +1123,27 @@ a entrega são arquivos de configuração, scripts e relatório textual.
   - [x] **EXECUTE**: `buildDispatchCommand` em POSIX `sh` (caminho gravado → `command -v` → mensagem + exit 0), com aviso em stderr ao cair para PATH (FIND-SEC-001); `resolveDispatchCommand` em `resolve.ts` aplica o shim aos despachos e `resolveHookCommand` fica intacto (testes existentes preservados).
   - [x] **VERIFY**: `npm run test:tdd -- hooks-shim hooks-resolve` → GREEN; `npx tsc --noEmit` sem erros (2026-09-17).
   - [x] **VISUAL**: Não aplicável — sem interface; a mudança é em código, scripts e configuração.
-  - [x] **EVIDENCE**: GREEN registrado nas seções 11–12; `PROJECT.md` revisado e atualizado (seção sobre como um hook chega ao Claude Code); `.specsfy/STACK.md`/`DATABASE.md` sem impacto.
+  - [x] **EVIDENCE**: GREEN registrado nas seções 11–12; `PROJECT.md` revisado e atualizado (seção sobre como um hook chega ao Claude Code); `.project-context/STACK.md`/`DATABASE.md` sem impacto.
   - [x] **IMPROVE**: Primeira versão do shim tinha `then;` inválido em `sh`; corrigido antes do GREEN e o teste passou a usar `/bin/sh` explícito para não depender do `PATH` manipulado.
-  <!-- specsfy:evidence {"task":"T032","refs":["US-004","FR-008","AC-017","AC-018","AC-019"],"files":["src/hooks/shim.ts","src/hooks/resolve.ts"],"commands":[{"run":"npm run test:tdd -- hooks-shim hooks-resolve","exit":0},{"run":"npx tsc --noEmit -p .","exit":0}]} -->
+  <!-- framework:evidence {"task":"T032","refs":["US-004","FR-008","AC-017","AC-018","AC-019"],"files":["src/hooks/shim.ts","src/hooks/resolve.ts"],"commands":[{"run":"npm run test:tdd -- hooks-shim hooks-resolve","exit":0},{"run":"npx tsc --noEmit -p .","exit":0}]} -->
 
 
 **Checkpoint**: renomear a raiz temporária após o setup e executar o hook de despacho continua encontrando o binário pelo `PATH`.
 
 #### Fase final — Qualidade
 
-- [x] T033 [TEST] Executar regressão completa e rastreabilidade via node .agents/skills/specsfy-06-tdd-bdd/scripts/check_traceability.mjs — Refs: US-001, US-002, US-003, US-004, FR-001, FR-002, FR-003, FR-004, FR-005, FR-006, FR-007, FR-008, NFR-001, NFR-002, NFR-003, AC-001, AC-002, AC-003, AC-004, AC-005, AC-006, AC-007, AC-008, AC-009, AC-010, AC-011, AC-012, AC-013, AC-014, AC-015, AC-016, AC-017, AC-018, AC-019, AC-020, AC-021, AC-022 — Depends: T028, T030, T031, T032
+- [x] T033 [TEST] Executar regressão completa e rastreabilidade via node .agents/skills/framework-06-tdd-bdd/scripts/check_traceability.mjs — Refs: US-001, US-002, US-003, US-004, FR-001, FR-002, FR-003, FR-004, FR-005, FR-006, FR-007, FR-008, NFR-001, NFR-002, NFR-003, AC-001, AC-002, AC-003, AC-004, AC-005, AC-006, AC-007, AC-008, AC-009, AC-010, AC-011, AC-012, AC-013, AC-014, AC-015, AC-016, AC-017, AC-018, AC-019, AC-020, AC-021, AC-022 — Depends: T028, T030, T031, T032
   - [x] **PREP**: Suítes identificadas: `npm run test:tdd` (566 casos), `npx tsc --noEmit`, `check_traceability.mjs --full-chain`; testes antigos reescritos: `setup-writes`, `hooks-corpus`, `hooks-escape`, `hooks-translate`, `hooks-permissive`, `hooks-raw-command`, `hooks-context-mode-comando` (reescrito sobre a projeção), `setup-dependency-resolution`, `setup-install`, `mcp-tool-install`, `trace-hooks-e-skills` e 13 arquivos com contagem fixa `8` trocada por `installedHookCount()`.
-  - [x] **EXECUTE**: `npm run test:tdd` → 555 passaram / 11 falharam (as 11 são o RED pré-existente da SPEC-0021 em `Planned`: `config-schema`, `setup-documentation-extension`, `setup-readme-homepage`, `doctor-documentation-issues`, `documentation-diagnose`); `npx tsc --noEmit` limpo; `check_traceability.mjs --full-chain` → 37/37 cobertos, `insufficient_cases: {}`, `broken_chains: []`; `RESULTADO: GAPS` decorre apenas de `orphan_markers` de outras specs do repositório (condição pré-existente, idêntica na SPEC-0021). Verificação manual executada com autorização (2026-09-17): `npm version patch` → 2.1.23, `npm run build` OK; `echo '{"approved": true}' | node dist/cli.js setup --target claude-code` → `19 hooks installed in .claude/settings.json; 8 legacy inline entries migrated`; `.claude/settings.json` deste repositório sem `>>> hook fragment` e sem `common-rules-server`, chave `permissions` preservada; `.maestro/hooks/{guard-destructive,guard-secrets,protect-authorship,setup-check}.sh` criados; `protect-authorship.sh` com JSON de `PreToolUse`/`Bash` contendo trailer de IA → exit 2, com `git status` → exit 0. Evidência viva: na própria sessão do Claude Code, o hook novo bloqueou um comando `Bash` que continha o trailer e o `context-mode` PreToolUse passou a injetar contexto — ambos inertes antes da migração. Notas do relatório fora do escopo: `specsfy install` recusou por alterações locais em `.agents/skills/specsfy-setup` (proteção do próprio instalador) e a reinstalação das skills atualizou `retro/SKILL.md` do upstream.
+  - [x] **EXECUTE**: `npm run test:tdd` → 555 passaram / 11 falharam (as 11 são o RED pré-existente da SPEC-0021 em `Planned`: `config-schema`, `setup-documentation-extension`, `setup-readme-homepage`, `doctor-documentation-issues`, `documentation-diagnose`); `npx tsc --noEmit` limpo; `check_traceability.mjs --full-chain` → 37/37 cobertos, `insufficient_cases: {}`, `broken_chains: []`; `RESULTADO: GAPS` decorre apenas de `orphan_markers` de outras specs do repositório (condição pré-existente, idêntica na SPEC-0021). Verificação manual executada com autorização (2026-09-17): `npm version patch` → 2.1.23, `npm run build` OK; `echo '{"approved": true}' | node dist/cli.js setup --target claude-code` → `19 hooks installed in .claude/settings.json; 8 legacy inline entries migrated`; `.claude/settings.json` deste repositório sem `>>> hook fragment` e sem `common-rules-server`, chave `permissions` preservada; `.maestro/hooks/{guard-destructive,guard-secrets,protect-authorship,setup-check}.sh` criados; `protect-authorship.sh` com JSON de `PreToolUse`/`Bash` contendo trailer de IA → exit 2, com `git status` → exit 0. Evidência viva: na própria sessão do Claude Code, o hook novo bloqueou um comando `Bash` que continha o trailer e o `context-mode` PreToolUse passou a injetar contexto — ambos inertes antes da migração. Notas do relatório fora do escopo: `former tool install` recusou por alterações locais em `.agents/skills/removed-project-setup` (proteção do próprio instalador) e a reinstalação das skills atualizou `retro/SKILL.md` do upstream.
   - [x] **VERIFY**: Zero regressão em teste que passava antes desta spec; `.claude/settings.json` deste repositório migrado para o novo formato (19 entradas, 0 legadas); guard verificado com exit 2/0.
   - [x] **VISUAL**: Não aplicável — sem interface em nenhuma tarefa desta spec.
   - [x] **EVIDENCE**: Comandos e contagens acima (2026-09-17); seções 11–12 com GREEN/Passed em todas as linhas.
   - [x] **IMPROVE**: Retrospectiva: dois defeitos só apareceram no GREEN (duplicação de despachos na 2ª execução e `then;` inválido no shim) — ambos capturados por AC-008 e AC-017/018, o que confirma o valor de exigir o novo formato em AC-008 durante o RED.
 
-- [x] T034 [DOC] Revisar PROJECT.md e docs/integrations.md e acionar $specsfy-documentator — Refs: US-001, US-002, US-003, US-004 — Depends: T033
+- [x] T034 [DOC] Revisar PROJECT.md e docs/integrations.md e acionar $framework-documentator — Refs: US-001, US-002, US-003, US-004 — Depends: T033
   - [x] **PREP**: Lidos `PROJECT.md`, `docs/integrations.md`, `docs/application.md`, `docs/architecture.md`; impacto material: novo diretório gerenciado `.maestro/hooks/`, vocabulário de eventos, projeção do upstream, shim.
-  - [x] **EXECUTE**: `PROJECT.md` atualizado (parágrafo sobre os cinco hooks canônicos + projeção do context-mode e a seção *Como um hook chega ao Claude Code (SPEC-0022)*); `docs/integrations.md` §3 e `docs/application.md` (tabela de módulos) atualizados de forma dirigida. O script mecânico `build_documentation.mjs` foi executado e revertido: ele substitui o conteúdo real de `docs/` por um esqueleto em português (achado R-001 da SPEC-0021), portanto não serve como reconstrução; `.specsfy/STACK.md` e `.specsfy/DATABASE.md` sem impacto (sem mudança de stack nem persistência).
-  - [x] **VERIFY**: `node .agents/skills/specsfy-setup/scripts/monitor_context.mjs --project . --check` → `CURRENT` (2026-09-17).
+  - [x] **EXECUTE**: `PROJECT.md` atualizado (parágrafo sobre os cinco hooks canônicos + projeção do context-mode e a seção *Como um hook chega ao Claude Code (SPEC-0022)*); `docs/integrations.md` §3 e `docs/application.md` (tabela de módulos) atualizados de forma dirigida. O script mecânico `build_documentation.mjs` foi executado e revertido: ele substitui o conteúdo real de `docs/` por um esqueleto em português (achado R-001 da SPEC-0021), portanto não serve como reconstrução; `.project-context/STACK.md` e `.project-context/DATABASE.md` sem impacto (sem mudança de stack nem persistência).
+  - [x] **VERIFY**: `node .agents/skills/removed-project-setup/scripts/monitor_context.mjs --project . --check` → `CURRENT` (2026-09-17).
   - [x] **VISUAL**: Não aplicável — documentação textual.
   - [x] **EVIDENCE**: Diff de `PROJECT.md`, `docs/integrations.md`, `docs/application.md`; monitor `CURRENT`.
   - [x] **IMPROVE**: Aprendizado: o `--check` do documentator acusa `docs/` desatualizado por comparação com o esqueleto, não com o código; a SPEC-0021 já trata essa lacuna e o resultado dele não deve ser usado como gate aqui.
@@ -1197,4 +1197,4 @@ a entrega são arquivos de configuração, scripts e relatório textual.
 - [x] Todos os requisitos possuem evidência de verificação.
 - [x] Todas as tarefas na seção 14 estão concluídas.
 - [x] Testes e checks estáticos disponíveis passam — `tsc --noEmit` limpo e suíte verde exceto o RED pré-existente da SPEC-0021; `npm run build` OK após `npm version patch` (2.1.23).
-- [x] `PROJECT.md` revisado quanto ao novo diretório gerenciado `.maestro/hooks/`; `.specsfy/STACK.md` e `.specsfy/DATABASE.md` sem impacto (sem mudança de stack nem persistência).
+- [x] `PROJECT.md` revisado quanto ao novo diretório gerenciado `.maestro/hooks/`; `.project-context/STACK.md` e `.project-context/DATABASE.md` sem impacto (sem mudança de stack nem persistência).

@@ -12,7 +12,7 @@ function setup(root: string) {
 const config = (root: string) => parse(readFileSync(join(root, ".maestro", "config.yaml"), "utf8"));
 
 describe("AC-004 — os tipos de tarefa vêm da configuração", () => {
-  // SPECSFY: US-001 FR-002 NFR-001 AC-004
+  // TRACEABILITY: US-001 FR-002 NFR-001 AC-004
   it("o setup semeia os tipos, cada um com sua janela mínima", () => {
     const root = project();
     setup(root);
@@ -30,7 +30,7 @@ describe("AC-004 — os tipos de tarefa vêm da configuração", () => {
 });
 
 describe("AC-005 — a configuração da pessoa não é sobrescrita", () => {
-  // SPECSFY: US-001 FR-002 NFR-002 AC-005
+  // TRACEABILITY: US-001 FR-002 NFR-002 AC-005
   it("um tipo próprio sobrevive a uma segunda execução do setup", () => {
     const root = project();
     setup(root);
@@ -46,7 +46,7 @@ describe("AC-005 — a configuração da pessoa não é sobrescrita", () => {
 });
 
 describe("AC-006 — tipo desconhecido é recusado", () => {
-  // SPECSFY: US-001 FR-002 NFR-002 AC-006
+  // TRACEABILITY: US-001 FR-002 NFR-002 AC-006
   it("nomeia o tipo pedido e os disponíveis", async () => {
     const { resolveTaskType } = await import("../src/models/task-type");
     const types = { revisao: { context_window_min: { value: 100000, mode: "suggested" as const } } };

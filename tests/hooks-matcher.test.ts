@@ -6,10 +6,10 @@ import { runSetup } from "../src/setup/run";
 import { translateForClaudeCode, renderSettings } from "../src/hooks/claude-code";
 import { claudeEnv, project, readSettings, entriesFor, corpusHook, syntheticHook } from "./helpers-spec-0022";
 
-const CANONICAL = ["guard-destructive", "guard-secrets", "protect-authorship", "code-review-graph-update", "setup-check"];
+const CANONICAL = ["guard-destructive", "guard-secrets", "protect-authorship", "code-review-graph-update"];
 
 describe("AC-001 — protect-authorship em PreToolUse com matcher Bash bloqueia trailer de IA", () => {
-  // SPECSFY: US-001 FR-001 FR-002 NFR-003 AC-001
+  // TRACEABILITY: US-001 FR-001 FR-002 NFR-003 AC-001
   it("instala o guard como referência a .maestro/hooks/ e o script devolve exit 2", () => {
     const root = project();
     runSetup({ env: claudeEnv, root, write: true });
@@ -32,7 +32,7 @@ describe("AC-001 — protect-authorship em PreToolUse com matcher Bash bloqueia 
 });
 
 describe("AC-002 — matcher derivado do evento canônico por mapa fixo", () => {
-  // SPECSFY: US-001 FR-001 AC-002
+  // TRACEABILITY: US-001 FR-001 AC-002
   it("nenhuma entrada usa o nome do hook e cada evento recebe o matcher do mapa", () => {
     const hooks = CANONICAL.map(corpusHook);
     const translated = hooks.map(translateForClaudeCode);
@@ -55,7 +55,7 @@ describe("AC-002 — matcher derivado do evento canônico por mapa fixo", () => 
 });
 
 describe("AC-003 — tools: no frontmatter sobrescreve o mapa fixo", () => {
-  // SPECSFY: US-001 FR-001 FR-007 AC-003
+  // TRACEABILITY: US-001 FR-001 FR-007 AC-003
   it("usa tools quando declarado e o mapa fixo quando não", () => {
     const withTools = syntheticHook("kind: hook\nname: wide\nevent: before-tool\ntools: Bash|Read|Grep|WebFetch\nraw_command: echo x");
     const without = syntheticHook("kind: hook\nname: narrow\nevent: before-tool\nraw_command: echo y");

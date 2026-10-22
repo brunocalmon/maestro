@@ -2,7 +2,7 @@
 
 | Campo | Valor |
 | --- | --- |
-| Formato | Specsfy/2.0 |
+| Formato | former project tool/2.0 |
 | ID | SPEC-0013 |
 | Slug | 0013-testes-de-setup-com-root-isolado |
 | Status | Complete |
@@ -428,8 +428,8 @@ src/setup/run.ts             (lido, não modificado — fallback preservado)
 
 | IDs | BDD de referência | Teste TDD informado pelo BDD | RED observado | GREEN observado | Refactor/regressão |
 | --- | --- | --- | --- | --- | --- |
-| US-001, FR-001, FR-002, NFR-001, AC-001 | AC-001 na seção 6 | Verificação manual: `git status --porcelain` antes/depois de `npx vitest run` completo (sem unidade isolada possível, ver "Verificação manual" acima); marcador `SPECSFY:` registrado no changelog da tarefa T006 | **RED** (histórico da sessão): a suíte completa sujava o repositório em toda rodada, exigindo reversão manual repetida | **GREEN (T006)**: duas rodadas completas seguidas, 425/425 testes, `git status --porcelain` vazio nas duas | **Passed** |
-| US-001, FR-001, NFR-001, AC-002 | AC-002 na seção 6 | Por arquivo (T001–T005): RED = rodar `npx vitest run <arquivo>` no estado atual e `git status --porcelain` fica sujo; edição para criar `root` via `mkdtempSync` e passá-lo a `runSetup`, marcador `SPECSFY:` no comentário do helper; GREEN = mesmo comando, `git status --porcelain` vazio | **RED, T001–T004**: cada arquivo, rodado no estado original, passa (4/4) mas suja `.claude/settings.json` e `.common-rules/install.json`. **T005 (dryrun) é exceção**: já rodava limpo — `dryRun: true` retorna antes de qualquer escrita, independente de `root` | **GREEN, T001–T005**: todos os cinco, com `root` via `project()`, mantêm as mesmas asserções e `git status --porcelain` limpo | **Passed — T001–T005 completos** |
+| US-001, FR-001, FR-002, NFR-001, AC-001 | AC-001 na seção 6 | Verificação manual: `git status --porcelain` antes/depois de `npx vitest run` completo (sem unidade isolada possível, ver "Verificação manual" acima); marcador `TRACEABILITY:` registrado no changelog da tarefa T006 | **RED** (histórico da sessão): a suíte completa sujava o repositório em toda rodada, exigindo reversão manual repetida | **GREEN (T006)**: duas rodadas completas seguidas, 425/425 testes, `git status --porcelain` vazio nas duas | **Passed** |
+| US-001, FR-001, NFR-001, AC-002 | AC-002 na seção 6 | Por arquivo (T001–T005): RED = rodar `npx vitest run <arquivo>` no estado atual e `git status --porcelain` fica sujo; edição para criar `root` via `mkdtempSync` e passá-lo a `runSetup`, marcador `TRACEABILITY:` no comentário do helper; GREEN = mesmo comando, `git status --porcelain` vazio | **RED, T001–T004**: cada arquivo, rodado no estado original, passa (4/4) mas suja `.claude/settings.json` e `.common-rules/install.json`. **T005 (dryrun) é exceção**: já rodava limpo — `dryRun: true` retorna antes de qualquer escrita, independente de `root` | **GREEN, T001–T005**: todos os cinco, com `root` via `project()`, mantêm as mesmas asserções e `git status --porcelain` limpo | **Passed — T001–T005 completos** |
 | US-001, FR-002, NFR-001, AC-003 | AC-003 na seção 6 | As 16 asserções já existentes nesses cinco arquivos, executadas sem alteração de expectativa | Pending | Pending | Pending |
 | US-001, FR-001, FR-002, AC-004 | AC-004 na seção 6 | Cada um dos cinco arquivos rodado individualmente (`npx vitest run tests/<arquivo>.test.ts`), fora da suíte completa | Ver T001–T005 acima | Ver T001–T005 acima | **Passed** — os cinco rodam isoladamente sem depender da suíte completa |
 
@@ -447,7 +447,7 @@ src/setup/run.ts             (lido, não modificado — fallback preservado)
 #### Gate do Ato I — Definição
 
 - **Resultado**: READY (2026-09-06)
-- **Comando**: `node .agents/skills/specsfy-04-validate/scripts/validate_spec.mjs specs/draft/0013-testes-de-setup-com-root-isolado/spec.md` — `VALID DRAFT` (estrutura); revisão semântica feita manualmente contra `references/quality-gates.md`.
+- **Comando**: `node .agents/skills/framework-04-validate/scripts/validate_spec.mjs specs/draft/0013-testes-de-setup-com-root-isolado/spec.md` — `VALID DRAFT` (estrutura); revisão semântica feita manualmente contra `references/quality-gates.md`.
 - **Achados**: Nenhum `BLOCKER`. Um ponto corrigido durante a própria validação (não um achado residual): o RED-GREEN de AC-002/AC-004 estava descrito de forma agregada demais para uma correção só em código de teste; refinado para RED/GREEN concreto por arquivo (`git status --porcelain` antes/depois de rodar cada arquivo isoladamente), já refletido nas tarefas T001–T005 e na seção 11. Sem findings de produto, arquitetura ou segurança — não materiais nesta mudança (mudança restrita a arquivos de teste, seção 16 já documenta ausência de risco de segurança).
 - Cobertura mínima confirmada: US-001 → 4 AC; FR-001 → 3 AC (AC-001, AC-002, AC-004); FR-002 → 3 AC (AC-001, AC-003, AC-004); NFR-001 → 3 AC (AC-001, AC-002, AC-003).
 - `Interface para pessoas: Não` — seção 10 corretamente marcada `Não aplicável` em todas as subseções; não é CRUD, não bloqueia.
@@ -457,19 +457,19 @@ src/setup/run.ts             (lido, não modificado — fallback preservado)
 #### Gate do Ato II — Plano
 
 - **Resultado**: READY (2026-09-06)
-- **Comando**: `node .agents/skills/specsfy-05-tasks/scripts/validate_tasks.mjs specs/defined/0013-testes-de-setup-com-root-isolado/spec.md` — `VALID DRAFT`.
+- **Comando**: `node .agents/skills/framework-05-tasks/scripts/validate_tasks.mjs specs/defined/0013-testes-de-setup-com-root-isolado/spec.md` — `VALID DRAFT`.
 - **Achados**: Nenhum bloqueio. Seção 14 preenchida: 6 tarefas `[TEST][TDD]`, sem `[CODE]` (a correção inteira vive em arquivos de teste, então não há predecessor TDD de tarefa CODE a exigir — a checagem estrita de "Plan Gate exige predecessor concluído" não se aplica aqui). T001-T005 marcadas `[P]` (arquivos independentes, sem dependência). Cobertura completa dos 8 IDs da spec confirmada pelo validador (`covered_spec_ids=8 required_spec_ids=8`). RED da primeira tarefa (T001) já observado e registrado na seção 11 antes desta promoção — ver `checklist_complete=1`.
 
 #### Gate do Ato III — Entrega
 
 - **Resultado**: READY (2026-09-06)
-- **Comando**: `node .agents/skills/specsfy-06-tdd-bdd/scripts/check_traceability.mjs specs/in-progress/0013-testes-de-setup-com-root-isolado/spec.md .` — `Rastreabilidade: 8/8 IDs cobertos em 166 arquivos de teste`.
+- **Comando**: `node .agents/skills/framework-06-tdd-bdd/scripts/check_traceability.mjs specs/in-progress/0013-testes-de-setup-com-root-isolado/spec.md .` — `Rastreabilidade: 8/8 IDs cobertos em 166 arquivos de teste`.
 - **Achados**: Nenhum bloqueio real. A ferramenta também reporta uma lista de "marcadores órfãos" (centenas de IDs de outras specs) — confirmado como condição pré-existente e estrutural do projeto, não algo introduzido por esta spec: rodei o mesmo comando contra `specs/completed/0012-.../spec.md` (já `completed`, Delivery Gate Passed há tempos) e o mesmo padrão aparece, porque este projeto numera IDs de forma local por spec (não global), e a ferramenta compara contra o universo inteiro de marcadores do repositório. `verify_acceptance.mjs`: `QA: PASSED`. `build_documentation.mjs --check`: limpo após reconstrução (commit `b69d9fe`, drift acumulado da sessão inteira, não específico desta spec). 6/6 tarefas concluídas, 36/36 itens de checklist, 425/425 testes em duas rodadas completas consecutivas sem sujar o repositório (T006) — a prova final do AC-001.
 
-#### Aceite final (`$specsfy-04-validate`)
+#### Aceite final (`$framework-04-validate`)
 
 - **Resultado**: READY (2026-09-06)
-- **Comando**: `node .claude/skills/specsfy-04-validate/scripts/validate_spec.mjs specs/review/0013-testes-de-setup-com-root-isolado/spec.md` — `RESULTADO: READY`.
+- **Comando**: `node .claude/skills/framework-04-validate/scripts/validate_spec.mjs specs/review/0013-testes-de-setup-com-root-isolado/spec.md` — `RESULTADO: READY`.
 - **Achados**: Nenhum `BLOCKER`. Os três Gates dos Atos I, II e III permanecem `Passed` com evidência real e verificável (comandos, saídas e IDs citados acima). Definition of Done (seção 18) integralmente comprovada: `npx tsc --noEmit` limpo, `npx vitest run` 425/425 em duas rodadas consecutivas sem sujar o repositório, `verify_acceptance.mjs` `QA: PASSED`, 6/6 tarefas e 36/36 itens de checklist concluídos. Nenhuma decisão de produto, arquitetura ou segurança pendente — mudança restrita a arquivos de teste. `Status: Complete`.
 
 ### 14. Tarefas
@@ -499,7 +499,7 @@ mesmas asserções de hoje continuam passando.
 
 - [x] T001 [P] [TEST] [TDD] [US-001] Isolar root em tests/setup-idempotent.test.ts — Refs: US-001, FR-001, FR-002, NFR-001, AC-002, AC-003, AC-004 — Depends: none
   - [x] **PREP**: Ler o arquivo e confirmar as 4 chamadas a `runSetup({ env, write: true, ... })` que hoje não passam `root`. RED: rodar `npx vitest run tests/setup-idempotent.test.ts` no estado atual (antes da edição) e confirmar que `git status --porcelain` fica sujo em `.common-rules/install.json` — a evidência concreta do problema, por arquivo. **RED observado**: 4/4 asserções passam, mas `git status --porcelain` fica sujo em `.claude/settings.json` e `.common-rules/install.json`; revertido com `git checkout --`.
-  - [x] **EXECUTE**: Criar `root` com `mkdtempSync(join(tmpdir(), "setup-"))` (populando `.claude/` quando `env.hasClaudeCode` exigir), passar `root` a cada chamada; marcador `SPECSFY:` no comentário do helper. Helper `project()` adicionado seguindo o padrão de `tests/setup-writes.test.ts`; as 4 chamadas a `runSetup` agora recebem `root`.
+  - [x] **EXECUTE**: Criar `root` com `mkdtempSync(join(tmpdir(), "setup-"))` (populando `.claude/` quando `env.hasClaudeCode` exigir), passar `root` a cada chamada; marcador `TRACEABILITY:` no comentário do helper. Helper `project()` adicionado seguindo o padrão de `tests/setup-writes.test.ts`; as 4 chamadas a `runSetup` agora recebem `root`.
   - [x] **VERIFY**: `npx vitest run tests/setup-idempotent.test.ts` — as 4 asserções continuam passando (GREEN: repita `git status --porcelain` — vazio, ao contrário do RED do PREP). **GREEN observado**: 4/4 passam, `git status --porcelain` mostra só a edição do próprio arquivo de teste — nada em `.claude/` ou `.common-rules/`.
   - [x] **VISUAL**: Não aplicável — arquivo de teste sem superfície visual.
   - [x] **EVIDENCE**: Registrado nas seções 11–12.
@@ -536,7 +536,7 @@ mesmas asserções de hoje continuam passando.
   - [x] **VISUAL**: Não aplicável — arquivo de teste sem superfície visual.
   - [x] **EVIDENCE**: Registrado nas seções 11–12.
   - [x] **IMPROVE**: Achado registrado no PREP — vale considerar, fora do escopo desta spec, se `runSetup` deveria validar `root` mesmo em dry-run, para não depender do retorno antecipado permanecer assim.
-  <!-- specsfy:evidence {"task":"T005","refs":["US-001","FR-001","FR-002","NFR-001","AC-002","AC-003","AC-004"],"files":["tests/setup-dryrun.test.ts"],"commands":[{"run":"npx vitest run tests/setup-dryrun.test.ts","exit":0}]} -->
+  <!-- framework:evidence {"task":"T005","refs":["US-001","FR-001","FR-002","NFR-001","AC-002","AC-003","AC-004"],"files":["tests/setup-dryrun.test.ts"],"commands":[{"run":"npx vitest run tests/setup-dryrun.test.ts","exit":0}]} -->
 
 **Checkpoint**: os cinco arquivos passam individualmente com `root` isolado,
 sem nenhuma asserção mudando de resultado.
@@ -550,7 +550,7 @@ sem nenhuma asserção mudando de resultado.
   - [x] **VISUAL**: Não aplicável — nenhuma superfície visual envolvida.
   - [x] **EVIDENCE**: Registrado acima e nas seções 11–12.
   - [x] **IMPROVE**: Nenhuma melhoria adicional necessária agora — a extração de um helper de fixture compartilhado (DEC-001) permanece uma melhoria futura opcional, deliberadamente fora de escopo desta entrega.
-  <!-- specsfy:evidence {"task":"T006","refs":["US-001","FR-001","FR-002","NFR-001","AC-001","AC-002","AC-003","AC-004"],"files":[],"commands":[{"run":"npx vitest run","exit":0},{"run":"git status --porcelain","exit":0}]} -->
+  <!-- framework:evidence {"task":"T006","refs":["US-001","FR-001","FR-002","NFR-001","AC-001","AC-002","AC-003","AC-004"],"files":[],"commands":[{"run":"npx vitest run","exit":0},{"run":"git status --porcelain","exit":0}]} -->
 
 ### 15. Ordem de execução
 

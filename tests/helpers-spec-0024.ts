@@ -27,8 +27,8 @@ export const OLD_FALLBACK = "## maestro: hooks fallback\n\nfallback text from an
 /** A root installed by a release that wrote content in CLAUDE.md and pointers in AGENTS.md. */
 export function oldDirectionRoot(): string {
   const root = project();
-  writeFileSync(resolve(root, "CLAUDE.md"), "<!-- specsfy:framework:start -->\n@.specsfy/Spec.md\n<!-- specsfy:framework:end -->\n");
-  writeFileSync(resolve(root, "AGENTS.md"), "<!-- specsfy:framework:start -->\n## Framework Specsfy\n\nRead .specsfy/Spec.md.\n<!-- specsfy:framework:end -->\n");
+  writeFileSync(resolve(root, "CLAUDE.md"), "# Project instructions\n");
+  writeFileSync(resolve(root, "AGENTS.md"), "# Agent instructions\n");
   registerBlock(root, "router", "CLAUDE.md", OLD_ROUTER);
   registerBlock(root, "config-language-rule", "CLAUDE.md", OLD_LANGUAGE);
   registerBlock(root, "hooks-fallback", "CLAUDE.md", OLD_FALLBACK);

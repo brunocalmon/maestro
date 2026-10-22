@@ -67,4 +67,4 @@ Nenhuma fonte contextual consultada.
 
 ## Próximo passo
 
-Manter em `specs/inbox/` ou refinar com `$specsfy-02-backlog`.
+Manter em `specs/inbox/` ou refinar com `$framework-02-backlog`.

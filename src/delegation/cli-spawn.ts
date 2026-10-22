@@ -13,7 +13,6 @@ export interface SpawnOptions {
  * Runs one CLI backend subprocess, capturing stdout/stderr/exit code
  * without interpreting them (`PR-004`) — same `spawnSync`-with-timeout
  * pattern already used by `scripts/pinned-skills.mjs` and
- * `realSpecsfyExecutor`.
  */
 export function spawnCliAgent(command: string, args: readonly string[], options: SpawnOptions = {}): SpawnResult {
   const timeout = options.timeoutMs ?? 120_000;

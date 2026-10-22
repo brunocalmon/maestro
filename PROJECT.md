@@ -12,22 +12,22 @@ Pacote npm `@brunocalmon/maestro`, binário `maestro`.
 | Comando | O que faz |
 | --- | --- |
 | `maestro --version` | Imprime a versão declarada no manifesto |
-| `maestro doctor` | Relata as três dependências do projeto e os backends de agente detectados, com camada, origem resolvida e versão, os conjuntos de skills registrados, nomeando o que divergiu, cada extensão local divergente do que a CLI gravou, e o identificador da última execução. Desde a SPEC-0025, também orquestra os diagnósticos dos quatro subsistemas (`specsfy doctor`, `context-mode doctor`, `skills list`, `code-review-graph status`, cada um com seu próprio status) e adiciona uma camada própria: hooks com entrada legada ou script ausente, blocos na direção antiga, marcadores de âncora sem par, seções não padronizadas em `CLAUDE.md`, projeções de skills divergentes, cobertura entre `hooks-fallback` e os scripts instalados, e rastros pendentes do `specsfy-setup`/`setup-matt-pocock-skills`. Só reporta — nunca escreve — e sai com código diferente de zero somente para achados `FAIL`; achados `WARN` (configuração conversacional pendente, conteúdo não padronizado) nunca afetam o código de saída. |
-| `maestro setup` | Instala os sete hooks no editor detectado, instala os dois conjuntos de skills e o framework Specsfy, escreve o roteador do `maestro` em `CLAUDE.md`/`AGENTS.md`, e registra o que escreveu, identificando a execução e o momento. Also creates and keeps `.maestro/config.yaml` always complete. |
+| `maestro doctor` | Relata as três dependências do projeto e os backends de agente detectados, com camada, origem resolvida e versão, os conjuntos de skills registrados, nomeando o que divergiu, cada extensão local divergente do que a CLI gravou, e o identificador da última execução. Desde a SPEC-0025, também orquestra os diagnósticos dos quatro subsistemas (`former tool doctor`, `context-mode doctor`, `skills list`, `code-review-graph status`, cada um com seu próprio status) e adiciona uma camada própria: hooks com entrada legada ou script ausente, blocos na direção antiga, marcadores de âncora sem par, seções não padronizadas em `CLAUDE.md`, projeções de skills divergentes, cobertura entre `hooks-fallback` e os scripts instalados, e rastros pendentes do `removed-project-setup`/`setup-matt-pocock-skills`. Só reporta — nunca escreve — e sai com código diferente de zero somente para achados `FAIL`; achados `WARN` (configuração conversacional pendente, conteúdo não padronizado) nunca afetam o código de saída. |
+| `maestro setup` | Instala os sete hooks no editor detectado, instala os dois conjuntos de skills e o framework former project tool, escreve o roteador do `maestro` em `CLAUDE.md`/`AGENTS.md`, e registra o que escreveu, identificando a execução e o momento. Also creates and keeps `.maestro/config.yaml` always complete. |
 | `maestro recommend` | Recomenda um backend de agente presente e, quando o `ollama` está disponível, o maior modelo local que cabe na memória livre, com override humano opcional |
 | `maestro extension create` | Cria um artefato de extensão local (`override`/`extension`, nunca `new` para um dos sete hooks gerenciados) — hook, regra ou o próprio roteador — que sobrevive a uma reinstalação |
 | `maestro extension repair` | Move o conteúdo de uma extensão divergente para `.maestro/quarantine/` e restaura o original, sem apagar nada |
 
-**Aprovação do plano, em lote.** `maestro setup` apresenta o plano e aguarda aprovação antes de escrever — interativa quando há terminal, por documento JSON pela entrada padrão quando não há. Recusa, ausência e entrada malformada são negativa, sem escrita. O plano lista cada comando de dependência que a execução de fato dispararia — hooks, instalador de skills por origem, instalador do framework Specsfy e a ponte Python, quando aplicável — não só os hooks. Um comando já aprovado antes, com o mesmo binário e argv exatos, não pede aprovação de novo, mesmo quando a execução precisa reinstalar por drift; qualquer diferença no argv, como uma versão diferente, conta como comando novo. O registro fica em `.maestro/approved-commands.json`, local ao projeto.
+**Aprovação do plano, em lote.** `maestro setup` apresenta o plano e aguarda aprovação antes de escrever — interativa quando há terminal, por documento JSON pela entrada padrão quando não há. Recusa, ausência e entrada malformada são negativa, sem escrita. O plano lista cada comando de dependência que a execução de fato dispararia — hooks, instalador de skills por origem, instalador do framework former project tool e a ponte Python, quando aplicável — não só os hooks. Um comando já aprovado antes, com o mesmo binário e argv exatos, não pede aprovação de novo, mesmo quando a execução precisa reinstalar por drift; qualquer diferença no argv, como uma versão diferente, conta como comando novo. O registro fica em `.maestro/approved-commands.json`, local ao projeto.
 
-**Reconciliação de drift.** `setup` só relata "já estava configurado" quando hooks, skills e o framework Specsfy estão de fato presentes no disco — não só quando os hooks batem com o registro. Apagar `.claude/skills/` ou `.specsfy/` por fora e rodar `setup` de novo restaura o que faltar.
+**Reconciliação de drift.** `setup` só relata "já estava configurado" quando hooks, skills e o framework former project tool estão de fato presentes no disco — não só quando os hooks batem com o registro. Apagar `.claude/skills/` ou `.project-context/` por fora e rodar `setup` de novo restaura o que faltar.
 
 **Backends de agente.** `doctor` relata, numa terceira camada informativa, cada backend de agente candidato conhecido — presença, versão e se tem capacidade demonstrada de invocação sem interação. Suportados hoje: `pi`, `agy`, `claude`, `codex` e `goose`. Nenhum backend ausente afeta o código de saída: `maestro` detecta, nunca instala agente.
 
 Exemplo real de `doctor`:
 
 ```text
-ok      @promovaweb/specsfy — camada npm, origem local, versão 0.22.2
+ok      removed-project-integration — camada npm, origem local, versão 0.22.2
 ok      context-mode — camada npm, origem local, versão 1.0.169
 ok      code-review-graph — camada python, origem global, versão 2.3.7
 ```
@@ -35,14 +35,14 @@ ok      code-review-graph — camada python, origem global, versão 2.3.7
 Quarenta e cinco módulos em `src/`, 150 arquivos de teste, 388 casos.
 
 **Language rule and an always-present `config.yaml`.** Above any dependency
-(Specsfy, mattpocock or none), `setup` creates and keeps
+(former project tool, mattpocock or none), `setup` creates and keeps
 `.maestro/config.yaml` always complete — every schema key (`language`,
 `project`, `system`, `git`) present, with a real default when evidence
 exists and empty otherwise, never omitted. `CLAUDE.md`/`AGENTS.md` receive
 their own instruction (distinct from the extensions router) telling the
 agent to reply in the conversation's language and generate a document in
 `language.default`, except the paths listed in `language.exceptions`. When
-Specsfy is active, the `project` fields that overlap `.specsfy/STACK.md`
+former project tool is active, the `project` fields that overlap `.project-context/STACK.md`
 sync automatically from it — `STACK.md` remains the source of truth,
 `config.yaml` never diverges silently.
 
@@ -79,23 +79,23 @@ veredito em qualquer shell, inclusive em subagentes. `code-review-graph-update`
 roda após qualquer ferramenta e só executa o CLI quando o hash do working tree
 mudou (`.maestro/state/crg-tree.hash`); `code-review-graph-stop` fecha a rodada.
 `graph-hint` lembra o grafo uma única vez por sessão antes de `Grep`/`Glob`, e
-`guard-docs` impede o `build_documentation.mjs` do Specsfy sem `--check`
+`guard-docs` impede o `build_documentation.mjs` do former project tool sem `--check`
 (`findings/external/FIND-EXT-001`). As regras em texto se limitam ao bloco
 `maestro: hooks fallback`: três linhas condicionadas ao `maestro doctor`, que
 nunca repetem o que o hook já faz.
 
 **"Instalado" não é "configurado" (SPEC-0025).** `.maestro/install.json` e
-`.specsfy/` existirem prova que os arquivos foram gravados, não que as skills
-conversacionais que configuram o projeto (`specsfy-setup`, que produz
-`PROJECT.md`, `.specsfy/STACK.md`, `.specsfy/RULES.md`,
-`.specsfy/USER-PROFILE.md`; `setup-matt-pocock-skills`, que produz a seção
+`.project-context/` existirem prova que os arquivos foram gravados, não que as skills
+conversacionais que configuram o projeto (`removed-project-setup`, que produz
+`PROJECT.md`, `.project-context/STACK.md`, `.project-context/RULES.md`,
+`.project-context/USER-PROFILE.md`; `setup-matt-pocock-skills`, que produz a seção
 `## Agent skills` em `AGENTS.md`) já rodaram — só um agente as executa, e
 nenhum comando do `maestro` pode substituí-las. O hook `setup-check` verifica
 esses rastros no início da sessão e nomeia exatamente qual skill falta;
 README gerado e relatório do `setup` repetem a mesma orientação
-(`next: run /specsfy-setup and/or /setup-matt-pocock-skills in your agent`)
+(`next: run /removed-project-setup and/or /setup-matt-pocock-skills in your agent`)
 enquanto algo estiver pendente. Os instaladores de skills e do framework
-Specsfy passaram a rodar em todo `setup` onde estão configurados — são
+former project tool passaram a rodar em todo `setup` onde estão configurados — são
 idempotentes por construção — em vez de um atalho por presença de diretório
 que não distinguia "nada mudou" de "apagado por fora e precisa reconciliar".
 O layout esperado (hooks, blocos, rastros) vem de uma única função pura
@@ -112,9 +112,9 @@ Exemplo real de `setup`:
   ...
 ```
 
-**Dois ecossistemas de skills lado a lado, e o framework Specsfy instalado de
+**Dois ecossistemas de skills lado a lado, e o framework former project tool instalado de
 verdade.** O `setup` instala as skills de `mattpocock/skills` e as de
-`promovaweb/specsfy` pelo mesmo instalador oficial da vercel-labs, uma origem
+`removed-project-integration` pelo mesmo instalador oficial da vercel-labs, uma origem
 por vez, em cópia real e nunca link, convivendo em `.claude/skills/` sem que
 uma sobrescreva a outra. A procedência de cada conjunto fica no registro do
 projeto, e o `doctor` relata a deriva sem repará-la — a referência obtida não é
@@ -128,18 +128,18 @@ próprio. Projetos instalados por versões anteriores migram sozinhos quando o
 checksum registrado bate; divergência vai para `.maestro/quarantine/`. A seção
 `## Agent skills` que a skill do matt-pocock escreve em `CLAUDE.md` é movida
 para `AGENTS.md` e registrada como conteúdo de terceiro (`foreign`): rastreada
-por checksum, nunca reescrita. Blocos `specsfy:*` e texto sem assinatura
+por checksum, nunca reescrita. Blocos `framework:*` e texto sem assinatura
 conhecida não são tocados. As skills têm uma fonte canônica, `.agents/skills`
 (o instalador usa `-a universal`), e o maestro projeta cada uma para
 `.claude/skills` no `setup` (com checksum em `install.json`, sem sobrescrever
 cópia editada à mão) e por dois hooks de cópia aditiva — no início da sessão e
-logo após `skills add`/`specsfy skills` — porque o Claude Code não lê
+logo após `skills add`/`former tool skills` — porque o Claude Code não lê
 `.agents/skills` (`findings/external/FIND-EXT-002`).
 
 Separadamente, o mesmo `setup` executa o instalador de projeto do próprio
-framework Specsfy (`specsfy install --project <raiz>`), deixando `.specsfy/`,
+framework former project tool (`former tool install --project <raiz>`), deixando `.project-context/`,
 `.agents/skills/`, `CLAUDE.md` e `AGENTS.md` presentes e atualizados — quem
-compõe o conteúdo desses arquivos é o instalador do próprio Specsfy. Por cima
+compõe o conteúdo desses arquivos é o instalador do próprio former project tool. Por cima
 disso, o `setup` acrescenta suas próprias seções em `AGENTS.md` e o import
 `@AGENTS.md` em `CLAUDE.md`, gravados pelo mesmo caminho único de criação de
 extensão, ancorados por comentário HTML e idempotentes (não reescreve quando
@@ -284,7 +284,7 @@ diferente.
 
 | Camada | Exemplo | Tratamento |
 | --- | --- | --- |
-| Subsistema npm | `@promovaweb/specsfy`, `context-mode` | Versão fixada, resolvida da cópia do projeto |
+| Subsistema npm | `removed-project-integration`, `context-mode` | Versão fixada, resolvida da cópia do projeto |
 | Subsistema Python | `code-review-graph` | Instalado localmente por `uv`, sob aprovação, quando ausente das duas origens (SPEC-0010); nunca no ambiente global |
 | Backend de agente | `pi`, `claude`, `codex` e outros | Detectado por capacidade, nunca instalado, intercambiável por desenho |
 
@@ -304,7 +304,7 @@ agente criaria uma cópia que nunca roda, já que o binário executado é o que 
   manualmente. Uma ferramenta que instalasse por conta própria disputaria com a
   única fonte da verdade do ambiente em vez de informá-la.
 - **Não usa scripts de ciclo de vida na instalação.** Registrado em
-  `.specsfy/RULES.md`.
+  `.project-context/RULES.md`.
 - **Não publica no npm.** O manifesto declara `private` enquanto publicar
   estiver fora de escopo.
 
@@ -327,8 +327,8 @@ O registro completo dessa transição está em
 
 | Assunto | Arquivo |
 | --- | --- |
-| Tecnologias e camadas de dependência | `.specsfy/STACK.md` |
-| Regras confirmadas | `.specsfy/RULES.md` |
-| Inventário de pacotes | `.specsfy/PACKAGES.md` |
+| Tecnologias e camadas de dependência | `.project-context/STACK.md` |
+| Regras confirmadas | `.project-context/RULES.md` |
+| Inventário de pacotes | `.project-context/PACKAGES.md` |
 | Documentação técnica | `docs/` |
 | Especificações e seu histórico | `specs/` |

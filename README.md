@@ -36,7 +36,7 @@ All primary technical documentation is maintained in [docs/README.md](docs/READM
 | --- | --- |
 | `maestro --version` | Prints the version declared in the package manifest. |
 | `maestro doctor` | Reports subsystem dependencies, detected agent backends, installed skill sets, and extension drift. |
-| `maestro setup` | Installs editor hooks, delivers skill sets, initializes Specsfy, and maintains `.maestro/config.yaml` and root `README.md`. |
+| `maestro setup` | Installs editor hooks, delivers skill sets, initializes former project tool, and maintains `.maestro/config.yaml` and root `README.md`. |
 | `maestro recommend` | Recommends an available agent backend and the optimal local Ollama model fitting free memory & context length. |
 | `maestro plan --task "..."` | Generates a multi-agent orchestration plan requiring explicit human approval before persisting. |
 | `maestro run <execution-id>` | Executes an approved plan by constructing briefs and spawning CLI agent subprocesses under individual gate approval. |
@@ -49,7 +49,7 @@ All primary technical documentation is maintained in [docs/README.md](docs/READM
 ## Architecture Principles
 
 1. **3-Layer Dependency Hierarchy**:
-   - **Local npm Subsystems** (`@promovaweb/specsfy`, `context-mode`): Pinned version, resolved from project local copy.
+   - **Local npm Subsystems** (`removed-project-integration`, `context-mode`): Pinned version, resolved from project local copy.
    - **Local Python Subsystems** (`code-review-graph`): Isolated in local project `venv`, installed via `uv` upon explicit approval.
    - **Agent CLI Backends** (`pi`, `agy`, `claude`, `codex`, `goose`): Detected dynamically in `PATH` by capability. Never installed by Maestro.
 2. **Approval Gate Security**:
@@ -63,4 +63,4 @@ All primary technical documentation is maintained in [docs/README.md](docs/READM
 
 ## License & Private Status
 
-This package is private (`"private": true` in `package.json`). Internal project managed under Specsfy framework contracts.
+This package is private (`"private": true` in `package.json`). Internal project managed under Maestro-owned setup contracts.

@@ -6,7 +6,7 @@ const detected = (names: string[]): BackendResult[] =>
   names.map((name) => ({ name, present: true, version: "1.0.0", supported: true }));
 
 describe("AC-010 — sem backend declarado, usa o primeiro detectado", () => {
-  // SPECSFY: US-001 FR-004 NFR-001 AC-010
+  // TRACEABILITY: US-001 FR-004 NFR-001 AC-010
   it("escolhe o primeiro presente na ordem fixa", async () => {
     const { selectBackend } = await import("../src/delegation/cli-select");
     const agent = profile("maestro");
@@ -18,7 +18,7 @@ describe("AC-010 — sem backend declarado, usa o primeiro detectado", () => {
 });
 
 describe("AC-011 — backend required indisponível é recusado", () => {
-  // SPECSFY: US-001 FR-004 NFR-002 AC-011
+  // TRACEABILITY: US-001 FR-004 NFR-002 AC-011
   it("recusa nomeando o backend ausente", async () => {
     const { selectBackend } = await import("../src/delegation/cli-select");
     const agent = profile("maestro");
@@ -32,7 +32,7 @@ describe("AC-011 — backend required indisponível é recusado", () => {
 });
 
 describe("AC-012 — backend suggested indisponível cai para outro detectado", () => {
-  // SPECSFY: US-001 FR-004 NFR-001 AC-012
+  // TRACEABILITY: US-001 FR-004 NFR-001 AC-012
   it("escolhe o outro backend presente, não uma recusa", async () => {
     const { selectBackend } = await import("../src/delegation/cli-select");
     const agent = profile("maestro");

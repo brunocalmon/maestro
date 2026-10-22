@@ -11,21 +11,21 @@ describe("AC-070 — nothing is written beyond what the plan foresaw", () => {
     return { plan: received[0] ?? [], installed: r.installed };
   };
 
-  // SPECSFY: US-060 NFR-062 AC-070
+  // TRACEABILITY: US-060 NFR-062 AC-070
   it("every written file matches a plan item", () => {
     const { plan, installed } = run();
     const planNames = new Set(plan.map((p) => p.name));
     for (const h of installed) expect(planNames.has(h.name)).toBe(true);
   });
 
-  // SPECSFY: US-060 NFR-062 AC-070
+  // TRACEABILITY: US-060 NFR-062 AC-070
   it("no plan item was left unwritten", () => {
     const { plan, installed } = run();
     const installedNames = new Set(installed.map((h) => h.name));
     for (const p of plan) expect(installedNames.has(p.name)).toBe(true);
   });
 
-  // SPECSFY: US-060 NFR-062 AC-070
+  // TRACEABILITY: US-060 NFR-062 AC-070
   it("the counts match exactly", () => {
     const { plan, installed } = run();
     expect(installed.length).toBe(plan.length);

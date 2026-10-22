@@ -18,7 +18,7 @@ function run(root: string, input: string) {
 }
 
 describe("AC-118 — a JSON document run uses the same registry", () => {
-  // SPECSFY: US-070 US-071 US-072 FR-071 FR-074 NFR-071 AC-118
+  // TRACEABILITY: US-070 US-071 US-072 FR-071 FR-074 NFR-071 AC-118
   it("with the skills command already registered, drift doesn't ask for approval again even with no document", () => {
     const root = projectWithTarget();
     run(root, approved);

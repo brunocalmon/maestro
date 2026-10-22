@@ -15,7 +15,7 @@
 
 ## Texto original
 
-O Orchestrator (extensão do specsfy) monta times dinâmicos de 3 a 9 instâncias operacionais sob demanda, ou atua em modo solo, dependendo da complexidade. Tem total liberdade para escolher a ferramenta: subagents nativos da IDE (ex: subagents do Cursor) ou subprocessos CLI de agentes externos (pi.dev, aider, goose, agy). Ao abrir um subprocesso, injeta dinamicamente regras e guardrails (ex: AGENTS.md temporário ou parâmetros). Roda os agentes externos em modo headless/print (-p, --mode json), capturando a saída sem poluir a interface. Define explicitamente o modelo que cada subprocesso deve usar (--model ollama/qwen2.5:8b, Claude, DeepSeek, etc.), permitindo orquestração híbrida local/nuvem. Hierarquia: humano pede ao Orchestrator, subagents/subprocessos reportam ao Orchestrator, Orchestrator reporta ao humano. Aprovação obrigatória: o Orchestrator sempre apresenta o planejamento da orquestração (ferramentas, modelos, guardrails) para revisão humana antes de executar. (Formalizada como captura de inbox própria em 2026-09-06, a pedido explícito do usuário que pediu cobertura completa do roadmap; texto original consolidado a partir de specs/inbox/2026-08-24-191151-reestruturacao-mcp-para-cli-com-orchestrator-multi-agente.md, seção 3 'O Orchestrator e a Delegação Flexível', e seção 4 'Fluxo de Trabalho e Human-in-the-Loop'.)
+O Orchestrator (extensão do framework) monta times dinâmicos de 3 a 9 instâncias operacionais sob demanda, ou atua em modo solo, dependendo da complexidade. Tem total liberdade para escolher a ferramenta: subagents nativos da IDE (ex: subagents do Cursor) ou subprocessos CLI de agentes externos (pi.dev, aider, goose, agy). Ao abrir um subprocesso, injeta dinamicamente regras e guardrails (ex: AGENTS.md temporário ou parâmetros). Roda os agentes externos em modo headless/print (-p, --mode json), capturando a saída sem poluir a interface. Define explicitamente o modelo que cada subprocesso deve usar (--model ollama/qwen2.5:8b, Claude, DeepSeek, etc.), permitindo orquestração híbrida local/nuvem. Hierarquia: humano pede ao Orchestrator, subagents/subprocessos reportam ao Orchestrator, Orchestrator reporta ao humano. Aprovação obrigatória: o Orchestrator sempre apresenta o planejamento da orquestração (ferramentas, modelos, guardrails) para revisão humana antes de executar. (Formalizada como captura de inbox própria em 2026-09-06, a pedido explícito do usuário que pediu cobertura completa do roadmap; texto original consolidado a partir de specs/inbox/2026-08-24-191151-reestruturacao-mcp-para-cli-com-orchestrator-multi-agente.md, seção 3 'O Orchestrator e a Delegação Flexível', e seção 4 'Fluxo de Trabalho e Human-in-the-Loop'.)
 
 ## Contexto consultado
 
@@ -49,7 +49,7 @@ Nenhuma fonte contextual consultada.
 
 ### Riscos e dependências
 
-**Análise preliminar:** Inferência: sobreposição grande com decisões já vinculantes do projeto — SPEC-0002 (DEC-002) fixa três subsistemas orquestrados (specsfy, context-mode, code-review-graph), sem pi.dev como dependência fixada; SPEC-0008 (fatia 1d) já entregou detecção de backends de agente sem instalar globalmente; SPEC-0010 já entrega aprovação em lote de comandos, potencialmente sobreposta com 'aprovação obrigatória do plano' descrita aqui. O próprio backlog-0003 (linha 34) já classificou 'multi-agente orchestration' como Phase 2+, sem desenho, distinto do que foi de fato promovido e entregue (SPEC-0002 a SPEC-0013).
+**Análise preliminar:** Inferência: sobreposição grande com decisões já vinculantes do projeto — SPEC-0002 (DEC-002) fixa três subsistemas orquestrados (framework, context-mode, code-review-graph), sem pi.dev como dependência fixada; SPEC-0008 (fatia 1d) já entregou detecção de backends de agente sem instalar globalmente; SPEC-0010 já entrega aprovação em lote de comandos, potencialmente sobreposta com 'aprovação obrigatória do plano' descrita aqui. O próprio backlog-0003 (linha 34) já classificou 'multi-agente orchestration' como Phase 2+, sem desenho, distinto do que foi de fato promovido e entregue (SPEC-0002 a SPEC-0013).
 
 ## Possíveis direções futuras
 
@@ -67,4 +67,4 @@ Nenhuma fonte contextual consultada.
 
 ## Próximo passo
 
-Manter em `specs/inbox/` ou refinar com `$specsfy-02-backlog`.
+Manter em `specs/inbox/` ou refinar com `$framework-02-backlog`.

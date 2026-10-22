@@ -5,18 +5,18 @@ import { generateId } from "../src/telemetry/trace";
 describe("AC-049 — nothing from the environment leaks into the identifier", () => {
   const values = () => Array.from({ length: 100 }, () => generateId());
 
-  // SPECSFY: US-042 NFR-041 AC-049
+  // TRACEABILITY: US-042 NFR-041 AC-049
   it("doesn't contain the username", () => {
     const u = userInfo().username.toLowerCase();
     for (const v of values()) expect(v.toLowerCase()).not.toContain(u);
   });
 
-  // SPECSFY: US-042 NFR-041 AC-049
+  // TRACEABILITY: US-042 NFR-041 AC-049
   it("doesn't contain an absolute path", () => {
     for (const v of values()) expect(v).not.toContain(homedir());
   });
 
-  // SPECSFY: US-042 NFR-041 AC-049
+  // TRACEABILITY: US-042 NFR-041 AC-049
   it("doesn't contain the machine name", () => {
     const h = hostname().toLowerCase();
     for (const v of values()) expect(v.toLowerCase()).not.toContain(h);

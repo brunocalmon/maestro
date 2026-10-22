@@ -15,7 +15,7 @@
 
 ## Texto original
 
-quero as skills do mattpocock/skills como dependência do common-rules, instaladas pelo setup e disponíveis junto com o specsfy, o context-mode e o code-review-graph — descobri que o autor não publica no npm e o caminho oficial é o instalador skills da vercel-labs
+quero as skills do mattpocock/skills como dependência do common-rules, instaladas pelo setup e disponíveis junto com o framework, o context-mode e o code-review-graph — descobri que o autor não publica no npm e o caminho oficial é o instalador skills da vercel-labs
 
 ## Contexto consultado
 
@@ -23,7 +23,7 @@ Nenhuma fonte contextual consultada.
 
 ## Resumo processado
 
-**Inferência:** As skills de mattpocock/skills passam a ser dependência do common-rules, instaladas pelo setup e disponíveis ao lado do specsfy, do context-mode e do code-review-graph, pelo instalador oficial da vercel-labs em vez de um pacote npm do autor, que não existe.
+**Inferência:** As skills de mattpocock/skills passam a ser dependência do common-rules, instaladas pelo setup e disponíveis ao lado do framework, do context-mode e do code-review-graph, pelo instalador oficial da vercel-labs em vez de um pacote npm do autor, que não existe.
 
 ## Análise inicial
 
@@ -41,7 +41,7 @@ Nenhuma fonte contextual consultada.
 
 ### Sinais de escopo, regras ou solução
 
-**Sinais extraídos, não decisões:** Escopo citado: as skills de mattpocock/skills, o comando setup, e a paridade com specsfy, context-mode e code-review-graph. Caminho oficial nomeado pela pessoa: o instalador skills da vercel-labs. Verificado no registro npm durante a conversa: o pacote skills está em 1.5.23, vem de vercel-labs/skills, é mantido por rauchg e quuu, e expõe os binários skills e add-skill. O README de github.com/mattpocock/skills instrui npx skills@latest add mattpocock/skills, e o nome mattpocock-skills que ele cita é de plugin do Claude Code, não de pacote npm. Existe no npm um mattpocock-skills 1.3.0 publicado por aanhnguyen, que não é o autor e não aparece como caminho oficial no README.
+**Sinais extraídos, não decisões:** Escopo citado: as skills de mattpocock/skills, o comando setup, e a paridade com framework, context-mode e code-review-graph. Caminho oficial nomeado pela pessoa: o instalador skills da vercel-labs. Verificado no registro npm durante a conversa: o pacote skills está em 1.5.23, vem de vercel-labs/skills, é mantido por rauchg e quuu, e expõe os binários skills e add-skill. O README de github.com/mattpocock/skills instrui npx skills@latest add mattpocock/skills, e o nome mattpocock-skills que ele cita é de plugin do Claude Code, não de pacote npm. Existe no npm um mattpocock-skills 1.3.0 publicado por aanhnguyen, que não é o autor e não aparece como caminho oficial no README.
 
 ### Informações que talvez precisem ser guardadas
 
@@ -67,4 +67,4 @@ Nenhuma fonte contextual consultada.
 
 ## Próximo passo
 
-Manter em `specs/inbox/` ou refinar com `$specsfy-02-backlog`.
+Manter em `specs/inbox/` ou refinar com `$framework-02-backlog`.

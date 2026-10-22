@@ -6,7 +6,7 @@ import { readLock, toRecordEntries, reportSkills } from "../src/skills/record";
 import { fileTree, projectWithSkills, fakeExecutor, outsideProject, MATTPOCOCK_SET } from "./skills-fixtures";
 
 describe("AC-032 — refusal, conflict and rerun preserve what exists", () => {
-  // SPECSFY: US-020 FR-026 NFR-020 AC-032
+  // TRACEABILITY: US-020 FR-026 NFR-020 AC-032
   it("a conflict refusal deletes nothing", async () => {
     const root = projectWithSkills();
     const name = MATTPOCOCK_SET[0]!;
@@ -17,7 +17,7 @@ describe("AC-032 — refusal, conflict and rerun preserve what exists", () => {
     for (const path of before) expect(fileTree(root)).toContain(path);
   });
 
-  // SPECSFY: US-020 FR-021 NFR-020 AC-032
+  // TRACEABILITY: US-020 FR-021 NFR-020 AC-032
   it("rerunning deletes nothing", async () => {
     const root = projectWithSkills();
     const opts = { root, source: "mattpocock/skills", execute: fakeExecutor("success", root).fn };
@@ -27,7 +27,7 @@ describe("AC-032 — refusal, conflict and rerun preserve what exists", () => {
     for (const path of middle) expect(fileTree(root)).toContain(path);
   });
 
-  // SPECSFY: US-020 FR-022 NFR-022 AC-032
+  // TRACEABILITY: US-020 FR-022 NFR-022 AC-032
   it("nothing outside the project root was touched on any path", async () => {
     const root = projectWithSkills();
     const neighbor = projectWithSkills("crs-neighbor-");

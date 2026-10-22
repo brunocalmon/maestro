@@ -31,11 +31,11 @@ Todos os hooks entregues pelo maestro disparam de fato no Claude Code, com ident
 
 ## Contexto
 
-Origem: specs/inbox/2026-09-17-105213-hooks-do-maestro-com-matcher-invalido-no-claude-code-e-setup-que-instala-sem-configurar-specsfy-e-skills.md. Decisões tomadas em sessão de grill em 2026-09-17 (Q1-Q5, Q9, Q18-Q20). Primeira das três fatias derivadas da mesma captura; passa na frente de BACKLOG-0010/SPEC-0021 por ter consequência ativa em projeto consumidor.
+Origem: specs/inbox/2026-09-17-105213-hooks-do-maestro-com-matcher-invalido-no-claude-code-e-setup-que-instala-sem-configurar-framework-e-skills.md. Decisões tomadas em sessão de grill em 2026-09-17 (Q1-Q5, Q9, Q18-Q20). Primeira das três fatias derivadas da mesma captura; passa na frente de BACKLOG-0010/SPEC-0021 por ter consequência ativa em projeto consumidor.
 
 ## Referências relacionadas
 
-- `specs/inbox/2026-09-17-105213-hooks-do-maestro-com-matcher-invalido-no-claude-code-e-setup-que-instala-sem-configurar-specsfy-e-skills.md` — origem (Inbox).
+- `specs/inbox/2026-09-17-105213-hooks-do-maestro-com-matcher-invalido-no-claude-code-e-setup-que-instala-sem-configurar-framework-e-skills.md` — origem (Inbox).
 - `specs/completed/0003-fatia-1b-setup-hooks/spec.md` — spec relacionada: definiu o formato inline atual (preâmbulo/fragmento/postâmbulo) e o matcher por nome.
 - `specs/completed/0011-extensoes-locais-reparo-assistido/spec.md` — spec relacionada: registro por checksum e quarentena reutilizados para os scripts de hook.
 - `specs/backlog/0012-normalizacao-agents-md-claude-md-e-projecao-de-skills-agents-para-claude.md` — backlog relacionado: depende dos hooks `SessionStart`/`PostToolUse` desta fatia para a projeção de skills.
@@ -112,4 +112,4 @@ Origem: specs/inbox/2026-09-17-105213-hooks-do-maestro-com-matcher-invalido-no-c
 
 ## Próximo passo
 
-Promover com `$specsfy-03-specify`.
+Promover com `$framework-03-specify`.

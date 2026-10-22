@@ -84,4 +84,4 @@ A esclarecer.
 
 ## Próximo passo
 
-Aprofundar nesta etapa até o item ficar pronto para `$specsfy-03-specify`.
+Aprofundar nesta etapa até o item ficar pronto para `$framework-03-specify`.

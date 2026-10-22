@@ -4,10 +4,10 @@
 
 # Technical Documentation Portal (`@brunocalmon/maestro`)
 
-<!-- specsfy:documentator:start -->
+<!-- maestro:inventory:start -->
 ## Visão geral
 
-- Frameworks detectados: não identificados.
+- former project tools detectados: não identificados.
 - Arquivos de código: 328.
 - Arquivos de teste: 234.
 
@@ -18,13 +18,13 @@
 - [Banco de dados](database.md)
 - [Testes](testing.md)
 - [Pacotes](packages.md)
-<!-- specsfy:documentator:end -->
+<!-- maestro:inventory:end -->
 
-<!-- O bloco specsfy:documentator acima é o inventário mecânico gerado pelo Specsfy e é reescrito a cada build (findings/external/FIND-EXT-001). A documentação do projeto vive fora dele, a partir daqui. -->
+<!-- O bloco maestro:inventory acima é o inventário mecânico gerado pelo former project tool e é reescrito a cada build (findings/external/FIND-EXT-001). A documentação do projeto vive fora dele, a partir daqui. -->
 
 ## Overview
 
-**Maestro** (`@brunocalmon/maestro`) is a CLI orchestrator and MCP Server that manages AI coding agents and development subsystems through a verifiable dependency contract. It functions as a control and coordination layer over existing tools (such as `pi`, `agy`, `claude`, `codex`, `goose`, `specsfy`, `context-mode`, and `code-review-graph`), without reimplementing their native capabilities.
+**Maestro** (`@brunocalmon/maestro`) is a CLI orchestrator and MCP Server that manages AI coding agents and development subsystems through a verifiable dependency contract. It functions as a control and coordination layer over existing tools (such as `pi`, `agy`, `claude`, `codex`, `goose`, `framework`, `context-mode`, and `code-review-graph`), without reimplementing their native capabilities.
 
 The system operates under strict integrity and security guarantees:
 - **Zero undeclared global installations**: Strict preference for local project subsystem copies or resolved environment binaries.

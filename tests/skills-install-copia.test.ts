@@ -4,14 +4,14 @@ import { inspectSkills } from "../src/skills/inventory";
 import { projectWithSkills, fakeExecutor } from "./skills-fixtures";
 
 describe("AC-021 — no installed entry is a symlink", () => {
-  // SPECSFY: US-020 FR-021 AC-021
+  // TRACEABILITY: US-020 FR-021 AC-021
   it("the inventory finds no link at any level", async () => {
     const root = projectWithSkills();
     await installSkills({ root, source: "mattpocock/skills", execute: fakeExecutor("success", root).fn });
     expect(inspectSkills(root).symlinks).toEqual([]);
   });
 
-  // SPECSFY: US-020 NFR-022 AC-021
+  // TRACEABILITY: US-020 NFR-022 AC-021
   it("the content the agent reads lives inside the project", async () => {
     const root = projectWithSkills();
     await installSkills({ root, source: "mattpocock/skills", execute: fakeExecutor("success", root).fn });
@@ -20,7 +20,7 @@ describe("AC-021 — no installed entry is a symlink", () => {
     for (const d of r.dirs) expect(d.startsWith("/")).toBe(false);
   });
 
-  // SPECSFY: US-020 FR-021 AC-021
+  // TRACEABILITY: US-020 FR-021 AC-021
   it("the invocation explicitly requests copy, instead of accepting the default", async () => {
     const root = projectWithSkills();
     const ex = fakeExecutor("success", root);

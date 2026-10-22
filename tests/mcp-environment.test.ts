@@ -11,7 +11,7 @@ afterEach(() => {
 });
 
 describe("AC-008 — project environment variables don't influence the write", () => {
-  // SPECSFY: US-002 FR-002 AC-008
+  // TRACEABILITY: US-002 FR-002 AC-008
   it("writes to the root given to the tool", async () => {
     const fromEnv = disposableProject("crs-env-");
     const target = disposableProject("crs-target-");
@@ -20,7 +20,7 @@ describe("AC-008 — project environment variables don't influence the write", (
     expect(existsSync(join(target, ".maestro", "install.json"))).toBe(true);
   });
 
-  // SPECSFY: US-002 NFR-001 AC-008
+  // TRACEABILITY: US-002 NFR-001 AC-008
   it("leaves the project pointed to by the environment untouched", async () => {
     const fromEnv = disposableProject("crs-env-");
     const target = disposableProject("crs-target-");
@@ -30,7 +30,7 @@ describe("AC-008 — project environment variables don't influence the write", (
     expect(fileTree(fromEnv)).toEqual(before);
   });
 
-  // SPECSFY: US-002 NFR-003 AC-008
+  // TRACEABILITY: US-002 NFR-003 AC-008
   it("refuses when only the environment points at a project and the tool gets no root", async () => {
     process.env["CLAUDE_PROJECT_DIR"] = disposableProject("crs-env-");
     expect((await executeSetup({})).isError).toBe(true);

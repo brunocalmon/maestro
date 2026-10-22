@@ -5,7 +5,7 @@ import { backends, snapshot, BIG_SMALL_WINDOW, SMALL_BIG_WINDOW, countingReader,
 const both = snapshot([BIG_SMALL_WINDOW, SMALL_BIG_WINDOW]);
 
 describe("AC-013 — o relatório declara o tipo considerado", () => {
-  // SPECSFY: US-001 FR-004 NFR-001 AC-013
+  // TRACEABILITY: US-001 FR-004 NFR-001 AC-013
   it("nomeia o tipo e a janela mínima exigida", () => {
     const r = recommend(backends, both, capacity, {}, { name: "revisao", contextWindowMin: 100_000 }, countingReader([]));
 
@@ -15,7 +15,7 @@ describe("AC-013 — o relatório declara o tipo considerado", () => {
 });
 
 describe("AC-014 — um override escapa do filtro", () => {
-  // SPECSFY: US-001 FR-003 NFR-002 AC-014
+  // TRACEABILITY: US-001 FR-003 NFR-002 AC-014
   it("mantém o modelo escolhido à mão mesmo com janela insuficiente", () => {
     const r = recommend(
       backends,

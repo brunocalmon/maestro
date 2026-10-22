@@ -13,17 +13,17 @@ const runBin = (args: string[]) => {
 };
 
 describe("AC-004 — --version prints the manifest's version", () => {
-  // SPECSFY: US-001 FR-005 AC-004
+  // TRACEABILITY: US-001 FR-005 AC-004
   it("prints exactly the declared version", () => {
     expect(runBin(["--version"]).trim()).toContain(String(manifest().version));
   });
 
-  // SPECSFY: US-001 FR-002 FR-005 AC-004
+  // TRACEABILITY: US-001 FR-002 FR-005 AC-004
   it("exits with code zero", () => {
     expect(() => runBin(["--version"])).not.toThrow();
   });
 
-  // SPECSFY: US-001 FR-001 NFR-003 AC-004
+  // TRACEABILITY: US-001 FR-001 NFR-003 AC-004
   it("declares a version in the manifest to be able to print it", () => {
     expect(manifest().version).toBeDefined();
   });

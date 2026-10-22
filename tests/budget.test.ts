@@ -18,13 +18,13 @@ const timings = (): Record<string, number> =>
 
 describe("AC-009 — install, build and tests fit the budget", () => {
   for (const step of ["install", "build", "test"]) {
-    // SPECSFY: US-001 FR-002 FR-003 NFR-001 AC-009
+    // TRACEABILITY: US-001 FR-002 FR-003 NFR-001 AC-009
     it(`records the ${step} step's time`, () => {
       expect(timings()[step]).toBeTypeOf("number");
     });
   }
 
-  // SPECSFY: US-001 NFR-001 AC-009
+  // TRACEABILITY: US-001 NFR-001 AC-009
   it("sums the three steps under five minutes", () => {
     const t = timings();
     const total = (t.install ?? 0) + (t.build ?? 0) + (t.test ?? 0);

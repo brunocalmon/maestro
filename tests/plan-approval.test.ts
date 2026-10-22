@@ -3,7 +3,7 @@ import { existsSync, mkdirSync, mkdtempSync, readdirSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 
-// SPECSFY: US-001 FR-003 AC-007 — projeto descartável, o mesmo padrão da SPEC-0013.
+// TRACEABILITY: US-001 FR-003 AC-007 — projeto descartável, o mesmo padrão da SPEC-0013.
 function project(): string {
   const root = mkdtempSync(join(tmpdir(), "plan-approval-"));
   mkdirSync(resolve(root, ".maestro"), { recursive: true });
@@ -28,7 +28,7 @@ function plansIn(root: string): string[] {
 }
 
 describe("AC-006 — o plano é apresentado antes da decisão", () => {
-  // SPECSFY: US-001 FR-003 NFR-001 AC-006
+  // TRACEABILITY: US-001 FR-003 NFR-001 AC-006
   it("o texto nomeia agente, modelo e runtime e declara que nada roda sem aprovação", async () => {
     const { renderPlan } = await import("../src/plan/render");
     const text = renderPlan(PLAN);
@@ -41,7 +41,7 @@ describe("AC-006 — o plano é apresentado antes da decisão", () => {
 });
 
 describe("AC-007 — aprovar produz o plano aprovado", () => {
-  // SPECSFY: US-001 FR-003 FR-004 AC-007
+  // TRACEABILITY: US-001 FR-003 FR-004 AC-007
   it("devolve o plano aprovado e grava o artefato", async () => {
     const { decidePlan } = await import("../src/plan/run");
     const root = project();
@@ -54,7 +54,7 @@ describe("AC-007 — aprovar produz o plano aprovado", () => {
 });
 
 describe("AC-008 — recusar não grava nada", () => {
-  // SPECSFY: US-001 FR-003 FR-004 NFR-002 AC-008
+  // TRACEABILITY: US-001 FR-003 FR-004 NFR-002 AC-008
   it("nenhum arquivo aparece e o resultado é negativo", async () => {
     const { decidePlan } = await import("../src/plan/run");
     const root = project();
@@ -67,7 +67,7 @@ describe("AC-008 — recusar não grava nada", () => {
 });
 
 describe("AC-009 — resposta ausente ou malformada é negativa", () => {
-  // SPECSFY: US-001 FR-003 NFR-002 AC-009
+  // TRACEABILITY: US-001 FR-003 NFR-002 AC-009
   it("uma fonte que lança é tratada como recusa, sem gravar", async () => {
     const { decidePlan } = await import("../src/plan/run");
     const root = project();

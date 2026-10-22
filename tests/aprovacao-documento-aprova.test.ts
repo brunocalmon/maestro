@@ -12,7 +12,7 @@ describe("AC-065 — the document authorizes the run", () => {
     approval: { context: { hasTerminal: () => false }, stdin: { read: () => '{"approved": true}' } },
   });
 
-  // SPECSFY: US-061 FR-062 AC-065
+  // TRACEABILITY: US-061 FR-062 AC-065
   it("the document is actually read before deciding", () => {
     const root = project();
     let readCount = 0;
@@ -23,13 +23,13 @@ describe("AC-065 — the document authorizes the run", () => {
     expect(readCount).toBe(1);
   });
 
-  // SPECSFY: US-061 FR-062 AC-065
+  // TRACEABILITY: US-061 FR-062 AC-065
   it("the run happens", () => {
     const root = project();
     expect(run(root).exitCode).toBe(0);
   });
 
-  // SPECSFY: US-061 FR-062 AC-065
+  // TRACEABILITY: US-061 FR-062 AC-065
   it("the expected files exist", () => {
     const root = project();
     run(root);
@@ -37,7 +37,7 @@ describe("AC-065 — the document authorizes the run", () => {
     expect(existsSync(join(root, ".maestro", "install.json"))).toBe(true);
   });
 
-  // SPECSFY: US-061 FR-062 AC-065
+  // TRACEABILITY: US-061 FR-062 AC-065
   it("the number of installed hooks is as expected", () => {
     const root = project();
     expect(run(root).installed.length).toBe(installedHookCount());

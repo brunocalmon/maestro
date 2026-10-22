@@ -1,5 +1,5 @@
 // Utilitários compartilhados pelas asserções da Phase 0.
-// Não é um caso de teste: não carrega marcador SPECSFY.
+// Não é um caso de teste: não carrega marcador TRACEABILITY.
 const { execFileSync } = require("node:child_process");
 const { existsSync, readFileSync } = require("node:fs");
 const { resolve } = require("node:path");
@@ -7,7 +7,7 @@ const { resolve } = require("node:path");
 const WORK_BRANCH = "refactor/v1-cli-first";
 const ARCHIVED_BRANCH = "archived";
 const MAIN_BRANCH = "main";
-const PRESERVED = ["specs", ".claude", ".specsfy", ".agents"];
+const PRESERVED = ["specs", ".claude", ".project-context", ".agents"];
 // O estado de execução vive dentro de .git, nunca na árvore versionada.
 // Se morasse em .claude/, a reindexação de T010 o incluiria no commit raiz e
 // assert-preserved-set acusaria um arquivo inesperado ao comparar com a main.

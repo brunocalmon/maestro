@@ -24,13 +24,13 @@ const bytesOf = (s: string): number[] => [...Buffer.from(s, "utf8")];
 describe("AC-090 — a terminal read survives EAGAIN instead of failing on it", () => {
   // This is the exact failure mode a real terminal produces: readFileSync(0)
   // throws EAGAIN immediately, before the person has typed anything.
-  // SPECSFY: US-060 FR-060 AC-090
+  // TRACEABILITY: US-060 FR-060 AC-090
   it("retries past an immediate EAGAIN and still reads the answer", () => {
     const reader = fakeTty(bytesOf("y\n"));
     expect(readTtyLine(reader)).toBe("y");
   });
 
-  // SPECSFY: US-060 FR-060 AC-090
+  // TRACEABILITY: US-060 FR-060 AC-090
   it("retries past EAGAIN appearing between bytes, not just at the start", () => {
     const queue = [...bytesOf("yes")];
     let calls = 0;
@@ -55,19 +55,19 @@ describe("AC-090 — a terminal read survives EAGAIN instead of failing on it", 
     expect(readTtyLine(reader)).toBe("yes");
   });
 
-  // SPECSFY: US-060 FR-060 NFR-060 AC-090
+  // TRACEABILITY: US-060 FR-060 NFR-060 AC-090
   it("stops at newline without consuming what comes after it", () => {
     const reader = fakeTty(bytesOf("y\nignored"));
     expect(readTtyLine(reader)).toBe("y");
   });
 
-  // SPECSFY: US-060 FR-060 AC-090
+  // TRACEABILITY: US-060 FR-060 AC-090
   it("strips a trailing carriage return", () => {
     const reader = fakeTty(bytesOf("y\r\n"));
     expect(readTtyLine(reader)).toBe("y");
   });
 
-  // SPECSFY: US-060 FR-060 AC-090
+  // TRACEABILITY: US-060 FR-060 AC-090
   it("stops at EOF (fd closed) the same as at a newline", () => {
     const reader: SyncReader = {
       readSync: () => 0,
@@ -76,7 +76,7 @@ describe("AC-090 — a terminal read survives EAGAIN instead of failing on it", 
     expect(readTtyLine(reader)).toBe("");
   });
 
-  // SPECSFY: US-060 FR-060 NFR-060 AC-090
+  // TRACEABILITY: US-060 FR-060 NFR-060 AC-090
   it("propagates an error that isn't EAGAIN, instead of retrying forever", () => {
     const reader: SyncReader = {
       readSync: () => {

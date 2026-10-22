@@ -14,19 +14,19 @@ jobs:
       contents: read
     env:
       # Some real-command tests fetch skill sources from GitHub
-      # (specsfy/skills installers). Unauthenticated, a shared Actions
+      # (framework/skills installers). Unauthenticated, a shared Actions
       # runner IP routinely hits GitHub's anonymous rate limit — both
       # installers already check GH_TOKEN/GITHUB_TOKEN for exactly this;
       # the repo-scoped token Actions provides automatically is enough.
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      # O instalador do Specsfy resolve a CLI de skills por `npx skills`, sem
+      # O instalador do Framework resolve a CLI de skills por `npx skills`, sem
       # versão: o `skills` que o package.json fixa não é o que roda, e cada
       # execução depende da árvore que o npx monta em ~/.npm/_npx/<hash>. No
       # runner essa árvore chegou incompleta e derrubou a instalação com
       # ERR_MODULE_NOT_FOUND em `yaml` — a falha intermitente que custou três
-      # investigações. Este é o ponto de extensão do próprio Specsfy para
+      # investigações. Este é o ponto de extensão do próprio Framework para
       # apontar a resolução para outro lugar: a cópia local já fixada.
-      SPECSFY_NPX_COMMAND: ${{ github.workspace }}/scripts/pinned-skills.mjs
+      TRACEABILITY_NPX_COMMAND: ${{ github.workspace }}/scripts/pinned-skills.mjs
     steps:
       - uses: actions/checkout@v4
 

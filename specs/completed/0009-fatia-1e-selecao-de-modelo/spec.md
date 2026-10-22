@@ -2,7 +2,7 @@
 
 | Campo | Valor |
 | --- | --- |
-| Formato | Specsfy/2.0 |
+| Formato | former project tool/2.0 |
 | ID | SPEC-0009 |
 | Slug | 0009-fatia-1e-selecao-de-modelo |
 | Status | Complete |
@@ -529,7 +529,7 @@ O ponto sensível é a tentação de tratar ausência de capacidade como erro. `
 #### Gate do Ato I — Definição
 
 - **Resultado**: READY (2026-08-30)
-- **Comando**: `node .agents/skills/specsfy-04-validate/scripts/validate_spec.mjs specs/completed/0009-fatia-1e-selecao-de-modelo/spec.md`
+- **Comando**: `node .agents/skills/framework-04-validate/scripts/validate_spec.mjs specs/completed/0009-fatia-1e-selecao-de-modelo/spec.md`
 - **Cobertura**: 3 US, 4 FR, 3 NFR, 13 AC, 4 DEC; mínimo de 3 AC por ID satisfeito em todos.
 - **Research**: `load_research.mjs` em `PASSED`, com `R-033`, `R-034` e `R-035` verificados e um artefato indexado.
 - **Revisão PROD**: a redução de escopo de "análise completa" para "sem rede, sem autenticação" foi verificada por execução real antes de escrever a spec (`agy models` pedindo login), não suposta — mesma disciplina da correção de `D2` na fatia 1d.
@@ -538,7 +538,7 @@ O ponto sensível é a tentação de tratar ausência de capacidade como erro. `
 #### Gate do Ato II — Plano
 
 - **Resultado**: Passed (2026-08-30)
-- **Comando**: `node .agents/skills/specsfy-05-tasks/scripts/validate_tasks.mjs specs/completed/0009-fatia-1e-selecao-de-modelo/spec.md`
+- **Comando**: `node .agents/skills/framework-05-tasks/scripts/validate_tasks.mjs specs/completed/0009-fatia-1e-selecao-de-modelo/spec.md`
 - **Plano**: 19 tarefas — 12 `[TEST] [TDD]`, 4 `[CODE]`, 2 `[DOC]`, 1 `[OPS]`; 95 itens de checklist; 23 de 23 IDs cobertos.
 - **Achados**: Nenhum bloqueante.
 
@@ -655,12 +655,12 @@ Checklist obrigatório por tarefa, na ordem:
 #### Fase 2 — Código, cada tarefa atrás do seu RED
 
 - [x] T013 [CODE] Implementar em src/models/capacity.ts — Refs: NFR-034, AC-098, AC-099, AC-102 — Depends: T009, T010, T011
-  - [x] **PREP**: Confirmar RED de T009, T010 e T011; `docs/` reconstruído por `$specsfy-documentator` antes da alteração.
+  - [x] **PREP**: Confirmar RED de T009, T010 e T011; `docs/` reconstruído por `$framework-documentator` antes da alteração.
   - [x] **EXECUTE**: `CapacityEnvironment` injetável com `totalBytes()`/`freeBytes()`; `realCapacityEnvironment()` usando `os.totalmem()`/`os.freemem()`, sem subprocesso.
   - [x] **VERIFY**: `npx tsc --noEmit` em exit 0.
   - [x] **EVIDENCE**: Comandos e resultado registrados na seção 12.
   - [x] **IMPROVE**: Registrar melhoria aplicada ou ausência justificada.
-  <!-- specsfy:evidence {"task": "T013", "refs": ["NFR-034", "AC-098", "AC-099", "AC-102"], "files": ["src/models/capacity.ts"], "commands": [{"run": "npx tsc --noEmit", "exit": 0}]} -->
+  <!-- framework:evidence {"task": "T013", "refs": ["NFR-034", "AC-098", "AC-099", "AC-102"], "files": ["src/models/capacity.ts"], "commands": [{"run": "npx tsc --noEmit", "exit": 0}]} -->
 
 - [x] T014 [CODE] [US-033] Implementar em src/models/ollama.ts — Refs: US-033, FR-035, AC-092, AC-093, AC-094, AC-099 — Depends: T003, T004, T005, T010
   - [x] **PREP**: Confirmar RED de T003, T004, T005 e T010.
@@ -668,7 +668,7 @@ Checklist obrigatório por tarefa, na ordem:
   - [x] **VERIFY**: Casos de T003, T004, T005 e T010 GREEN.
   - [x] **EVIDENCE**: Comandos e resultado registrados na seção 12.
   - [x] **IMPROVE**: Registrar melhoria aplicada ou ausência justificada.
-  <!-- specsfy:evidence {"task": "T014", "refs": ["US-033", "FR-035", "AC-092", "AC-093", "AC-094", "AC-099"], "files": ["src/models/ollama.ts"], "commands": [{"run": "npm run test:tdd", "exit": 0}, {"run": "npx tsc --noEmit", "exit": 0}]} -->
+  <!-- framework:evidence {"task": "T014", "refs": ["US-033", "FR-035", "AC-092", "AC-093", "AC-094", "AC-099"], "files": ["src/models/ollama.ts"], "commands": [{"run": "npm run test:tdd", "exit": 0}, {"run": "npx tsc --noEmit", "exit": 0}]} -->
 
 - [x] T015 [CODE] [US-033] [US-034] [US-035] Implementar em src/models/recommend.ts — Refs: US-033, US-034, US-035, FR-034, FR-035, FR-036, NFR-033, NFR-034, NFR-035, AC-090, AC-091, AC-095, AC-096, AC-098, AC-100, AC-102 — Depends: T001, T002, T006, T007, T008, T009, T011, T013, T014
   - [x] **PREP**: Confirmar RED de T001, T002, T006, T007, T008, T009 e T011.
@@ -676,7 +676,7 @@ Checklist obrigatório por tarefa, na ordem:
   - [x] **VERIFY**: Casos de T001, T002, T006, T007, T008, T009 e T011 GREEN.
   - [x] **EVIDENCE**: Comandos e resultado registrados na seção 12.
   - [x] **IMPROVE**: Registrar melhoria aplicada ou ausência justificada.
-  <!-- specsfy:evidence {"task": "T015", "refs": ["US-033", "US-034", "US-035", "FR-034", "FR-035", "FR-036", "NFR-033", "NFR-034", "NFR-035", "AC-090", "AC-091", "AC-095", "AC-096", "AC-098", "AC-100", "AC-102"], "files": ["src/models/recommend.ts"], "commands": [{"run": "npm run test:tdd", "exit": 0}, {"run": "npx tsc --noEmit", "exit": 0}]} -->
+  <!-- framework:evidence {"task": "T015", "refs": ["US-033", "US-034", "US-035", "FR-034", "FR-035", "FR-036", "NFR-033", "NFR-034", "NFR-035", "AC-090", "AC-091", "AC-095", "AC-096", "AC-098", "AC-100", "AC-102"], "files": ["src/models/recommend.ts"], "commands": [{"run": "npm run test:tdd", "exit": 0}, {"run": "npx tsc --noEmit", "exit": 0}]} -->
 
 - [x] T016 [CODE] [US-033] Implementar o comando recommend em src/cli.ts — Refs: US-033, FR-037, AC-097, AC-101 — Depends: T012, T015
   - [x] **PREP**: Confirmar RED de T012.
@@ -684,12 +684,12 @@ Checklist obrigatório por tarefa, na ordem:
   - [x] **VERIFY**: Caso de T012 GREEN, com `dist/cli.js recommend` real.
   - [x] **EVIDENCE**: Comandos e resultado registrados na seção 12.
   - [x] **IMPROVE**: Registrar melhoria aplicada ou ausência justificada.
-  <!-- specsfy:evidence {"task": "T016", "refs": ["US-033", "FR-037", "AC-097", "AC-101"], "files": ["src/cli.ts"], "commands": [{"run": "npm run test:tdd", "exit": 0}, {"run": "npx tsc --noEmit", "exit": 0}, {"run": "npm run build", "exit": 0}]} -->
+  <!-- framework:evidence {"task": "T016", "refs": ["US-033", "FR-037", "AC-097", "AC-101"], "files": ["src/cli.ts"], "commands": [{"run": "npm run test:tdd", "exit": 0}, {"run": "npx tsc --noEmit", "exit": 0}, {"run": "npm run build", "exit": 0}]} -->
 
 #### Fase 3 — Fechamento
 
-- [x] T017 [DOC] Registrar os módulos novos e o comando recommend em .specsfy/STACK.md — Refs: FR-037 — Depends: T016
-  - [x] **PREP**: Ler a seção de backends (fatia 1d) em `.specsfy/STACK.md`.
+- [x] T017 [DOC] Registrar os módulos novos e o comando recommend em .project-context/STACK.md — Refs: FR-037 — Depends: T016
+  - [x] **PREP**: Ler a seção de backends (fatia 1d) em `.project-context/STACK.md`.
   - [x] **EXECUTE**: Descrever `src/models/ollama.ts`, `src/models/capacity.ts`, `src/models/recommend.ts` e o comando `recommend`, incluindo a decisão de não calcular custo/uso de plano.
   - [x] **VERIFY**: `npm run build` em exit 0.
   - [x] **EVIDENCE**: Comando e resultado registrados na seção 12.
@@ -760,5 +760,5 @@ O fechamento admite paralelismo entre `T017` e `T018`, que tocam arquivos difere
 - [x] `npx tsc --noEmit`, `npm run build` e a suíte completa passam.
 - [x] Nenhuma chamada de rede nem prompt de autenticação ocorre, conferido por inspeção do código e por execução manual real.
 - [x] `node dist/cli.js recommend`, executado de verdade nesta máquina, imprime backend e modelo local recomendados (ou a ausência de cada um) e a declaração de que custo e uso de plano não entram no cálculo.
-- [x] `.specsfy/STACK.md` registra os três módulos novos e o comando `recommend`.
+- [x] `.project-context/STACK.md` registra os três módulos novos e o comando `recommend`.
 - [x] `PROJECT.md` descreve o que `common-rules recommend` faz e o que deliberadamente não calcula.

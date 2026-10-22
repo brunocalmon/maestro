@@ -8,21 +8,21 @@ const CORPUS = resolve(__dirname, "../resources/hooks");
 const hook = (n: string) => readHook(readFileSync(resolve(CORPUS, `${n}.md`), "utf8"));
 
 describe("AC-009 — translation preserves blocking semantics", () => {
-  // SPECSFY: US-002 FR-002 FR-003 FR-006 AC-009
+  // TRACEABILITY: US-002 FR-002 FR-003 FR-006 AC-009
   it("makes a hook declared blocking produce an entry that interrupts", () => {
     for (const n of ["guard-destructive", "guard-secrets", "protect-authorship"]) {
       expect(translateForClaudeCode(hook(n)).blocking).toBe(true);
     }
   });
 
-  // SPECSFY: US-002 FR-002 FR-006 AC-009
+  // TRACEABILITY: US-002 FR-002 FR-006 AC-009
   it("makes a non-blocking hook produce an entry that only observes", () => {
     for (const n of ["code-review-graph-update"]) {
       expect(translateForClaudeCode(hook(n)).blocking).toBe(false);
     }
   });
 
-  // SPECSFY: US-002 FR-002 NFR-003 AC-009
+  // TRACEABILITY: US-002 FR-002 NFR-003 AC-009
   it("maps each canonical event to the name the target uses", () => {
     expect(translateForClaudeCode(hook("guard-secrets")).event).toBe("PreToolUse");
     expect(translateForClaudeCode(hook("code-review-graph-update")).event).toBe("PostToolUse");

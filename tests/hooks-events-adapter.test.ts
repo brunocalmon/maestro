@@ -10,7 +10,7 @@ import { syntheticHook, project, readSettings } from "./helpers-spec-0022";
 const COMPACT = "kind: hook\nname: compact-probe\nevent: before-compact\nraw_command: echo compact";
 
 describe("AC-016 — evento não suportado pelo adaptador é reportado como pulado", () => {
-  // SPECSFY: US-003 FR-007 AC-016
+  // TRACEABILITY: US-003 FR-007 AC-016
   it("Antigravity pula before-compact e lista o motivo; Claude Code instala em PreCompact", () => {
     const hook = syntheticHook(COMPACT);
     expect(antigravityAdapter.supportedEvents).not.toContain("before-compact");

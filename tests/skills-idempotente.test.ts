@@ -13,7 +13,7 @@ describe("AC-029 — the second run recognizes the state", () => {
     return { root, middle, second };
   };
 
-  // SPECSFY: US-020 FR-023 AC-029
+  // TRACEABILITY: US-020 FR-023 AC-029
   it("the record keeps one entry per set", async () => {
     const { root } = await twice();
     const names = toRecordEntries(readLock(root)).map((e) => e.name);
@@ -21,13 +21,13 @@ describe("AC-029 — the second run recognizes the state", () => {
     expect(names.length).toBe(MATTPOCOCK_SET.length);
   });
 
-  // SPECSFY: US-020 NFR-020 AC-029
+  // TRACEABILITY: US-020 NFR-020 AC-029
   it("no installed content was removed", async () => {
     const { root, middle } = await twice();
     for (const path of middle) expect(fileTree(root)).toContain(path);
   });
 
-  // SPECSFY: US-020 FR-026 AC-029
+  // TRACEABILITY: US-020 FR-026 AC-029
   it("the second run isn't reported as a new install", async () => {
     const { second } = await twice();
     expect(second.changed).toBe(false);

@@ -12,12 +12,12 @@ dist/
 # Estado de execução da Phase 0, gravado dentro de .git e fora da árvore.
 # Listado aqui por clareza; .git já não é versionado.
 
-# Lockfile das skills Specsfy. A Phase 0 decidiu mantê-lo fora do índice para
+# Lockfile das skills Framework. A Phase 0 decidiu mantê-lo fora do índice para
 # que o conjunto preservado ficasse idêntico ao da main; versioná-lo é decisão
 # de outra fatia.
-.specsfy/skills-lock.json
+.project-context/skills-lock.json
 
-# Projeção gerada por `specsfy progress`, reconstruível a partir das specs.
+# Projeção gerada por `framework progress`, reconstruível a partir das specs.
 /specs.md
 
 # Variáveis de ambiente locais.
@@ -37,8 +37,8 @@ dist/
 # T013 e foi removida do índice; não pertence ao projeto.
 .obsidian/
 
-# Lockfile de skills na raiz, gerado pelo instalador do Specsfy — atribuição
-# confirmada: `@promovaweb/specsfy` declara `skills` entre suas dependências e
+# Lockfile de skills na raiz, gerado pelo instalador do Framework — atribuição
+# confirmada: `removed-project-integration` declara `skills` entre suas dependências e
 # seu instalador grava este arquivo. O mesmo formato é produzido quando o
 # `skills` é invocado diretamente.
 #
@@ -50,7 +50,7 @@ dist/
 # precisar sobreviver a um clone sem reexecutar o `setup`, esta linha sai.
 /skills-lock.json
 
-# Projeção gerada por `specsfy progress`, reconstruível a partir das specs.
+# Projeção gerada por `framework progress`, reconstruível a partir das specs.
 /specs.md
 
 # Variáveis de ambiente locais.
@@ -70,14 +70,14 @@ dist/
 # T013 e foi removida do índice; não pertence ao projeto.
 .obsidian/
 
-# Lockfile de skills na raiz, gerado pelo instalador do Specsfy — atribuição
-# confirmada: `@promovaweb/specsfy` declara `skills` entre suas dependências e
+# Lockfile de skills na raiz, gerado pelo instalador do Framework — atribuição
+# confirmada: `removed-project-integration` declara `skills` entre suas dependências e
 # seu instalador grava este arquivo. O mesmo formato é produzido quando o
 # `skills` é invocado diretamente. Se a fatia 1h passar a usá-lo como registro
 # de procedência, esta linha precisa ser revista.
 /skills-lock.json
 
-# Projeção gerada por `specsfy progress`, reconstruível a partir das specs.
+# Projeção gerada por `framework progress`, reconstruível a partir das specs.
 /specs.md
 
 # Variáveis de ambiente locais.
@@ -97,7 +97,7 @@ dist/
 # T013 e foi removida do índice; não pertence ao projeto.
 .obsidian/
 
-# Lockfile de skills na raiz. A atribuição anterior ao instalador do Specsfy
+# Lockfile de skills na raiz. A atribuição anterior ao instalador do Framework
 # estava errada: a observação da SPEC-0005 mostrou que este formato — `version`
 # 1 e um mapa `skills` com `computedHash` por entrada — é gravado pelo
 # instalador `skills`, da vercel-labs. Se a fatia 1h passar a usá-lo como

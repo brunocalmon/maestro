@@ -3,7 +3,7 @@ import { detectBackends } from "../src/backends/detect";
 import { sourceFake } from "./backends-fixtures";
 
 describe("AC-087 — version resolution never interprets --help", () => {
-  // SPECSFY: FR-030 NFR-030 AC-087
+  // TRACEABILITY: FR-030 NFR-030 AC-087
   it("the only flag used is --version; --help is never consulted", () => {
     const { env, calls } = sourceFake({ claude: "2.1.251" });
     detectBackends(env);

@@ -2,7 +2,7 @@
 
 | Campo | Valor |
 | --- | --- |
-| Formato | Specsfy/2.0 |
+| Formato | former project tool/2.0 |
 | ID | SPEC-0011 |
 | Slug | 0011-extensoes-locais-reparo-assistido |
 | Status | Complete |
@@ -29,7 +29,7 @@ Hoje não há como a pessoa ajustar um hook ou uma regra entregue pelo
 execução sobrescreve. Não existe caminho de customização que sobreviva a uma
 reinstalação, nem forma de distinguir o que a ferramenta gerou do que alguém
 alterou à mão. `CLAUDE.md`/`AGENTS.md` também não ensinam o agente a acionar
-esse mecanismo: hoje contêm só o bloco gerenciado pelo Specsfy, sem nenhuma
+esse mecanismo: hoje contêm só o bloco gerenciado pelo former project tool, sem nenhuma
 seção própria do `common-rules` (achado real, verificação manual desta
 sessão, 2026-09-02).
 
@@ -77,10 +77,10 @@ Não aplicável como claim externo verificável — as decisões desta seção d
 
 - `specs/backlog/0004-phase-2-extensoes-locais-e-heal.md` — brief refinado, decisões D1–D8, critérios de aceite, regras de negócio.
 - `specs/inbox/2026-08-29-145241-adr-001-harness-extensivel-com-lazy-loading-shadow-dom-e-doctor-com-rollback.md` — ADR original, preservado sem alteração.
-- `.specsfy/Spec.md` — contrato de blocos delimitados em `AGENTS.md`/`CLAUDE.md`, cuja convenção de âncora (`<!-- specsfy:framework:start/end -->`) esta especificação reaproveita.
+- `.project-context/Spec.md` — contrato de blocos delimitados em `AGENTS.md`/`CLAUDE.md`, cuja convenção de âncora (`<!-- former-tool:context:start/end -->`) esta especificação reaproveita.
 - `src/setup/run.ts`, `src/setup/record.ts` (`SPEC-0003`, `SPEC-0005`) — como o `setup` já grava hooks e registro; o comando de extensão estende o mesmo módulo, não cria um paralelo.
 - `src/approval/registry.ts` (`SPEC-0010`) — o mesmo padrão de registro JSON local (`.common-rules/approved-commands.json`) que o registro de checksum desta fatia segue, em arquivo próprio.
-- `CLAUDE.md`, `AGENTS.md` deste repositório, lidos de verdade nesta sessão — confirmam que hoje só têm o bloco do Specsfy, nada do `common-rules`.
+- `CLAUDE.md`, `AGENTS.md` deste repositório, lidos de verdade nesta sessão — confirmam que hoje só têm o bloco do former project tool, nada do `common-rules`.
 
 #### Documentação consultada
 
@@ -92,10 +92,10 @@ Nenhum artefato externo — o único material de origem é o backlog e o ADR, am
 
 #### Dúvidas respondidas
 
-- **Q**: Qual formato de âncora marca onde o conteúdo customizado entra? → **A**: Comentário HTML, mesmo padrão do Specsfy — `<!-- common-rules:<categoria>:<nome>:start/end -->`. Decisão `D6` do backlog, tomada em 2026-09-02: reaproveita um mecanismo que já funciona neste repositório, em vez de inventar um segundo formato para o mesmo problema.
+- **Q**: Qual formato de âncora marca onde o conteúdo customizado entra? → **A**: Comentário HTML, mesmo padrão do former project tool — `<!-- common-rules:<categoria>:<nome>:start/end -->`. Decisão `D6` do backlog, tomada em 2026-09-02: reaproveita um mecanismo que já funciona neste repositório, em vez de inventar um segundo formato para o mesmo problema.
 - **Q**: Onde vive a quarentena, e ela expira? → **A**: `.common-rules/quarantine/`, sem expiração automática. Decisão `D7`: expirar implicaria apagar, o que contradiz a regra já fixada de "quarentena em vez de exclusão, sempre"; limpeza manual fica com quem usa.
 - **Q**: A camada de orquestração em `CLAUDE.md`/`AGENTS.md` (fatia C) entra nesta especificação? → **A**: Sim. Decisão `D8`: o gatilho nomeado no diagnóstico anterior do backlog era a fatia 1d (detecção de backends), já entregue como `SPEC-0008`; a Phase 1 inteira fechou em 2026-09-02.
-- **Q**: O sistema de extensões cobre skills do Specsfy, `context-mode` ou `code-review-graph`? → **A**: Não. Decisão `D4`, já registrada no backlog: cobre só os artefatos que o próprio `setup` escreve — os sete hooks, seu registro, e agora o bloco de `CLAUDE.md`/`AGENTS.md` que a fatia C acrescenta a essa mesma lista.
+- **Q**: O sistema de extensões cobre skills do former project tool, `context-mode` ou `code-review-graph`? → **A**: Não. Decisão `D4`, já registrada no backlog: cobre só os artefatos que o próprio `setup` escreve — os sete hooks, seu registro, e agora o bloco de `CLAUDE.md`/`AGENTS.md` que a fatia C acrescenta a essa mesma lista.
 - **Q**: O `doctor` ganha capacidade de reparar ou reverter? → **A**: Não. Decisão já fixada no backlog: "o `doctor` não altera o sistema de arquivos sob nenhuma condição." O reparo é comando irmão, não subcomando — resolvido por inspeção da própria regra, sem precisar perguntar de novo nesta especificação.
 - **Q**: Falta confirmar se `context-mode`/`code-review-graph` publicam inventário de propriedade? → **A**: Pergunta sem efeito prático dentro deste escopo — `D4` já restringe o sistema a artefatos que o próprio `setup` escreve, nunca a artefato de dependência de terceiro.
 
@@ -116,7 +116,7 @@ Nenhuma que bloqueie esta especificação.
 #### Fora de escopo
 
 - Hidratação sob demanda de regras de skill (fatia D do backlog) — adiada por `D1`: medição já mostrou 17x de economia que a plataforma entrega sozinha, sem essa fatia.
-- Qualquer artefato de dependência — skills do Specsfy, `context-mode`, `code-review-graph`. O sistema de extensões nunca os toca (`D4`).
+- Qualquer artefato de dependência — skills do former project tool, `context-mode`, `code-review-graph`. O sistema de extensões nunca os toca (`D4`).
 - Instalação de ferramenta upstream em diretório global, em qualquer forma — a regra de preferir cópia local, aceitar global, nunca instalar globalmente (`SPEC-0002`) não muda.
 - `doctor` que bloqueia, reverte, repara ou exclui — permanece estritamente leitura.
 - Alvo de editor além do Claude Code — fora do escopo já decidido para o produto inteiro.
@@ -371,7 +371,7 @@ Feature: Skill de fachada chega ao projeto-alvo
 
 - Checksum ausente para arquivo presente no diretório de extensões → tratado como divergente e recusado, sem apagar (`AC-135`).
 - Quarentena não gravável → recusa o reparo inteiro em vez de reparar pela metade (`AC-139`).
-- Conflito de nome com artefato de dependência (skill do Specsfy, por exemplo) → recusado, apontando que o caminho é a montante — esse artefato nunca é candidato a extensão (`D4`).
+- Conflito de nome com artefato de dependência (skill do former project tool, por exemplo) → recusado, apontando que o caminho é a montante — esse artefato nunca é candidato a extensão (`D4`).
 - Registro de checksum corrompido → tratado como vazio (cada artefato pendente aparece como divergente), no mesmo padrão já usado pelo registro de aprovação (`SPEC-0010`, `AC-119`) — nunca reconstruído por inferência.
 - `CLAUDE.md`/`AGENTS.md` já contêm o bloco do `common-rules`, sem divergência → `setup` não reescreve nada, comportamento idempotente igual ao já estabelecido para hooks (`SPEC-0005`).
 
@@ -381,9 +381,9 @@ Feature: Skill de fachada chega ao projeto-alvo
 
 #### Contexto existente
 
-- `src/setup/run.ts` já grava hooks, skills, framework Specsfy e a ponte Python pelo mesmo `runSetup`, com aprovação (`SPEC-0007`, `SPEC-0010`) e registro de idempotência (`src/setup/record.ts`).
+- `src/setup/run.ts` já grava hooks, skills, framework former project tool e a ponte Python pelo mesmo `runSetup`, com aprovação (`SPEC-0007`, `SPEC-0010`) e registro de idempotência (`src/setup/record.ts`).
 - `src/approval/registry.ts` (`SPEC-0010`) já estabelece o padrão de registro JSON local, injetável, com leitura tolerante a ausência/corrupção — o registro de checksum desta fatia segue o mesmo padrão, em arquivo próprio.
-- `.specsfy/Spec.md` já documenta e usa blocos delimitados por comentário HTML em `CLAUDE.md`/`AGENTS.md` (`<!-- specsfy:framework:start/end -->`) — a âncora desta fatia reaproveita a mesma convenção, com namespace `common-rules` em vez de `specsfy`.
+- `.project-context/Spec.md` já documenta e usa blocos delimitados por comentário HTML em `CLAUDE.md`/`AGENTS.md` (`<!-- former-tool:context:start/end -->`) — a âncora desta fatia reaproveita a mesma convenção, com namespace `common-rules` em vez de `framework`.
 - `src/hooks/claude-code.ts` (`SPEC-0003`) já traduz e renderiza os sete hooks para `.claude/settings.json` — a extensão de hook por `override` altera o script gerado antes dessa renderização, sem duplicar o motor de tradução.
 
 #### Arquitetura e módulos
@@ -397,7 +397,7 @@ Feature: Skill de fachada chega ao projeto-alvo
 | Reparo | Move o artefato divergente para `.common-rules/quarantine/<timestamp>-<nome>`, restaura o conteúdo original a partir do registro | `src/extensions/repair.ts` |
 | Roteador de `CLAUDE.md`/`AGENTS.md` | Constrói o bloco do roteador minimalista e o ponteiro de `AGENTS.md`, como um caso de extensão da categoria `extension` sobre esses dois arquivos | `src/extensions/router.ts` |
 
-`src/setup/run.ts` passa a montar um candidato adicional (o roteador de `CLAUDE.md`/`AGENTS.md`) no mesmo padrão de candidato de dependência já usado por skills/Specsfy/ponte (`SPEC-0010`) — mas fora do registro de aprovação em lote, porque não é comando de dependência de terceiro: é o próprio `common-rules` escrevendo em arquivo do projeto, já coberto pela aprovação de plano existente (`SPEC-0007`).
+`src/setup/run.ts` passa a montar um candidato adicional (o roteador de `CLAUDE.md`/`AGENTS.md`) no mesmo padrão de candidato de dependência já usado por skills/former project tool/ponte (`SPEC-0010`) — mas fora do registro de aprovação em lote, porque não é comando de dependência de terceiro: é o próprio `common-rules` escrevendo em arquivo do projeto, já coberto pela aprovação de plano existente (`SPEC-0007`).
 
 `doctor` ganha uma quarta fonte de relato — divergência de extensão — ao lado das três camadas já existentes (`npm`, `python`, `agent`), sempre informativa por padrão (uma extensão divergente não é motivo para o `common-rules` recusar reportar as demais camadas, mas o exit code do `doctor` na íntegra passa a refletir a divergência, já que ela é responsabilidade do próprio `common-rules`, diferente da camada `agent`, que é sobre dependência de terceiro).
 
@@ -531,7 +531,7 @@ Não aplicável.
 #### Eventos e outros contratos
 
 - `.common-rules/extensions.json`: `{ "artifacts": [{ "category": string, "name": string, "target": string, "checksum": string, "createdAt": string }] }`.
-- Âncora no arquivo alvo: `<!-- common-rules:<categoria>:<nome>:start -->` ... `<!-- common-rules:<categoria>:<nome>:end -->`, mesmo padrão de comentário HTML que `.specsfy/Spec.md` já documenta para o Specsfy.
+- Âncora no arquivo alvo: `<!-- common-rules:<categoria>:<nome>:start -->` ... `<!-- common-rules:<categoria>:<nome>:end -->`, mesmo padrão de comentário HTML que `.project-context/Spec.md` já documenta para o former project tool.
 
 ### 11. Estratégia TDD
 
@@ -590,39 +590,39 @@ comando que a encontrou.
 #### Gate do Ato I — Definição
 
 - **Resultado original**: READY (2026-09-02)
-- **Comando**: `node .agents/skills/specsfy-04-validate/scripts/validate_spec.mjs specs/defined/0011-extensoes-locais-reparo-assistido/spec.md`
+- **Comando**: `node .agents/skills/framework-04-validate/scripts/validate_spec.mjs specs/defined/0011-extensoes-locais-reparo-assistido/spec.md`
 - **Cobertura**: 3 US, 8 FR, 4 NFR, 10 AC, 5 DEC; mínimo de 3 AC por ID satisfeito em todos.
 - **Origem**: `BACKLOG-0004`, refinado nesta mesma sessão (D6, D7, D8) antes desta especificação — brief já cobria problema, atores, escopo, jornadas e critérios de aceite em Gherkin; nenhuma pergunta nova foi necessária além das três decisões pendentes.
 - **Achados**: Nenhum bloqueante.
-- **Reaberto em 2026-09-03** (`$specsfy-update-spec`, correção pós-`Complete`): acrescido `FR-088`/`AC-140`/`DEC-085` — a skill de fachada precisa ser entregue de verdade no projeto-alvo, não só existir no pacote. Ver seção 17.
+- **Reaberto em 2026-09-03** (`$framework-update-spec`, correção pós-`Complete`): acrescido `FR-088`/`AC-140`/`DEC-085` — a skill de fachada precisa ser entregue de verdade no projeto-alvo, não só existir no pacote. Ver seção 17.
 
 #### Gate do Ato II — Plano
 
 - **Resultado original**: Passed (2026-09-03)
-- **Comando**: `node .agents/skills/specsfy-05-tasks/scripts/validate_tasks.mjs specs/defined/0011-extensoes-locais-reparo-assistido/spec.md --allow-draft` → `VALID DRAFT` (total=21 complete=18 tdd=10 code=8 checklist_items=126 checklist_complete=108 covered_spec_ids=25 required_spec_ids=25)
+- **Comando**: `node .agents/skills/framework-05-tasks/scripts/validate_tasks.mjs specs/defined/0011-extensoes-locais-reparo-assistido/spec.md --allow-draft` → `VALID DRAFT` (total=21 complete=18 tdd=10 code=8 checklist_items=126 checklist_complete=108 covered_spec_ids=25 required_spec_ids=25)
 - **Achados**: Nenhum bloqueante. T001–T010 observaram RED real antes de T011–T018 os tornarem GREEN (seção 11); T019–T021 (fechamento) ainda pendentes no momento deste gate.
-- **Reaberto e reaprovado em 2026-09-03**: acrescidos T022/T023 (Fase 4, correção pós-`Complete`), com `FR-088` recebendo `T007`/`T008`/`T009`/`T022` como predecessores TDD (mínimo de três satisfeito reaproveitando os casos irmãos já `GREEN` de AC-136/137/138, mesmo padrão de cobertura secundária já usado na definição original). `node .agents/skills/specsfy-05-tasks/scripts/validate_tasks.mjs specs/completed/0011-extensoes-locais-reparo-assistido/spec.md --allow-draft` → `VALID DRAFT` (total=23 complete=23 tdd=11 code=9 checklist_items=138 checklist_complete=138 covered_spec_ids=27 required_spec_ids=27).
+- **Reaberto e reaprovado em 2026-09-03**: acrescidos T022/T023 (Fase 4, correção pós-`Complete`), com `FR-088` recebendo `T007`/`T008`/`T009`/`T022` como predecessores TDD (mínimo de três satisfeito reaproveitando os casos irmãos já `GREEN` de AC-136/137/138, mesmo padrão de cobertura secundária já usado na definição original). `node .agents/skills/framework-05-tasks/scripts/validate_tasks.mjs specs/completed/0011-extensoes-locais-reparo-assistido/spec.md --allow-draft` → `VALID DRAFT` (total=23 complete=23 tdd=11 code=9 checklist_items=138 checklist_complete=138 covered_spec_ids=27 required_spec_ids=27).
 
 #### Gate do Ato III — Entrega
 
 - **Resultado original**: Passed (2026-09-03)
 - **Comandos**:
-  - `node .agents/skills/specsfy-06-tdd-bdd/scripts/check_traceability.mjs specs/in-progress/0011-extensoes-locais-reparo-assistido/spec.md .` → 25/25 IDs de SPEC-0011 cobertos em 151 arquivos de teste (os "marcadores órfãos" listados pertencem a outras specs já `completed` — o mesmo script relata a mesma lista de nomes de outras specs como órfã até checando uma spec já `completed`, confirmado comparando com `specs/completed/0001-.../spec.md`; não é gap real desta spec).
-  - `node .agents/skills/specsfy-06-tdd-bdd/scripts/verify_acceptance.mjs specs/in-progress/0011-extensoes-locais-reparo-assistido/spec.md .` → `QA: PASSED`.
+  - `node .agents/skills/framework-06-tdd-bdd/scripts/check_traceability.mjs specs/in-progress/0011-extensoes-locais-reparo-assistido/spec.md .` → 25/25 IDs de SPEC-0011 cobertos em 151 arquivos de teste (os "marcadores órfãos" listados pertencem a outras specs já `completed` — o mesmo script relata a mesma lista de nomes de outras specs como órfã até checando uma spec já `completed`, confirmado comparando com `specs/completed/0001-.../spec.md`; não é gap real desta spec).
+  - `node .agents/skills/framework-06-tdd-bdd/scripts/verify_acceptance.mjs specs/in-progress/0011-extensoes-locais-reparo-assistido/spec.md .` → `QA: PASSED`.
   - `npx tsc --noEmit` → exit 0.
   - `npm run build` → exit 0.
   - `npm run verify` (install + build + suíte completa) → 143 arquivos, 366 casos, todos GREEN.
   - Verificação manual real em diretório temporário (`node dist/cli.js`): `extension create` → `doctor` detecta zero divergência → edição fora da CLI dentro da âncora → `doctor` nomeia o artefato divergente e sai com código 1 → `extension repair` → conteúdo original restaurado, divergente preservado em `.common-rules/quarantine/`, `doctor` volta a sair com código 0.
-  - `setup` real em projeto novo (sem terminal, aprovação por documento JSON via stdin): `CLAUDE.md` ganha `<!-- common-rules:extension:router:start/end -->`, `AGENTS.md` ganha o ponteiro, convivendo sem conflito com os blocos do próprio Specsfy; segunda execução idêntica byte a byte (idempotente, via caminho "já estava configurado").
+  - `setup` real em projeto novo (sem terminal, aprovação por documento JSON via stdin): `CLAUDE.md` ganha `<!-- common-rules:extension:router:start/end -->`, `AGENTS.md` ganha o ponteiro, convivendo sem conflito com os blocos do próprio former project tool; segunda execução idêntica byte a byte (idempotente, via caminho "já estava configurado").
 - **Achados**: Um bug real de correção encontrado só pela verificação manual (T021, `IMPROVE`): `diagnoseExtensions` comparava presença em disco por `target` contra `name` no registro, relatando falso positivo para cada artefato cujo `name` diverge do `target`. Corrigido antes do fechamento deste gate, com regressão própria; suíte completa reconfirmada GREEN depois da correção (143/143 arquivos).
 - **Reaberto e refechado em 2026-09-03** (correção pós-`Complete`, `FR-088`/`AC-140`/`DEC-085`/`T022`/`T023`):
   - `npx tsc --noEmit` → exit 0.
   - `npm run build` → exit 0.
   - Suíte completa → 145 arquivos, 370 casos, todos GREEN.
-  - `node .agents/skills/specsfy-06-tdd-bdd/scripts/verify_acceptance.mjs specs/completed/0011-extensoes-locais-reparo-assistido/spec.md .` → `QA: PASSED`.
-  - `node .agents/skills/specsfy-06-tdd-bdd/scripts/check_traceability.mjs specs/completed/0011-extensoes-locais-reparo-assistido/spec.md .` → 27/27 IDs de SPEC-0011 cobertos em 153 arquivos de teste.
+  - `node .agents/skills/framework-06-tdd-bdd/scripts/verify_acceptance.mjs specs/completed/0011-extensoes-locais-reparo-assistido/spec.md .` → `QA: PASSED`.
+  - `node .agents/skills/framework-06-tdd-bdd/scripts/check_traceability.mjs specs/completed/0011-extensoes-locais-reparo-assistido/spec.md .` → 27/27 IDs de SPEC-0011 cobertos em 153 arquivos de teste.
   - `node dist/cli.js setup` real, num diretório novo, sem terminal (aprovação por documento JSON): confirmado `.claude/skills/common-rules-extension-creator/SKILL.md` e `.agents/skills/common-rules-extension-creator/SKILL.md` presentes, com o conteúdo empacotado em `resources/skills/`.
-  - `.specsfy/PACKAGES.md` ficou fora deste ciclo: `package.json` mudou só o campo `files` (`hooks` → `resources`), sem alterar nenhuma dependência — nada para o inventário reconstruir. `monitor_context.mjs` continua sinalizando isso como aberto, sem um `--acknowledge-packages-no-change` equivalente ao que existe para `PROJECT.md`/`RULES.md`; registrado aqui como lacuna de ferramenta de terceiro, não ignorado silenciosamente.
+  - `.project-context/PACKAGES.md` ficou fora deste ciclo: `package.json` mudou só o campo `files` (`hooks` → `resources`), sem alterar nenhuma dependência — nada para o inventário reconstruir. `monitor_context.mjs` continua sinalizando isso como aberto, sem um `--acknowledge-packages-no-change` equivalente ao que existe para `PROJECT.md`/`RULES.md`; registrado aqui como lacuna de ferramenta de terceiro, não ignorado silenciosamente.
 
 ### 14. Tarefas
 
@@ -725,13 +725,13 @@ Checklist obrigatório por tarefa, na ordem:
 #### Fase 2 — Código, cada tarefa atrás do seu RED
 
 - [x] T011 [CODE] Implementar em src/extensions/registry.ts — Refs: FR-083, NFR-081, NFR-082, AC-133, AC-135, AC-139 — Depends: T004, T006, T010
-  - [x] **PREP**: Confirmar RED de T004, T006 e T010; `docs/` reconstruído por `$specsfy-documentator` antes da alteração.
+  - [x] **PREP**: Confirmar RED de T004, T006 e T010; `docs/` reconstruído por `$framework-documentator` antes da alteração.
   - [x] **EXECUTE**: `ExtensionRegistry`/`ExtensionArtifact` (`category`, `name`, `target`, `checksum`, `createdAt`); `ChecksumEnvironment` injetável; `readExtensionRegistry`/`writeExtensionRegistry`, registro ausente ou corrompido resolve para `{ artifacts: [] }`, nunca lança — mesmo padrão de `src/approval/registry.ts` (`SPEC-0010`).
   - [x] **VERIFY**: `npx tsc --noEmit` em exit 0.
   - [x] **VISUAL**: Não aplicável — sem interface, comando de terminal.
   - [x] **EVIDENCE**: Comandos e resultado registrados na seção 12.
   - [x] **IMPROVE**: Registrar melhoria aplicada ou ausência justificada.
-  <!-- specsfy:evidence {"task": "T011", "refs": ["FR-083", "NFR-081", "NFR-082", "AC-133", "AC-135", "AC-139"], "files": ["src/extensions/registry.ts"], "commands": [{"run": "npx tsc --noEmit", "exit": 0}]} -->
+  <!-- framework:evidence {"task": "T011", "refs": ["FR-083", "NFR-081", "NFR-082", "AC-133", "AC-135", "AC-139"], "files": ["src/extensions/registry.ts"], "commands": [{"run": "npx tsc --noEmit", "exit": 0}]} -->
 
 - [x] T012 [CODE] Implementar em src/extensions/anchor.ts — Refs: FR-080, FR-086, FR-087, AC-130, AC-136, AC-137 — Depends: T001, T007, T008
   - [x] **PREP**: Confirmar RED de T001, T007 e T008.
@@ -740,7 +740,7 @@ Checklist obrigatório por tarefa, na ordem:
   - [x] **VISUAL**: Não aplicável — sem interface, comando de terminal.
   - [x] **EVIDENCE**: Comandos e resultado registrados na seção 12.
   - [x] **IMPROVE**: Registrar melhoria aplicada ou ausência justificada.
-  <!-- specsfy:evidence {"task": "T012", "refs": ["FR-080", "FR-086", "FR-087", "AC-130", "AC-136", "AC-137"], "files": ["src/extensions/anchor.ts"], "commands": [{"run": "npx tsc --noEmit", "exit": 0}]} -->
+  <!-- framework:evidence {"task": "T012", "refs": ["FR-080", "FR-086", "FR-087", "AC-130", "AC-136", "AC-137"], "files": ["src/extensions/anchor.ts"], "commands": [{"run": "npx tsc --noEmit", "exit": 0}]} -->
 
 - [x] T013 [CODE] [US-080] Implementar em src/extensions/create.ts — Refs: US-080, FR-080, FR-081, FR-082, AC-130, AC-131, AC-132, AC-138 — Depends: T001, T002, T003, T009, T011, T012
   - [x] **PREP**: Confirmar RED de T001, T002, T003 e T009.
@@ -749,7 +749,7 @@ Checklist obrigatório por tarefa, na ordem:
   - [x] **VISUAL**: Não aplicável — sem interface, comando de terminal.
   - [x] **EVIDENCE**: Comandos e resultado registrados na seção 12.
   - [x] **IMPROVE**: Registrar melhoria aplicada ou ausência justificada.
-  <!-- specsfy:evidence {"task": "T013", "refs": ["US-080", "FR-080", "FR-081", "FR-082", "AC-130", "AC-131", "AC-132", "AC-138"], "files": ["src/extensions/create.ts"], "commands": [{"run": "npm run test:tdd", "exit": 0}, {"run": "npx tsc --noEmit", "exit": 0}]} -->
+  <!-- framework:evidence {"task": "T013", "refs": ["US-080", "FR-080", "FR-081", "FR-082", "AC-130", "AC-131", "AC-132", "AC-138"], "files": ["src/extensions/create.ts"], "commands": [{"run": "npm run test:tdd", "exit": 0}, {"run": "npx tsc --noEmit", "exit": 0}]} -->
 
 - [x] T014 [CODE] [US-081] Implementar em src/extensions/diagnose.ts — Refs: US-081, FR-083, NFR-080, NFR-082, AC-133, AC-135 — Depends: T004, T005, T006, T011, T012
   - [x] **PREP**: Confirmar RED de T004, T005 e T006.
@@ -758,7 +758,7 @@ Checklist obrigatório por tarefa, na ordem:
   - [x] **VISUAL**: Não aplicável — sem interface, comando de terminal.
   - [x] **EVIDENCE**: Comandos e resultado registrados na seção 12.
   - [x] **IMPROVE**: Registrar melhoria aplicada ou ausência justificada.
-  <!-- specsfy:evidence {"task": "T014", "refs": ["US-081", "FR-083", "NFR-080", "NFR-082", "AC-133", "AC-135"], "files": ["src/extensions/diagnose.ts"], "commands": [{"run": "npm run test:tdd", "exit": 0}, {"run": "npx tsc --noEmit", "exit": 0}]} -->
+  <!-- framework:evidence {"task": "T014", "refs": ["US-081", "FR-083", "NFR-080", "NFR-082", "AC-133", "AC-135"], "files": ["src/extensions/diagnose.ts"], "commands": [{"run": "npm run test:tdd", "exit": 0}, {"run": "npx tsc --noEmit", "exit": 0}]} -->
 
 - [x] T015 [CODE] [US-081] Implementar em src/extensions/repair.ts — Refs: US-081, FR-084, FR-085, NFR-081, AC-134, AC-139 — Depends: T004, T005, T010, T011, T012, T014
   - [x] **PREP**: Confirmar RED de T004, T005 e T010.
@@ -767,7 +767,7 @@ Checklist obrigatório por tarefa, na ordem:
   - [x] **VISUAL**: Não aplicável — sem interface, comando de terminal.
   - [x] **EVIDENCE**: Comandos e resultado registrados na seção 12.
   - [x] **IMPROVE**: Registrar melhoria aplicada ou ausência justificada.
-  <!-- specsfy:evidence {"task": "T015", "refs": ["US-081", "FR-084", "FR-085", "NFR-081", "AC-134", "AC-139"], "files": ["src/extensions/repair.ts"], "commands": [{"run": "npm run test:tdd", "exit": 0}, {"run": "npx tsc --noEmit", "exit": 0}]} -->
+  <!-- framework:evidence {"task": "T015", "refs": ["US-081", "FR-084", "FR-085", "NFR-081", "AC-134", "AC-139"], "files": ["src/extensions/repair.ts"], "commands": [{"run": "npm run test:tdd", "exit": 0}, {"run": "npx tsc --noEmit", "exit": 0}]} -->
 
 - [x] T016 [CODE] [US-082] Implementar em src/extensions/router.ts — Refs: US-082, FR-086, FR-087, NFR-083, AC-136, AC-137 — Depends: T007, T008, T009, T013
   - [x] **PREP**: Confirmar RED de T007, T008 e T009.
@@ -776,7 +776,7 @@ Checklist obrigatório por tarefa, na ordem:
   - [x] **VISUAL**: Não aplicável — sem interface, comando de terminal.
   - [x] **EVIDENCE**: Comandos e resultado registrados na seção 12.
   - [x] **IMPROVE**: Registrar melhoria aplicada ou ausência justificada.
-  <!-- specsfy:evidence {"task": "T016", "refs": ["US-082", "FR-086", "FR-087", "NFR-083", "AC-136", "AC-137"], "files": ["src/extensions/router.ts"], "commands": [{"run": "npm run test:tdd", "exit": 0}, {"run": "npx tsc --noEmit", "exit": 0}]} -->
+  <!-- framework:evidence {"task": "T016", "refs": ["US-082", "FR-086", "FR-087", "NFR-083", "AC-136", "AC-137"], "files": ["src/extensions/router.ts"], "commands": [{"run": "npm run test:tdd", "exit": 0}, {"run": "npx tsc --noEmit", "exit": 0}]} -->
 
 - [x] T017 [CODE] [US-081] Estender src/doctor.ts com a quarta fonte de relato — Refs: US-081, FR-083, FR-085, NFR-080, NFR-082, AC-133, AC-135 — Depends: T004, T005, T006, T014
   - [x] **PREP**: Confirmar RED de T004 e T006.
@@ -785,7 +785,7 @@ Checklist obrigatório por tarefa, na ordem:
   - [x] **VISUAL**: Não aplicável — sem interface, comando de terminal.
   - [x] **EVIDENCE**: Comandos e resultado registrados na seção 12.
   - [x] **IMPROVE**: Registrar melhoria aplicada ou ausência justificada.
-  <!-- specsfy:evidence {"task": "T017", "refs": ["US-081", "FR-083", "FR-085", "NFR-080", "NFR-082", "AC-133", "AC-135"], "files": ["src/doctor.ts"], "commands": [{"run": "npm run test:tdd", "exit": 0}, {"run": "npx tsc --noEmit", "exit": 0}]} -->
+  <!-- framework:evidence {"task": "T017", "refs": ["US-081", "FR-083", "FR-085", "NFR-080", "NFR-082", "AC-133", "AC-135"], "files": ["src/doctor.ts"], "commands": [{"run": "npm run test:tdd", "exit": 0}, {"run": "npx tsc --noEmit", "exit": 0}]} -->
 
 - [x] T018 [CODE] [US-080] [US-081] [US-082] Ligar os comandos em src/cli.ts e o candidato do roteador em src/setup/run.ts — Refs: US-080, US-081, US-082, FR-080, FR-084, FR-086, FR-087, AC-130, AC-134, AC-136, AC-137 — Depends: T001, T005, T007, T008, T009, T013, T015, T016, T017
   - [x] **PREP**: Confirmar RED de T001, T005, T007, T008 e T009.
@@ -794,18 +794,18 @@ Checklist obrigatório por tarefa, na ordem:
   - [x] **VISUAL**: Não aplicável — sem interface, comando de terminal.
   - [x] **EVIDENCE**: Comandos e resultado registrados na seção 12.
   - [x] **IMPROVE**: Registrar melhoria aplicada ou ausência justificada.
-  <!-- specsfy:evidence {"task": "T018", "refs": ["US-080", "US-081", "US-082", "FR-080", "FR-084", "FR-086", "FR-087", "AC-130", "AC-134", "AC-136", "AC-137"], "files": ["src/cli.ts", "src/setup/run.ts"], "commands": [{"run": "npm run test:tdd", "exit": 0}, {"run": "npx tsc --noEmit", "exit": 0}, {"run": "npm run build", "exit": 0}]} -->
+  <!-- framework:evidence {"task": "T018", "refs": ["US-080", "US-081", "US-082", "FR-080", "FR-084", "FR-086", "FR-087", "AC-130", "AC-134", "AC-136", "AC-137"], "files": ["src/cli.ts", "src/setup/run.ts"], "commands": [{"run": "npm run test:tdd", "exit": 0}, {"run": "npx tsc --noEmit", "exit": 0}, {"run": "npm run build", "exit": 0}]} -->
 
 #### Fase 3 — Fechamento
 
-- [x] T019 [DOC] Registrar os módulos de extensão em .specsfy/STACK.md — Refs: FR-080, FR-086 — Depends: T018
-  - [x] **PREP**: Ler a seção de aprovação em lote (fatia 1i) em `.specsfy/STACK.md`.
+- [x] T019 [DOC] Registrar os módulos de extensão em .project-context/STACK.md — Refs: FR-080, FR-086 — Depends: T018
+  - [x] **PREP**: Ler a seção de aprovação em lote (fatia 1i) em `.project-context/STACK.md`.
   - [x] **EXECUTE**: Descrever `src/extensions/registry.ts`, `anchor.ts`, `create.ts`, `diagnose.ts`, `repair.ts`, `router.ts`, os dois comandos novos de CLI, e a extensão do `doctor`.
   - [x] **VERIFY**: `npm run build` em exit 0.
   - [x] **VISUAL**: Não aplicável — sem interface, comando de terminal.
   - [x] **EVIDENCE**: Comando e resultado registrados na seção 12.
   - [x] **IMPROVE**: Registrar melhoria aplicada ou ausência justificada.
-  <!-- specsfy:evidence {"task": "T019", "refs": ["FR-080", "FR-086"], "files": [".specsfy/STACK.md"], "commands": [{"run": "npm run build", "exit": 0}]} -->
+  <!-- framework:evidence {"task": "T019", "refs": ["FR-080", "FR-086"], "files": [".project-context/STACK.md"], "commands": [{"run": "npm run build", "exit": 0}]} -->
 
 - [x] T020 [DOC] Descrever em PROJECT.md o sistema de extensões e o comando de reparo — Refs: US-080, US-081, US-082 — Depends: T018
   - [x] **PREP**: Ler a tabela de comandos e a seção "O que ainda não existe" em `PROJECT.md`.
@@ -814,7 +814,7 @@ Checklist obrigatório por tarefa, na ordem:
   - [x] **VISUAL**: Não aplicável — sem interface, comando de terminal.
   - [x] **EVIDENCE**: Comando e resultado registrados na seção 12.
   - [x] **IMPROVE**: Registrar melhoria aplicada ou ausência justificada.
-  <!-- specsfy:evidence {"task": "T020", "refs": ["US-080", "US-081", "US-082"], "files": ["PROJECT.md"], "commands": [{"run": "npm run build", "exit": 0}]} -->
+  <!-- framework:evidence {"task": "T020", "refs": ["US-080", "US-081", "US-082"], "files": ["PROJECT.md"], "commands": [{"run": "npm run build", "exit": 0}]} -->
 
 - [x] T021 [OPS] Verificação manual real e fechar o Delivery Gate na seção 13 de specs/defined/0011-extensoes-locais-reparo-assistido/spec.md — Refs: NFR-080, NFR-081, NFR-082, NFR-083 — Depends: T019, T020
   - [x] **PREP**: T011–T020 concluídas, cada `[CODE]` com seu comentário de evidência.
@@ -841,7 +841,7 @@ Checklist obrigatório por tarefa, na ordem:
   - [x] **VISUAL**: Não aplicável — sem interface, comando de terminal.
   - [x] **EVIDENCE**: Comandos e resultado registrados na seção 12.
   - [x] **IMPROVE**: Nenhuma melhoria adicional além da própria correção.
-  <!-- specsfy:evidence {"task": "T023", "refs": ["FR-088", "AC-140"], "files": ["src/skills/deliver.ts", "src/setup/run.ts", "resources/hooks", "resources/skills/common-rules-extension-creator/SKILL.md", "package.json"], "commands": [{"run": "npm run test:tdd", "exit": 0}, {"run": "npx tsc --noEmit", "exit": 0}, {"run": "npm run build", "exit": 0}]} -->
+  <!-- framework:evidence {"task": "T023", "refs": ["FR-088", "AC-140"], "files": ["src/skills/deliver.ts", "src/setup/run.ts", "resources/hooks", "resources/skills/common-rules-extension-creator/SKILL.md", "package.json"], "commands": [{"run": "npm run test:tdd", "exit": 0}, {"run": "npx tsc --noEmit", "exit": 0}, {"run": "npm run build", "exit": 0}]} -->
 
 ### 15. Ordem de execução
 
@@ -885,10 +885,10 @@ superfície real.
 
 ### 17. Decisões
 
-- **DEC-080**: A âncora de injeção é comentário HTML, no mesmo padrão do Specsfy. *Razão*: `D6` do backlog — consistência com um mecanismo que já funciona neste repositório. *Alternativas descartadas*: formato próprio (YAML frontmatter, separador de texto) — descartado por inventar um segundo mecanismo para o mesmo problema sem motivo; arquivo separado sem âncora textual — descartado por perder a localização visual do conteúdo customizado dentro do arquivo alvo.
+- **DEC-080**: A âncora de injeção é comentário HTML, no mesmo padrão do former project tool. *Razão*: `D6` do backlog — consistência com um mecanismo que já funciona neste repositório. *Alternativas descartadas*: formato próprio (YAML frontmatter, separador de texto) — descartado por inventar um segundo mecanismo para o mesmo problema sem motivo; arquivo separado sem âncora textual — descartado por perder a localização visual do conteúdo customizado dentro do arquivo alvo.
 - **DEC-081**: A quarentena vive em `.common-rules/quarantine/`, sem expiração automática. *Razão*: `D7` — consistente com onde o registro de instalação e o de aprovação já vivem; expirar implicaria apagar, contradizendo a regra de "quarentena em vez de exclusão, sempre".
 - **DEC-082**: A fatia C (roteador em `CLAUDE.md`/`AGENTS.md`) entra nesta especificação, junto com A e B. *Razão*: `D8` — o gatilho nomeado (fatia 1d) já foi satisfeito, e a Phase 1 fechou por completo.
-- **DEC-083**: O sistema de extensões cobre só os sete hooks, o registro do `setup` e o próprio bloco de `CLAUDE.md`/`AGENTS.md` que esta fatia acrescenta — nunca artefato de dependência de terceiro. *Razão*: `D4` — estender skills do Specsfy violaria a imutabilidade do upstream e criaria um fork do motor de skills.
+- **DEC-083**: O sistema de extensões cobre só os sete hooks, o registro do `setup` e o próprio bloco de `CLAUDE.md`/`AGENTS.md` que esta fatia acrescenta — nunca artefato de dependência de terceiro. *Razão*: `D4` — estender skills do former project tool violaria a imutabilidade do upstream e criaria um fork do motor de skills.
 - **DEC-084**: `doctor` relata divergência de extensão como responsabilidade própria do `common-rules`, não como quarta camada de dependência — o exit code do `doctor` reflete essa divergência diretamente, diferente da camada `agent` (fatia 1d), que é puramente informativa. *Razão*: uma extensão divergente é sobre o que o próprio `common-rules` escreveu, não sobre o que uma dependência de terceiro expõe; tratá-la como informativa esconderia um problema que é literalmente do escopo desta ferramenta.
 - **DEC-085** (correção pós-`Complete`, 2026-09-03): Cada artefato de origem que o `setup` lê e leva para o projeto-alvo — hooks e skills locais empacotadas — vive sob um único diretório `resources/` na raiz do pacote (`resources/hooks/`, `resources/skills/<nome>/`), no lugar de diretórios soltos (`hooks/`, `skills/`). A skill `common-rules-extension-creator` é entregue de verdade em `.claude/skills/` e `.agents/skills/` do projeto-alvo por `src/skills/deliver.ts`, chamado por `runSetup` no mesmo ponto onde o roteador já era garantido. *Razão*: a pessoa responsável revisou o resultado real da entrega e encontrou a skill parada na raiz do projeto sem nenhum código a instalando — `AC-138`/`FR-080` originais provaram que a fachada nunca escreve arquivo, mas nenhum requisito cobria que ela precisa *chegar* ao projeto-alvo para existir de fato; a seção 8 original já antecipava a entrega ("fora deste repositório em consumidores") sem nunca implementá-la. *Achado*: `.claude/skills/`/`.agents/skills/` são ambos populados pelo instalador real de terceiro (`npx skills add`) para o alvo `claude-code` — confirmado inspecionando este próprio repositório após uma execução real — então a entrega da skill local espelha o mesmo par de diretórios, em vez de escolher um e adivinhar errado o outro.
 
@@ -904,6 +904,6 @@ superfície real.
 - [x] Nenhuma escrita de extensão ocorre fora do caminho único da CLI, conferido por inspeção do código e pela suíte real.
 - [x] `node dist/cli.js extension create`/`doctor`/`extension repair`, executados de verdade num diretório temporário, completam o ciclo: criar, divergir, detectar, reparar, sem apagar nada.
 - [x] `CLAUDE.md` e `AGENTS.md`, gerados por um `setup` real num projeto novo, contêm a seção/ponteiro do `common-rules`.
-- [x] `.specsfy/STACK.md` registra os módulos novos de `src/extensions/`.
+- [x] `.project-context/STACK.md` registra os módulos novos de `src/extensions/`.
 - [x] `PROJECT.md` descreve o sistema de extensões locais e o comando de reparo.
 - [x] (correção pós-`Complete`) `.claude/skills/common-rules-extension-creator/SKILL.md` e `.agents/skills/common-rules-extension-creator/SKILL.md`, gerados por um `setup` real num projeto novo, existem de fato — não só a referência de conteúdo no pacote.

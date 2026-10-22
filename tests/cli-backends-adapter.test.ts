@@ -11,7 +11,7 @@ const brief = (over: Partial<AgentBrief> = {}): AgentBrief => ({
 });
 
 describe("AC-001 — cada backend suportado tem um adaptador", () => {
-  // SPECSFY: US-001 FR-001 NFR-001 AC-001
+  // TRACEABILITY: US-001 FR-001 NFR-001 AC-001
   it("resolve um adaptador para pi, agy, claude, codex e goose", async () => {
     const { resolveAdapter } = await import("../src/delegation/cli-backends/registry");
     const { SUPPORTED_AGENT_BACKENDS } = await import("../src/backends/known");
@@ -25,7 +25,7 @@ describe("AC-001 — cada backend suportado tem um adaptador", () => {
 });
 
 describe("AC-002 — o modelo entra sem tradução", () => {
-  // SPECSFY: US-001 FR-001 FR-007 NFR-001 AC-002
+  // TRACEABILITY: US-001 FR-001 FR-007 NFR-001 AC-002
   it("qwen3:8b aparece idêntico nos argumentos dos cinco adaptadores", async () => {
     const { resolveAdapter } = await import("../src/delegation/cli-backends/registry");
     const { SUPPORTED_AGENT_BACKENDS } = await import("../src/backends/known");
@@ -39,7 +39,7 @@ describe("AC-002 — o modelo entra sem tradução", () => {
 });
 
 describe("AC-003 — os argumentos pedem saída estruturada", () => {
-  // SPECSFY: US-001 FR-001 NFR-001 AC-003
+  // TRACEABILITY: US-001 FR-001 NFR-001 AC-003
   it("cada adaptador inclui sua própria flag de saída estruturada", async () => {
     const { resolveAdapter } = await import("../src/delegation/cli-backends/registry");
 
@@ -60,7 +60,7 @@ describe("AC-003 — os argumentos pedem saída estruturada", () => {
 });
 
 describe("AC-004 — pi, claude e goose recebem comportamento por flag", () => {
-  // SPECSFY: US-001 FR-002 NFR-001 AC-004
+  // TRACEABILITY: US-001 FR-002 NFR-001 AC-004
   it("o comportamento aparece na flag nativa daquele backend", async () => {
     const { resolveAdapter } = await import("../src/delegation/cli-backends/registry");
 
@@ -74,7 +74,7 @@ describe("AC-004 — pi, claude e goose recebem comportamento por flag", () => {
 });
 
 describe("AC-019 — modelo desconhecido não é bloqueado antes do spawn", () => {
-  // SPECSFY: US-001 FR-007 NFR-001 AC-019
+  // TRACEABILITY: US-001 FR-007 NFR-001 AC-019
   it("construir argumentos com um nome de modelo qualquer nunca lança nem recusa", async () => {
     const { resolveAdapter } = await import("../src/delegation/cli-backends/registry");
     const { SUPPORTED_AGENT_BACKENDS } = await import("../src/backends/known");
@@ -87,7 +87,7 @@ describe("AC-019 — modelo desconhecido não é bloqueado antes do spawn", () =
 });
 
 describe("AC-020 — nenhuma tabela de tradução é consultada", () => {
-  // SPECSFY: US-001 FR-007 NFR-001 AC-020
+  // TRACEABILITY: US-001 FR-007 NFR-001 AC-020
   it("o mesmo modelo em dois adaptadores diferentes aparece com o mesmo valor exato", async () => {
     const { resolveAdapter } = await import("../src/delegation/cli-backends/registry");
 

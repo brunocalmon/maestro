@@ -4,7 +4,7 @@
 
 # CLI Architecture and Interface Design
 
-<!-- specsfy:documentator:start -->
+<!-- maestro:inventory:start -->
 ## Superfícies observadas
 
 - Componentes, páginas ou views: 0.
@@ -14,9 +14,9 @@
 | Arquivo |
 | --- |
 | Nenhuma superfície frontend identificada |
-<!-- specsfy:documentator:end -->
+<!-- maestro:inventory:end -->
 
-<!-- O bloco specsfy:documentator acima é o inventário mecânico gerado pelo Specsfy e é reescrito a cada build (findings/external/FIND-EXT-001). A documentação do projeto vive fora dele, a partir daqui. -->
+<!-- O bloco maestro:inventory acima é o inventário mecânico gerado pelo former project tool e é reescrito a cada build (findings/external/FIND-EXT-001). A documentação do projeto vive fora dele, a partir daqui. -->
 
 ## Interface Overview
 

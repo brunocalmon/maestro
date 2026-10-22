@@ -6,7 +6,7 @@ import { detectEnvironment } from "../src/setup/env";
 import { project, fixedDecision } from "./aprovacao-fixtures";
 
 describe("setup delivers the bundled maestro-extension-creator skill", () => {
-  // SPECSFY: US-080 US-082 FR-088 AC-140
+  // TRACEABILITY: US-080 US-082 FR-088 AC-140
   it("copies SKILL.md into both .claude/skills/ and .agents/skills/ on first run", () => {
     const root = project();
     runSetup({

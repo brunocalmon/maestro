@@ -15,7 +15,7 @@ const grep = (session: string, tool = "Grep") => ({ session_id: session, tool_na
 const parse = (stdout: string) => JSON.parse(stdout) as { hookSpecificOutput: { hookEventName: string; additionalContext: string } };
 
 describe("AC-011 — dica do grafo aparece uma vez por sessão", () => {
-  // SPECSFY: US-003 FR-004 FR-007 NFR-001 AC-011
+  // TRACEABILITY: US-003 FR-004 FR-007 NFR-001 AC-011
   it("primeiro Grep emite JSON; segundo fica em silêncio; marca gravada", () => {
     const root = withGraph();
     const script = scriptFor("graph-hint");
@@ -31,7 +31,7 @@ describe("AC-011 — dica do grafo aparece uma vez por sessão", () => {
 });
 
 describe("AC-012 — sem grafo, silêncio", () => {
-  // SPECSFY: US-003 FR-004 NFR-001 AC-012
+  // TRACEABILITY: US-003 FR-004 NFR-001 AC-012
   it("projeto sem .code-review-graph/ não recebe dica", () => {
     const root = project();
     mkdirSync(join(root, ".maestro", "state"), { recursive: true });
@@ -43,7 +43,7 @@ describe("AC-012 — sem grafo, silêncio", () => {
 });
 
 describe("AC-013 — nova sessão recebe a dica de novo; Glob também conta", () => {
-  // SPECSFY: US-003 FR-004 FR-007 AC-013
+  // TRACEABILITY: US-003 FR-004 FR-007 AC-013
   it("session_id diferente com Glob emite uma vez; matcher Grep|Glob no settings", () => {
     const root = withGraph();
     const script = scriptFor("graph-hint");

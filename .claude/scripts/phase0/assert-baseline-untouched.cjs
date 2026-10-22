@@ -19,23 +19,23 @@ const compare = (branch, key) => () => {
 };
 
 assert("assert-baseline-untouched", [
-  // SPECSFY: US-001 US-002 NFR-002 AC-007
+  // TRACEABILITY: US-001 US-002 NFR-002 AC-007
   ["a baseline foi registrada no congelamento", () =>
     readState() !== null || `${STATE_FILE} ausente ou ilegível`],
 
-  // SPECSFY: US-002 FR-001 NFR-002 AC-007
+  // TRACEABILITY: US-002 FR-001 NFR-002 AC-007
   [`${MAIN_BRANCH} mantém o SHA da baseline`, compare(MAIN_BRANCH, "mainSha")],
 
-  // SPECSFY: US-002 FR-001 NFR-002 AC-007
+  // TRACEABILITY: US-002 FR-001 NFR-002 AC-007
   [`${ARCHIVED_BRANCH} mantém o SHA da baseline`, compare(ARCHIVED_BRANCH, "archivedSha")],
 
   // A referência remota tem baseline própria. Compará-la com a da main local
   // testaria se local e remoto coincidem — propriedade que nunca foi requisito
   // e que diverge legitimamente quando há commit local ainda não publicado.
-  // SPECSFY: US-002 FR-001 NFR-002 AC-007
+  // TRACEABILITY: US-002 FR-001 NFR-002 AC-007
   [`origin/${MAIN_BRANCH} mantém o SHA da baseline`, compare(`refs/remotes/origin/${MAIN_BRANCH}`, "originMainSha")],
 
-  // SPECSFY: US-002 NFR-003 AC-007
+  // TRACEABILITY: US-002 NFR-003 AC-007
   [`${ARCHIVED_BRANCH} não recebeu commit posterior`, () => {
     const state = readState();
     if (!state || !state.archivedSha) return "baseline não registrada";

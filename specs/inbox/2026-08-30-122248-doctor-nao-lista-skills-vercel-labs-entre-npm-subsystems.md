@@ -23,13 +23,13 @@ src/doctor.ts (NPM_SUBSYSTEMS), specs/completed/0002-phase-1a-esqueleto-typescri
 
 ## Resumo processado
 
-**Inferência:** Investigação mostrou que NÃO é um defeito: NPM_SUBSYSTEMS é, por decisão explícita da SPEC-0002 (DEC-002), o conjunto fechado dos três subsistemas que o common-rules orquestra — @promovaweb/specsfy, context-mode e code-review-graph. skills (vercel-labs) é um instalador, não um subsistema orquestrado, e já tem seu próprio relato pelo doctor através de reportSkills()/FR-024 (SPEC-0005), que confere os conjuntos de skills instalados, não a presença do pacote skills em si.
+**Inferência:** Investigação mostrou que NÃO é um defeito: NPM_SUBSYSTEMS é, por decisão explícita da SPEC-0002 (DEC-002), o conjunto fechado dos três subsistemas que o common-rules orquestra — removed-project-integration, context-mode e code-review-graph. skills (vercel-labs) é um instalador, não um subsistema orquestrado, e já tem seu próprio relato pelo doctor através de reportSkills()/FR-024 (SPEC-0005), que confere os conjuntos de skills instalados, não a presença do pacote skills em si.
 
 ## Análise inicial
 
 ### Problema ou oportunidade
 
-**Declaração ou inferência identificada:** Nenhum: doctor já relata o que precisa relatar sobre skills — presença de cada conjunto (mattpocock, specsfy) e divergência — através de um mecanismo dedicado (reportSkills), separado de NPM_SUBSYSTEMS por desenho, desde a SPEC-0005 original.
+**Declaração ou inferência identificada:** Nenhum: doctor já relata o que precisa relatar sobre skills — presença de cada conjunto (mattpocock, framework) e divergência — através de um mecanismo dedicado (reportSkills), separado de NPM_SUBSYSTEMS por desenho, desde a SPEC-0005 original.
 
 ### Pessoas afetadas ou beneficiadas
 
@@ -67,8 +67,8 @@ src/doctor.ts (NPM_SUBSYSTEMS), specs/completed/0002-phase-1a-esqueleto-typescri
 
 ## Próximo passo
 
-Manter em `specs/inbox/` ou refinar com `$specsfy-02-backlog`.
+Manter em `specs/inbox/` ou refinar com `$framework-02-backlog`.
 
 ## Encerramento — 2026-08-30
 
-Investigado e fechado sem promoção a backlog nem spec. `NPM_SUBSYSTEMS` (`src/doctor.ts`) é, por `DEC-002` da SPEC-0002, o conjunto fechado dos três subsistemas orquestrados do projeto (`@promovaweb/specsfy`, `context-mode`, `code-review-graph`); `skills` é o instalador que o `setup` invoca, não um subsistema orquestrado, e seu relato já existe por caminho próprio — `reportSkills()`, exigido por `FR-024` da SPEC-0005 e coberto por `skills-doctor-presenca.test.ts`, `skills-doctor-deriva.test.ts` e `skills-doctor-garantia.test.ts`, todos `Passed`. Adicionar `skills` a `NPM_SUBSYSTEMS` misturaria os dois conceitos sem ganho correspondente. Nenhuma mudança de código feita.
+Investigado e fechado sem promoção a backlog nem spec. `NPM_SUBSYSTEMS` (`src/doctor.ts`) é, por `DEC-002` da SPEC-0002, o conjunto fechado dos três subsistemas orquestrados do projeto (`removed-project-integration`, `context-mode`, `code-review-graph`); `skills` é o instalador que o `setup` invoca, não um subsistema orquestrado, e seu relato já existe por caminho próprio — `reportSkills()`, exigido por `FR-024` da SPEC-0005 e coberto por `skills-doctor-presenca.test.ts`, `skills-doctor-deriva.test.ts` e `skills-doctor-garantia.test.ts`, todos `Passed`. Adicionar `skills` a `NPM_SUBSYSTEMS` misturaria os dois conceitos sem ganho correspondente. Nenhuma mudança de código feita.

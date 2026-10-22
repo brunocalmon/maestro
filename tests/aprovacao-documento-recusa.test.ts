@@ -9,7 +9,7 @@ describe("AC-066 — the document denies the run", () => {
     approval: { context: { hasTerminal: () => false }, stdin: { read: () => '{"approved": false}' } },
   });
 
-  // SPECSFY: US-061 FR-062 FR-064 AC-066
+  // TRACEABILITY: US-061 FR-062 FR-064 AC-066
   it("no file is created", () => {
     const root = project();
     const before = fileTree(root);
@@ -17,13 +17,13 @@ describe("AC-066 — the document denies the run", () => {
     expect(fileTree(root)).toEqual(before);
   });
 
-  // SPECSFY: US-061 FR-064 AC-066
+  // TRACEABILITY: US-061 FR-064 AC-066
   it("the report states the refusal", () => {
     const root = project();
     expect(run(root).report).toMatch(/refused/i);
   });
 
-  // SPECSFY: US-061 FR-062 AC-066
+  // TRACEABILITY: US-061 FR-062 AC-066
   it("the exit code isn't a success one", () => {
     const root = project();
     expect(run(root).exitCode).not.toBe(0);

@@ -16,7 +16,7 @@ const hasUv = (): boolean => {
 };
 
 describe("AC-116 — the Python bridge actually runs when approved", () => {
-  // SPECSFY: US-072 FR-074 NFR-072 AC-116
+  // TRACEABILITY: US-072 FR-074 NFR-072 AC-116
   it("with code-review-graph absent from both sources and uv available, .venv-crg is really created", () => {
     if (!hasUv()) return;
     const root = project();

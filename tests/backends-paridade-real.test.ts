@@ -13,7 +13,7 @@ const onPath = (name: string): boolean => {
 };
 
 describe("AC-085 — parity between the real source and the machine", () => {
-  // SPECSFY: US-032 NFR-032 AC-085
+  // TRACEABILITY: US-032 NFR-032 AC-085
   it("the real source resolves what's actually installed", () => {
     const result = detectBackends(realBackendEnvironment());
     for (const name of SUPPORTED_AGENT_BACKENDS) {
@@ -22,7 +22,7 @@ describe("AC-085 — parity between the real source and the machine", () => {
     }
   });
 
-  // SPECSFY: NFR-032 AC-085
+  // TRACEABILITY: NFR-032 AC-085
   it("claude's version, whose real output has parentheses, comes out clean", () => {
     if (!onPath("claude")) return;
     const entry = detectBackends(realBackendEnvironment()).find((r) => r.name === "claude");

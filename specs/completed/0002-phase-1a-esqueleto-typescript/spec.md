@@ -2,7 +2,7 @@
 
 | Campo | Valor |
 | --- | --- |
-| Formato | Specsfy/2.0 |
+| Formato | former project tool/2.0 |
 | ID | SPEC-0002 |
 | Slug | 0002-phase-1a-esqueleto-typescript |
 | Status | Complete |
@@ -26,7 +26,7 @@
 
 A branch de trabalho nasceu com 119 arquivos, e nenhum deles é código. Não há manifesto, build, runner de testes nem ponto de entrada: a v1.0 não compila nem executa, porque ainda não existe.
 
-Há um segundo problema, menos visível e mais caro. O plano da v1.0 tratava quatro ferramentas como dependências fixadas, e essa premissa nunca foi exercitada neste repositório. A verificação de 2026-08-24 mostrou que três dos quatro nomes estavam errados e que a categoria era uma só quando deveria ser duas: `specsfy` é `@promovaweb/specsfy`, `code-review-graph` sequer é pacote npm — é Python instalado por `uv` — e `pi` não é subsistema, é agente, intercambiável por desenho e pertencente a outra camada. Construir setup, orquestração e seleção de modelo sobre uma premissa não exercitada repetiria o erro que a Phase 0 encontrou no `.gitignore`, quando o conjunto que a fase prometia preservar não existia em git.
+Há um segundo problema, menos visível e mais caro. O plano da v1.0 tratava quatro ferramentas como dependências fixadas, e essa premissa nunca foi exercitada neste repositório. A verificação de 2026-08-24 mostrou que três dos quatro nomes estavam errados e que a categoria era uma só quando deveria ser duas: `framework` é `removed-project-integration`, `code-review-graph` sequer é pacote npm — é Python instalado por `uv` — e `pi` não é subsistema, é agente, intercambiável por desenho e pertencente a outra camada. Construir setup, orquestração e seleção de modelo sobre uma premissa não exercitada repetiria o erro que a Phase 0 encontrou no `.gitignore`, quando o conjunto que a fase prometia preservar não existia em git.
 
 #### Resultado desejado
 
@@ -52,9 +52,9 @@ O valor não é o comando `--version`. É ter chão firme e a premissa das depen
 
 - **R-001** [critical] As três dependências do projeto resolvem para os identificadores e as camadas registrados em DEC-002 — Verdict: verified — Confidence: high — Evidence: research/pi-dev/consulta.md#impacto-na-spec — Budget: 1/1.
 
-O claim registrado é o fato de que a spec depende: `@promovaweb/specsfy` 0.10.2 e `context-mode` 1.0.169 na camada npm, `code-review-graph` 2.3.7 exigido do ambiente, e `pi` como agente da camada 3, sob o pacote `@earendil-works/pi-coding-agent`.
+O claim registrado é o fato de que a spec depende: `removed-project-integration` 0.10.2 e `context-mode` 1.0.169 na camada npm, `code-review-graph` 2.3.7 exigido do ambiente, e `pi` como agente da camada 3, sob o pacote `@earendil-works/pi-coding-agent`.
 
-A mesma verificação **refutou** a premissa original do backlog, que tratava as quatro como dependências npm fixadas sob os nomes `specsfy`, `context-mode`, `pi.dev` e `code-review-graph`. Três desses nomes estavam errados, um não é pacote npm, e `pi` sequer é subsistema. DEC-002 registra a revisão.
+A mesma verificação **refutou** a premissa original do backlog, que tratava as quatro como dependências npm fixadas sob os nomes `framework`, `context-mode`, `pi.dev` e `code-review-graph`. Três desses nomes estavam errados, um não é pacote npm, e `pi` sequer é subsistema. DEC-002 registra a revisão.
 
 #### Fontes e contexto consultados
 
@@ -95,7 +95,7 @@ Nenhuma que bloqueie esta fatia. A inclusão de `codex` na lista de backends sup
 - Manifesto `package.json` com nome `@brunocalmon/common-rules`, binário `common-rules`, `type: module` e `engines.node`.
 - Configuração TypeScript e build que produz um ponto de entrada executável em `dist/`.
 - Vitest instalado e exposto pelo script `test:tdd`, exigido pelo contrato do framework em projeto Node.
-- As duas dependências npm declaradas em versão exata: `@promovaweb/specsfy` e `context-mode`. Elas são subsistemas do produto, resolvidos de `node_modules`, e é daí que vem a garantia de versão.
+- As duas dependências npm declaradas em versão exata: `removed-project-integration` e `context-mode`. Elas são subsistemas do produto, resolvidos de `node_modules`, e é daí que vem a garantia de versão.
 - Comando `common-rules --version`, que imprime a versão do manifesto.
 - Comando `common-rules doctor`, que reporta o alcance das três dependências do projeto e sai com código diferente de zero quando alguma falta.
 - Script `verify`, que executa instalação, compilação e suíte em sequência, registra o tempo de cada etapa e permite que um clone recém-obtido fique verde com um comando.
@@ -380,7 +380,7 @@ Feature: Interrupção do ciclo
 
 #### Contexto existente
 
-- Branch `refactor/v1-cli-first`, com 119 arquivos versionados e nenhum de código: `specs/`, `.claude/`, `.specsfy/` e o link `.agents`.
+- Branch `refactor/v1-cli-first`, com 119 arquivos versionados e nenhum de código: `specs/`, `.claude/`, `.project-context/` e o link `.agents`.
 - Sem `package.json`, sem `.gitignore`, sem `dist/`, sem `node_modules/`.
 - Node 22.23.1 e npm 10.9.8 na máquina de desenvolvimento; `uv` presente, com `code-review-graph` 2.3.7 instalado por ele.
 - `.claude/scripts/phase0/` contém as sete asserções da Phase 0, em Node CommonJS. Elas continuam válidas e não são migradas por esta fatia.
@@ -482,11 +482,11 @@ O ponto sensível é a injeção do ambiente. Um teste de `doctor` que consulte 
 
 Registro por tarefa. Cada linha cita comando e resultado observado.
 
-**T001 — bootstrap do runner.** `npm install --ignore-scripts` instalou 44 pacotes em 22s, sem vulnerabilidades. `npm run test:tdd` reportou `No test files found`, provando o runner operante sem afirmar nada sobre o produto. A primeira verificação reprovou em dezesseis arquivos: o Vitest coletava as asserções da Phase 0 em `.claude/scripts/phase0/`, que se chamam `*.test.js` porque o auditor de rastreabilidade do Specsfy só reconhece arquivo cujo nome pareça de teste. A seção 8 listava `vitest.config.ts` mas nenhuma tarefa o criava; o escopo passou a integrar T001.
+**T001 — bootstrap do runner.** `npm install --ignore-scripts` instalou 44 pacotes em 22s, sem vulnerabilidades. `npm run test:tdd` reportou `No test files found`, provando o runner operante sem afirmar nada sobre o produto. A primeira verificação reprovou em dezesseis arquivos: o Vitest coletava as asserções da Phase 0 em `.claude/scripts/phase0/`, que se chamam `*.test.js` porque o auditor de rastreabilidade do former project tool só reconhece arquivo cujo nome pareça de teste. A seção 8 listava `vitest.config.ts` mas nenhuma tarefa o criava; o escopo passou a integrar T001.
 
 **T002 a T011 — dez asserções em RED.** 21 asserções reprovando, 3 aprovando. Cada um dos dez cenários tem ao menos uma reprovação. As três aprovações verificam o que T001 entregou e existem de fato. Duas asserções foram refinadas por passarem por vacuidade sobre conjunto vazio de dependências; com a guarda de conjunto não vazio, as aprovações caíram de 5 para 3.
 
-**T012 — manifesto de produto.** `npm install --ignore-scripts` em 6s. Suíte de 21 reprovações para 9. `monitor_context --check` retornou `PENDING` apontando `.specsfy/STACK.md` e bloqueou o fechamento da tarefa, o que desviou a execução para `$specsfy-aux-stack` antes de prosseguir.
+**T012 — manifesto de produto.** `npm install --ignore-scripts` em 6s. Suíte de 21 reprovações para 9. `monitor_context --check` retornou `PENDING` apontando `.project-context/STACK.md` e bloqueou o fechamento da tarefa, o que desviou a execução para `$framework-aux-stack` antes de prosseguir.
 
 **T013 — configuração TypeScript.** `npx tsc --showConfig` em exit 0, resolvendo `nodenext`, `outDir` `./dist` e `rootDir` `./src`. `npm run build` reprovou com **TS18003**, por ausência de fontes. A tarefa prometia build com código zero, impossível na sua posição; o critério foi corrigido para o que ela prova, e a produção do binário permaneceu em T016.
 
@@ -496,7 +496,7 @@ Registro por tarefa. Cada linha cita comando e resultado observado.
 
 | Dependência | Camada | Origem | Versão |
 | --- | --- | --- | --- |
-| `@promovaweb/specsfy` | npm | local | 0.10.2 |
+| `removed-project-integration` | npm | local | 0.10.2 |
 | `context-mode` | npm | local | 1.0.169 |
 | `code-review-graph` | python | **global** | 2.3.7 |
 
@@ -509,7 +509,7 @@ $ node dist/cli.js --version
 1.0.0
 
 $ node dist/cli.js doctor
-ok      @promovaweb/specsfy — camada npm, origem local, versão 0.10.2
+ok      removed-project-integration — camada npm, origem local, versão 0.10.2
 ok      context-mode — camada npm, origem local, versão 1.0.169
 ok      code-review-graph — camada python, origem global, versão 2.3.7
 
@@ -517,7 +517,7 @@ $ node dist/cli.js inventado
 comando não reconhecido. Disponíveis: version, doctor   (exit 2)
 ```
 
-**T017 — registro da stack.** Onze afirmações conferidas por script; duas estavam falsas. O arquivo dizia que os backends de agente eram detectados em tempo de execução, e nada os detecta. Dizia que a regra de `--ignore-scripts` estava registrada em `.specsfy/RULES.md`, que não existia. Um teste do próprio script deu falso positivo, procurando `pi` como substring e casando dentro de outra palavra — refeito com limite de palavra.
+**T017 — registro da stack.** Onze afirmações conferidas por script; duas estavam falsas. O arquivo dizia que os backends de agente eram detectados em tempo de execução, e nada os detecta. Dizia que a regra de `--ignore-scripts` estava registrada em `.project-context/RULES.md`, que não existia. Um teste do próprio script deu falso positivo, procurando `pi` como substring e casando dentro de outra palavra — refeito com limite de palavra.
 
 **T018 — descrição do produto.** `PROJECT.md` criado, com onze fatos conferidos por script contra manifesto, árvore, git e a API do GitHub. A seção do que **não** existe recebeu a mesma proeminência das capacidades reais.
 
@@ -525,7 +525,7 @@ comando não reconhecido. Disponíveis: version, doctor   (exit 2)
 
 #### Achados abertos
 
-**A suíte não passa sozinha num clone recém-instalado.** `budget.test.ts` lê `.git/phase1a-timings.json`, que fica fora da árvore versionada e não é clonado. Num clone onde ninguém registrou um ciclo, quatro asserções reprovam; verificado removendo o arquivo. É coerente com o texto de AC-009, que descreve alguém medindo a sequência, mas `npm ci && npm test` num clone novo reprova, e integração contínua reprovaria junto. Fechar exige comportamento que a spec não descreve e passa por `$specsfy-update-spec`.
+**A suíte não passa sozinha num clone recém-instalado.** `budget.test.ts` lê `.git/phase1a-timings.json`, que fica fora da árvore versionada e não é clonado. Num clone onde ninguém registrou um ciclo, quatro asserções reprovam; verificado removendo o arquivo. É coerente com o texto de AC-009, que descreve alguém medindo a sequência, mas `npm ci && npm test` num clone novo reprova, e integração contínua reprovaria junto. Fechar exige comportamento que a spec não descreve e passa por `$framework-update-spec`.
 
 **Colisão de identificadores entre specs.** `check_traceability.mjs` varre 18 arquivos, dez desta fatia e oito da Phase 0, e devolve `MARCADORES ÓRFÃOS: AC-011`. Conferência restrita a `tests/` mostra 21 de 21 IDs cobertos pelos arquivos próprios, de modo que a cobertura não depende da contaminação. Registrado como P4 e bloqueia o Delivery Gate.
 
@@ -545,7 +545,7 @@ Não há correção a fazer no gerador nesta fatia. A avaliação fica registrad
 
 #### Matriz de verificação`, que existe em SPEC-0001 e **não existe** nesta spec. Cada uma foi um no-op silencioso, e o conteúdo acima esteve ausente do arquivo enquanto os relatos afirmavam tê-lo registrado.
 
-Os checklists das tarefas e os blocos `specsfy:evidence` foram gravados normalmente, porque usaram âncoras próprias de cada linha. O que se perdeu foi a narrativa da seção 12 e a atualização da coluna de evidência da matriz — razão pela qual `verify_acceptance.mjs` reportava `AC SEM RESULTADO` para os dez critérios.
+Os checklists das tarefas e os blocos `framework:evidence` foram gravados normalmente, porque usaram âncoras próprias de cada linha. O que se perdeu foi a narrativa da seção 12 e a atualização da coluna de evidência da matriz — razão pela qual `verify_acceptance.mjs` reportava `AC SEM RESULTADO` para os dez critérios.
 
 A falha é da mesma família de duas outras já registradas nesta sessão: substituição de texto assumindo âncora sem conferir se ela existe. A partir daqui, toda escrita nesta spec verifica o resultado antes de seguir.
 
@@ -588,7 +588,7 @@ A falha é da mesma família de duas outras já registradas nesta sessão: subst
 #### Gate do Ato I — Definição
 
 - **Resultado**: READY (2026-08-24)
-- **Comando**: `node .claude/skills/specsfy-04-validate/scripts/validate_spec.mjs specs/completed/0002-phase-1a-esqueleto-typescript/spec.md`
+- **Comando**: `node .claude/skills/framework-04-validate/scripts/validate_spec.mjs specs/completed/0002-phase-1a-esqueleto-typescript/spec.md`
 - **Cobertura**: 2 US, 6 FR, 3 NFR, 10 AC, 5 DEC; mínimo de 3 AC por ID satisfeito.
 
 **Achados da rodada**
@@ -601,7 +601,7 @@ A falha é da mesma família de duas outras já registradas nesta sessão: subst
 #### Gate do Ato II — Plano
 
 - **Resultado**: Passed (2026-08-30), reaberto sobre plano concluído anteriormente
-- **Comando**: `node .claude/skills/specsfy-05-tasks/scripts/validate_tasks.mjs specs/completed/0002-phase-1a-esqueleto-typescript/spec.md`
+- **Comando**: `node .claude/skills/framework-05-tasks/scripts/validate_tasks.mjs specs/completed/0002-phase-1a-esqueleto-typescript/spec.md`
 - **Plano**: 26 tarefas — T001 a T024 preservadas da entrega original; T025 e T026 acrescentadas para a correção de plano de 2026-08-30.
 - **RED**: `npm run test:tdd` com `tests/cli-symlink.test.ts` em 3 de 3 casos reprovando, e os 287 casos anteriores verdes.
 - **Predecessores de T026**: `T009` (AC-008, execução local) e `T011` (AC-010, superfície) exercitam `src/cli.ts` de fato e somam-se a `T025` para os três predecessores exigidos.
@@ -619,7 +619,7 @@ A falha é da mesma família de duas outras já registradas nesta sessão: subst
 
 - Módulo ESM, por ser o padrão de um projeto TypeScript novo em Node 22 e por `context-mode` e `pi` já serem ESM. Reversível enquanto nenhuma fatia depender do formato.
 - Node maior ou igual a 20, a linha LTS, embora a máquina de desenvolvimento use 22.
-- As versões fixadas são as verificadas em 2026-08-24: `@promovaweb/specsfy` 0.10.2 e `context-mode` 1.0.169 na camada npm, e `code-review-graph` 2.3.7 na camada Python. `@earendil-works/pi-coding-agent` 0.84.3 permanece registrado como identidade do agente `pi`, que pertence à camada 3 e não é fixado por este projeto.
+- As versões fixadas são as verificadas em 2026-08-24: `removed-project-integration` 0.10.2 e `context-mode` 1.0.169 na camada npm, e `code-review-graph` 2.3.7 na camada Python. `@earendil-works/pi-coding-agent` 0.84.3 permanece registrado como identidade do agente `pi`, que pertence à camada 3 e não é fixado por este projeto.
 - `uv` está disponível para a ponte da fatia 1b. Esta fatia apenas resolve e relata, sem instalar em nenhuma origem.
 
 #### Decisões abertas
@@ -634,7 +634,7 @@ As dez asserções da fase seguinte rodam em Vitest, que vem do manifesto que el
 
 - [x] T001 [OPS] [US-001] Criar .gitignore, o package.json de bootstrap e o escopo do runner em vitest.config.ts — Refs: US-001, FR-003 — Depends: none
   - [x] **PREP**: Confirmado em 2026-08-24 — sem `package.json`, sem `.gitignore`, árvore de trabalho com 119 arquivos e nenhum de código.
-  - [x] **EXECUTE**: `.gitignore` escrito antes da instalação, cobrindo `node_modules/`, `dist/`, `.venv-crg/`, `.specsfy/skills-lock.json` e `specs.md`. `package.json` de bootstrap com `private: true`, `vitest` 4.1.11 e `test:tdd`, sem nome, binário, tipo de módulo ou dependência de produto. `npm install --ignore-scripts` — 44 pacotes em 22s, zero vulnerabilidades. `vitest.config.ts` restringindo o escopo a `tests/`.
+  - [x] **EXECUTE**: `.gitignore` escrito antes da instalação, cobrindo `node_modules/`, `dist/`, `.venv-crg/`, `.project-context/skills-lock.json` e `specs.md`. `package.json` de bootstrap com `private: true`, `vitest` 4.1.11 e `test:tdd`, sem nome, binário, tipo de módulo ou dependência de produto. `npm install --ignore-scripts` — 44 pacotes em 22s, zero vulnerabilidades. `vitest.config.ts` restringindo o escopo a `tests/`.
   - [x] **VERIFY**: `npm run test:tdd` reporta `No test files found` com o escopo `tests/**/*.test.ts`, o que prova o runner operante sem afirmar nada sobre o produto. `git status` mostra apenas arquivos do projeto; nada de gerado escapou do `.gitignore`.
   - [x] **EVIDENCE**: Comandos, saídas e a lacuna de planejamento revelada pela execução registrados na seção 12.
   - [x] **IMPROVE**: O escopo do runner entrou nesta tarefa. O plano listava `vitest.config.ts` na estrutura de arquivos da seção 8 mas não criava tarefa para ele, e sem escopo o runner é inutilizável neste repositório.
@@ -645,83 +645,83 @@ Uma tarefa por cenário da seção 6. Nenhuma depende das outras e cada uma escr
 
 - [x] T002 [P] [TEST] [TDD] [US-001] Derivar do AC-001 o caso de instalação limpa em tests/manifest.test.ts — Refs: US-001, FR-001, FR-003, FR-004, NFR-002, AC-001 — Depends: T001
   - [x] **PREP**: Ler o Gherkin de AC-001 e definir as asserções: nome do pacote, presença das três dependências e ausência de faixa de versão.
-  - [x] **EXECUTE**: Escrever o caso lendo o manifesto do disco, com marcador `SPECSFY` declarando os IDs.
+  - [x] **EXECUTE**: Escrever o caso lendo o manifesto do disco, com marcador `TRACEABILITY` declarando os IDs.
   - [x] **VERIFY**: RED observado — `npm run test:tdd` reprova 2 de 4 em `tests/manifest.test.ts`, por nome e dependências de produto ausentes do manifesto de bootstrap.
   - [x] **EVIDENCE**: Comando, contagem e causa registrados na seção 12.
-  - [x] **IMPROVE**: Cada asserção recebeu marcador `SPECSFY` próprio, e o ambiente é injetado onde a verificação dependeria da máquina.
+  - [x] **IMPROVE**: Cada asserção recebeu marcador `TRACEABILITY` próprio, e o ambiente é injetado onde a verificação dependeria da máquina.
 
 - [x] T003 [P] [TEST] [TDD] [US-001] Derivar do AC-002 o caso de build executável em tests/build.test.ts — Refs: US-001, FR-001, FR-002, NFR-001, AC-002 — Depends: T001
   - [x] **PREP**: Ler o Gherkin de AC-002 e definir o critério: existe em `dist/` o arquivo que o campo de binário do manifesto declara.
-  - [x] **EXECUTE**: Escrever o caso que resolve o alvo do binário pelo manifesto e verifica sua presença, com marcador `SPECSFY`.
+  - [x] **EXECUTE**: Escrever o caso que resolve o alvo do binário pelo manifesto e verifica sua presença, com marcador `TRACEABILITY`.
   - [x] **VERIFY**: RED observado — `npm run test:tdd` reprova 4 de 4 em `tests/build.test.ts`, por campo de binário e dist/ inexistentes.
   - [x] **EVIDENCE**: Comando, contagem e causa registrados na seção 12.
-  - [x] **IMPROVE**: Cada asserção recebeu marcador `SPECSFY` próprio, e o ambiente é injetado onde a verificação dependeria da máquina.
+  - [x] **IMPROVE**: Cada asserção recebeu marcador `TRACEABILITY` próprio, e o ambiente é injetado onde a verificação dependeria da máquina.
 
 - [x] T004 [P] [TEST] [TDD] [US-001] Derivar do AC-003 o caso de contrato do runner em tests/scripts.test.ts — Refs: US-001, FR-003, NFR-001, AC-003 — Depends: T001
   - [x] **PREP**: Ler o Gherkin de AC-003 e definir o critério: o manifesto expõe `test:tdd` e ele invoca Vitest, como o enforcement do framework exige em projeto Node.
-  - [x] **EXECUTE**: Escrever o caso verificando o script e o runner que ele chama, com marcador `SPECSFY`.
+  - [x] **EXECUTE**: Escrever o caso verificando o script e o runner que ele chama, com marcador `TRACEABILITY`.
   - [x] **VERIFY**: RED observado — `npm run test:tdd` reprova 1 de 3 em `tests/scripts.test.ts`, por script de build ainda não declarado.
   - [x] **EVIDENCE**: Comando, contagem e causa registrados na seção 12.
-  - [x] **IMPROVE**: Cada asserção recebeu marcador `SPECSFY` próprio, e o ambiente é injetado onde a verificação dependeria da máquina.
+  - [x] **IMPROVE**: Cada asserção recebeu marcador `TRACEABILITY` próprio, e o ambiente é injetado onde a verificação dependeria da máquina.
 
 - [x] T005 [P] [TEST] [TDD] [US-001] Derivar do AC-004 o caso de impressão da versão em tests/version.test.ts — Refs: US-001, FR-001, FR-002, FR-005, NFR-003, AC-004 — Depends: T001
   - [x] **PREP**: Ler o Gherkin de AC-004 e definir o critério: a saída do binário compilado contém exatamente a versão do manifesto e o código de saída é zero.
-  - [x] **EXECUTE**: Escrever o caso executando o binário como subprocesso, com marcador `SPECSFY`.
+  - [x] **EXECUTE**: Escrever o caso executando o binário como subprocesso, com marcador `TRACEABILITY`.
   - [x] **VERIFY**: RED observado — `npm run test:tdd` reprova 3 de 3 em `tests/version.test.ts`, por sem versão no manifesto e sem binário compilado.
   - [x] **EVIDENCE**: Comando, contagem e causa registrados na seção 12.
-  - [x] **IMPROVE**: Cada asserção recebeu marcador `SPECSFY` próprio, e o ambiente é injetado onde a verificação dependeria da máquina.
+  - [x] **IMPROVE**: Cada asserção recebeu marcador `TRACEABILITY` próprio, e o ambiente é injetado onde a verificação dependeria da máquina.
 
 - [x] T006 [P] [TEST] [TDD] [US-002] Derivar do AC-005 o caso de ambiente aprovado em tests/doctor-ok.test.ts — Refs: US-002, FR-006, NFR-002, NFR-003, AC-005 — Depends: T001
   - [x] **PREP**: Ler o Gherkin de AC-005 e definir o critério: as três dependências do projeto recebem veredito individual, cada uma reporta camada, origem resolvida e versão, e o código de saída é zero.
-  - [x] **EXECUTE**: Escrever o caso injetando um ambiente controlado completo, para que o resultado não dependa da máquina, com marcador `SPECSFY`.
+  - [x] **EXECUTE**: Escrever o caso injetando um ambiente controlado completo, para que o resultado não dependa da máquina, com marcador `TRACEABILITY`.
   - [x] **VERIFY**: RED observado — `npm run test:tdd` reprova arquivo inteiro em `tests/doctor-ok.test.ts`, por módulo src/doctor inexistente.
   - [x] **EVIDENCE**: Comando, contagem e causa registrados na seção 12.
-  - [x] **IMPROVE**: Cada asserção recebeu marcador `SPECSFY` próprio, e o ambiente é injetado onde a verificação dependeria da máquina.
+  - [x] **IMPROVE**: Cada asserção recebeu marcador `TRACEABILITY` próprio, e o ambiente é injetado onde a verificação dependeria da máquina.
 
 - [x] T007 [P] [TEST] [TDD] [US-002] Derivar do AC-006 o caso de dependência ausente em tests/doctor-missing.test.ts — Refs: US-002, FR-004, FR-006, AC-006 — Depends: T001
   - [x] **PREP**: Ler o Gherkin de AC-006 e definir o critério: a saída nomeia `code-review-graph`, explica que vem de `uv` e não do npm, e o código de saída difere de zero.
-  - [x] **EXECUTE**: Escrever o caso com um PATH controlado sem a ferramenta, sem desinstalar nada da máquina, com marcador `SPECSFY`.
+  - [x] **EXECUTE**: Escrever o caso com um PATH controlado sem a ferramenta, sem desinstalar nada da máquina, com marcador `TRACEABILITY`.
   - [x] **VERIFY**: RED observado — `npm run test:tdd` reprova arquivo inteiro em `tests/doctor-missing.test.ts`, por módulo src/doctor inexistente.
   - [x] **EVIDENCE**: Comando, contagem e causa registrados na seção 12.
-  - [x] **IMPROVE**: Cada asserção recebeu marcador `SPECSFY` próprio, e o ambiente é injetado onde a verificação dependeria da máquina.
+  - [x] **IMPROVE**: Cada asserção recebeu marcador `TRACEABILITY` próprio, e o ambiente é injetado onde a verificação dependeria da máquina.
 
 - [x] T008 [P] [TEST] [TDD] [US-001] Derivar do AC-007 o caso de versões fixas em tests/pinning.test.ts — Refs: US-001, FR-004, NFR-002, AC-007 — Depends: T001
   - [x] **PREP**: Ler o Gherkin de AC-007 e definir o critério: nenhuma dependência declarada aceita prefixo de intervalo, e as versões conferem com as verificadas em 2026-08-24.
-  - [x] **EXECUTE**: Escrever o caso inspecionando cada versão declarada, com marcador `SPECSFY`.
+  - [x] **EXECUTE**: Escrever o caso inspecionando cada versão declarada, com marcador `TRACEABILITY`.
   - [x] **VERIFY**: RED observado — `npm run test:tdd` reprova 2 de 3 em `tests/pinning.test.ts`, por nenhuma dependência de produto declarada.
   - [x] **EVIDENCE**: Comando, contagem e causa registrados na seção 12.
-  - [x] **IMPROVE**: Cada asserção recebeu marcador `SPECSFY` próprio, e o ambiente é injetado onde a verificação dependeria da máquina.
+  - [x] **IMPROVE**: Cada asserção recebeu marcador `TRACEABILITY` próprio, e o ambiente é injetado onde a verificação dependeria da máquina.
 
 - [x] T009 [P] [TEST] [TDD] [US-001] [US-002] Derivar do AC-008 o caso de execução local em tests/local-run.test.ts — Refs: US-001, US-002, FR-001, FR-002, FR-005, NFR-003, AC-008 — Depends: T001
   - [x] **PREP**: Ler o Gherkin de AC-008 e definir o critério: o binário responde ao ser invocado pelo caminho do projeto, sem instalação global do próprio pacote.
-  - [x] **EXECUTE**: Escrever o caso executando o alvo do binário por caminho relativo, com marcador `SPECSFY`.
+  - [x] **EXECUTE**: Escrever o caso executando o alvo do binário por caminho relativo, com marcador `TRACEABILITY`.
   - [x] **VERIFY**: RED observado — `npm run test:tdd` reprova 3 de 3 em `tests/local-run.test.ts`, por sem binário e sem subsistemas em node_modules.
   - [x] **EVIDENCE**: Comando, contagem e causa registrados na seção 12.
-  - [x] **IMPROVE**: Cada asserção recebeu marcador `SPECSFY` próprio, e o ambiente é injetado onde a verificação dependeria da máquina.
+  - [x] **IMPROVE**: Cada asserção recebeu marcador `TRACEABILITY` próprio, e o ambiente é injetado onde a verificação dependeria da máquina.
 
 - [x] T010 [P] [TEST] [TDD] [US-001] Derivar do AC-009 o caso de orçamento do ciclo em tests/budget.test.ts — Refs: US-001, FR-002, FR-003, NFR-001, AC-009 — Depends: T001
   - [x] **PREP**: Ler o Gherkin de AC-009 e definir o critério: a soma dos tempos registrados de instalação, build e suíte fica abaixo de cinco minutos.
-  - [x] **EXECUTE**: Escrever o caso lendo os tempos registrados pela execução das etapas, falhando quando algum estiver ausente, com marcador `SPECSFY`.
+  - [x] **EXECUTE**: Escrever o caso lendo os tempos registrados pela execução das etapas, falhando quando algum estiver ausente, com marcador `TRACEABILITY`.
   - [x] **VERIFY**: RED observado — `npm run test:tdd` reprova 4 de 4 em `tests/budget.test.ts`, por tempos das etapas não registrados.
   - [x] **EVIDENCE**: Comando, contagem e causa registrados na seção 12.
-  - [x] **IMPROVE**: Cada asserção recebeu marcador `SPECSFY` próprio, e o ambiente é injetado onde a verificação dependeria da máquina.
+  - [x] **IMPROVE**: Cada asserção recebeu marcador `TRACEABILITY` próprio, e o ambiente é injetado onde a verificação dependeria da máquina.
 
 - [x] T011 [P] [TEST] [TDD] [US-001] [US-002] Derivar do AC-010 o caso de limite do esqueleto em tests/surface.test.ts — Refs: US-001, US-002, FR-005, FR-006, AC-010 — Depends: T001
   - [x] **PREP**: Ler o Gherkin de AC-010 e definir o critério: apenas identificação de versão e verificação de dependências são oferecidas.
-  - [x] **EXECUTE**: Escrever o caso verificando a superfície de comandos e a ausência de setup, orquestração, aprovação e seleção de modelo, com marcador `SPECSFY`.
+  - [x] **EXECUTE**: Escrever o caso verificando a superfície de comandos e a ausência de setup, orquestração, aprovação e seleção de modelo, com marcador `TRACEABILITY`.
   - [x] **VERIFY**: RED observado — `npm run test:tdd` reprova arquivo inteiro em `tests/surface.test.ts`, por módulo src/cli inexistente.
   - [x] **EVIDENCE**: Comando, contagem e causa registrados na seção 12.
-  - [x] **IMPROVE**: Cada asserção recebeu marcador `SPECSFY` próprio, e o ambiente é injetado onde a verificação dependeria da máquina.
+  - [x] **IMPROVE**: Cada asserção recebeu marcador `TRACEABILITY` próprio, e o ambiente é injetado onde a verificação dependeria da máquina.
 
 #### Fase 3 — Fundação
 
 - [x] T012 [CODE] [US-001] Promover o bootstrap a manifesto de produto em package.json — Refs: US-001, FR-001, FR-003, FR-004, NFR-002, AC-001, AC-007 — Depends: T002, T003, T004, T008
-  - [x] **PREP**: RED confirmado em T002, T004 e T008. `docs/` e `.specsfy/PACKAGES.md` reconstruídos por `$specsfy-documentator`, com `--check` em exit 0.
+  - [x] **PREP**: RED confirmado em T002, T004 e T008. `docs/` e `.project-context/PACKAGES.md` reconstruídos por `$framework-documentator`, com `--check` em exit 0.
   - [x] **EXECUTE**: `package.json` promovido a manifesto de produto — nome `@brunocalmon/common-rules`, versão 1.0.0, `type: module`, `engines.node` maior ou igual a 20, binário `common-rules` apontando para `dist/cli.js`, e as duas dependências de subsistema em versão exata. `private: true` mantido, porque publicar está fora de escopo. `npm install --ignore-scripts` em 6s.
   - [x] **VERIFY**: `npm run test:tdd` — de 21 reprovações para 9. Os casos de manifesto, contrato do runner e fixação passaram a GREEN; build, versão, execução local, orçamento e superfície seguem em RED por dependerem de compilação e código.
   - [x] **EVIDENCE**: Comandos, transição por caso e a pendência de stack que o monitor apontou, registrados na seção 12.
   - [x] **IMPROVE**: `private: true` foi preservado no manifesto de produto como guarda contra publicação acidental, já que publicar pertence a outra fatia. Nenhum teste exigia isso; é decisão de segurança do próprio manifesto.
-  <!-- specsfy:evidence {"task": "T012", "refs": ["US-001", "FR-001", "FR-003", "FR-004", "NFR-002", "AC-001", "AC-007"], "files": ["package.json", "package-lock.json", ".specsfy/STACK.md"], "commands": [{"run": "npm install --ignore-scripts", "exit": 0}, {"run": "node .claude/skills/specsfy-documentator/scripts/build_documentation.mjs --project . --check", "exit": 0}, {"run": "node .claude/skills/specsfy-setup/scripts/monitor_context.mjs --project . --check", "exit": 0}]} -->
+  <!-- framework:evidence {"task": "T012", "refs": ["US-001", "FR-001", "FR-003", "FR-004", "NFR-002", "AC-001", "AC-007"], "files": ["package.json", "package-lock.json", ".project-context/STACK.md"], "commands": [{"run": "npm install --ignore-scripts", "exit": 0}, {"run": "node .claude/skills/framework-documentator/scripts/build_documentation.mjs --project . --check", "exit": 0}, {"run": "node .claude/skills/removed-project-setup/scripts/monitor_context.mjs --project . --check", "exit": 0}]} -->
 
 - [x] T013 [CODE] [US-001] Configurar TypeScript e o build em tsconfig.json — Refs: US-001, FR-002, NFR-001, AC-002, AC-009 — Depends: T003, T005, T010, T012
   - [x] **PREP**: RED confirmado em T003, com 2 de 4 reprovando, e em T010, com 3 de 4. `docs/` reconstruído antes da alteração, com `--check` em exit 0.
@@ -729,7 +729,7 @@ Uma tarefa por cenário da seção 6. Nenhuma depende das outras e cada uma escr
   - [x] **VERIFY**: `npx tsc --showConfig` sai com exit 0 e resolve `nodenext`, `outDir` em `./dist` e `rootDir` em `./src`. `npm run build` ainda reprova com TS18003, por ausência de fonte — comportamento esperado e corrigido em T016.
   - [x] **EVIDENCE**: Comandos, configuração resolvida e o defeito de plano revelado pela execução, registrados na seção 12.
   - [x] **IMPROVE**: O critério de verificação da tarefa foi corrigido para o que ela consegue provar. Prometia build com código zero, impossível antes de existir fonte; passou a provar que a configuração resolve, e a produção do binário ficou em T016, onde de fato acontece.
-  <!-- specsfy:evidence {"task": "T013", "refs": ["US-001", "FR-002", "NFR-001", "AC-002", "AC-009"], "files": ["tsconfig.json"], "commands": [{"run": "npx tsc --showConfig", "exit": 0}, {"run": "node .claude/skills/specsfy-documentator/scripts/build_documentation.mjs --project . --check", "exit": 0}]} -->
+  <!-- framework:evidence {"task": "T013", "refs": ["US-001", "FR-002", "NFR-001", "AC-002", "AC-009"], "files": ["tsconfig.json"], "commands": [{"run": "npx tsc --showConfig", "exit": 0}, {"run": "node .claude/skills/framework-documentator/scripts/build_documentation.mjs --project . --check", "exit": 0}]} -->
 
 - [x] T014 [CODE] [US-001] Implementar a leitura da versão em src/version.ts — Refs: US-001, FR-005, NFR-003, AC-004 — Depends: T005, T009, T011, T013
   - [x] **PREP**: RED confirmado em T005 e T009, 2 de 3 em cada. `docs/` reconstruído antes da alteração.
@@ -737,7 +737,7 @@ Uma tarefa por cenário da seção 6. Nenhuma depende das outras e cada uma escr
   - [x] **VERIFY**: `npm run build` em exit 0 e o módulo compilado devolve `1.0.0`, idêntico ao manifesto. As asserções de `version.test.ts` seguem em RED por exercitarem o binário de ponta a ponta, e passam a GREEN em T016, quando o despacho as liga — como o próprio critério da tarefa previa.
   - [x] **EVIDENCE**: Comandos, verificação em runtime e as duas correções que a execução exigiu, registrados na seção 12.
   - [x] **IMPROVE**: `noEmitOnError` passou a constar do `tsconfig.json`. Sem ele o `tsc` emitia `dist/` mesmo reprovando por tipo, o que faria a asserção de binário existente passar sobre uma compilação quebrada. Verificado por mutação, e não por leitura.
-  <!-- specsfy:evidence {"task": "T014", "refs": ["US-001", "FR-005", "NFR-003", "AC-004"], "files": ["src/version.ts", "tsconfig.json", "package.json"], "commands": [{"run": "npm run build", "exit": 0}, {"run": "node .claude/skills/specsfy-documentator/scripts/build_documentation.mjs --project . --check", "exit": 0}, {"run": "node .claude/skills/specsfy-setup/scripts/monitor_context.mjs --project . --check --acknowledge-project-no-change", "exit": 0}]} -->
+  <!-- framework:evidence {"task": "T014", "refs": ["US-001", "FR-005", "NFR-003", "AC-004"], "files": ["src/version.ts", "tsconfig.json", "package.json"], "commands": [{"run": "npm run build", "exit": 0}, {"run": "node .claude/skills/framework-documentator/scripts/build_documentation.mjs --project . --check", "exit": 0}, {"run": "node .claude/skills/removed-project-setup/scripts/monitor_context.mjs --project . --check --acknowledge-project-no-change", "exit": 0}]} -->
 
 - [x] T015 [CODE] [US-002] Implementar a verificação de dependências em src/doctor.ts — Refs: US-002, FR-004, FR-006, NFR-002, NFR-003, AC-005, AC-006 — Depends: T006, T007, T008, T013
   - [x] **PREP**: RED confirmado em T006 e T007 — os dois arquivos sequer carregavam, por `src/doctor` inexistente. `docs/` reconstruído antes da alteração.
@@ -745,7 +745,7 @@ Uma tarefa por cenário da seção 6. Nenhuma depende das outras e cada uma escr
   - [x] **VERIFY**: `npm run test:tdd` — `doctor-ok.test.ts` e `doctor-missing.test.ts` passaram a carregar e aprovam os oito casos. A suíte foi de 24 para 32 testes, com 26 aprovando e 6 reprovando, todas dependentes do binário.
   - [x] **EVIDENCE**: Comandos, transição dos dois arquivos e a execução contra o ambiente real, registrados na seção 12.
   - [x] **IMPROVE**: A verificação foi exercitada também contra o ambiente real, e não só contra o injetado. Um módulo que passa apenas com ambiente forjado poderia estar correto no teste e errado na máquina.
-  <!-- specsfy:evidence {"task": "T015", "refs": ["US-002", "FR-004", "FR-006", "NFR-002", "NFR-003", "AC-005", "AC-006"], "files": ["src/doctor.ts"], "commands": [{"run": "npm run build", "exit": 0}, {"run": "node .claude/skills/specsfy-documentator/scripts/build_documentation.mjs --project . --check", "exit": 0}, {"run": "node .claude/skills/specsfy-setup/scripts/monitor_context.mjs --project . --check --acknowledge-project-no-change", "exit": 0}]} -->
+  <!-- framework:evidence {"task": "T015", "refs": ["US-002", "FR-004", "FR-006", "NFR-002", "NFR-003", "AC-005", "AC-006"], "files": ["src/doctor.ts"], "commands": [{"run": "npm run build", "exit": 0}, {"run": "node .claude/skills/framework-documentator/scripts/build_documentation.mjs --project . --check", "exit": 0}, {"run": "node .claude/skills/removed-project-setup/scripts/monitor_context.mjs --project . --check --acknowledge-project-no-change", "exit": 0}]} -->
 
 #### Fase 4 — Superfície
 
@@ -755,17 +755,17 @@ Uma tarefa por cenário da seção 6. Nenhuma depende das outras e cada uma escr
   - [x] **VERIFY**: `npm run build` em exit 0 e `npm run test:tdd` com **10 arquivos e 35 testes, todos aprovando**. O binário responde `--version` com `1.0.0` e exit 0, `doctor` com as três dependências e exit 0, e comando desconhecido com exit 2.
   - [x] **EVIDENCE**: Comandos, suíte completa em GREEN e a saída real do binário, registrados na seção 12.
   - [x] **IMPROVE**: O despacho devolve um resultado em vez de imprimir, e quem escreve é a borda do processo. Isso mantém cada comando testável sem capturar saída de terminal, e é a mesma separação aplicada em `version.ts` e `doctor.ts`.
-  <!-- specsfy:evidence {"task": "T016", "refs": ["US-001", "US-002", "FR-005", "FR-006", "AC-008", "AC-010"], "files": ["src/cli.ts"], "commands": [{"run": "npm run build", "exit": 0}, {"run": "npm run test:tdd", "exit": 0}, {"run": "node dist/cli.js --version", "exit": 0}, {"run": "node dist/cli.js doctor", "exit": 0}]} -->
+  <!-- framework:evidence {"task": "T016", "refs": ["US-001", "US-002", "FR-005", "FR-006", "AC-008", "AC-010"], "files": ["src/cli.ts"], "commands": [{"run": "npm run build", "exit": 0}, {"run": "npm run test:tdd", "exit": 0}, {"run": "node dist/cli.js --version", "exit": 0}, {"run": "node dist/cli.js doctor", "exit": 0}]} -->
 
 #### Fase 5 — Contexto persistente e fechamento
 
-- [x] T017 [DOC] [US-001] Registrar a stack introduzida por esta fatia em .specsfy/STACK.md — Refs: US-001, FR-001, FR-003, AC-001, AC-003 — Depends: T012, T013, T016
+- [x] T017 [DOC] [US-001] Registrar a stack introduzida por esta fatia em .project-context/STACK.md — Refs: US-001, FR-001, FR-003, AC-001, AC-003 — Depends: T012, T013, T016
   - [x] **PREP**: Levantado o que a fatia entregou. Parte do registro já existia, porque o monitor de contexto exigiu STACK.md em T012 e T014 antes de deixar fechar aquelas tarefas.
   - [x] **EXECUTE**: Cada linha do arquivo foi conferida contra manifesto, configuração e ambiente. Onze afirmações verificadas por script; duas estavam falsas e foram corrigidas.
   - [x] **VERIFY**: As onze afirmações passam a corresponder às fontes. O bloco reconstruído sobrevive a nova execução do gerador sem apagar o conteúdo humano, e o monitor retorna CURRENT.
   - [x] **EVIDENCE**: Conferência item a item e as duas correções, registradas na seção 12.
   - [x] **IMPROVE**: A conferência passou a ser por script contra as fontes, e não por leitura. Foi assim que as duas afirmações falsas apareceram — nenhuma delas seria notada relendo o texto, porque ambas descreviam algo plausível.
-  <!-- specsfy:evidence {"task": "T017", "refs": ["US-001", "FR-001", "FR-003", "AC-001", "AC-003"], "files": [".specsfy/STACK.md"], "commands": [{"run": "node .claude/skills/specsfy-aux-stack/scripts/update_stack.mjs --project .", "exit": 0}, {"run": "node .claude/skills/specsfy-setup/scripts/monitor_context.mjs --project . --check --acknowledge-project-no-change", "exit": 0}]} -->
+  <!-- framework:evidence {"task": "T017", "refs": ["US-001", "FR-001", "FR-003", "AC-001", "AC-003"], "files": [".project-context/STACK.md"], "commands": [{"run": "node .claude/skills/framework-aux-stack/scripts/update_stack.mjs --project .", "exit": 0}, {"run": "node .claude/skills/removed-project-setup/scripts/monitor_context.mjs --project . --check --acknowledge-project-no-change", "exit": 0}]} -->
 
 - [x] T018 [DOC] [US-001] [US-002] Criar PROJECT.md descrevendo a finalidade e os limites do produto novo — Refs: US-001, US-002, FR-005, FR-006, AC-010 — Depends: T016
   - [x] **PREP**: Confirmado que `PROJECT.md` não existia. A Phase 0 atribuiu a esta fatia a descrição do produto novo, e a partir de T014 o monitor passou a cobrar a revisão a cada tarefa de produção.
@@ -773,7 +773,7 @@ Uma tarefa por cenário da seção 6. Nenhuma depende das outras e cada uma escr
   - [x] **VERIFY**: Onze fatos conferidos por script contra manifesto, árvore, git e a API do GitHub; todos correspondem. Uma segunda checagem confirmou que nenhum comando citado no documento deixa de existir no binário.
   - [x] **EVIDENCE**: Conferência item a item registrada na seção 12.
   - [x] **IMPROVE**: O documento ganhou uma seção dedicada ao que ainda não existe, com a mesma proeminência da lista de capacidades. Sem ela, a descrição da finalidade se leria como descrição do presente — que foi exatamente o erro que T017 encontrou no registro da stack.
-  <!-- specsfy:evidence {"task": "T018", "refs": ["US-001", "US-002", "FR-005", "FR-006", "AC-010"], "files": ["PROJECT.md"], "commands": [{"run": "node .claude/skills/specsfy-documentator/scripts/build_documentation.mjs --project . --check", "exit": 0}, {"run": "node .claude/skills/specsfy-setup/scripts/monitor_context.mjs --project . --check", "exit": 0}]} -->
+  <!-- framework:evidence {"task": "T018", "refs": ["US-001", "US-002", "FR-005", "FR-006", "AC-010"], "files": ["PROJECT.md"], "commands": [{"run": "node .claude/skills/framework-documentator/scripts/build_documentation.mjs --project . --check", "exit": 0}, {"run": "node .claude/skills/removed-project-setup/scripts/monitor_context.mjs --project . --check", "exit": 0}]} -->
 
 - [x] T019 [TEST] [US-001] [US-002] Executar regressão e rastreabilidade pelos scripts declarados em package.json — Refs: US-001, US-002, FR-001, FR-002, FR-003, FR-004, FR-005, FR-006, NFR-001, NFR-002, NFR-003, AC-001, AC-002, AC-003, AC-004, AC-005, AC-006, AC-007, AC-008, AC-009, AC-010 — Depends: T016, T017, T018
   - [x] **PREP**: Dez casos reunidos, cada um com RED registrado antes da implementação correspondente, conforme as evidências de T002 a T011.
@@ -781,25 +781,25 @@ Uma tarefa por cenário da seção 6. Nenhuma depende das outras e cada uma escr
   - [x] **VERIFY**: As três etapas concluem com exit 0 e a suíte fica verde no clone — 10 arquivos, 35 testes. O binário responde `--version` e `doctor`. Ciclo em 4s, contra orçamento de 300. A rastreabilidade cobre 21 de 21 IDs, mas o auditor devolve `GAPS` por contaminação entre specs.
   - [x] **EVIDENCE**: Tempos, contagens, saída do binário e os dois achados do clone, registrados na seção 12.
   - [x] **IMPROVE**: A regressão foi executada contra um clone do remoto, e não contra a árvore local. Foi o que revelou que a suíte não passa sozinha num clone recém-instalado — algo invisível aqui, onde o arquivo de tempos já existia de execuções anteriores.
-  <!-- specsfy:evidence {"task": "T019", "refs": ["US-001", "US-002", "FR-001", "FR-002", "FR-003", "FR-004", "FR-005", "FR-006", "NFR-001", "NFR-002", "NFR-003", "AC-001", "AC-002", "AC-003", "AC-004", "AC-005", "AC-006", "AC-007", "AC-008", "AC-009", "AC-010"], "files": ["package.json", "tests/budget.test.ts"], "commands": [{"run": "npm ci --ignore-scripts", "exit": 0}, {"run": "npm run build", "exit": 0}, {"run": "npm run test:tdd", "exit": 0}]} -->
+  <!-- framework:evidence {"task": "T019", "refs": ["US-001", "US-002", "FR-001", "FR-002", "FR-003", "FR-004", "FR-005", "FR-006", "NFR-001", "NFR-002", "NFR-003", "AC-001", "AC-002", "AC-003", "AC-004", "AC-005", "AC-006", "AC-007", "AC-008", "AC-009", "AC-010"], "files": ["package.json", "tests/budget.test.ts"], "commands": [{"run": "npm ci --ignore-scripts", "exit": 0}, {"run": "npm run build", "exit": 0}, {"run": "npm run test:tdd", "exit": 0}]} -->
 
-- [x] T020 [DOC] [US-001] Registrar a regra de instalação sem scripts em .specsfy/RULES.md — Refs: US-001, FR-004, NFR-002, AC-001, AC-007 — Depends: T012
-  - [x] **PREP**: Confirmado que `.specsfy/RULES.md` não existia e que a regra foi confirmada pela pessoa responsável, não inferida.
+- [x] T020 [DOC] [US-001] Registrar a regra de instalação sem scripts em .project-context/RULES.md — Refs: US-001, FR-004, NFR-002, AC-001, AC-007 — Depends: T012
+  - [x] **PREP**: Confirmado que `.project-context/RULES.md` não existia e que a regra foi confirmada pela pessoa responsável, não inferida.
   - [x] **EXECUTE**: Quatro regras registradas com o motivo de cada uma: instalação sem scripts de ciclo de vida, nada instalado no ambiente global, preferir a cópia local aceitando a global, e compilação que não deixa artefato quando falha.
   - [x] **VERIFY**: O arquivo cita motivo e alcance de cada regra. A afirmação do `STACK.md` de que o registro canônico vive aqui passou a ser verdadeira, e deixou de apontar para arquivo inexistente.
   - [x] **EVIDENCE**: Caminho e conteúdo registrados na seção 12.
   - [x] **IMPROVE**: Cada regra registra o porquê. Uma regra cujo propósito se perdeu vira ritual, e a primeira delas seria descartada como burocracia sem a razão de segurança ao lado.
-  <!-- specsfy:evidence {"task": "T020", "refs": ["US-001", "FR-004", "NFR-002", "AC-001", "AC-007"], "files": [".specsfy/RULES.md", ".specsfy/STACK.md"], "commands": [{"run": "node .claude/skills/specsfy-setup/scripts/monitor_context.mjs --project . --check --acknowledge-project-no-change", "exit": 0}]} -->
+  <!-- framework:evidence {"task": "T020", "refs": ["US-001", "FR-004", "NFR-002", "AC-001", "AC-007"], "files": [".project-context/RULES.md", ".project-context/STACK.md"], "commands": [{"run": "node .claude/skills/removed-project-setup/scripts/monitor_context.mjs --project . --check --acknowledge-project-no-change", "exit": 0}]} -->
 
 #### Fase 6 — Ciclo de verificação
 
 - [x] T021 [P] [TEST] [TDD] [US-001] Derivar de AC-011 o caso do comando de ciclo em tests/cycle-command.test.ts — Refs: US-001, FR-003, FR-007, AC-011 — Depends: T001
   - [x] **PREP**: Lidos AC-011 a AC-013 e definido o critério: manifesto expõe o script, ele mede as três etapas em separado, e reprova nomeando a que falhou.
-  - [x] **EXECUTE**: `tests/cycle.test.ts` com oito casos, cada um com marcador `SPECSFY`, verificando manifesto e comportamento sem executar um ciclo completo dentro da suíte.
+  - [x] **EXECUTE**: `tests/cycle.test.ts` com oito casos, cada um com marcador `TRACEABILITY`, verificando manifesto e comportamento sem executar um ciclo completo dentro da suíte.
   - [x] **VERIFY**: RED observado — 7 de 8 reprovando, por não existir o script nem a entrada no manifesto.
   - [x] **EVIDENCE**: Comando e contagem de RED registrados na seção 12.
   - [x] **IMPROVE**: Os casos inspecionam o script em vez de executá-lo. Um teste que rodasse o ciclo inteiro dentro da suíte chamaria a própria suíte, em recursão.
-  <!-- specsfy:evidence {"task": "T021", "refs": ["US-001", "FR-003", "FR-007", "NFR-001", "AC-011", "AC-012", "AC-013"], "files": ["tests/cycle.test.ts"], "commands": [{"run": "npm run test:tdd", "exit": 1}]} -->
+  <!-- framework:evidence {"task": "T021", "refs": ["US-001", "FR-003", "FR-007", "NFR-001", "AC-011", "AC-012", "AC-013"], "files": ["tests/cycle.test.ts"], "commands": [{"run": "npm run test:tdd", "exit": 1}]} -->
 
 - [x] T022 [CODE] [US-001] Implementar o ciclo de verificação em scripts/cycle.mjs — Refs: US-001, FR-003, FR-007, NFR-001, AC-011, AC-012, AC-013 — Depends: T021, T016, T019
   - [x] **PREP**: RED confirmado em T021, com 7 de 8 reprovando. `docs/` reconstruído antes da alteração.
@@ -807,18 +807,18 @@ Uma tarefa por cenário da seção 6. Nenhuma depende das outras e cada uma escr
   - [x] **VERIFY**: Num clone recém-obtido, `npm run verify` conclui com exit 0 — instalação 3s, compilação 0s, suíte 1s, total 4s — e a suíte fica verde com 11 arquivos e 43 testes. Com um erro de tipo injetado, o ciclo encerra com `ciclo interrompido: a etapa build reprovou com código 1`.
   - [x] **EVIDENCE**: Execução em clone limpo e o caso de falha registrados na seção 12.
   - [x] **IMPROVE**: A circularidade da medição foi tratada: a suíte afere um registro e não mede a própria duração enquanto roda, de modo que instalação e compilação são gravadas antes dela e a duração da suíte é atualizada depois.
-  <!-- specsfy:evidence {"task": "T022", "refs": ["US-001", "FR-003", "FR-007", "NFR-001", "AC-011", "AC-012", "AC-013"], "files": ["scripts/cycle.mjs", "package.json"], "commands": [{"run": "npm run verify", "exit": 0}, {"run": "npm run test:tdd", "exit": 0}]} -->
+  <!-- framework:evidence {"task": "T022", "refs": ["US-001", "FR-003", "FR-007", "NFR-001", "AC-011", "AC-012", "AC-013"], "files": ["scripts/cycle.mjs", "package.json"], "commands": [{"run": "npm run verify", "exit": 0}, {"run": "npm run test:tdd", "exit": 0}]} -->
 
 - [x] T023 [P] [TEST] [TDD] [US-001] Derivar de AC-012 o caso de registro das etapas em tests/cycle-timings.test.ts — Refs: US-001, FR-007, NFR-001, AC-012 — Depends: T001
   - [x] **PREP**: Definido o critério: medições distintas para instalação, compilação e suíte, gravadas fora da árvore versionada.
-  - [x] **EXECUTE**: Três casos com marcador `SPECSFY`, inspecionando o registro e a fonte do script.
+  - [x] **EXECUTE**: Três casos com marcador `TRACEABILITY`, inspecionando o registro e a fonte do script.
   - [x] **VERIFY**: RED observado por não existir o script.
   - [x] **EVIDENCE**: Registrado na seção 12 junto de T021.
   - [x] **IMPROVE**: O caso confere que o registro não está na árvore versionada, e não apenas que existe.
 
 - [x] T024 [P] [TEST] [TDD] [US-001] Derivar de AC-013 o caso de interrupção em tests/cycle-failure.test.ts — Refs: US-001, FR-007, NFR-001, AC-013 — Depends: T001
   - [x] **PREP**: Definido o critério: encerrar com código diferente de zero, nomear a etapa e não prosseguir.
-  - [x] **EXECUTE**: Dois casos com marcador `SPECSFY`.
+  - [x] **EXECUTE**: Dois casos com marcador `TRACEABILITY`.
   - [x] **VERIFY**: RED observado por não existir o script; depois confirmado por injeção real de erro de tipo num clone.
   - [x] **EVIDENCE**: Registrado na seção 12 junto de T022.
   - [x] **IMPROVE**: A interrupção foi verificada executando um ciclo que falha de verdade, e não só lendo a fonte.
@@ -835,20 +835,20 @@ Reabertura de 2026-08-30. `FR-005` e `FR-006` já exigiam resposta "quando invoc
   - [x] **IMPROVE**: O caso usa subprocesso de verdade, e não apenas inspeciona `argv`/`import.meta.url` isoladamente — é a mesma disciplina que `AC-002` da SPEC-0003 já aplica aos guards: só executar prova o comportamento real.
 
 - [x] T026 [CODE] [US-001] Resolver o caminho real de argv[1] antes de comparar em src/cli.ts — Refs: FR-005, FR-006, NFR-003, AC-008, AC-010 — Depends: T009, T011, T025
-  - [x] **PREP**: T025 em RED; `docs/` reconstruído por `$specsfy-documentator` antes da alteração.
+  - [x] **PREP**: T025 em RED; `docs/` reconstruído por `$framework-documentator` antes da alteração.
   - [x] **EXECUTE**: `src/cli.ts` ganhou `realEntryPath`, que resolve `argv[1]` pelo caminho real via `realpathSync` antes de comparar com `fileURLToPath(import.meta.url)`, devolvendo `undefined` em vez de lançar quando o caminho não existe.
   - [x] **VERIFY**: T025 passa a GREEN nos três casos. A suíte inteira fecha em 290 de 290 casos e 88 de 88 arquivos. `npx tsc --noEmit` e `npm run build` em exit 0. Confirmado contra o sistema real: `common-rules --version` e `common-rules doctor`, invocados pelo binário linkado por `npm link` em `~/.local/bin/`, respondem com saída e código zero.
   - [x] **EVIDENCE**: Comandos, contagens e a saída do binário real registrados na seção 12.
   - [x] **IMPROVE**: Este defeito é mais grave que o da SPEC-0003: ali quatro hooks de sete ficavam inertes; aqui o binário inteiro nunca funcionaria fora deste checkout, incluindo qualquer instalação futura publicada de verdade. `AC-008` já previa o cenário de instalação, mas seu Gherkin dizia "pelo caminho local do projeto" — nunca "por link simbólico" —, e ninguém tinha motivo para desconfiar até a primeira instalação real acontecer nesta sessão.
 
-  <!-- specsfy:evidence {"task": "T026", "refs": ["FR-005", "FR-006", "NFR-003", "AC-008", "AC-010"], "files": ["src/cli.ts"], "commands": [{"run": "npm run test:tdd", "exit": 0}, {"run": "npx tsc --noEmit", "exit": 0}, {"run": "npm run build", "exit": 0}]} -->
+  <!-- framework:evidence {"task": "T026", "refs": ["FR-005", "FR-006", "NFR-003", "AC-008", "AC-010"], "files": ["src/cli.ts"], "commands": [{"run": "npm run test:tdd", "exit": 0}, {"run": "npx tsc --noEmit", "exit": 0}, {"run": "npm run build", "exit": 0}]} -->
 
 ### 15. Ordem de execução
 
 **Correção de 2026-08-30.** `T025` não depende de nada e `T026` depende só de `T025`; a ordem original não muda.
 
 - Caminho crítico: T001 → T002 e T003 → T012 → T013 → T015 → T016 → T019.
-- T020 registra em `.specsfy/RULES.md` a regra de instalar sempre com `--ignore-scripts`, confirmada pela pessoa responsável durante o planejamento.
+- T020 registra em `.project-context/RULES.md` a regra de instalar sempre com `--ignore-scripts`, confirmada pela pessoa responsável durante o planejamento.
 - Tarefas paralelas: T002 a T011 executam em paralelo, porque cada uma escreve num arquivo distinto de `tests/` e nenhuma depende do resultado das outras.
 - Barreira deliberada: T001 precede toda a fase de asserções. Sem runner instalado não há como observar RED, e sem RED observado não se escreve produção.
 - Ordem interna da fundação: o manifesto precede o build, que precede os módulos, porque cada um resolve o alvo declarado pelo anterior. T016 vem por último na superfície, porque só ele torna a suíte inteira verde.
@@ -883,7 +883,7 @@ Registradas na seção 13, todas reversíveis nesta fatia.
 - **DEC-001**: O pacote se chama `@brunocalmon/common-rules`, com binário `common-rules`. *Razão*: `common-rules` sem escopo está ocupado no npm por um pacote de expressões regulares sem atualização desde 2023. *Trade-off*: perde-se a forma curta do comando de instalação; o nome do comando não muda, porque o escopo restringe o pacote e não o binário.
 - **DEC-002**: As dependências seguem três camadas, e as do projeto seguem uma única regra de resolução.
 
-  *Camada 1, subsistema npm*: `@promovaweb/specsfy` e `context-mode`, declarados em versão exata. *Camada 2, subsistema Python*: `code-review-graph`, que não existe no npm e é instalado por `uv` num ambiente virtual do projeto. *Camada 3, backend de agente*: `pi`, `claude`, `cursor-agent`, `codex`, `agy`, `goose`, `dsh` e Ollama, detectados por capacidade, nunca instalados, e pertencentes à fatia 1d.
+  *Camada 1, subsistema npm*: `removed-project-integration` e `context-mode`, declarados em versão exata. *Camada 2, subsistema Python*: `code-review-graph`, que não existe no npm e é instalado por `uv` num ambiente virtual do projeto. *Camada 3, backend de agente*: `pi`, `claude`, `cursor-agent`, `codex`, `agy`, `goose`, `dsh` e Ollama, detectados por capacidade, nunca instalados, e pertencentes à fatia 1d.
 
   *Regra de resolução das camadas 1 e 2*: preferir a cópia local do projeto; aceitar a global quando não houver local; nunca instalar no ambiente global. O `doctor` sempre relata qual origem resolveu, de modo que a diferença entre máquinas seja visível em vez de silenciosa.
 
@@ -908,7 +908,7 @@ Registradas na seção 13, todas reversíveis nesta fatia.
 - [x] Todas as tarefas da seção 14 estão concluídas — 24 de 24, com 120 de 120 itens de checklist.
 - [x] `npm ci`, `npm run build` e `npm run test:tdd` concluem com código zero a partir de clone limpo, verificado em clone descartável.
 - [x] `common-rules doctor` aprova o ambiente completo com exit 0 e reprova com exit 1 ao remover `code-review-graph` do `PATH`, nomeando-a e explicando que vem de `uv`.
-- [x] `.specsfy/STACK.md` registra a stack introduzida por esta fatia: TypeScript, ESM, Vitest, as **duas** dependências de subsistema fixadas por npm e o subsistema Python exigido do ambiente. O texto anterior falava em três fixadas, o que contradizia DEC-002.
+- [x] `.project-context/STACK.md` registra a stack introduzida por esta fatia: TypeScript, ESM, Vitest, as **duas** dependências de subsistema fixadas por npm e o subsistema Python exigido do ambiente. O texto anterior falava em três fixadas, o que contradizia DEC-002.
 - [x] `PROJECT.md` foi criado em T018, com onze fatos conferidos por script contra manifesto, árvore, git e a API do GitHub.
 
 #### Nota de manutenção — 2026-08-24, após a conclusão

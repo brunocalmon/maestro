@@ -13,7 +13,7 @@ describe("AC-073 — an already configured project doesn't ask for approval", ()
     return { root, record };
   };
 
-  // SPECSFY: US-062 FR-060 AC-073
+  // TRACEABILITY: US-062 FR-060 AC-073
   it("a source that would throw if called isn't triggered on rerun", () => {
     const { root, record } = alreadyConfigured();
     expect(() => runSetup({
@@ -22,21 +22,21 @@ describe("AC-073 — an already configured project doesn't ask for approval", ()
     })).not.toThrow();
   });
 
-  // SPECSFY: US-062 FR-063 AC-073
+  // TRACEABILITY: US-062 FR-063 AC-073
   it("the report states it was already configured", () => {
     const { root, record } = alreadyConfigured();
     const r = runSetup({ env: detectEnvironment(root), root, write: true, previous: record, approval: { source: decisionThatThrowsIfCalled() } });
     expect(r.report).toMatch(/already configured/i);
   });
 
-  // SPECSFY: US-062 FR-060 AC-073
+  // TRACEABILITY: US-062 FR-060 AC-073
   it("control: the same source is actually consulted on a first run, proving the mechanism exists", () => {
     const root = project();
     const r = runSetup({ env: detectEnvironment(root), root, write: true, approval: { source: decisionThatThrowsIfCalled() } });
     expect(r.exitCode).not.toBe(0);
   });
 
-  // SPECSFY: US-062 FR-060 AC-073
+  // TRACEABILITY: US-062 FR-060 AC-073
   it("the exit code stays a success one", () => {
     const { root, record } = alreadyConfigured();
     const r = runSetup({ env: detectEnvironment(root), root, write: true, previous: record, approval: { source: decisionThatThrowsIfCalled() } });

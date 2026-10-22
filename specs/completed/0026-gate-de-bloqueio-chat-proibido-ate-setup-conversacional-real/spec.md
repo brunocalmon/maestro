@@ -2,7 +2,7 @@
 
 | Campo | Valor |
 | --- | --- |
-| Formato | Specsfy/2.0 |
+| Formato | former project tool/2.0 |
 | ID | SPEC-0026 |
 | Slug | 0026-gate-de-bloqueio-chat-proibido-ate-setup-conversacional-real |
 | Status | Complete |
@@ -24,15 +24,15 @@
 
 #### Problema
 
-SPEC-0025 já detecta e avisa quando `specsfy-setup` ou `setup-matt-pocock-skills` não rodaram de verdade num projeto instalado pelo maestro (`WARN` no `doctor`, mensagem do hook `setup-check` no início da sessão), mas nada impede o uso do chat enquanto isso. O aviso pode ser ignorado indefinidamente: o projeto segue sendo usado sem `PROJECT.md`, `.specsfy/STACK.md`, `.specsfy/RULES.md`, `.specsfy/USER-PROFILE.md` nem a seção `## Agent skills` em `AGENTS.md` — exatamente o gap que o usuário encontrou ao inspecionar este próprio repositório depois de rodar `maestro setup`.
+SPEC-0025 já detecta e avisa quando `removed-project-setup` ou `setup-matt-pocock-skills` não rodaram de verdade num projeto instalado pelo maestro (`WARN` no `doctor`, mensagem do hook `setup-check` no início da sessão), mas nada impede o uso do chat enquanto isso. O aviso pode ser ignorado indefinidamente: o projeto segue sendo usado sem `PROJECT.md`, `.project-context/STACK.md`, `.project-context/RULES.md`, `.project-context/USER-PROFILE.md` nem a seção `## Agent skills` em `AGENTS.md` — exatamente o gap que o usuário encontrou ao inspecionar este próprio repositório depois de rodar `maestro setup`.
 
 #### Resultado desejado
 
-Em Claude Code, o chat fica bloqueado — nenhuma mensagem chega ao modelo, exceto a invocação exata de `/specsfy-setup` ou `/setup-matt-pocock-skills` — enquanto os traços reais dessas duas skills não existirem no projeto. Quem precisa seguir trabalhando sem completar a configuração agora tem uma saída deliberada e auditável (`maestro setup --defer-conversational`, só via terminal real), não um bloqueio permanente sem escape.
+Em Claude Code, o chat fica bloqueado — nenhuma mensagem chega ao modelo, exceto a invocação exata de `/removed-project-setup` ou `/setup-matt-pocock-skills` — enquanto os traços reais dessas duas skills não existirem no projeto. Quem precisa seguir trabalhando sem completar a configuração agora tem uma saída deliberada e auditável (`maestro setup --defer-conversational`, só via terminal real), não um bloqueio permanente sem escape.
 
 #### Métricas de sucesso
 
-- Um projeto recém-instalado pelo maestro em Claude Code, sem `specsfy-setup` nem `setup-matt-pocock-skills` executados, tem toda mensagem de chat negada exceto os dois comandos de setup — verificável por teste automatizado do hook gerado.
+- Um projeto recém-instalado pelo maestro em Claude Code, sem `removed-project-setup` nem `setup-matt-pocock-skills` executados, tem toda mensagem de chat negada exceto os dois comandos de setup — verificável por teste automatizado do hook gerado.
 - Nenhum campo novo de checklist booleano ou checksum aparece em `config.yaml` ou `install.json` para este recurso — verificável por revisão do schema.
 
 ### 2. Research e esclarecimentos
@@ -62,7 +62,7 @@ Em Claude Code, o chat fica bloqueado — nenhuma mensagem chega ao modelo, exce
 #### Dúvidas respondidas
 
 - **Q**: O checklist booleano + checksum imutável proposto originalmente deveria ser implementado? → **A**: Não — rejeitado em `/grill-me`: um checksum derivado dos mesmos campos que protege é forjável trivialmente e é estritamente mais fraco que a checagem de traços de arquivo real já existente (SPEC-0025). A checagem "configurado" é sempre ao vivo.
-- **Q**: Um hook deveria "flipar" o campo `matt-pocock`/`specsfy` quando a skill correspondente for chamada? → **A**: Não — não existe evento de hook Claude Code para "a skill terminou com sucesso" (`PostToolUse` do `Skill` tool dispara no início da conversa multi-turno, não no fim); a checagem ao vivo dos traços dispensa esse evento.
+- **Q**: Um hook deveria "flipar" o campo `matt-pocock`/`framework` quando a skill correspondente for chamada? → **A**: Não — não existe evento de hook Claude Code para "a skill terminou com sucesso" (`PostToolUse` do `Skill` tool dispara no início da conversa multi-turno, não no fim); a checagem ao vivo dos traços dispensa esse evento.
 - **Q**: O bloqueio deve resetar a cada bump de versão do pacote? → **A**: Não — dissolvido pela checagem ao vivo; o único gatilho de reavaliação é o identificador do contrato de traços exigidos mudar, não a versão do pacote em si.
 - **Q**: O escape hatch pode ser aceito como comando dentro do próprio chat bloqueado? → **A**: Não — só via terminal real, fora de qualquer tool do agente, para não virar mais uma porta de allowlist.
 
@@ -74,9 +74,9 @@ Em Claude Code, o chat fica bloqueado — nenhuma mensagem chega ao modelo, exce
 
 #### Incluído
 
-- Novo hook `on-prompt` → `UserPromptSubmit` que nega (`exit 2`) mensagens de chat quando `specsfy-setup` ou `setup-matt-pocock-skills` não tiverem seus traços reais no projeto.
+- Novo hook `on-prompt` → `UserPromptSubmit` que nega (`exit 2`) mensagens de chat quando `removed-project-setup` ou `setup-matt-pocock-skills` não tiverem seus traços reais no projeto.
 - Extração de `HOOK_PROMPT` no `PREAMBLE` do gerador de hooks Claude Code (`src/hooks/claude-code.ts`).
-- Allowlist por prefixo exato de `/specsfy-setup` e `/setup-matt-pocock-skills`.
+- Allowlist por prefixo exato de `/removed-project-setup` e `/setup-matt-pocock-skills`.
 - Comando `maestro setup --defer-conversational` (CLI), que grava um adiamento vinculado ao identificador do contrato de traços vigente.
 - Guard `PreToolUse` que bloqueia a execução desse comando por qualquer tool do agente (Bash ou MCP shell), exigindo execução real em terminal.
 - Expiração automática do adiamento quando o identificador do contrato de traços mudar.
@@ -98,7 +98,7 @@ Em Claude Code, o chat fica bloqueado — nenhuma mensagem chega ao modelo, exce
 
 ### 4. Princípios e restrições do projeto
 
-- **PR-001**: A checagem "configurado" usada por este gate deve ser sempre ao vivo, lida diretamente dos traços de arquivo já definidos por SPEC-0025 (`SPECSFY_SETUP_TRACES`, `AGENT_SKILLS_HEADING`), sem introduzir checklist booleano, checksum ou qualquer outro estado persistido novo para representar "configurado".
+- **PR-001**: A checagem "configurado" usada por este gate deve ser sempre ao vivo, lida diretamente dos traços de arquivo já definidos por SPEC-0025 (`TRACEABILITY_SETUP_TRACES`, `AGENT_SKILLS_HEADING`), sem introduzir checklist booleano, checksum ou qualquer outro estado persistido novo para representar "configurado".
 - **PR-002**: Nenhum hook grava campo de estado ao detectar a chamada de uma skill; toda decisão de bloqueio deriva de leitura direta do disco no momento do prompt.
 - **PR-003**: O gate nunca deve travar o fluxo por falha própria do hook (leitura impossível, arquivo ausente por erro): falha do hook implica `allow`, nunca `deny` por omissão.
 - **PR-004**: Nenhuma mensagem deste gate duplica o conteúdo já mostrado pelo `setup-check` (SessionStart); a mensagem de negação é curta e aponta de volta para os dois comandos.
@@ -107,7 +107,7 @@ Em Claude Code, o chat fica bloqueado — nenhuma mensagem chega ao modelo, exce
 
 #### US-001 — Bloqueio do chat até a configuração conversacional ser real (P1)
 
-Como pessoa usuária do maestro em Claude Code, quero que o chat fique bloqueado enquanto `specsfy-setup` e `setup-matt-pocock-skills` não tiverem seus traços reais no projeto, para não seguir trabalhando num projeto que parece configurado mas não foi.
+Como pessoa usuária do maestro em Claude Code, quero que o chat fique bloqueado enquanto `removed-project-setup` e `setup-matt-pocock-skills` não tiverem seus traços reais no projeto, para não seguir trabalhando num projeto que parece configurado mas não foi.
 
 **Por que P1**: é o comportamento central do backlog — sem ele, o aviso de SPEC-0025 continua sendo ignorável indefinidamente, que foi o problema relatado pelo usuário neste próprio repositório.
 **Teste independente**: instalar o maestro num projeto novo sem rodar as skills conversacionais, abrir uma sessão Claude Code e confirmar que qualquer mensagem além dos dois comandos de setup é negada.
@@ -132,12 +132,12 @@ Como pessoa usuária do maestro, quero poder adiar conscientemente o bloqueio vi
 Feature: Gate de configuração conversacional
 
   Scenario: Projeto sem nenhum traço configurado bloqueia mensagem comum
-    Given um projeto instalado pelo maestro em Claude Code sem os 4 traços de specsfy-setup e sem "## Agent skills" em AGENTS.md
+    Given um projeto instalado pelo maestro em Claude Code sem os 4 traços de removed-project-setup e sem "## Agent skills" em AGENTS.md
     When a pessoa envia a mensagem "explique este arquivo para mim"
-    Then o hook nega a mensagem com exit 2 e uma mensagem curta apontando /specsfy-setup e /setup-matt-pocock-skills
+    Then o hook nega a mensagem com exit 2 e uma mensagem curta apontando /removed-project-setup e /setup-matt-pocock-skills
 ```
 
-#### AC-002 — Comando exato `/specsfy-setup` passa
+#### AC-002 — Comando exato `/removed-project-setup` passa
 
 **Cobre**: US-001, FR-001, FR-002
 
@@ -145,10 +145,10 @@ Feature: Gate de configuração conversacional
 @US-001 @FR-001 @FR-002 @AC-002
 Feature: Gate de configuração conversacional
 
-  Scenario: Invocação exata do comando de setup do Specsfy não é bloqueada
-    Given um projeto sem os 4 traços de specsfy-setup
-    When a pessoa envia a mensagem "/specsfy-setup"
-    Then o hook permite a mensagem e a skill specsfy-setup é carregada normalmente
+  Scenario: Invocação exata do comando de setup do former project tool não é bloqueada
+    Given um projeto sem os 4 traços de removed-project-setup
+    When a pessoa envia a mensagem "/removed-project-setup"
+    Then o hook permite a mensagem e a skill removed-project-setup é carregada normalmente
 ```
 
 #### AC-003 — Comando exato `/setup-matt-pocock-skills` passa
@@ -173,8 +173,8 @@ Feature: Gate de configuração conversacional
 @US-001 @FR-001 @NFR-001 @AC-004
 Feature: Gate de configuração conversacional
 
-  Scenario: specsfy-setup completo mas matt-pocock pendente continua bloqueando
-    Given um projeto com os 4 traços de specsfy-setup presentes e sem "## Agent skills" em AGENTS.md
+  Scenario: removed-project-setup completo mas matt-pocock pendente continua bloqueando
+    Given um projeto com os 4 traços de removed-project-setup presentes e sem "## Agent skills" em AGENTS.md
     When a pessoa envia qualquer mensagem que não seja /setup-matt-pocock-skills
     Then o hook nega a mensagem com exit 2
 ```
@@ -188,7 +188,7 @@ Feature: Gate de configuração conversacional
 Feature: Gate de configuração conversacional
 
   Scenario: Projeto totalmente configurado não bloqueia nada
-    Given um projeto com os 4 traços de specsfy-setup e "## Agent skills" em AGENTS.md presentes
+    Given um projeto com os 4 traços de removed-project-setup e "## Agent skills" em AGENTS.md presentes
     When a pessoa envia qualquer mensagem
     Then o hook permite a mensagem sem restrição
 ```
@@ -203,7 +203,7 @@ Feature: Gate de configuração conversacional
 
   Scenario: Mensagem que só menciona o comando no meio do texto continua bloqueada
     Given um projeto sem os traços de nenhuma das duas skills
-    When a pessoa envia a mensagem "me explica o que /specsfy-setup faz antes de eu rodar"
+    When a pessoa envia a mensagem "me explica o que /removed-project-setup faz antes de eu rodar"
     Then o hook nega a mensagem com exit 2, porque a mensagem não começa com o prefixo exato do comando
 ```
 
@@ -216,7 +216,7 @@ Feature: Gate de configuração conversacional
 Feature: Gate de configuração conversacional
 
   Scenario: Erro de leitura no hook nunca bloqueia por conta própria
-    Given um projeto onde a leitura de AGENTS.md ou dos traços de specsfy-setup falha por erro do ambiente, não por ausência real
+    Given um projeto onde a leitura de AGENTS.md ou dos traços de removed-project-setup falha por erro do ambiente, não por ausência real
     When a pessoa envia qualquer mensagem
     Then o hook permite a mensagem (decision allow) em vez de negar por incerteza
 ```
@@ -258,7 +258,7 @@ Feature: Adiamento deliberado do gate
 Feature: Adiamento deliberado do gate
 
   Scenario: Agente tentando rodar o comando de adiamento por dentro do chat é barrado
-    Given uma sessão de agente já dentro de /specsfy-setup ou /setup-matt-pocock-skills
+    Given uma sessão de agente já dentro de /removed-project-setup ou /setup-matt-pocock-skills
     When o agente tenta executar "maestro setup --defer-conversational" via tool Bash
     Then o guard PreToolUse nega a execução e informa que o comando só é válido rodado diretamente em terminal
 ```
@@ -301,7 +301,7 @@ Feature: Adiamento deliberado do gate
 
   Scenario: Bump de versão que não altera os traços exigidos não invalida o adiamento
     Given um projeto com adiamento ativo
-    When o maestro é atualizado para uma versão nova cujo contrato de traços (SPECSFY_SETUP_TRACES + AGENT_SKILLS_HEADING) permanece idêntico
+    When o maestro é atualizado para uma versão nova cujo contrato de traços (TRACEABILITY_SETUP_TRACES + AGENT_SKILLS_HEADING) permanece idêntico
     Then o adiamento continua válido e o chat continua liberado
 ```
 
@@ -347,7 +347,7 @@ Feature: Gate de configuração conversacional
     Then ele aparece em installed, nunca em skipped — ao contrário de setup-gate, que é skipped por evento on-prompt não suportado (AC-008)
 ```
 
-Retificado durante `$specsfy-07-implement` (T017/T027): a formulação original
+Retificado durante `$framework-07-implement` (T017/T027): a formulação original
 prometia que o aviso do `setup-check` "continua ativo" no target antigravity —
 mas `runSetup` nunca grava nenhum script de hook para esse target hoje,
 mesmo para eventos suportados, porque `antigravityAdapter.settingsPath` é
@@ -387,7 +387,7 @@ Feature: Gate de configuração conversacional
     Then o hook trata a falha de leitura como incerteza e permite a mensagem — diferente de AGENTS.md genuinamente ausente, que é o sinal normal de "matt-pocock não configurado" e deve continuar sendo negado (AC-001/AC-004)
 ```
 
-#### AC-019 — Fail-open quando `.specsfy/` existe mas está ilegível
+#### AC-019 — Fail-open quando `.project-context/` existe mas está ilegível
 
 **Cobre**: NFR-002
 
@@ -395,10 +395,10 @@ Feature: Gate de configuração conversacional
 @NFR-002 @AC-019
 Feature: Gate de configuração conversacional
 
-  Scenario: .specsfy/ ilegível (não ausente) não trava o chat por erro do hook
-    Given um projeto onde o diretório .specsfy/ existe mas está com permissão de leitura negada por erro de ambiente
+  Scenario: .project-context/ ilegível (não ausente) não trava o chat por erro do hook
+    Given um projeto onde o diretório .project-context/ existe mas está com permissão de leitura negada por erro de ambiente
     When a pessoa envia qualquer mensagem
-    Then o hook aplica o mesmo tratamento de falha do AC-018 e permite a mensagem — diferente de .specsfy/ genuinamente ausente, que é o sinal normal de "specsfy-setup não configurado" e deve continuar sendo negado (AC-001/AC-004)
+    Then o hook aplica o mesmo tratamento de falha do AC-018 e permite a mensagem — diferente de .project-context/ genuinamente ausente, que é o sinal normal de "removed-project-setup não configurado" e deve continuar sendo negado (AC-001/AC-004)
 ```
 
 #### AC-020 — `setup-check` continua avisando mesmo com adiamento ativo
@@ -433,9 +433,9 @@ Feature: Adiamento deliberado do gate
 
 #### Funcionais
 
-- **FR-001**: O sistema deve negar (exit 2), via um novo hook no evento canônico `on-prompt` (traduzido para `UserPromptSubmit` em Claude Code), toda mensagem de chat que não corresponda à allowlist, enquanto os traços reais de `specsfy-setup` ou de `setup-matt-pocock-skills` não existirem no projeto (checagem sempre ao vivo, conforme PR-001), com uma mensagem curta de negação que não duplica o conteúdo do `setup-check`.
-- **FR-002**: O sistema deve reconhecer como allowlist apenas mensagens cujo prefixo exato seja `/specsfy-setup` ou `/setup-matt-pocock-skills` (com ou sem argumentos depois), rejeitando qualquer correspondência por substring ou menção no meio do texto.
-- **FR-003**: O sistema deve expor `maestro setup --defer-conversational` na CLI, que grava um registro de adiamento vinculado a um identificador do contrato de traços vigente (derivado de `SPECSFY_SETUP_TRACES` + `AGENT_SKILLS_HEADING`); esse adiamento desliga o bloqueio do FR-001 enquanto o identificador do contrato não mudar, e deixa de valer automaticamente quando mudar.
+- **FR-001**: O sistema deve negar (exit 2), via um novo hook no evento canônico `on-prompt` (traduzido para `UserPromptSubmit` em Claude Code), toda mensagem de chat que não corresponda à allowlist, enquanto os traços reais de `removed-project-setup` ou de `setup-matt-pocock-skills` não existirem no projeto (checagem sempre ao vivo, conforme PR-001), com uma mensagem curta de negação que não duplica o conteúdo do `setup-check`.
+- **FR-002**: O sistema deve reconhecer como allowlist apenas mensagens cujo prefixo exato seja `/removed-project-setup` ou `/setup-matt-pocock-skills` (com ou sem argumentos depois), rejeitando qualquer correspondência por substring ou menção no meio do texto.
+- **FR-003**: O sistema deve expor `maestro setup --defer-conversational` na CLI, que grava um registro de adiamento vinculado a um identificador do contrato de traços vigente (derivado de `TRACEABILITY_SETUP_TRACES` + `AGENT_SKILLS_HEADING`); esse adiamento desliga o bloqueio do FR-001 enquanto o identificador do contrato não mudar, e deixa de valer automaticamente quando mudar.
 - **FR-004**: O sistema deve bloquear, via um guard `PreToolUse` (mesmo padrão de `guard-destructive`), a execução do comando `maestro setup --defer-conversational` por qualquer tool do agente (Bash ou MCP de shell), permitindo apenas execução direta em terminal, fora de qualquer sessão de agente.
 - **FR-005**: O bloqueio do FR-001 deve se aplicar somente ao target `claude-code`; o hook `setup-gate` (evento `on-prompt`) nunca deve ser instalado no target `antigravity`, mantendo apenas o aviso não-bloqueante já existente (`setup-check`, evento `session-start`, suportado por ambos os targets). Este requisito é satisfeito pelo mecanismo genérico já existente (`partitionByEvent`/`supportedEvents` em `src/targets/*.ts`), sem exigir lógica nova de seleção por target.
 
@@ -447,7 +447,7 @@ Feature: Adiamento deliberado do gate
 
 #### Erros e casos-limite
 
-- `AGENTS.md` ou `.specsfy/` existentes mas ilegíveis por erro de ambiente (permissão negada, I/O) → tratado como erro de leitura, resultando em `allow` (NFR-002, AC-018, AC-019). Importante: ausência genuína desses caminhos não é esse caso — é o sinal normal de "nunca configurado" e continua resultando em `deny` (AC-001, AC-004), senão o próprio requisito central (FR-001) nunca teria efeito, já que "não configurado" sempre significa exatamente esses arquivos ausentes.
+- `AGENTS.md` ou `.project-context/` existentes mas ilegíveis por erro de ambiente (permissão negada, I/O) → tratado como erro de leitura, resultando em `allow` (NFR-002, AC-018, AC-019). Importante: ausência genuína desses caminhos não é esse caso — é o sinal normal de "nunca configurado" e continua resultando em `deny` (AC-001, AC-004), senão o próprio requisito central (FR-001) nunca teria efeito, já que "não configurado" sempre significa exatamente esses arquivos ausentes.
 - Comando `maestro setup --defer-conversational` executado num projeto já totalmente configurado → o comando avisa que não há nada pendente e não grava um adiamento inútil.
 - Contrato de traços muda sem que o usuário rode `maestro setup` novamente → o adiamento anterior simplesmente para de cobrir a checagem nova, sem exigir migração ativa de dado antigo.
 - Mensagem de chat vazia ou só espaços → tratada como não correspondente à allowlist, portanto negada como qualquer outra mensagem fora do prefixo exato.
@@ -460,7 +460,7 @@ Feature: Adiamento deliberado do gate
 
 - `src/hooks/source.ts` já declara `on-prompt` como `CanonicalEvent` válido (adicionado em SPEC-0023); falta um hook real registrado nesse evento.
 - `src/hooks/claude-code.ts` já mapeia `on-prompt` → `UserPromptSubmit` em `EVENT_MAP` e já traduz `decision: deny` em `exit 2` no `POSTAMBLE`; falta apenas `HOOK_PROMPT` no `PREAMBLE`.
-- `src/setup/layout.ts` (SPEC-0025) já expõe `SPECSFY_SETUP_TRACES`, `AGENT_SKILLS_HEADING`, `assessConfiguration`; `src/doctor/maestro.ts` já expõe `diagnoseMaestroProject`. Ambos são reaproveitados sem alteração de contrato.
+- `src/setup/layout.ts` (SPEC-0025) já expõe `TRACEABILITY_SETUP_TRACES`, `AGENT_SKILLS_HEADING`, `assessConfiguration`; `src/doctor/maestro.ts` já expõe `diagnoseMaestroProject`. Ambos são reaproveitados sem alteração de contrato.
 - `resources/hooks/guard-destructive.md` é o precedente direto para o novo guard: hook `PreToolUse`, `tools: Bash|mcp__.*(execute|run_in_terminal|shell).*`, inspeciona o conteúdo do comando e nega com mensagem explicativa.
 - `.maestro/install.json` é o arquivo machine-owned que já guarda `version`; é o local natural para o novo registro de adiamento, evitando duplicar versão em `config.yaml` (decisão do grilling).
 
@@ -469,7 +469,7 @@ Feature: Adiamento deliberado do gate
 - **Novo hook de bloqueio** (`resources/hooks/setup-gate.md`, `kind: dispatch` ou script, `event: on-prompt`): lê `HOOK_PROMPT`, `PROJECT_DIR`; chama a mesma lógica de traços de `setup-check.md` mais a verificação de adiamento ativo (arquivo/campo em `.maestro/install.json`); decide `deny` com mensagem curta ou `allow`.
 - **Novo guard** (`resources/hooks/guard-defer-conversational.md`, `event: before-tool`, `tools: Bash|mcp__.*(execute|run_in_terminal|shell).*`, `blocking: true`): inspeciona `HOOK_COMMAND` procurando o padrão `maestro setup ... --defer-conversational`; nega com mensagem explicando que o comando só é válido em terminal real.
 - **`src/hooks/claude-code.ts`**: adicionar `"HOOK_PROMPT=$(_hook_str prompt)"` ao array `PREAMBLE`, logo após a extração de `HOOK_SESSION`, seguindo o padrão existente.
-- **`src/setup/defer.ts`** (novo): `configurationContractId(root)` (hash estável de `SPECSFY_SETUP_TRACES` + `AGENT_SKILLS_HEADING`), `readDeferral(root)`, `writeDeferral(root, contractId)`, `isDeferralActive(root)` (compara `contractId` gravado com o atual).
+- **`src/setup/defer.ts`** (novo): `configurationContractId(root)` (hash estável de `TRACEABILITY_SETUP_TRACES` + `AGENT_SKILLS_HEADING`), `readDeferral(root)`, `writeDeferral(root, contractId)`, `isDeferralActive(root)` (compara `contractId` gravado com o atual).
 - **`src/cli.ts`**: nova flag `--defer-conversational` no comando `setup`, chamando `writeDeferral`; se o projeto já estiver totalmente configurado, informa que não há nada para adiar e não grava nada.
 - **`src/doctor/maestro.ts`**: `diagnoseMaestroProject` passa a reportar um estado adicional (`WARN` "adiado" distinto de `WARN` "nunca configurado") quando `isDeferralActive` for verdadeiro.
 - **`resources/hooks/setup-check.md`**: sem mudança de comportamento — continua avisando independentemente do adiamento (NFR-003); pode ganhar uma linha extra citando que o bloqueio está desligado por adiamento, sem duplicar o motivo já explicado.
@@ -494,7 +494,7 @@ Feature: Adiamento deliberado do gate
 
 #### Queries e repositórios
 
-- Leitura direta de arquivos (`existsSync`/`readFileSync`) sobre `AGENTS.md`, `.specsfy/*`, `.maestro/install.json` — mesmo padrão já usado por `assessConfiguration` e `diagnoseMaestroProject`, sem novo mecanismo de acesso a dados.
+- Leitura direta de arquivos (`existsSync`/`readFileSync`) sobre `AGENTS.md`, `.project-context/*`, `.maestro/install.json` — mesmo padrão já usado por `assessConfiguration` e `diagnoseMaestroProject`, sem novo mecanismo de acesso a dados.
 
 #### Jobs e processamento assíncrono
 
@@ -523,7 +523,7 @@ tests/
 
 | Entidade | Identidade | Atributos e regras | Relações |
 | --- | --- | --- | --- |
-| Registro de adiamento | Único por projeto, dentro de `.maestro/install.json` | `contractId` (hash de `SPECSFY_SETUP_TRACES` + `AGENT_SKILLS_HEADING`), `at` (data ISO da decisão) | Comparado, a cada checagem ao vivo, contra o `contractId` computado no momento; nunca referencia diretamente traços individuais |
+| Registro de adiamento | Único por projeto, dentro de `.maestro/install.json` | `contractId` (hash de `TRACEABILITY_SETUP_TRACES` + `AGENT_SKILLS_HEADING`), `at` (data ISO da decisão) | Comparado, a cada checagem ao vivo, contra o `contractId` computado no momento; nunca referencia diretamente traços individuais |
 
 #### Estados e transições
 
@@ -600,17 +600,17 @@ tests/
 #### Gate do Ato I — Definição
 
 - **Resultado**: READY — 2026-09-18
-- **Comando**: `node .agents/skills/specsfy-04-validate/scripts/validate_spec.mjs specs/draft/0026-gate-de-bloqueio-chat-proibido-ate-setup-conversacional-real/spec.md`
+- **Comando**: `node .agents/skills/framework-04-validate/scripts/validate_spec.mjs specs/draft/0026-gate-de-bloqueio-chat-proibido-ate-setup-conversacional-real/spec.md`
 - **Achados**:
-  - `NOTE`: a tabela de evidência RED-GREEN-REFACTOR (seção 11) agrupa múltiplos `AC` por caso de teste em vez de um caso por `FR`/`NFR` individual; suficiente para o Definition Gate (cobertura de `AC` por `US`/`FR`/`NFR` já confirmada na seção 6), mas `$specsfy-05-tasks`/`$specsfy-06-tdd-bdd` devem expandir para casos TDD explícitos por requisito ao quebrar a seção 14.
+  - `NOTE`: a tabela de evidência RED-GREEN-REFACTOR (seção 11) agrupa múltiplos `AC` por caso de teste em vez de um caso por `FR`/`NFR` individual; suficiente para o Definition Gate (cobertura de `AC` por `US`/`FR`/`NFR` já confirmada na seção 6), mas `$framework-05-tasks`/`$framework-06-tdd-bdd` devem expandir para casos TDD explícitos por requisito ao quebrar a seção 14.
   - `NOTE`: nenhuma fonte externa foi consultada; toda a pesquisa (`R-001`–`R-003`) é leitura direta do próprio repositório, sem necessidade de `research/`.
   - Nenhum achado `BLOCKER` ou `WARNING` de produto, arquitetura ou segurança: as decisões de alto risco (checksum forjável, timing de hook, escopo por target, trust boundary do guard) já estão explicitadas em `DEC-001`–`DEC-005` e nos riscos da seção 16, não escondidas.
-  - `NOTE` (retificação pós-Defined, durante `$specsfy-06-tdd-bdd` modo `prepare`): AC-018/AC-019 originalmente descreviam "arquivo ausente" como gatilho de fail-open, contradizendo o próprio FR-001 — ausência de `AGENTS.md`/`.specsfy/` é o sinal normal de "não configurado" e deve continuar negando (AC-001/AC-004), não liberar. Corrigido para "arquivo existente mas ilegível por erro de ambiente" (permissão negada), coerente com o AC-007 original, que já fazia essa distinção corretamente. Também corrigido: FR-005 e os ACs 008/016/017 descreviam incorretamente "backends agy/codex/goose/pi" (o conceito real de backend de agente CLI do doctor, não relacionado) em vez do mecanismo real de instalação por target (`claude-code`/`antigravity`, `src/targets/*.ts`) — corrigido para refletir que `partitionByEvent`/`supportedEvents` já cobre esse escopo sem código novo (DEC-006).
+  - `NOTE` (retificação pós-Defined, durante `$framework-06-tdd-bdd` modo `prepare`): AC-018/AC-019 originalmente descreviam "arquivo ausente" como gatilho de fail-open, contradizendo o próprio FR-001 — ausência de `AGENTS.md`/`.project-context/` é o sinal normal de "não configurado" e deve continuar negando (AC-001/AC-004), não liberar. Corrigido para "arquivo existente mas ilegível por erro de ambiente" (permissão negada), coerente com o AC-007 original, que já fazia essa distinção corretamente. Também corrigido: FR-005 e os ACs 008/016/017 descreviam incorretamente "backends agy/codex/goose/pi" (o conceito real de backend de agente CLI do doctor, não relacionado) em vez do mecanismo real de instalação por target (`claude-code`/`antigravity`, `src/targets/*.ts`) — corrigido para refletir que `partitionByEvent`/`supportedEvents` já cobre esse escopo sem código novo (DEC-006).
 
 #### Gate do Ato II — Plano
 
 - **Resultado**: READY — 2026-09-18
-- **Comando**: `node .agents/skills/specsfy-05-tasks/scripts/validate_tasks.mjs specs/defined/0026-gate-de-bloqueio-chat-proibido-ate-setup-conversacional-real/spec.md`
+- **Comando**: `node .agents/skills/framework-05-tasks/scripts/validate_tasks.mjs specs/defined/0026-gate-de-bloqueio-chat-proibido-ate-setup-conversacional-real/spec.md`
 - **Achados**:
   - 29 tarefas (22 `[TEST][TDD]` + 7 `[CODE]`), 21 predecessoras TDD concluídas (T001–T021) com RED observado real via `npx vitest run`, cobrindo os 21 `AC`, 5 `FR` e 3 `NFR`. `covered_spec_ids=31/31`.
   - `NOTE`: T017 (AC-016) observou GREEN de imediato, sem RED — documentado explicitamente como comportamento pré-existente (`setup-check` já suportado pelo target `antigravity` desde SPEC-0022/0023), não como predecessor de nenhum `[CODE]` novo; nenhuma tarefa de produção depende dela para GREEN.
@@ -620,7 +620,7 @@ tests/
 #### Gate do Ato III — Entrega
 
 - **Resultado**: Passed — 2026-09-18
-- **Comando**: `node .agents/skills/specsfy-06-tdd-bdd/scripts/check_traceability.mjs specs/in-progress/0026-gate-de-bloqueio-chat-proibido-ate-setup-conversacional-real/spec.md .` + `node .agents/skills/specsfy-07-implement/scripts/verify_evidence.mjs specs/in-progress/0026-gate-de-bloqueio-chat-proibido-ate-setup-conversacional-real/spec.md .`
+- **Comando**: `node .agents/skills/framework-06-tdd-bdd/scripts/check_traceability.mjs specs/in-progress/0026-gate-de-bloqueio-chat-proibido-ate-setup-conversacional-real/spec.md .` + `node .agents/skills/framework-07-implement/scripts/verify_evidence.mjs specs/in-progress/0026-gate-de-bloqueio-chat-proibido-ate-setup-conversacional-real/spec.md .`
 - **Achados**:
   - 29/29 tarefas concluídas (22 `[TEST][TDD]` + 7 `[CODE]`); `verify_evidence.mjs`: `PASSED (strict)`; `check_traceability.mjs` (escopo desta spec): 31/31 IDs cobertos, nenhuma cadeia quebrada.
   - Suíte completa: 653 testes, 642 GREEN, 11 falhas pré-existentes e não relacionadas (confirmadas por `git stash`/`git stash pop` contra a árvore antes desta spec). `tsc --noEmit` e `npm run build` limpos.
@@ -644,21 +644,21 @@ Cada tarefa possui exatamente este checklist, atualizado durante a execução:
   - [ ] **IMPROVE**: Registrar melhoria aplicada ou ausência justificada.
 ```
 
-Runner TDD: Vitest (Node sem PHP), script `test:tdd`. Toda tarefa `[CODE]` exige rodar `$specsfy-documentator` antes de `EXECUTE`, mesmo quando a documentação já existir. Nenhuma tarefa desta fatia altera manifest, dependência estrutural, schema ou banco — nenhuma tarefa `[DOC]` para `STACK.md`/`DATABASE.md` é necessária; a evidência de cada `[CODE]` registra essa justificativa em vez de criar conteúdo artificial.
+Runner TDD: Vitest (Node sem PHP), script `test:tdd`. Toda tarefa `[CODE]` exige rodar `$framework-documentator` antes de `EXECUTE`, mesmo quando a documentação já existir. Nenhuma tarefa desta fatia altera manifest, dependência estrutural, schema ou banco — nenhuma tarefa `[DOC]` para `STACK.md`/`DATABASE.md` é necessária; a evidência de cada `[CODE]` registra essa justificativa em vez de criar conteúdo artificial.
 
 #### Fase 1 — RED TDD informado pelo BDD (grupo A: bloqueio e allowlist, `tests/hooks-setup-gate.test.ts`)
 
 - [x] T001 [TEST] [TDD] [US-001] Derivar do AC-001 um caso Vitest falhando em tests/hooks-setup-gate.test.ts — Refs: US-001, FR-001, NFR-001, AC-001 — Depends: none
   - [x] **PREP**: Ler o Gherkin do AC-001 (projeto sem nenhum traço, mensagem comum) e confirmar o shape do input JSON de UserPromptSubmit usado pelos demais hooks do repositório.
-  - [x] **EXECUTE**: Escrever o caso com marcador próprio `SPECSFY:`, chamando a função de decisão do hook `setup-gate` com um projeto sem traços e uma mensagem comum, esperando `decision: deny`.
+  - [x] **EXECUTE**: Escrever o caso com marcador próprio `TRACEABILITY:`, chamando a função de decisão do hook `setup-gate` com um projeto sem traços e uma mensagem comum, esperando `decision: deny`.
   - [x] **VERIFY**: Observar RED por ausência da função/hook ainda não implementados.
   - [x] **VISUAL**: Não aplicável — hook sem superfície visual.
   - [x] **EVIDENCE**: Registrar comando `npm run test:tdd -- hooks-setup-gate` e a causa do RED.
   - [x] **IMPROVE**: Registrar aprendizado sobre o shape mínimo de input necessário para os demais casos do grupo.
 
 - [x] T002 [TEST] [TDD] [US-001] Derivar do AC-002 um caso Vitest falhando em tests/hooks-setup-gate.test.ts — Refs: US-001, FR-001, FR-002, AC-002 — Depends: none
-  - [x] **PREP**: Ler o Gherkin do AC-002 (prefixo exato `/specsfy-setup` passa mesmo sem traços).
-  - [x] **EXECUTE**: Escrever o caso com marcador `SPECSFY:` esperando `decision: allow` quando o prompt é exatamente `/specsfy-setup`.
+  - [x] **PREP**: Ler o Gherkin do AC-002 (prefixo exato `/removed-project-setup` passa mesmo sem traços).
+  - [x] **EXECUTE**: Escrever o caso com marcador `TRACEABILITY:` esperando `decision: allow` quando o prompt é exatamente `/removed-project-setup`.
   - [x] **VERIFY**: Observar RED válido.
   - [x] **VISUAL**: Não aplicável — hook sem superfície visual.
   - [x] **EVIDENCE**: Registrar comando e causa do RED.
@@ -666,15 +666,15 @@ Runner TDD: Vitest (Node sem PHP), script `test:tdd`. Toda tarefa `[CODE]` exige
 
 - [x] T003 [TEST] [TDD] [US-001] Derivar do AC-003 um caso Vitest falhando em tests/hooks-setup-gate.test.ts — Refs: US-001, FR-001, FR-002, AC-003 — Depends: none
   - [x] **PREP**: Ler o Gherkin do AC-003 (prefixo exato `/setup-matt-pocock-skills` passa).
-  - [x] **EXECUTE**: Escrever o caso com marcador `SPECSFY:` esperando `decision: allow` para esse segundo comando.
+  - [x] **EXECUTE**: Escrever o caso com marcador `TRACEABILITY:` esperando `decision: allow` para esse segundo comando.
   - [x] **VERIFY**: Observar RED válido.
   - [x] **VISUAL**: Não aplicável — hook sem superfície visual.
   - [x] **EVIDENCE**: Registrar comando e causa do RED.
   - [x] **IMPROVE**: Nenhuma melhoria adicional identificada neste caso.
 
 - [x] T004 [TEST] [TDD] [US-001] Derivar do AC-004 um caso Vitest falhando em tests/hooks-setup-gate.test.ts — Refs: US-001, FR-001, NFR-001, AC-004 — Depends: none
-  - [x] **PREP**: Ler o Gherkin do AC-004 (specsfy-setup completo, matt-pocock pendente, mensagem comum continua bloqueada).
-  - [x] **EXECUTE**: Escrever o caso com marcador `SPECSFY:` esperando `decision: deny` quando só um dos dois estiver configurado.
+  - [x] **PREP**: Ler o Gherkin do AC-004 (removed-project-setup completo, matt-pocock pendente, mensagem comum continua bloqueada).
+  - [x] **EXECUTE**: Escrever o caso com marcador `TRACEABILITY:` esperando `decision: deny` quando só um dos dois estiver configurado.
   - [x] **VERIFY**: Observar RED válido.
   - [x] **VISUAL**: Não aplicável — hook sem superfície visual.
   - [x] **EVIDENCE**: Registrar comando e causa do RED.
@@ -682,7 +682,7 @@ Runner TDD: Vitest (Node sem PHP), script `test:tdd`. Toda tarefa `[CODE]` exige
 
 - [x] T005 [TEST] [TDD] [US-001] Derivar do AC-005 um caso Vitest falhando em tests/hooks-setup-gate.test.ts — Refs: US-001, FR-001, NFR-001, AC-005 — Depends: none
   - [x] **PREP**: Ler o Gherkin do AC-005 (ambos os traços presentes, tudo liberado).
-  - [x] **EXECUTE**: Escrever o caso com marcador `SPECSFY:` esperando `decision: allow` sem restrição quando os 4 traços de specsfy-setup e `## Agent skills` estiverem presentes.
+  - [x] **EXECUTE**: Escrever o caso com marcador `TRACEABILITY:` esperando `decision: allow` sem restrição quando os 4 traços de removed-project-setup e `## Agent skills` estiverem presentes.
   - [x] **VERIFY**: Observar RED válido.
   - [x] **VISUAL**: Não aplicável — hook sem superfície visual.
   - [x] **EVIDENCE**: Registrar comando e causa do RED.
@@ -690,7 +690,7 @@ Runner TDD: Vitest (Node sem PHP), script `test:tdd`. Toda tarefa `[CODE]` exige
 
 - [x] T006 [TEST] [TDD] [US-001] Derivar do AC-006 um caso Vitest falhando em tests/hooks-setup-gate.test.ts — Refs: US-001, FR-002, AC-006 — Depends: none
   - [x] **PREP**: Ler o Gherkin do AC-006 (menção ao comando no meio do texto não conta como prefixo).
-  - [x] **EXECUTE**: Escrever o caso com marcador `SPECSFY:` esperando `decision: deny` para a mensagem "me explica o que /specsfy-setup faz antes de eu rodar".
+  - [x] **EXECUTE**: Escrever o caso com marcador `TRACEABILITY:` esperando `decision: deny` para a mensagem "me explica o que /removed-project-setup faz antes de eu rodar".
   - [x] **VERIFY**: Observar RED válido.
   - [x] **VISUAL**: Não aplicável — hook sem superfície visual.
   - [x] **EVIDENCE**: Registrar comando e causa do RED.
@@ -698,7 +698,7 @@ Runner TDD: Vitest (Node sem PHP), script `test:tdd`. Toda tarefa `[CODE]` exige
 
 - [x] T007 [TEST] [TDD] [US-001] Derivar do AC-007 um caso Vitest falhando em tests/hooks-setup-gate.test.ts — Refs: US-001, FR-001, NFR-002, AC-007 — Depends: none
   - [x] **PREP**: Ler o Gherkin do AC-007 (erro de leitura do hook nunca bloqueia por conta própria).
-  - [x] **EXECUTE**: Escrever o caso com marcador `SPECSFY:` simulando uma leitura de arquivo que lança erro e esperando `decision: allow`.
+  - [x] **EXECUTE**: Escrever o caso com marcador `TRACEABILITY:` simulando uma leitura de arquivo que lança erro e esperando `decision: allow`.
   - [x] **VERIFY**: Observar RED válido.
   - [x] **VISUAL**: Não aplicável — hook sem superfície visual.
   - [x] **EVIDENCE**: Registrar comando e causa do RED.
@@ -706,15 +706,15 @@ Runner TDD: Vitest (Node sem PHP), script `test:tdd`. Toda tarefa `[CODE]` exige
 
 - [x] T008 [TEST] [TDD] [US-001] Derivar do AC-018 um caso Vitest falhando em tests/hooks-setup-gate.test.ts — Refs: NFR-002, AC-018 — Depends: none
   - [x] **PREP**: Ler o Gherkin do AC-018 (AGENTS.md ilegível, não ausente, não trava) — distinguir de AC-001/AC-004, onde a ausência real continua negando.
-  - [x] **EXECUTE**: Escrever o caso com marcador `SPECSFY:` simulando AGENTS.md com permissão de leitura negada (chmod 000 ou equivalente) e esperando `decision: allow`.
+  - [x] **EXECUTE**: Escrever o caso com marcador `TRACEABILITY:` simulando AGENTS.md com permissão de leitura negada (chmod 000 ou equivalente) e esperando `decision: allow`.
   - [x] **VERIFY**: Observar RED válido.
   - [x] **VISUAL**: Não aplicável — hook sem superfície visual.
   - [x] **EVIDENCE**: Registrar comando e causa do RED.
   - [x] **IMPROVE**: Nenhuma melhoria adicional identificada neste caso.
 
 - [x] T009 [TEST] [TDD] [US-001] Derivar do AC-019 um caso Vitest falhando em tests/hooks-setup-gate.test.ts — Refs: NFR-002, AC-019 — Depends: none
-  - [x] **PREP**: Ler o Gherkin do AC-019 (.specsfy/ ilegível, não ausente, não trava) — mesma distinção de AC-018.
-  - [x] **EXECUTE**: Escrever o caso com marcador `SPECSFY:` simulando .specsfy/ com permissão de leitura negada (chmod 000 ou equivalente) e esperando `decision: allow`.
+  - [x] **PREP**: Ler o Gherkin do AC-019 (.project-context/ ilegível, não ausente, não trava) — mesma distinção de AC-018.
+  - [x] **EXECUTE**: Escrever o caso com marcador `TRACEABILITY:` simulando .project-context/ com permissão de leitura negada (chmod 000 ou equivalente) e esperando `decision: allow`.
   - [x] **VERIFY**: Observar RED válido.
   - [x] **VISUAL**: Não aplicável — hook sem superfície visual.
   - [x] **EVIDENCE**: Registrar comando e causa do RED.
@@ -724,7 +724,7 @@ Runner TDD: Vitest (Node sem PHP), script `test:tdd`. Toda tarefa `[CODE]` exige
 
 - [x] T010 [TEST] [TDD] [US-002] Derivar do AC-009 um caso Vitest falhando em tests/setup-defer.test.ts — Refs: US-002, FR-003, AC-009 — Depends: none
   - [x] **PREP**: Ler o Gherkin do AC-009 (adiamento grava contractId vigente e libera o chat).
-  - [x] **EXECUTE**: Escrever o caso com marcador `SPECSFY:` chamando `writeDeferral`/`isDeferralActive` de `src/setup/defer.ts` e esperando adiamento ativo logo após a gravação.
+  - [x] **EXECUTE**: Escrever o caso com marcador `TRACEABILITY:` chamando `writeDeferral`/`isDeferralActive` de `src/setup/defer.ts` e esperando adiamento ativo logo após a gravação.
   - [x] **VERIFY**: Observar RED por ausência do módulo `src/setup/defer.ts`.
   - [x] **VISUAL**: Não aplicável — comando de CLI sem superfície visual.
   - [x] **EVIDENCE**: Registrar comando e causa do RED.
@@ -732,7 +732,7 @@ Runner TDD: Vitest (Node sem PHP), script `test:tdd`. Toda tarefa `[CODE]` exige
 
 - [x] T011 [TEST] [TDD] [US-002] Derivar do AC-012 um caso Vitest falhando em tests/setup-defer.test.ts — Refs: US-002, FR-003, AC-012 — Depends: none
   - [x] **PREP**: Ler o Gherkin do AC-012 (mudança no contrato de traços invalida o adiamento anterior).
-  - [x] **EXECUTE**: Escrever o caso com marcador `SPECSFY:` gravando um adiamento sob um contractId simulado e depois recalculando `isDeferralActive` com um contractId diferente, esperando `false`.
+  - [x] **EXECUTE**: Escrever o caso com marcador `TRACEABILITY:` gravando um adiamento sob um contractId simulado e depois recalculando `isDeferralActive` com um contractId diferente, esperando `false`.
   - [x] **VERIFY**: Observar RED válido.
   - [x] **VISUAL**: Não aplicável — comando de CLI sem superfície visual.
   - [x] **EVIDENCE**: Registrar comando e causa do RED.
@@ -740,7 +740,7 @@ Runner TDD: Vitest (Node sem PHP), script `test:tdd`. Toda tarefa `[CODE]` exige
 
 - [x] T012 [TEST] [TDD] [US-002] Derivar do AC-013 um caso Vitest falhando em tests/setup-defer.test.ts — Refs: US-002, FR-003, AC-013 — Depends: none
   - [x] **PREP**: Ler o Gherkin do AC-013 (contrato inalterado mantém o adiamento válido).
-  - [x] **EXECUTE**: Escrever o caso com marcador `SPECSFY:` gravando um adiamento e recalculando `isDeferralActive` com o mesmo contractId, esperando `true`.
+  - [x] **EXECUTE**: Escrever o caso com marcador `TRACEABILITY:` gravando um adiamento e recalculando `isDeferralActive` com o mesmo contractId, esperando `true`.
   - [x] **VERIFY**: Observar RED válido.
   - [x] **VISUAL**: Não aplicável — comando de CLI sem superfície visual.
   - [x] **EVIDENCE**: Registrar comando e causa do RED.
@@ -750,7 +750,7 @@ Runner TDD: Vitest (Node sem PHP), script `test:tdd`. Toda tarefa `[CODE]` exige
 
 - [x] T013 [TEST] [TDD] [US-002] Derivar do AC-010 um caso Vitest falhando em tests/hooks-guard-defer.test.ts — Refs: US-002, FR-004, AC-010 — Depends: none
   - [x] **PREP**: Ler o Gherkin do AC-010 (guard nega `--defer-conversational` executado via Bash pelo agente).
-  - [x] **EXECUTE**: Escrever o caso com marcador `SPECSFY:` chamando a função de decisão do guard com `tool_name: Bash` e `command` contendo `maestro setup --defer-conversational`, esperando `decision: deny`.
+  - [x] **EXECUTE**: Escrever o caso com marcador `TRACEABILITY:` chamando a função de decisão do guard com `tool_name: Bash` e `command` contendo `maestro setup --defer-conversational`, esperando `decision: deny`.
   - [x] **VERIFY**: Observar RED por ausência da função/hook ainda não implementados.
   - [x] **VISUAL**: Não aplicável — guard sem superfície visual.
   - [x] **EVIDENCE**: Registrar comando e causa do RED.
@@ -758,7 +758,7 @@ Runner TDD: Vitest (Node sem PHP), script `test:tdd`. Toda tarefa `[CODE]` exige
 
 - [x] T014 [TEST] [TDD] [US-002] Derivar do AC-011 um caso Vitest falhando em tests/hooks-guard-defer.test.ts — Refs: US-002, FR-004, AC-011 — Depends: none
   - [x] **PREP**: Ler o Gherkin do AC-011 (guard cobre também tool MCP de shell, não só Bash).
-  - [x] **EXECUTE**: Escrever o caso com marcador `SPECSFY:` chamando a mesma função de decisão com `tool_name` casando o padrão `mcp__.*(execute|run_in_terminal|shell).*`, esperando `decision: deny`.
+  - [x] **EXECUTE**: Escrever o caso com marcador `TRACEABILITY:` chamando a mesma função de decisão com `tool_name` casando o padrão `mcp__.*(execute|run_in_terminal|shell).*`, esperando `decision: deny`.
   - [x] **VERIFY**: Observar RED válido.
   - [x] **VISUAL**: Não aplicável — guard sem superfície visual.
   - [x] **EVIDENCE**: Registrar comando e causa do RED.
@@ -766,7 +766,7 @@ Runner TDD: Vitest (Node sem PHP), script `test:tdd`. Toda tarefa `[CODE]` exige
 
 - [x] T015 [TEST] [TDD] [US-002] Derivar do AC-015 um caso Vitest falhando em tests/hooks-guard-defer.test.ts — Refs: US-002, FR-004, AC-015 — Depends: none
   - [x] **PREP**: Ler o Gherkin do AC-015 (execução fora de qualquer tool de agente não é interceptada).
-  - [x] **EXECUTE**: Escrever o caso com marcador `SPECSFY:` chamando a mesma função de decisão sem `tool_name` presente no input (execução direta em terminal), esperando `decision: allow`.
+  - [x] **EXECUTE**: Escrever o caso com marcador `TRACEABILITY:` chamando a mesma função de decisão sem `tool_name` presente no input (execução direta em terminal), esperando `decision: allow`.
   - [x] **VERIFY**: Observar RED válido.
   - [x] **VISUAL**: Não aplicável — guard sem superfície visual.
   - [x] **EVIDENCE**: Registrar comando e causa do RED.
@@ -776,7 +776,7 @@ Runner TDD: Vitest (Node sem PHP), script `test:tdd`. Toda tarefa `[CODE]` exige
 
 - [x] T016 [TEST] [TDD] [US-001] Derivar do AC-008 um caso Vitest falhando em tests/setup-write-gate.test.ts — Refs: US-001, FR-005, AC-008 — Depends: none
   - [x] **PREP**: Ler o Gherkin do AC-008 (target antigravity nunca bloqueia) e reler `partitionByEvent`/`SUPPORTED` em src/targets/claude-code.ts e src/targets/antigravity.ts.
-  - [x] **EXECUTE**: Escrever o caso com marcador `SPECSFY:` chamando `antigravityAdapter.formatHooks([corpusHook("setup-gate")])` e confirmando que o hook volta em `skipped`, não em `installed`.
+  - [x] **EXECUTE**: Escrever o caso com marcador `TRACEABILITY:` chamando `antigravityAdapter.formatHooks([corpusHook("setup-gate")])` e confirmando que o hook volta em `skipped`, não em `installed`.
   - [x] **VERIFY**: Observar RED por ausência do arquivo `resources/hooks/setup-gate.md` (corpusHook lança ENOENT) — a lógica de partição em si já existe e não muda.
   - [x] **VISUAL**: Não aplicável — instalação sem superfície visual.
   - [x] **EVIDENCE**: Registrar comando e causa do RED.
@@ -784,7 +784,7 @@ Runner TDD: Vitest (Node sem PHP), script `test:tdd`. Toda tarefa `[CODE]` exige
 
 - [x] T017 [TEST] [TDD] Derivar do AC-016 um caso Vitest falhando em tests/setup-write-gate.test.ts — Refs: FR-005, AC-016 — Depends: none
   - [x] **PREP**: Ler o Gherkin do AC-016 (aviso não-bloqueante continua ativo fora do Claude Code).
-  - [x] **EXECUTE**: Escrever o caso com marcador `SPECSFY:` chamando `antigravityAdapter.formatHooks([corpusHook("setup-check")])` e confirmando que `setup-check` (evento `session-start`) volta em `installed`, não em `skipped`, em ambos os targets.
+  - [x] **EXECUTE**: Escrever o caso com marcador `TRACEABILITY:` chamando `antigravityAdapter.formatHooks([corpusHook("setup-check")])` e confirmando que `setup-check` (evento `session-start`) volta em `installed`, não em `skipped`, em ambos os targets.
   - [x] **VERIFY**: Passou de imediato, GREEN — não RED. `setup-check` já é evento `session-start`, já suportado por `antigravity` desde SPEC-0022/0023; nada nesta fatia muda esse fato. Tratado como o caso previsto pela própria disciplina TDD ("se passar antes da mudança... prove que a funcionalidade já existe"), não como RED fabricado.
   - [x] **VISUAL**: Não aplicável — instalação sem superfície visual.
   - [x] **EVIDENCE**: `npm run test:tdd -- setup-write-gate` (caso AC-016 isolado): GREEN sem nenhuma alteração de produção. Registrado como prova de comportamento pré-existente, não como predecessor bloqueante de um `[CODE]`.
@@ -792,7 +792,7 @@ Runner TDD: Vitest (Node sem PHP), script `test:tdd`. Toda tarefa `[CODE]` exige
 
 - [x] T018 [TEST] [TDD] Derivar do AC-017 um caso Vitest falhando em tests/setup-write-gate.test.ts — Refs: FR-005, AC-017 — Depends: none
   - [x] **PREP**: Ler o Gherkin do AC-017 (instalação não grava o hook de bloqueio fora do Claude Code).
-  - [x] **EXECUTE**: Escrever o caso com marcador `SPECSFY:` rodando `runSetup` com `target: "antigravity"` sobre um hooksDir que inclui o novo `setup-gate.md` e confirmando que `.maestro/hooks/setup-gate.sh` nunca é criado nesse target.
+  - [x] **EXECUTE**: Escrever o caso com marcador `TRACEABILITY:` rodando `runSetup` com `target: "antigravity"` sobre um hooksDir que inclui o novo `setup-gate.md` e confirmando que `.maestro/hooks/setup-gate.sh` nunca é criado nesse target.
   - [x] **VERIFY**: Observar RED válido.
   - [x] **VISUAL**: Não aplicável — instalação sem superfície visual.
   - [x] **EVIDENCE**: Registrar comando e causa do RED.
@@ -802,7 +802,7 @@ Runner TDD: Vitest (Node sem PHP), script `test:tdd`. Toda tarefa `[CODE]` exige
 
 - [x] T019 [TEST] [TDD] [US-002] Derivar do AC-014 um caso Vitest falhando em tests/doctor-maestro.test.ts — Refs: US-002, NFR-003, AC-014 — Depends: none
   - [x] **PREP**: Ler o Gherkin do AC-014 (doctor nunca esconde um adiamento ativo).
-  - [x] **EXECUTE**: Escrever o caso com marcador `SPECSFY:` chamando `diagnoseMaestroProject` com adiamento ativo e esperando um finding distinto mencionando o adiamento.
+  - [x] **EXECUTE**: Escrever o caso com marcador `TRACEABILITY:` chamando `diagnoseMaestroProject` com adiamento ativo e esperando um finding distinto mencionando o adiamento.
   - [x] **VERIFY**: Observar RED por ausência do novo ramo em `diagnoseMaestroProject`.
   - [x] **VISUAL**: Não aplicável — CLI sem superfície visual.
   - [x] **EVIDENCE**: Registrar comando e causa do RED.
@@ -810,7 +810,7 @@ Runner TDD: Vitest (Node sem PHP), script `test:tdd`. Toda tarefa `[CODE]` exige
 
 - [x] T020 [TEST] [TDD] Derivar do AC-020 um caso Vitest falhando em tests/doctor-maestro.test.ts — Refs: NFR-003, AC-020 — Depends: none
   - [x] **PREP**: Ler o Gherkin do AC-020 (setup-check continua avisando mesmo com adiamento ativo).
-  - [x] **EXECUTE**: Escrever o caso com marcador `SPECSFY:` confirmando que o script do hook `setup-check` não muda de comportamento com adiamento ativo.
+  - [x] **EXECUTE**: Escrever o caso com marcador `TRACEABILITY:` confirmando que o script do hook `setup-check` não muda de comportamento com adiamento ativo.
   - [x] **VERIFY**: Observar RED válido.
   - [x] **VISUAL**: Não aplicável — CLI sem superfície visual.
   - [x] **EVIDENCE**: Registrar comando e causa do RED.
@@ -818,7 +818,7 @@ Runner TDD: Vitest (Node sem PHP), script `test:tdd`. Toda tarefa `[CODE]` exige
 
 - [x] T021 [TEST] [TDD] Derivar do AC-021 um caso Vitest falhando em tests/doctor-maestro.test.ts — Refs: NFR-003, AC-021 — Depends: none
   - [x] **PREP**: Ler o Gherkin do AC-021 (doctor distingue "adiado" de "nunca configurado").
-  - [x] **EXECUTE**: Escrever o caso com marcador `SPECSFY:` comparando a saída de `diagnoseMaestroProject` para os dois projetos simulados, esperando mensagens distintas.
+  - [x] **EXECUTE**: Escrever o caso com marcador `TRACEABILITY:` comparando a saída de `diagnoseMaestroProject` para os dois projetos simulados, esperando mensagens distintas.
   - [x] **VERIFY**: Observar RED válido.
   - [x] **VISUAL**: Não aplicável — CLI sem superfície visual.
   - [x] **EVIDENCE**: Registrar comando e causa do RED.
@@ -836,16 +836,16 @@ Runner TDD: Vitest (Node sem PHP), script `test:tdd`. Toda tarefa `[CODE]` exige
   - [x] **VISUAL**: Não aplicável — mudança em gerador de shell script, sem interface.
   - [x] **EVIDENCE**: Arquivo alterado: src/hooks/claude-code.ts (única linha nova + comentário). Sem regressão nos demais hooks (suíte completa em T029).
   - [x] **IMPROVE**: Nenhuma melhoria de processo necessária; mudança pontual e isolada.
-  <!-- specsfy:evidence {"task":"T022","refs":["US-001","FR-001","AC-001","AC-002","AC-003","AC-004","AC-005","AC-006"],"files":["src/hooks/claude-code.ts"],"commands":[{"run":"npx vitest run tests/hooks-setup-gate.test.ts","exit":0}]} -->
+  <!-- framework:evidence {"task":"T022","refs":["US-001","FR-001","AC-001","AC-002","AC-003","AC-004","AC-005","AC-006"],"files":["src/hooks/claude-code.ts"],"commands":[{"run":"npx vitest run tests/hooks-setup-gate.test.ts","exit":0}]} -->
 
 - [x] T023 [CODE] [US-001] Criar resources/hooks/setup-gate.md (hook on-prompt: checagem ao vivo, allowlist e fail-open) — Refs: FR-001, FR-002, NFR-001, NFR-002, AC-001, AC-002, AC-003, AC-004, AC-005, AC-006, AC-007, AC-018, AC-019 — Depends: T001, T002, T003, T004, T005, T006, T007, T008, T009, T022
-  - [x] **PREP**: Relido `resources/hooks/setup-check.md` (mesma lógica de traços) e `resources/hooks/guard-destructive.md` (padrão decision/message); `SPECSFY_SETUP_TRACES`/`AGENT_SKILLS_HEADING` de src/setup/layout.ts.
-  - [x] **EXECUTE**: Escrito o hook (`event: on-prompt`) — allowlist por prefixo exato sobre `$HOOK_PROMPT`; checagem ao vivo dos 4 traços de specsfy-setup e da seção `## Agent skills`; distingue ausência genuína (nega) de erro de leitura (`cat`/`ls` falhando, permissão negada — libera); checa adiamento comparando o hash do contrato (mesmo material de `configurationContractId`) contra `.maestro/install.json`.
+  - [x] **PREP**: Relido `resources/hooks/setup-check.md` (mesma lógica de traços) e `resources/hooks/guard-destructive.md` (padrão decision/message); `TRACEABILITY_SETUP_TRACES`/`AGENT_SKILLS_HEADING` de src/setup/layout.ts.
+  - [x] **EXECUTE**: Escrito o hook (`event: on-prompt`) — allowlist por prefixo exato sobre `$HOOK_PROMPT`; checagem ao vivo dos 4 traços de removed-project-setup e da seção `## Agent skills`; distingue ausência genuína (nega) de erro de leitura (`cat`/`ls` falhando, permissão negada — libera); checa adiamento comparando o hash do contrato (mesmo material de `configurationContractId`) contra `.maestro/install.json`.
   - [x] **VERIFY**: `npx vitest run tests/hooks-setup-gate.test.ts` — 10/10 GREEN.
   - [x] **VISUAL**: Não aplicável — hook sem interface.
   - [x] **EVIDENCE**: Arquivo criado: resources/hooks/setup-gate.md. Verificado manualmente também via `maestro doctor` e `--defer-conversational` num projeto de teste real (/tmp/maestro-defer-test-2).
   - [x] **IMPROVE**: Nenhuma duplicação de lógica evitável — a checagem de traços é inerentemente um bloco de shell independente do TypeScript de `assessConfiguration` (hooks são scripts standalone, sem import possível); a mesma duplicação já existe entre `setup-check.md` e `assessConfiguration` desde SPEC-0025, então este hook segue o padrão já aceito no repositório em vez de introduzir um novo.
-  <!-- specsfy:evidence {"task":"T023","refs":["FR-001","FR-002","NFR-001","NFR-002","AC-001","AC-002","AC-003","AC-004","AC-005","AC-006","AC-007","AC-018","AC-019"],"files":["resources/hooks/setup-gate.md"],"commands":[{"run":"npx vitest run tests/hooks-setup-gate.test.ts","exit":0}]} -->
+  <!-- framework:evidence {"task":"T023","refs":["FR-001","FR-002","NFR-001","NFR-002","AC-001","AC-002","AC-003","AC-004","AC-005","AC-006","AC-007","AC-018","AC-019"],"files":["resources/hooks/setup-gate.md"],"commands":[{"run":"npx vitest run tests/hooks-setup-gate.test.ts","exit":0}]} -->
 
 **Checkpoint**: instalar o hook num projeto de teste sem traços e confirmar negação de mensagem comum e passagem dos dois comandos exatos.
 
@@ -856,12 +856,12 @@ Runner TDD: Vitest (Node sem PHP), script `test:tdd`. Toda tarefa `[CODE]` exige
 
 - [x] T024 [CODE] [US-002] Criar src/setup/defer.ts (configurationContractId, readDeferral, writeDeferral, isDeferralActive) — Refs: FR-003, AC-009, AC-012, AC-013 — Depends: T010, T011, T012
   - [x] **PREP**: Confirmado o schema atual de `.maestro/install.json` via `readRecordFile`/`writeRecordFile` (src/setup/write.ts) — round-trip JSON sem normalização que descartasse campos extras, seguro para um campo novo (`conversationalGateDeferral`) sem tocar o schema `InstallRecord` compartilhado.
-  - [x] **EXECUTE**: Implementado `configurationContractId(root)` (SHA-256 de `SPECSFY_SETUP_TRACES` + `AGENT_SKILLS_HEADING`, primeiros 16 hex), `writeDeferral(root, contractId, now?)`, `readDeferral(root)` e `isDeferralActive(root)`, persistindo em `.maestro/install.json` via `readRecordFile`/`writeRecordFile` já existentes.
+  - [x] **EXECUTE**: Implementado `configurationContractId(root)` (SHA-256 de `TRACEABILITY_SETUP_TRACES` + `AGENT_SKILLS_HEADING`, primeiros 16 hex), `writeDeferral(root, contractId, now?)`, `readDeferral(root)` e `isDeferralActive(root)`, persistindo em `.maestro/install.json` via `readRecordFile`/`writeRecordFile` já existentes.
   - [x] **VERIFY**: `npx vitest run tests/setup-defer.test.ts` — 3/3 GREEN.
   - [x] **VISUAL**: Não aplicável — módulo interno sem interface.
   - [x] **EVIDENCE**: Arquivo criado: src/setup/defer.ts. Corrigido um import errado durante o desenvolvimento (`readRecordFile`/`writeRecordFile` vivem em `./write.js`, não em `./record.js`) — detectado pelo próprio teste falhando com `TypeError: readRecordFile is not a function`.
   - [x] **IMPROVE**: Nenhuma melhoria de processo necessária além da correção de import já registrada acima.
-  <!-- specsfy:evidence {"task":"T024","refs":["US-002","FR-003","AC-009","AC-012","AC-013"],"files":["src/setup/defer.ts"],"commands":[{"run":"npx vitest run tests/setup-defer.test.ts","exit":0}]} -->
+  <!-- framework:evidence {"task":"T024","refs":["US-002","FR-003","AC-009","AC-012","AC-013"],"files":["src/setup/defer.ts"],"commands":[{"run":"npx vitest run tests/setup-defer.test.ts","exit":0}]} -->
 
 - [x] T025 [CODE] [US-002] Adicionar flag --defer-conversational ao comando setup em src/cli.ts — Refs: FR-003, AC-009 — Depends: T024
   - [x] **PREP**: Relido `formatSetup`/`parseFlags` — `parseFlags` só captura pares `--flag valor`, então a flag booleana precisou de detecção própria (`args.includes(...)`) antes de repassar o resto para `parseFlags`/`SETUP_FLAGS`.
@@ -870,7 +870,7 @@ Runner TDD: Vitest (Node sem PHP), script `test:tdd`. Toda tarefa `[CODE]` exige
   - [x] **VISUAL**: Não aplicável — CLI sem interface.
   - [x] **EVIDENCE**: Arquivo alterado: src/cli.ts. Saída real observada: "maestro: conversational setup deferred. The setup-gate chat block is off until the configuration contract changes (...)".
   - [x] **IMPROVE**: Nenhuma melhoria de processo necessária.
-  <!-- specsfy:evidence {"task":"T025","refs":["FR-003","AC-009"],"files":["src/cli.ts"],"commands":[{"run":"node dist/cli.js setup --defer-conversational --target claude-code","exit":0}]} -->
+  <!-- framework:evidence {"task":"T025","refs":["FR-003","AC-009"],"files":["src/cli.ts"],"commands":[{"run":"node dist/cli.js setup --defer-conversational --target claude-code","exit":0}]} -->
 
 - [x] T026 [CODE] [US-002] Criar resources/hooks/guard-defer-conversational.md (guard PreToolUse) — Refs: FR-004, AC-010, AC-011, AC-015 — Depends: T013, T014, T015, T024
   - [x] **PREP**: Relido `resources/hooks/guard-destructive.md` como precedente direto de guard `PreToolUse` (frontmatter `tools:`/`blocking:`, variável `decision`/`message`).
@@ -879,7 +879,7 @@ Runner TDD: Vitest (Node sem PHP), script `test:tdd`. Toda tarefa `[CODE]` exige
   - [x] **VISUAL**: Não aplicável — guard sem interface.
   - [x] **EVIDENCE**: Arquivo criado: resources/hooks/guard-defer-conversational.md.
   - [x] **IMPROVE**: Nenhuma melhoria de processo necessária além do reaproveitamento do padrão de `guard-destructive`.
-  <!-- specsfy:evidence {"task":"T026","refs":["FR-004","AC-010","AC-011","AC-015"],"files":["resources/hooks/guard-defer-conversational.md"],"commands":[{"run":"npx vitest run tests/hooks-guard-defer.test.ts","exit":0}]} -->
+  <!-- framework:evidence {"task":"T026","refs":["FR-004","AC-010","AC-011","AC-015"],"files":["resources/hooks/guard-defer-conversational.md"],"commands":[{"run":"npx vitest run tests/hooks-guard-defer.test.ts","exit":0}]} -->
 
 - [x] T027 [CODE] [US-001] Confirmar em src/targets/antigravity.ts, sem alterar seu conteúdo, que partitionByEvent já cobre o escopo por target de setup-gate e guard-defer-conversational — Refs: FR-005, AC-008, AC-016, AC-017 — Depends: T016, T017, T018, T023, T026
   - [x] **PREP**: Reler `partitionByEvent`/`SUPPORTED` em src/targets/claude-code.ts e src/targets/antigravity.ts, confirmando que `on-prompt` já está fora do `SUPPORTED` de antigravity e que `before-tool` está em ambos.
@@ -888,28 +888,28 @@ Runner TDD: Vitest (Node sem PHP), script `test:tdd`. Toda tarefa `[CODE]` exige
   - [x] **VISUAL**: Não aplicável — instalação sem interface.
   - [x] **EVIDENCE**: GREEN confirmado sem diff de produção. Achado adicional durante esta tarefa: `antigravityAdapter.settingsPath` é sempre `null`, então `runSetup` nunca grava NENHUM script de hook para esse target hoje, mesmo para eventos que ele suporta (ex.: `setup-check`) — gap pré-existente, fora do escopo de SPEC-0026, registrado em `findings/internal/FIND-INT-005-antigravity-nunca-recebe-script-de-hook.md`. AC-016 e seu teste foram corrigidos para não afirmar algo que o sistema não entrega hoje (ver seção 6).
   - [x] **IMPROVE**: Nenhuma melhoria de processo necessária; achado registrado como DEC-006 (seção 17) e FIND-INT-005 para não ser perdido em revisão futura.
-  <!-- specsfy:evidence {"task":"T027","refs":["FR-005","AC-008","AC-016","AC-017"],"files":["src/targets/antigravity.ts"],"commands":[{"run":"npx vitest run tests/setup-write-gate.test.ts","exit":0}]} -->
+  <!-- framework:evidence {"task":"T027","refs":["FR-005","AC-008","AC-016","AC-017"],"files":["src/targets/antigravity.ts"],"commands":[{"run":"npx vitest run tests/setup-write-gate.test.ts","exit":0}]} -->
 
 - [x] T028 [CODE] [US-002] Reportar estado de adiamento em src/doctor/maestro.ts — Refs: NFR-003, AC-014, AC-020, AC-021 — Depends: T019, T020, T021, T024
   - [x] **PREP**: Relido `diagnoseMaestroProject`/`diagnoseMaestro` e o formato de `MaestroFinding`; confirmado que `renderReport` (src/cli.ts:187-188) já mapeia genericamente cada `report.maestro[]` para uma linha — nenhuma mudança própria necessária em `src/cli.ts` para este achado aparecer no relatório, então o título da tarefa foi ajustado (era "src/doctor/maestro.ts e src/cli.ts").
   - [x] **EXECUTE**: `diagnoseMaestroProject` agora chama `isDeferralActive(root)`; quando verdadeiro, substitui os `WARN area:"configuration"` genéricos por um único `WARN` nomeando o adiamento explicitamente. `resources/hooks/setup-check.md` não foi alterado — continua avisando de forma idêntica, independente do adiamento.
   - [x] **VERIFY**: `npx vitest run tests/doctor-maestro.test.ts` — 3/3 GREEN (após corrigir a regex do próprio teste, ver EVIDENCE).
   - [x] **VISUAL**: Não aplicável — CLI sem interface.
-  - [x] **EVIDENCE**: Arquivo alterado: src/doctor/maestro.ts. Dois ajustes descobertos rodando de verdade: (1) o teste original checava `/adiad/i`, mas a mensagem foi escrita em inglês para bater com a convenção do resto do arquivo (`"legacy inline hook entries..."` etc.) — corrigido para `/deferred/i`; (2) o AC-020 assumia que `setup-check` sempre emite a mensagem granular "missing from /specsfy-setup: ..." — mas um projeto sem `.specsfy/` nenhum cai no branch genérico "hasn't completed setup yet", então o regex do teste foi ampliado. Verificado também manualmente: `node dist/cli.js doctor` (após `npm version patch` → 2.1.30 + rebuild) num projeto com adiamento ativo mostrou exatamente uma linha `WARN configuration — conversational setup ... deliberately deferred ...` no lugar das 5 linhas `WARN configuration — missing ...` que apareciam antes do adiamento.
+  - [x] **EVIDENCE**: Arquivo alterado: src/doctor/maestro.ts. Dois ajustes descobertos rodando de verdade: (1) o teste original checava `/adiad/i`, mas a mensagem foi escrita em inglês para bater com a convenção do resto do arquivo (`"legacy inline hook entries..."` etc.) — corrigido para `/deferred/i`; (2) o AC-020 assumia que `setup-check` sempre emite a mensagem granular "missing from /removed-project-setup: ..." — mas um projeto sem `.project-context/` nenhum cai no branch genérico "hasn't completed setup yet", então o regex do teste foi ampliado. Verificado também manualmente: `node dist/cli.js doctor` (após `npm version patch` → 2.1.30 + rebuild) num projeto com adiamento ativo mostrou exatamente uma linha `WARN configuration — conversational setup ... deliberately deferred ...` no lugar das 5 linhas `WARN configuration — missing ...` que apareciam antes do adiamento.
   - [x] **IMPROVE**: Nenhuma melhoria de processo necessária além das duas correções já registradas.
-  <!-- specsfy:evidence {"task":"T028","refs":["NFR-003","AC-014","AC-020","AC-021"],"files":["src/doctor/maestro.ts"],"commands":[{"run":"npx vitest run tests/doctor-maestro.test.ts","exit":0}]} -->
+  <!-- framework:evidence {"task":"T028","refs":["NFR-003","AC-014","AC-020","AC-021"],"files":["src/doctor/maestro.ts"],"commands":[{"run":"npx vitest run tests/doctor-maestro.test.ts","exit":0}]} -->
 
 **Checkpoint**: rodar `maestro doctor` num projeto com adiamento ativo e confirmar que o achado aparece distinto de "nunca configurado", e que `setup-check` continua avisando.
 
 #### Fase final — Qualidade
 
-- [x] T029 [TEST] Executar regressão completa em tests/hooks-setup-gate.test.ts, tests/setup-defer.test.ts, tests/hooks-guard-defer.test.ts, tests/setup-write-gate.test.ts e tests/doctor-maestro.test.ts, e rastreabilidade via .agents/skills/specsfy-06-tdd-bdd/scripts/check_traceability.mjs — Refs: US-001, US-002, FR-001, FR-002, FR-003, FR-004, FR-005, NFR-001, NFR-002, NFR-003, AC-001 a AC-021 — Depends: T022, T023, T024, T025, T026, T027, T028
+- [x] T029 [TEST] Executar regressão completa em tests/hooks-setup-gate.test.ts, tests/setup-defer.test.ts, tests/hooks-guard-defer.test.ts, tests/setup-write-gate.test.ts e tests/doctor-maestro.test.ts, e rastreabilidade via .agents/skills/framework-06-tdd-bdd/scripts/check_traceability.mjs — Refs: US-001, US-002, FR-001, FR-002, FR-003, FR-004, FR-005, NFR-001, NFR-002, NFR-003, AC-001 a AC-021 — Depends: T022, T023, T024, T025, T026, T027, T028
   - [x] **PREP**: Identificada toda a suíte tocada por esta fatia (5 arquivos novos, 29 casos) e os checks estáticos do repositório (`tsc --noEmit`, `npm run build`).
   - [x] **EXECUTE**: `npx vitest run` (suíte inteira, 653 testes): 641→642 GREEN conforme tarefas avançaram, 11 falhas pré-existentes confirmadas via `git stash`/`git stash pop` (config-schema, documentation-diagnose, setup-documentation-extension, setup-readme-homepage, doctor-documentation-issues — nenhuma toca hooks/setup/doctor/defer, mesmas falhas na árvore limpa antes de qualquer mudança desta spec). `npx tsc --noEmit` limpo. `npm run build` limpo (2.1.28 → 2.1.30, dois bumps de patch exigidos pelo `check-version-checksum.mjs` a cada mudança de `src/`/`resources/`).
-  - [x] **VERIFY**: `check_traceability.mjs` (escopo desta spec): 31/31 IDs cobertos, nenhuma `CADEIA QUEBRADA` para IDs desta spec (com `--full-chain` e `--task`, após corrigir T027 sem `specsfy:evidence` e US-001/US-002 ausentes dos `refs` de T022/T024). `verify_evidence.mjs`: `PASSED (strict)`. Os "MARCADORES ÓRFÃOS" que `--full-chain` reporta são de outras specs (confirmado rodando o mesmo comando contra `specs/completed/0025-.../spec.md`, que também reporta `GAPS` pelo mesmo motivo) — fenômeno pré-existente do repositório inteiro, não desta fatia.
+  - [x] **VERIFY**: `check_traceability.mjs` (escopo desta spec): 31/31 IDs cobertos, nenhuma `CADEIA QUEBRADA` para IDs desta spec (com `--full-chain` e `--task`, após corrigir T027 sem `framework:evidence` e US-001/US-002 ausentes dos `refs` de T022/T024). `verify_evidence.mjs`: `PASSED (strict)`. Os "MARCADORES ÓRFÃOS" que `--full-chain` reporta são de outras specs (confirmado rodando o mesmo comando contra `specs/completed/0025-.../spec.md`, que também reporta `GAPS` pelo mesmo motivo) — fenômeno pré-existente do repositório inteiro, não desta fatia.
   - [x] **VISUAL**: Não aplicável — sem interface em toda a fatia.
   - [x] **EVIDENCE**: 653 testes totais, 642 GREEN, 11 falhas pré-existentes não relacionadas (confirmadas antes desta spec existir). 29/29 testes desta spec GREEN. Verificação manual real neste repositório: `maestro setup --defer-conversational --target claude-code` grava o adiamento; `maestro doctor` mostra o `WARN` distinto de adiamento em vez das 5 linhas de "missing".
-  - [x] **IMPROVE**: Duas correções de rastreabilidade aplicadas nesta tarefa (comentário `specsfy:evidence` ausente em T027; `US-001`/`US-002` ausentes dos `refs` de T022/T024) — registradas para lembrete futuro: toda tarefa `[CODE]`, mesmo sem diff de produção, precisa do comentário de evidência, e `refs` deve incluir o nível `US`, não só `FR`/`AC`.
+  - [x] **IMPROVE**: Duas correções de rastreabilidade aplicadas nesta tarefa (comentário `framework:evidence` ausente em T027; `US-001`/`US-002` ausentes dos `refs` de T022/T024) — registradas para lembrete futuro: toda tarefa `[CODE]`, mesmo sem diff de produção, precisa do comentário de evidência, e `refs` deve incluir o nível `US`, não só `FR`/`AC`.
 
 ### 15. Ordem de execução
 
@@ -924,7 +924,7 @@ Runner TDD: Vitest (Node sem PHP), script `test:tdd`. Toda tarefa `[CODE]` exige
 #### Dependências
 
 - SPEC-0022 (tradução de hooks canônicos para Claude Code, `src/hooks/claude-code.ts`, `src/hooks/source.ts`).
-- SPEC-0025 (`diagnoseMaestroProject`, `assessConfiguration`, `SPECSFY_SETUP_TRACES`, `AGENT_SKILLS_HEADING`, hook `setup-check`).
+- SPEC-0025 (`diagnoseMaestroProject`, `assessConfiguration`, `TRACEABILITY_SETUP_TRACES`, `AGENT_SKILLS_HEADING`, hook `setup-check`).
 - SPEC-0024 (traço `## Agent skills` em `AGENTS.md`, direção de instrução que este gate consulta).
 
 #### Riscos
@@ -934,7 +934,7 @@ Runner TDD: Vitest (Node sem PHP), script `test:tdd`. Toda tarefa `[CODE]` exige
 
 #### Suposições
 
-- O identificador do contrato de traços pode ser um hash simples (ex.: SHA-256) da concatenação ordenada de `SPECSFY_SETUP_TRACES` e `AGENT_SKILLS_HEADING`; não precisa ser criptograficamente forte, só estável e determinístico para a mesma lista de traços.
+- O identificador do contrato de traços pode ser um hash simples (ex.: SHA-256) da concatenação ordenada de `TRACEABILITY_SETUP_TRACES` e `AGENT_SKILLS_HEADING`; não precisa ser criptograficamente forte, só estável e determinístico para a mesma lista de traços.
 - O registro de adiamento em `.maestro/install.json` é aceitável mesmo sendo um arquivo majoritariamente machine-owned, porque `--defer-conversational` só é gravado por uma execução real de CLI, nunca por um hook automático.
 
 ### 17. Decisões

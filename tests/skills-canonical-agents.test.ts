@@ -10,7 +10,7 @@ import { skill, claudeSkill } from "./helpers-spec-0024";
 const opts = { upstream: { contextModeHooksJson: null } };
 
 describe("AC-012 — matt-pocock instalado com -a universal em .agents/skills", () => {
-  // SPECSFY: US-003 FR-005 NFR-001 AC-012
+  // TRACEABILITY: US-003 FR-005 NFR-001 AC-012
   it("argv do instalador e inventário em .agents/skills", () => {
     const args = buildSkillsAddArgs("mattpocock/skills");
     expect(args[args.indexOf("-a") + 1]).toBe("universal");
@@ -22,7 +22,7 @@ describe("AC-012 — matt-pocock instalado com -a universal em .agents/skills", 
 });
 
 describe("AC-021 — sync antigo .claude → .agents deixa de existir", () => {
-  // SPECSFY: US-003 FR-005 NFR-002 AC-021
+  // TRACEABILITY: US-003 FR-005 NFR-002 AC-021
   it("skill só em .claude não é copiada para .agents", () => {
     const root = project();
     skill(root, ".claude/skills", "local-only");

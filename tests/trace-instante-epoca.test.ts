@@ -11,12 +11,12 @@ function withEpoch(): string {
 }
 
 describe("AC-048 — a record with the epoch stamp is accepted on read", () => {
-  // SPECSFY: US-041 FR-045 AC-048
+  // TRACEABILITY: US-041 FR-045 AC-048
   it("the read happens without error", () => {
     expect(() => readTrace(withEpoch())).not.toThrow();
   });
 
-  // SPECSFY: US-041 NFR-042 AC-048
+  // TRACEABILITY: US-041 NFR-042 AC-048
   it("the entries stay as they were", () => {
     const root = withEpoch();
     readTrace(root);
@@ -24,7 +24,7 @@ describe("AC-048 — a record with the epoch stamp is accepted on read", () => {
     expect(rec.hooks[0].installedAt).toBe(EPOCH);
   });
 
-  // SPECSFY: US-041 NFR-042 AC-048
+  // TRACEABILITY: US-041 NFR-042 AC-048
   it("the tree doesn't change", () => {
     const root = withEpoch();
     const before = fileTree(root);

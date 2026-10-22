@@ -3,7 +3,7 @@ import { diagnoseExtensions } from "../src/extensions/diagnose";
 import { registryFake, targetEnvFake } from "./extensions-fixtures";
 
 describe("AC-135 — a missing checksum record is divergence, not an exception", () => {
-  // SPECSFY: US-081 FR-083 FR-084 NFR-080 NFR-081 NFR-082 AC-135
+  // TRACEABILITY: US-081 FR-083 FR-084 NFR-080 NFR-081 NFR-082 AC-135
   it("a present file with no matching registry entry is treated as divergent", () => {
     const registry = registryFake([]);
     const targetEnv = targetEnvFake();

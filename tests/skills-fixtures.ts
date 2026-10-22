@@ -2,16 +2,16 @@ import { mkdtempSync, mkdirSync, writeFileSync, readFileSync, readdirSync, exist
 import { homedir, tmpdir } from "node:os";
 import { join } from "node:path";
 
-export const SPECSFY_SET = ["specsfy-01-inbox", "specsfy-04-validate", "specsfy-setup"];
+export const TRACEABILITY_SET = ["sample-skill-one", "sample-skill-two", "sample-skill-setup"];
 export const MATTPOCOCK_SET = ["ask-matt", "code-review", "writing-shape"];
 
-/** Disposable root with what `specsfy` already occupies in `.agents/skills/` (the canonical directory since SPEC-0024). */
+/** Disposable root with what `framework` already occupies in `.agents/skills/` (the canonical directory since SPEC-0024). */
 export function projectWithSkills(prefix = "crs-sk-"): string {
   const root = mkdtempSync(join(tmpdir(), prefix));
   writeFileSync(join(root, "package.json"), '{"name":"disposable"}\n');
   // A Claude Code project: `.claude/` is the detection evidence; skills live in `.agents/skills`.
   mkdirSync(join(root, ".claude"), { recursive: true });
-  for (const n of SPECSFY_SET) {
+  for (const n of TRACEABILITY_SET) {
     mkdirSync(join(root, ".agents", "skills", n), { recursive: true });
     writeFileSync(join(root, ".agents", "skills", n, "SKILL.md"), `---\nname: ${n}\n---\nbody\n`);
   }
@@ -92,7 +92,7 @@ export function writeLock(root: string, names: string[], source = "mattpocock/sk
 }
 
 /**
- * Fake executor that responds per source — `mattpocock/skills` or `promovaweb/specsfy`.
+ * Fake executor that responds per source — `mattpocock/skills` or `example-org/skills`.
  *
  * `failFor`, when given, makes that specific source return `null` (binary
  * absent), while the other keeps installing normally — this is what
@@ -104,12 +104,12 @@ export function dualSourceExecutor(failFor?: string) {
     calls.push(args);
     const source = args.includes("mattpocock/skills")
       ? "mattpocock/skills"
-      : args.includes("promovaweb/specsfy")
-        ? "promovaweb/specsfy"
+      : args.includes("example-org/skills")
+        ? "example-org/skills"
         : null;
     if (source === null) return null;
     if (source === failFor) return null;
-    const set = source === "mattpocock/skills" ? MATTPOCOCK_SET : SPECSFY_SET;
+    const set = source === "mattpocock/skills" ? MATTPOCOCK_SET : TRACEABILITY_SET;
     if (args.includes("--list")) return { status: 0, skills: [...set] };
     for (const n of set) {
       mkdirSync(join(cwd, ".agents", "skills", n), { recursive: true });

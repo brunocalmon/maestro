@@ -5,7 +5,7 @@ const SECTION_COMMENTS: Record<string, string> = {
   language:
     "Reply follows the conversation's language. A generated document uses \"default\", except paths listed in \"exceptions\".",
   project:
-    "Project stack metadata. Synced automatically from .specsfy/STACK.md when Specsfy is active — don't hand-edit these fields in that case.",
+    "Project stack metadata. Describe the current project stack here.",
   system: "Machine/environment profile. \"os\" is auto-detected; the rest can be filled by asking the agent to interview you.",
   git: "Controls what this project ignores in git. \"default\" applies to any group without an explicit \"ignored\".",
 };

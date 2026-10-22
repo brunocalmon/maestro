@@ -25,15 +25,15 @@ Aqui está a especificação atualizada, com a nova seção de Dependências e a
 2. Gestão de Dependências e CLIs Embutidos
 
 * Ecossistema de Dependências Fixadas: O projeto terá dependências diretas com versões fixadas (travadas no `package.json`). Ao instalar o seu aplicativo, o sistema garantirá automaticamente a presença de:
-   * `specsfy`, `context-mode` e `code-review-graph`.
+   * `framework`, `context-mode` e `code-review-graph`.
    * Agentes de IA via CLI: `pi.dev` (e afins que você decidir suportar, como `aider`, `goose`, `openinterpreter`, etc.).
 * Isolamento de Ambiente: Por serem instalados como subdependências locais (ex: via npm), não há necessidade de ferramentas globais na máquina do usuário, garantindo que qualquer pipeline de CI ou membro da equipe rode exatamente a mesma versão das ferramentas.
 * Instalação Centralizada: A instalação e a configuração agnóstica de IDE se darão unicamente pelo `common-rules-server` (futuro novo nome), distribuindo os hooks necessários para todo esse ecossistema.
-* Motor Central de Skills: Não haverá mais regras e skills próprias no projeto base. O `specsfy` assumirá o papel de motor central de skills e regras.
+* Motor Central de Skills: Não haverá mais regras e skills próprias no projeto base. O `framework` assumirá o papel de motor central de skills e regras.
 
 3. O Orchestrator e a Delegação Flexível
 
-* Único Agente Fixo: O Orchestrator (uma extensão do `specsfy`) será o único subagent fixo do sistema e o responsável por gerenciar toda a execução.
+* Único Agente Fixo: O Orchestrator (uma extensão do `framework`) será o único subagent fixo do sistema e o responsável por gerenciar toda a execução.
 * Times Dinâmicos e Multi-Agentes: O Orchestrator montará times de 3 a 9 instâncias operacionais sob demanda, ou atuará em "modo solo", dependendo da complexidade.
 * Flexibilidade de Subagents (IDE vs Externos): O Orchestrator terá total liberdade para escolher a melhor ferramenta para o trabalho:
    * Subagents Nativos da IDE: Pode acionar os recursos built-in da própria IDE (ex: subagents do Cursor) quando for conveniente.
@@ -55,13 +55,13 @@ Nenhuma fonte contextual consultada.
 
 ## Resumo processado
 
-**Inferência:** Transformar common-rules-server em CLI wrapper que orquestra agentes via subprocessos, centralizando dependências e delegando skills ao specsfy.
+**Inferência:** Transformar common-rules-server em CLI wrapper que orquestra agentes via subprocessos, centralizando dependências e delegando skills ao framework.
 
 ## Análise inicial
 
 ### Problema ou oportunidade
 
-**Declaração ou inferência identificada:** Projeto atual é pesado (6 tools MCP), carrega todo o kit built-in, e replica funcionalidades de ferramentas especializadas como specsfy. Oportunidade: simplificar para CLI headless com orchestration dinâmica de agentes internos e externos.
+**Declaração ou inferência identificada:** Projeto atual é pesado (6 tools MCP), carrega todo o kit built-in, e replica funcionalidades de ferramentas especializadas como framework. Oportunidade: simplificar para CLI headless com orchestration dinâmica de agentes internos e externos.
 
 ### Pessoas afetadas ou beneficiadas
 
@@ -69,7 +69,7 @@ Nenhuma fonte contextual consultada.
 
 ### Resultado ou valor esperado
 
-**Declaração ou inferência identificada:** Redução de complexidade no core; reutilização de specsfy/context-mode/code-review-graph como subsistemas; suporte a agentes CLI locais e na nuvem; garantia de versões fixadas em todo o ecossistema; human-in-the-loop explícito com aprovação de planos antes de execução.
+**Declaração ou inferência identificada:** Redução de complexidade no core; reutilização de framework/context-mode/code-review-graph como subsistemas; suporte a agentes CLI locais e na nuvem; garantia de versões fixadas em todo o ecossistema; human-in-the-loop explícito com aprovação de planos antes de execução.
 
 ### Sinais de escopo, regras ou solução
 
@@ -77,11 +77,11 @@ Nenhuma fonte contextual consultada.
 
 ### Informações que talvez precisem ser guardadas
 
-**Sinais para conversar depois, não confirmação:** Mapeamento de CLI tools suportadas (pi.dev, aider, goose, openinterpreter, agy); versões fixadas de specsfy, context-mode, code-review-graph; modelos LLM suportados; flags/opções de cada CLI para headless execution; formato de injec de regras e approval workflows.
+**Sinais para conversar depois, não confirmação:** Mapeamento de CLI tools suportadas (pi.dev, aider, goose, openinterpreter, agy); versões fixadas de framework, context-mode, code-review-graph; modelos LLM suportados; flags/opções de cada CLI para headless execution; formato de injec de regras e approval workflows.
 
 ### Riscos e dependências
 
-**Análise preliminar:** Dependência de specsfy como motor central (versionamento, breaking changes); complexidade de orquestração multi-agente e sincronização de subprocessos; garantir que injeção de regras/skills funcione para cada CLI sem poluir seu namespace; testing complexo com múltiplos agentes concorrentes; possível latência de aprovação manual bloqueando execução.
+**Análise preliminar:** Dependência de framework como motor central (versionamento, breaking changes); complexidade de orquestração multi-agente e sincronização de subprocessos; garantir que injeção de regras/skills funcione para cada CLI sem poluir seu namespace; testing complexo com múltiplos agentes concorrentes; possível latência de aprovação manual bloqueando execução.
 
 ## Possíveis direções futuras
 
@@ -89,7 +89,7 @@ Nenhuma fonte contextual consultada.
 
 ## Pontos a revisar no futuro
 
-**A revisar:** Conflitos a resolver: como manter compatibilidade com MCP clients já conectados (Cursor, Claude Code) enquanto transiciona para CLI-first? Qual é o escopo exato do 'Orchestrator' - É um agente Specsfy modificado ou novo subagente? Como injetar regras dinamicamente sem modificar permanentemente o projeto do user? Precisa de aprovação de plano antes de CADA task ou somente para orquestrações complexas (3+ agentes)?
+**A revisar:** Conflitos a resolver: como manter compatibilidade com MCP clients já conectados (Cursor, Claude Code) enquanto transiciona para CLI-first? Qual é o escopo exato do 'Orchestrator' - É um agente former project tool modificado ou novo subagente? Como injetar regras dinamicamente sem modificar permanentemente o projeto do user? Precisa de aprovação de plano antes de CADA task ou somente para orquestrações complexas (3+ agentes)?
 
 ## Rastreabilidade
 
@@ -99,4 +99,4 @@ Nenhuma fonte contextual consultada.
 
 ## Próximo passo
 
-Manter em `specs/inbox/` ou refinar com `$specsfy-02-backlog`.
+Manter em `specs/inbox/` ou refinar com `$framework-02-backlog`.

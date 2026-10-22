@@ -45,7 +45,7 @@ function properties(profile: Record<string, any>): [string, unknown][] {
 }
 
 describe("AC-001 — a seção maestro existe e está completa após o setup", () => {
-  // SPECSFY: US-001 FR-001 NFR-001 AC-001
+  // TRACEABILITY: US-001 FR-001 NFR-001 AC-001
   it("declara os cinco grupos e a lista subagents", () => {
     const root = project();
     setup(root);
@@ -60,7 +60,7 @@ describe("AC-001 — a seção maestro existe e está completa após o setup", (
 });
 
 describe("AC-002 — toda propriedade usa o formato uniforme value/mode", () => {
-  // SPECSFY: US-001 FR-001 NFR-001 AC-002
+  // TRACEABILITY: US-001 FR-001 NFR-001 AC-002
   it("cada propriedade configurável é um objeto com value e mode no domínio", () => {
     const root = project();
     setup(root);
@@ -75,7 +75,7 @@ describe("AC-002 — toda propriedade usa o formato uniforme value/mode", () => 
 });
 
 describe("AC-003 — o setup não sobrescreve configuração já existente", () => {
-  // SPECSFY: US-001 FR-001 NFR-002 AC-003
+  // TRACEABILITY: US-001 FR-001 NFR-002 AC-003
   it("preserva um subagent declarado pela pessoa numa segunda execução", () => {
     const root = project();
     setup(root);

@@ -8,19 +8,19 @@ import { skill, claudeSkill, installRecord } from "./helpers-spec-0024";
 const opts = { upstream: { contextModeHooksJson: null } };
 
 describe("AC-013 — setup projeta .agents/skills para .claude/skills com registro", () => {
-  // SPECSFY: US-003 FR-005 FR-006 NFR-001 AC-013
+  // TRACEABILITY: US-003 FR-005 FR-006 NFR-001 AC-013
   it("skill só em .agents aparece em .claude e em projections", () => {
     const root = project();
-    skill(root, ".agents/skills", "specsfy-specialist-x", "---\nname: specsfy-specialist-x\n---\n# X\n");
+    skill(root, ".agents/skills", "framework-specialist-x", "---\nname: framework-specialist-x\n---\n# X\n");
     runSetup({ env: claudeEnv, root, write: true, ...opts });
-    expect(claudeSkill(root, "specsfy-specialist-x")).toBe("---\nname: specsfy-specialist-x\n---\n# X\n");
+    expect(claudeSkill(root, "framework-specialist-x")).toBe("---\nname: framework-specialist-x\n---\n# X\n");
     const p = installRecord(root).projections ?? [];
-    expect(p.find((x) => x.name === "specsfy-specialist-x")?.checksum).toMatch(/^[0-9a-f]{16,}$/);
+    expect(p.find((x) => x.name === "framework-specialist-x")?.checksum).toMatch(/^[0-9a-f]{16,}$/);
   });
 });
 
 describe("AC-014 — cópia editada à mão não é sobrescrita e é reportada", () => {
-  // SPECSFY: US-003 FR-006 NFR-002 AC-014
+  // TRACEABILITY: US-003 FR-006 NFR-002 AC-014
   it("edição local em .claude permanece mesmo com fonte atualizada", () => {
     const root = project();
     skill(root, ".agents/skills", "edited", "v1\n");
@@ -35,7 +35,7 @@ describe("AC-014 — cópia editada à mão não é sobrescrita e é reportada",
 });
 
 describe("AC-015 — projeção atualiza cópia íntegra quando a fonte muda", () => {
-  // SPECSFY: US-003 FR-006 NFR-001 AC-015
+  // TRACEABILITY: US-003 FR-006 NFR-001 AC-015
   it("cópia igual ao registrado recebe o novo conteúdo e o checksum muda", () => {
     const root = project();
     skill(root, ".agents/skills", "fresh", "v1\n");
@@ -49,7 +49,7 @@ describe("AC-015 — projeção atualiza cópia íntegra quando a fonte muda", (
 });
 
 describe("AC-016 — Antigravity não recebe projeção", () => {
-  // SPECSFY: US-003 FR-006 NFR-003 AC-016
+  // TRACEABILITY: US-003 FR-006 NFR-003 AC-016
   it(".claude/ continua inexistente", () => {
     const root = project();
     skill(root, ".agents/skills", "x");

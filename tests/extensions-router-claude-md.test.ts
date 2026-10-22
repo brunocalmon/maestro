@@ -6,7 +6,7 @@ import { detectEnvironment } from "../src/setup/env";
 import { project, fixedDecision } from "./aprovacao-fixtures";
 
 describe("AC-136 — CLAUDE.md gets maestro' own section on the first setup", () => {
-  // SPECSFY: US-082 FR-086 FR-087 NFR-083 AC-136
+  // TRACEABILITY: US-082 FR-086 FR-087 NFR-083 AC-136
   it("setup runs for the first time and CLAUDE.md gets the router's anchored block", () => {
     const root = project();
     runSetup({

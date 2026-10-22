@@ -13,7 +13,7 @@ function collect() {
 }
 
 describe("AC-001 — spawn executado grava um registro completo", () => {
-  // SPECSFY: US-001 FR-001 NFR-001 AC-001
+  // TRACEABILITY: US-001 FR-001 NFR-001 AC-001
   it("grava outcome ran com backend, modelo, exitCode e duração", async () => {
     const { runDelegation } = await import("../src/delegation/run");
     const telemetry = collect();
@@ -40,7 +40,7 @@ describe("AC-001 — spawn executado grava um registro completo", () => {
 });
 
 describe("AC-002 — tools required não suportável grava recusa", () => {
-  // SPECSFY: US-001 FR-001 NFR-002 AC-002
+  // TRACEABILITY: US-001 FR-001 NFR-002 AC-002
   it("grava outcome refused com stage tools", async () => {
     const { runDelegation } = await import("../src/delegation/run");
     const telemetry = collect();
@@ -63,7 +63,7 @@ describe("AC-002 — tools required não suportável grava recusa", () => {
 });
 
 describe("AC-003 — backend ausente grava recusa", () => {
-  // SPECSFY: US-001 FR-001 NFR-002 AC-003
+  // TRACEABILITY: US-001 FR-001 NFR-002 AC-003
   it("grava outcome refused com stage backend", async () => {
     const { runDelegation } = await import("../src/delegation/run");
     const telemetry = collect();
@@ -87,7 +87,7 @@ describe("AC-003 — backend ausente grava recusa", () => {
 });
 
 describe("AC-004 — decisão negativa do gate grava recusa", () => {
-  // SPECSFY: US-001 FR-001 NFR-002 AC-004
+  // TRACEABILITY: US-001 FR-001 NFR-002 AC-004
   it("grava outcome refused com stage gate", async () => {
     const { runDelegation } = await import("../src/delegation/run");
     const telemetry = collect();
@@ -109,7 +109,7 @@ describe("AC-004 — decisão negativa do gate grava recusa", () => {
 });
 
 describe("AC-005 — native e auto nunca geram registro", () => {
-  // SPECSFY: US-001 FR-002 NFR-001 AC-005
+  // TRACEABILITY: US-001 FR-002 NFR-001 AC-005
   it("nenhum registro é gravado para native, mas o mesmo coletor grava para cli", async () => {
     const { runDelegation } = await import("../src/delegation/run");
     const telemetry = collect();
@@ -132,7 +132,7 @@ describe("AC-005 — native e auto nunca geram registro", () => {
 });
 
 describe("AC-007 — nenhum registro contém stdout/stderr", () => {
-  // SPECSFY: US-001 FR-001 NFR-002 AC-007
+  // TRACEABILITY: US-001 FR-001 NFR-002 AC-007
   it("nenhuma chave do registro contém o texto do subprocesso", async () => {
     const { runDelegation } = await import("../src/delegation/run");
     const telemetry = collect();
@@ -154,7 +154,7 @@ describe("AC-007 — nenhum registro contém stdout/stderr", () => {
 });
 
 describe("AC-010 — plano misto grava telemetria só para o agente cli", () => {
-  // SPECSFY: US-001 FR-002 NFR-001 AC-010
+  // TRACEABILITY: US-001 FR-002 NFR-001 AC-010
   it("só o agente cli produz registro", async () => {
     const { runDelegation } = await import("../src/delegation/run");
     const telemetry = collect();
@@ -183,7 +183,7 @@ describe("AC-010 — plano misto grava telemetria só para o agente cli", () => 
 });
 
 describe("AC-011 — plano só com native/auto não cria arquivo de telemetria", () => {
-  // SPECSFY: US-001 FR-002 NFR-001 AC-011
+  // TRACEABILITY: US-001 FR-002 NFR-001 AC-011
   it("o hook nunca é chamado para auto, mas o mesmo coletor grava para cli", async () => {
     const { runDelegation } = await import("../src/delegation/run");
     const telemetry = collect();

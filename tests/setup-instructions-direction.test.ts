@@ -10,7 +10,7 @@ const opts = { upstream: { contextModeHooksJson: null } };
 const antigravityEnv = { hasClaudeCode: false, hasAntigravity: true, files: [".agents/"] };
 
 describe("AC-001 — projeto novo recebe conteúdo em AGENTS.md e @AGENTS.md em CLAUDE.md", () => {
-  // SPECSFY: US-001 FR-001 NFR-001 NFR-003 AC-001
+  // TRACEABILITY: US-001 FR-001 NFR-001 NFR-003 AC-001
   it("blocos completos em AGENTS.md; bloco agents-import em CLAUDE.md", () => {
     const root = project();
     runSetup({ env: claudeEnv, root, write: true, ...opts });
@@ -24,7 +24,7 @@ describe("AC-001 — projeto novo recebe conteúdo em AGENTS.md e @AGENTS.md em 
 });
 
 describe("AC-002 — segundo setup não duplica nem altera", () => {
-  // SPECSFY: US-001 FR-001 NFR-001 AC-002
+  // TRACEABILITY: US-001 FR-001 NFR-001 AC-002
   it("arquivos idênticos e @AGENTS.md uma única vez", () => {
     const root = project();
     runSetup({ env: claudeEnv, root, write: true, ...opts });
@@ -37,7 +37,7 @@ describe("AC-002 — segundo setup não duplica nem altera", () => {
 });
 
 describe("AC-003 — Antigravity usa os mesmos nomes de bloco em AGENTS.md", () => {
-  // SPECSFY: US-001 FR-001 NFR-003 AC-003
+  // TRACEABILITY: US-001 FR-001 NFR-003 AC-003
   it("nomes compartilhados e nenhum CLAUDE.md", () => {
     const root = project();
     runSetup({ env: antigravityEnv, root, write: true, target: "antigravity", ...opts });

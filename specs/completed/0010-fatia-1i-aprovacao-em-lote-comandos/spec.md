@@ -2,7 +2,7 @@
 
 | Campo | Valor |
 | --- | --- |
-| Formato | Specsfy/2.0 |
+| Formato | former project tool/2.0 |
 | ID | SPEC-0010 |
 | Slug | 0010-fatia-1i-aprovacao-em-lote-comandos |
 | Status | Complete |
@@ -31,7 +31,7 @@ de aprovação e de instalação antes de especificar:
 1. **O plano aprovado não é o que executa.** `PR-062` (`SPEC-0007`) já
    declara "o plano apresentado é o que será executado, e não uma descrição
    paralela" — mas `src/approval/render.ts`'s `PlannedItem`/`renderPlan` só
-   descrevem hooks. A instalação de skills, do framework Specsfy e, quando
+   descrevem hooks. A instalação de skills, do framework former project tool e, quando
    ligada, da ponte Python acontece depois da mesma aprovação, sem nunca
    aparecer no texto ou documento que a pessoa de fato viu. A pessoa aprova
    uma lista de hooks e, sem saber, autoriza também um instalador de skills e
@@ -60,7 +60,7 @@ no que seria executado.
 
 O plano apresentado para aprovação lista cada comando de dependência que a
 execução de fato dispararia — hooks, instalador de skills por origem,
-instalador do framework Specsfy e a ponte Python — cumprindo `PR-062` pela
+instalador do framework former project tool e a ponte Python — cumprindo `PR-062` pela
 primeira vez de ponta a ponta. Um registro persistente, local ao projeto,
 lembra cada comando já aprovado pelo par binário+argv exato; comandos já
 registrados não pedem aprovação de novo, mesmo quando a execução precisa
@@ -70,7 +70,7 @@ passa a executar de verdade quando aprovada.
 
 #### Métricas de sucesso
 
-- O texto e o documento de aprovação listam hooks, skills, framework Specsfy e ponte Python, quando cada um se aplica — nunca só hooks.
+- O texto e o documento de aprovação listam hooks, skills, framework former project tool e ponte Python, quando cada um se aplica — nunca só hooks.
 - Um comando já aprovado antes, com o mesmo binário e argv exatos, não aparece como pendência de aprovação numa execução seguinte, mesmo após um cenário de drift que force reinstalação.
 - Um comando cujo argv mudou desde a última aprovação pede aprovação de novo, sem herdar a aprovação anterior.
 - Aprovar um plano com comando novo grava esse comando no registro; recusar não grava nada.
@@ -81,14 +81,14 @@ passa a executar de verdade quando aprovada.
 
 #### Researchs executados
 
-- **R-036** [critical] O plano de aprovação hoje (`SPEC-0007`) só lista hooks; skills, Specsfy e a ponte Python escrevem depois da mesma aprovação sem aparecer nela — Verdict: verified — Confidence: high — Evidence: research/aprovacao/leitura-do-fluxo-real.md#o-plano-só-lista-hooks — Budget: 1/1.
+- **R-036** [critical] O plano de aprovação hoje (`SPEC-0007`) só lista hooks; skills, former project tool e a ponte Python escrevem depois da mesma aprovação sem aparecer nela — Verdict: verified — Confidence: high — Evidence: research/aprovacao/leitura-do-fluxo-real.md#o-plano-só-lista-hooks — Budget: 1/1.
 - **R-037** [critical] A ponte Python nunca executa em produção: `execute: false` fixo em `run.ts:204`, nenhum `bridgeEnv` fornecido por `cli.ts`, nenhuma `realBridgeEnvironment()` existe — Verdict: verified — Confidence: high — Evidence: research/aprovacao/leitura-do-fluxo-real.md#a-ponte-python-nunca-dispara — Budget: 1/1.
 
 #### Fontes e contexto consultados
 
 - `src/approval/context.ts`, `src/approval/decide.ts`, `src/approval/render.ts` (`SPEC-0007`) — mecanismo de aprovação existente, canal e interpretação da decisão.
 - `src/setup/run.ts`, `src/setup/bridge.ts`, `src/setup/env.ts`, `src/cli.ts` — onde o plano é montado, onde a ponte é chamada, e a ausência de fonte real para ela.
-- `src/skills/executor.ts`, `src/specsfy/executor.ts` — os dois instaladores que já executam de verdade hoje, e a forma de seus comandos reais (`spawnSync(bin, args)`).
+- `src/skills/executor.ts`, `src/framework/executor.ts` — os dois instaladores que já executam de verdade hoje, e a forma de seus comandos reais (`spawnSync(bin, args)`).
 - `src/setup/record.ts` (`InstallRecord`, `matches()`) — o registro existente de idempotência, cuja forma e ritual de leitura/escrita este registro novo segue, sem reutilizar o mesmo arquivo.
 - `specs/backlog/0003-phase-1-mvp-typescript-subsistemas.md`, pela `D1` que separou esta fatia da 1c.
 - `specs/inbox/2026-08-30-155149-ponte-python-nunca-executa-de-verdade-no-setup-real.md` — captura formal dos dois achados acima, com a decisão já tomada com a pessoa de incluir o wireup da ponte no escopo desta fatia.
@@ -117,7 +117,7 @@ Nenhuma que bloqueie esta fatia.
 #### Incluído
 
 - Um registro persistente de comandos de dependência aprovados, identificados pelo par binário+argv exato, local ao projeto.
-- Extensão do plano de aprovação (texto e documento JSON) para listar cada comando de dependência que a execução dispararia: hooks, instalador de skills por origem, instalador do framework Specsfy e a ponte Python.
+- Extensão do plano de aprovação (texto e documento JSON) para listar cada comando de dependência que a execução dispararia: hooks, instalador de skills por origem, instalador do framework former project tool e a ponte Python.
 - Comparação entre o plano da execução atual e o registro: comando já presente não pede aprovação de novo; comando novo ou com argv diferente pede.
 - Gravação no registro dos comandos aprovados, no momento em que o plano é aprovado.
 - Wireup real da ponte Python: `realBridgeEnvironment()`, `bridgeEnv` fornecido por `src/cli.ts`, e `execute` decidido pela aprovação em vez de fixo em falso.
@@ -166,7 +166,7 @@ informação completa, cumprindo o que `PR-062` já promete.
 
 **Por que P1**: aprovar uma lista parcial e autorizar, sem saber, comandos
 que não apareceram nela contradiz o próprio propósito de pedir aprovação.
-**Teste independente**: montar um plano com hooks, skills, Specsfy e ponte
+**Teste independente**: montar um plano com hooks, skills, former project tool e ponte
 Python todos pendentes, e conferir que os quatro aparecem no texto e no
 documento antes de qualquer escrita.
 **Requisitos**: FR-071
@@ -195,8 +195,8 @@ aprovar o plano e conferir `.venv-crg/` criado de verdade nesta máquina.
 @US-071 @FR-071 @AC-110
 Feature: Plano completo de aprovação
 
-  Scenario: Hooks, skills, Specsfy e ponte Python, todos pendentes
-    Given hooks, skills, o framework Specsfy e a ponte Python, todos pendentes de instalação
+  Scenario: Hooks, skills, former project tool e ponte Python, todos pendentes
+    Given hooks, skills, o framework former project tool e a ponte Python, todos pendentes de instalação
     When o plano é montado para aprovação
     Then o texto e o documento listam os quatro, não só os hooks
 ```
@@ -342,7 +342,7 @@ Feature: Registro corrompido nunca vira aprovação implícita
 #### Funcionais
 
 - **FR-070**: O sistema deve manter um registro persistente, local ao projeto, dos comandos de dependência já aprovados, identificados pelo par binário+argv exato.
-- **FR-071**: O plano apresentado para aprovação (texto e documento) deve listar cada comando de dependência que a execução de fato dispararia — hooks, instalador de skills por origem, instalador do framework Specsfy e a ponte Python, quando cada um se aplica.
+- **FR-071**: O plano apresentado para aprovação (texto e documento) deve listar cada comando de dependência que a execução de fato dispararia — hooks, instalador de skills por origem, instalador do framework former project tool e a ponte Python, quando cada um se aplica.
 - **FR-072**: Um comando cujo binário e argv exato já constam do registro não deve gerar pendência de aprovação; a execução prossegue direto para ele.
 - **FR-073**: Aprovar um plano deve gravar no registro cada comando dele que ainda não constava; recusar não deve gravar nada.
 - **FR-074**: A ponte Python deve executar de verdade (`uv venv` seguido de `uv pip install`) quando aprovada e a dependência estiver ausente das duas origens, substituindo o `execute: false` hoje fixo.
@@ -370,7 +370,7 @@ Feature: Registro corrompido nunca vira aprovação implícita
 - `src/approval/context.ts`/`decide.ts`/`render.ts` (`SPEC-0007`) — canal, decisão e renderização do plano, hoje limitados a hooks.
 - `src/setup/run.ts` — monta `planned` só a partir dos hooks traduzidos; chama `bridgePythonSubsystem` com `execute: false` fixo.
 - `src/setup/bridge.ts` — `bridgePythonSubsystem`, já com `execute: boolean` na assinatura, sem fonte real (`realBridgeEnvironment`) nem chamador que passe `execute: true`.
-- `src/skills/executor.ts`/`src/specsfy/executor.ts` — os dois instaladores que já executam de verdade, cada um com seu próprio `Executor` injetável e comando real (`spawnSync(bin, args)`).
+- `src/skills/executor.ts`/`src/framework/executor.ts` — os dois instaladores que já executam de verdade, cada um com seu próprio `Executor` injetável e comando real (`spawnSync(bin, args)`).
 - `src/setup/record.ts` — `InstallRecord`/`matches()`, o registro de idempotência existente; este trabalho segue o mesmo ritual de leitura/escrita, em arquivo próprio.
 
 #### Arquitetura e módulos
@@ -378,14 +378,14 @@ Feature: Registro corrompido nunca vira aprovação implícita
 | Módulo | Responsabilidade | Arquivo |
 | --- | --- | --- |
 | Registro de aprovação | Lê/grava comandos aprovados (binário+argv), com fonte injetável | `src/approval/registry.ts` |
-| Plano estendido | Deriva a lista completa de comandos de dependência pendentes (hooks + skills + Specsfy + ponte) a partir das mesmas fontes que `runSetup` já resolve | `src/approval/plan.ts` |
+| Plano estendido | Deriva a lista completa de comandos de dependência pendentes (hooks + skills + former project tool + ponte) a partir das mesmas fontes que `runSetup` já resolve | `src/approval/plan.ts` |
 | Ponte Python real | `realBridgeEnvironment()`, fonte real para `BridgeEnvironment` | `src/setup/bridge.ts` (estendido) |
 
 `src/approval/render.ts` passa a receber hooks (`PlannedItem[]`, forma
 inalterada) e comandos de dependência (`DependencyCommandItem[]`, binário+argv)
 como dois parâmetros — sem fundir os dois tipos numa estrutura só, sem
 quebrar a renderização de hooks já testada. `src/setup/run.ts` passa a montar
-os candidatos de skills/Specsfy/ponte, comparar contra o registro
+os candidatos de skills/former project tool/ponte, comparar contra o registro
 (`src/approval/registry.ts`) antes de decidir se pergunta, e gravar no
 registro após aprovação.
 
@@ -398,12 +398,12 @@ Não aplicável.
 ```ts
 interface ApprovedCommand { bin: string; args: string[] }
 interface ApprovalRegistry { commands: ApprovedCommand[] }
-interface DependencyCommandItem { kind: "skills" | "specsfy" | "bridge"; label: string; bin: string; args: string[] }
-interface CommandCandidate { kind: "skills" | "specsfy" | "bridge"; label: string; command: { bin: string; args: string[] } | null; pending: boolean }
+interface DependencyCommandItem { kind: "skills" | "framework" | "bridge"; label: string; bin: string; args: string[] }
+interface CommandCandidate { kind: "skills" | "framework" | "bridge"; label: string; command: { bin: string; args: string[] } | null; pending: boolean }
 ```
 
 `DependencyCommandItem` cobre só os três comandos que de fato disparam
-subprocesso — skills, Specsfy e ponte Python. Hooks continuam representados
+subprocesso — skills, former project tool e ponte Python. Hooks continuam representados
 por `PlannedItem` (`name`/`target`/`event`, inalterado): não são subprocesso,
 não têm `bin`/`args`, e o registro persistente desta fatia (`PR-070`,
 identidade por binário+argv) não se aplica a eles — hooks continuam pedindo
@@ -416,24 +416,24 @@ dado.
 
 - `readApprovalRegistry(env?)`/`writeApprovalRegistry(registry, env?)`, em `src/approval/registry.ts`, com `RegistryEnvironment` injetável (`PR-071`); registro corrompido ou ausente resolve para `{ commands: [] }`, nunca lança.
 - `isApproved(registry, item)`: comparação exata de `bin` e `args` (`Array.prototype.every` posição a posição, mesmo comprimento) — nenhuma normalização, nenhum wildcard.
-- `assembleDependencyCommands(candidates: CommandCandidate[])`, em `src/approval/plan.ts`: função pura que filtra `pending && command !== null` e devolve `DependencyCommandItem[]` — quem monta os candidatos (skills por origem, Specsfy, ponte) é `src/setup/run.ts`, que já sabe o que está pendente para hooks e passa a saber o mesmo para os três novos.
+- `assembleDependencyCommands(candidates: CommandCandidate[])`, em `src/approval/plan.ts`: função pura que filtra `pending && command !== null` e devolve `DependencyCommandItem[]` — quem monta os candidatos (skills por origem, former project tool, ponte) é `src/setup/run.ts`, que já sabe o que está pendente para hooks e passa a saber o mesmo para os três novos.
 - `partitionByApproval(registry, items)`: separa os itens em já aprovados e pendentes; só os pendentes entram no texto/documento que `interpret()` avalia.
 - `recordApproval(registry, items)`: função pura que devolve um novo registro com os itens recém-aprovados acrescentados, sem duplicar os já presentes.
 - `renderPlan(hooks, commands)` (`src/approval/render.ts`, estendida) e `DecisionSource.ask(hooks, commands)`/`interpret(source, hooks, commands)` (`src/approval/decide.ts`, estendidos) passam a receber os dois grupos — hooks continuam no formato de sempre, `commands` é só o que `partitionByApproval` devolveu como pendente.
-- `src/setup/run.ts` monta os candidatos de skills/Specsfy/ponte, resolve `registro = readApprovalRegistry()`, particiona, só invoca a aprovação quando há hook ou comando pendente, e grava `recordApproval` no registro após aprovação — antes da escrita real de cada comando.
+- `src/setup/run.ts` monta os candidatos de skills/former project tool/ponte, resolve `registro = readApprovalRegistry()`, particiona, só invoca a aprovação quando há hook ou comando pendente, e grava `recordApproval` no registro após aprovação — antes da escrita real de cada comando.
 - `bridgePythonSubsystem` deixa de receber `execute` fixo: `src/setup/run.ts` decide `execute` a partir do resultado da aprovação (aprovado e a ponte é pendência ⇒ `execute: true`). Ganha também um `cwd?: string` opcional (ausente hoje — achado ao planejar a real execução, já que `execFileSync` sem `cwd` roda relativo a `process.cwd()`, não à raiz do projeto alvo), repassado para as duas chamadas de `uv`; e passa a capturar exceção de cada `execFileSync`, reportando falha (ex.: `uv pip install` sem alcance de rede) em vez de deixar a exceção propagar sem tratamento — a criação de `.venv-crg/` em si não depende de rede.
 
 **Como o `bin`/`args` de cada comando é conhecido sem executar nada.** `Executor`
-(`src/skills/install.ts`, `src/specsfy/install.ts`) hoje é só uma função
+(`src/skills/install.ts`, `src/framework/install.ts`) hoje é só uma função
 chamável — o binário e o argv reais ficam fechados dentro de
-`realSkillsExecutor`/`realSpecsfyExecutor`, invisíveis para quem chama. Os
+`realSkillsExecutor`/`realformer project toolExecutor`, invisíveis para quem chama. Os
 candidatos precisam do argv sem rodar nada, então o argv sai de onde já era
 construído, extraído para uma função pura e reaproveitada nos dois lugares —
 nunca duplicado, para não abrir a mesma divergência que `PR-062` existe para
 fechar:
 
 - `src/skills/install.ts` exporta `buildSkillsAddArgs(source): string[]`, extraída do `base` que `installSkills` já construía inline; `src/skills/executor.ts` exporta `describeSkillsCommand(source, root?): { bin: string; args: string[] } | null`, compondo esse argv com o mesmo `resolveSkillsBin` que `realSkillsExecutor` já usa — `null` quando o binário não existe, mesma convenção de `Executor`.
-- `src/specsfy/install.ts` exporta `buildSpecsfyInstallArgs(root): string[]` (`["install", "--project", root, "--json"]`, já totalmente estático); `src/specsfy/executor.ts` exporta `describeSpecsfyCommand(root?): { bin: string; args: string[] } | null`, mesma composição.
+- `src/framework/install.ts` exporta `buildformer project toolInstallArgs(root): string[]` (`["install", "--project", root, "--json"]`, já totalmente estático); `src/framework/executor.ts` exporta `describeformer project toolCommand(root?): { bin: string; args: string[] } | null`, mesma composição.
 - Para a ponte Python, `bridgePythonSubsystem` sempre executa `uv venv` seguido de `uv pip install` como par atômico — nunca um sem o outro. Só o segundo varia (a versão pinada em `PINNED_VERSION`), então o item do plano rastreia identidade só pelo `uv pip install --python <VENV_DIR> <spec>`; `uv venv <VENV_DIR>` nunca muda e não precisa de identidade própria no registro. Evita duas entradas que sempre andariam juntas — a mesma economia que `DEC-073` já aplicou contra granularidade sem pedido real.
 
 #### Views e experiência
@@ -523,7 +523,7 @@ Não aplicável.
 
 ### 11. Estratégia TDD
 
-- **Unidade**: `isApproved`, `partitionByApproval`, `recordApproval`, `readApprovalRegistry`/`writeApprovalRegistry` com ambiente fake; montagem do plano completo com fontes fake para skills/Specsfy/ponte.
+- **Unidade**: `isApproved`, `partitionByApproval`, `recordApproval`, `readApprovalRegistry`/`writeApprovalRegistry` com ambiente fake; montagem do plano completo com fontes fake para skills/former project tool/ponte.
 - **Integração**: `runSetup` de ponta a ponta — plano com item novo pede aprovação, item já registrado não pede, aprovação grava, recusa não grava.
 - **Real**: a ponte Python criando `.venv-crg/` de verdade nesta máquina, quando aprovada; execução por documento JSON com registro pré-populado, sem travar em prompt.
 - **Runner**: Vitest, pelo script `test:tdd`.
@@ -582,7 +582,7 @@ isso nunca aconteça: qualquer diferença, por menor que seja, é comando novo.
 #### Gate do Ato I — Definição
 
 - **Resultado**: READY (2026-08-30)
-- **Comando**: `node .agents/skills/specsfy-04-validate/scripts/validate_spec.mjs specs/completed/0010-fatia-1i-aprovacao-em-lote-comandos/spec.md`
+- **Comando**: `node .agents/skills/framework-04-validate/scripts/validate_spec.mjs specs/completed/0010-fatia-1i-aprovacao-em-lote-comandos/spec.md`
 - **Cobertura**: 3 US, 5 FR, 3 NFR, 10 AC, 4 DEC; mínimo de 3 AC por ID satisfeito em todos.
 - **Research**: `load_research.mjs` em `PASSED`, com `R-036` e `R-037` verificados por leitura direta do código de produção, e um artefato indexado.
 - **Revisão PROD**: as duas lacunas (plano incompleto, ponte inerte) foram confirmadas por leitura de código antes de escrever a spec, capturadas em `specs/inbox/2026-08-30-155149-...`, com a decisão de incluir o wireup da ponte no escopo desta fatia tomada com a pessoa antes da especificação.
@@ -591,7 +591,7 @@ isso nunca aconteça: qualquer diferença, por menor que seja, é comando novo.
 #### Gate do Ato II — Plano
 
 - **Resultado**: Passed (2026-08-30)
-- **Comando**: `node .agents/skills/specsfy-05-tasks/scripts/validate_tasks.mjs specs/completed/0010-fatia-1i-aprovacao-em-lote-comandos/spec.md`
+- **Comando**: `node .agents/skills/framework-05-tasks/scripts/validate_tasks.mjs specs/completed/0010-fatia-1i-aprovacao-em-lote-comandos/spec.md`
 - **Plano**: 17 tarefas — 10 `[TEST] [TDD]`, 4 `[CODE]`, 2 `[DOC]`, 1 `[OPS]`; 85 itens de checklist; 21 de 21 IDs cobertos.
 - **Achados**: Nenhum bloqueante.
 
@@ -600,10 +600,10 @@ isso nunca aconteça: qualquer diferença, por menor que seja, é comando novo.
 - **Resultado**: Passed (2026-08-30)
 - **Verificação**: `npm run verify` em exit 0 a partir de clone limpo (install 3s, build 0s, test 38s, total 41s) — **352 casos em 130 arquivos** (era 339/121 antes desta fatia); `npx tsc --noEmit` e `npm run build` em exit 0.
 - **Auditorias**: `check_traceability.mjs` em 21/21 IDs próprios cobertos (ressalva de marcadores órfãos de outras specs persiste, mesma causa já conhecida das fatias anteriores); `verify_acceptance.mjs` em `QA: PASSED`; `verify_evidence.mjs` em `PASSED (strict)` para T011, T012, T013 e T014.
-- **Verificação manual real**: `node dist/cli.js setup`, num diretório temporário, aprova o plano completo por documento JSON (7 hooks, 2 origens de skills, framework Specsfy — `code-review-graph` já presente nesta máquina, então a ponte não aparece como pendência), grava `.common-rules/approved-commands.json` com os três comandos aprovados; uma segunda execução relata "já estava configurado"; apagando `.claude/skills/` e rodando de novo com entrada padrão **vazia** (sem documento de aprovação), o comando ainda restaura as skills, sem pedir aprovação — o comando já constava do registro.
+- **Verificação manual real**: `node dist/cli.js setup`, num diretório temporário, aprova o plano completo por documento JSON (7 hooks, 2 origens de skills, framework former project tool — `code-review-graph` já presente nesta máquina, então a ponte não aparece como pendência), grava `.common-rules/approved-commands.json` com os três comandos aprovados; uma segunda execução relata "já estava configurado"; apagando `.claude/skills/` e rodando de novo com entrada padrão **vazia** (sem documento de aprovação), o comando ainda restaura as skills, sem pedir aprovação — o comando já constava do registro.
 - **Ponte Python real, separadamente** (`tests/bridge-real.test.ts`, ambiente forçado a ausente): `uv venv` + `uv pip install code-review-graph==2.3.7` executam de verdade, instalando 76 pacotes Python via rede real nesta máquina.
 - **Achado durante a implementação, corrigido antes do GREEN**: o gate de aprovação original perguntava sempre que qualquer coisa estivesse pendente, mesmo quando só a lista de hooks (sempre não vazia, independente de estar ou não desatualizada) acionava a pergunta — um comando de dependência já aprovado nunca teria como pular a pergunta de fato. Corrigido condicionando a pergunta a `!hooksJaFeito || comandosPendentes.length > 0`, coberto por `AC-118`.
-- **Achado relacionado, corrigido antes do GREEN**: a primeira versão dos candidatos de skills/Specsfy só era construída quando `skillsJaFeito`/`specsfyJaFeito` eram falsos — mas esses sinais são triviais (`true`) quando não há registro anterior, deixando uma instalação genuinamente nova de fora do plano de aprovação. Corrigido para sempre montar o candidato quando `opts.skills`/`opts.specsfy` está configurado, deixando a decisão de "já aprovado" inteiramente para o registro (`partitionByApproval`), não para este sinal.
+- **Achado relacionado, corrigido antes do GREEN**: a primeira versão dos candidatos de skills/former project tool só era construída quando `skillsJaFeito`/`frameworkJaFeito` eram falsos — mas esses sinais são triviais (`true`) quando não há registro anterior, deixando uma instalação genuinamente nova de fora do plano de aprovação. Corrigido para sempre montar o candidato quando `opts.skills`/`opts.project-context` está configurado, deixando a decisão de "já aprovado" inteiramente para o registro (`partitionByApproval`), não para este sinal.
 - **Achados**: Nenhum bloqueante.
 
 ### 14. Tarefas
@@ -625,7 +625,7 @@ Checklist obrigatório por tarefa, na ordem:
 
 - [x] T001 [P] [TEST] [TDD] [US-071] Derivar de AC-110 o caso em tests/approval-plan-completo.test.ts — Refs: US-071, FR-071, AC-110 — Depends: none
   - [x] **PREP**: Ler o Gherkin de AC-110.
-  - [x] **EXECUTE**: Escrever caso montando o plano completo (função ainda inexistente) com hooks, skills, Specsfy e ponte, todos pendentes, conferindo que os quatro aparecem no texto e no documento.
+  - [x] **EXECUTE**: Escrever caso montando o plano completo (função ainda inexistente) com hooks, skills, former project tool e ponte, todos pendentes, conferindo que os quatro aparecem no texto e no documento.
   - [x] **VERIFY**: RED — `Cannot find module` sobre `src/approval/plan`.
   - [x] **EVIDENCE**: Comando e causa do RED registrados na seção 12.
   - [x] **IMPROVE**: Registrar melhoria aplicada ou ausência justificada.
@@ -696,12 +696,12 @@ Checklist obrigatório por tarefa, na ordem:
 #### Fase 2 — Código, cada tarefa atrás do seu RED
 
 - [x] T011 [CODE] Implementar em src/approval/registry.ts — Refs: FR-070, NFR-070, NFR-071, AC-112, AC-113, AC-119 — Depends: T002, T003, T004, T010
-  - [x] **PREP**: Confirmar RED de T002, T003, T004 e T010; `docs/` reconstruído por `$specsfy-documentator` antes da alteração.
+  - [x] **PREP**: Confirmar RED de T002, T003, T004 e T010; `docs/` reconstruído por `$framework-documentator` antes da alteração.
   - [x] **EXECUTE**: `RegistryEnvironment` injetável com `read()`/`write(registry)`; `realRegistryEnvironment()` lendo/gravando `.common-rules/approved-commands.json`; `readApprovalRegistry`/`writeApprovalRegistry`/`isApproved` (comparação exata de `bin`+`args`, mesmo comprimento); JSON inválido ou ausente resolve para `{ commands: [] }`, nunca lança.
   - [x] **VERIFY**: Casos de T002, T003, T004 e T010 GREEN.
   - [x] **EVIDENCE**: Comandos e resultado registrados na seção 12.
   - [x] **IMPROVE**: Registrar melhoria aplicada ou ausência justificada.
-  <!-- specsfy:evidence {"task": "T011", "refs": ["FR-070", "NFR-070", "NFR-071", "AC-112", "AC-113", "AC-119"], "files": ["src/approval/registry.ts"], "commands": [{"run": "npm run test:tdd", "exit": 0}, {"run": "npx tsc --noEmit", "exit": 0}]} -->
+  <!-- framework:evidence {"task": "T011", "refs": ["FR-070", "NFR-070", "NFR-071", "AC-112", "AC-113", "AC-119"], "files": ["src/approval/registry.ts"], "commands": [{"run": "npm run test:tdd", "exit": 0}, {"run": "npx tsc --noEmit", "exit": 0}]} -->
 
 - [x] T012 [CODE] [US-070] [US-071] Implementar em src/approval/plan.ts — Refs: US-070, US-071, FR-071, FR-072, FR-073, AC-110, AC-114, AC-115 — Depends: T001, T005, T006, T011
   - [x] **PREP**: Confirmar RED de T001, T005 e T006.
@@ -709,7 +709,7 @@ Checklist obrigatório por tarefa, na ordem:
   - [x] **VERIFY**: Casos de T001, T005 e T006 GREEN.
   - [x] **EVIDENCE**: Comandos e resultado registrados na seção 12.
   - [x] **IMPROVE**: Registrar melhoria aplicada ou ausência justificada.
-  <!-- specsfy:evidence {"task": "T012", "refs": ["US-070", "US-071", "FR-071", "FR-072", "FR-073", "AC-110", "AC-114", "AC-115"], "files": ["src/approval/plan.ts", "src/approval/render.ts", "src/approval/decide.ts"], "commands": [{"run": "npm run test:tdd", "exit": 0}, {"run": "npx tsc --noEmit", "exit": 0}]} -->
+  <!-- framework:evidence {"task": "T012", "refs": ["US-070", "US-071", "FR-071", "FR-072", "FR-073", "AC-110", "AC-114", "AC-115"], "files": ["src/approval/plan.ts", "src/approval/render.ts", "src/approval/decide.ts"], "commands": [{"run": "npm run test:tdd", "exit": 0}, {"run": "npx tsc --noEmit", "exit": 0}]} -->
 
 - [x] T013 [CODE] [US-072] Implementar realBridgeEnvironment em src/setup/bridge.ts — Refs: US-072, FR-074, AC-116, AC-117, AC-118 — Depends: T007, T008, T009
   - [x] **PREP**: Confirmar RED de T007, T008 e T009.
@@ -717,20 +717,20 @@ Checklist obrigatório por tarefa, na ordem:
   - [x] **VERIFY**: Casos de T007 e T008 GREEN.
   - [x] **EVIDENCE**: Comandos e resultado registrados na seção 12.
   - [x] **IMPROVE**: Registrar melhoria aplicada ou ausência justificada.
-  <!-- specsfy:evidence {"task": "T013", "refs": ["US-072", "FR-074", "AC-116", "AC-117"], "files": ["src/setup/bridge.ts"], "commands": [{"run": "npm run test:tdd", "exit": 0}, {"run": "npx tsc --noEmit", "exit": 0}]} -->
+  <!-- framework:evidence {"task": "T013", "refs": ["US-072", "FR-074", "AC-116", "AC-117"], "files": ["src/setup/bridge.ts"], "commands": [{"run": "npm run test:tdd", "exit": 0}, {"run": "npx tsc --noEmit", "exit": 0}]} -->
 
 - [x] T014 [CODE] [US-070] [US-071] [US-072] Ligar plano, registro e ponte em src/setup/run.ts e src/cli.ts — Refs: US-070, US-071, US-072, FR-070, FR-071, FR-072, FR-073, FR-074, AC-118 — Depends: T009, T012, T013
   - [x] **PREP**: Confirmar RED de T009.
-  - [x] **EXECUTE**: `runSetup` monta os candidatos de skills/Specsfy/ponte, resolve os comandos via `assembleDependencyCommands`, lê o registro, particiona, só invoca `interpret(source, hooks, pendentes)` quando há hook ou comando pendente, grava `recordApproval` após aprovação, e decide `execute` da ponte a partir do resultado; `src/cli.ts`'s `formatSetup()` passa `bridgeEnv: realBridgeEnvironment()`.
+  - [x] **EXECUTE**: `runSetup` monta os candidatos de skills/former project tool/ponte, resolve os comandos via `assembleDependencyCommands`, lê o registro, particiona, só invoca `interpret(source, hooks, pendentes)` quando há hook ou comando pendente, grava `recordApproval` após aprovação, e decide `execute` da ponte a partir do resultado; `src/cli.ts`'s `formatSetup()` passa `bridgeEnv: realBridgeEnvironment()`.
   - [x] **VERIFY**: Caso de T009 GREEN, com `dist/cli.js setup` real.
   - [x] **EVIDENCE**: Comandos e resultado registrados na seção 12.
   - [x] **IMPROVE**: Registrar melhoria aplicada ou ausência justificada.
-  <!-- specsfy:evidence {"task": "T014", "refs": ["US-070", "US-071", "US-072", "FR-070", "FR-071", "FR-072", "FR-073", "FR-074", "AC-118"], "files": ["src/setup/run.ts", "src/cli.ts", "src/skills/install.ts", "src/skills/executor.ts", "src/specsfy/install.ts", "src/specsfy/executor.ts"], "commands": [{"run": "npm run test:tdd", "exit": 0}, {"run": "npx tsc --noEmit", "exit": 0}, {"run": "npm run build", "exit": 0}]} -->
+  <!-- framework:evidence {"task": "T014", "refs": ["US-070", "US-071", "US-072", "FR-070", "FR-071", "FR-072", "FR-073", "FR-074", "AC-118"], "files": ["src/setup/run.ts", "src/cli.ts", "src/skills/install.ts", "src/skills/executor.ts", "src/framework/install.ts", "src/framework/executor.ts"], "commands": [{"run": "npm run test:tdd", "exit": 0}, {"run": "npx tsc --noEmit", "exit": 0}, {"run": "npm run build", "exit": 0}]} -->
 
 #### Fase 3 — Fechamento
 
-- [x] T015 [DOC] Registrar o registro de aprovação e o wireup da ponte Python em .specsfy/STACK.md — Refs: FR-070, FR-074 — Depends: T014
-  - [x] **PREP**: Ler a seção de aprovação (fatia 1c) em `.specsfy/STACK.md`.
+- [x] T015 [DOC] Registrar o registro de aprovação e o wireup da ponte Python em .project-context/STACK.md — Refs: FR-070, FR-074 — Depends: T014
+  - [x] **PREP**: Ler a seção de aprovação (fatia 1c) em `.project-context/STACK.md`.
   - [x] **EXECUTE**: Descrever `src/approval/registry.ts`, `src/approval/plan.ts`, a extensão de `render.ts`, e `realBridgeEnvironment()`, incluindo a regra de identidade exata (`PR-070`).
   - [x] **VERIFY**: `npm run build` em exit 0.
   - [x] **EVIDENCE**: Comando e resultado registrados na seção 12.
@@ -766,7 +766,7 @@ O fechamento admite paralelismo entre `T015` e `T016`, que tocam arquivos difere
 
 #### Dependências
 
-- Consome `src/skills/executor.ts`/`src/specsfy/executor.ts` (já reais) e `src/backends/detect.ts` (padrão de fonte injetável) sem alterá-los.
+- Consome `src/skills/executor.ts`/`src/framework/executor.ts` (já reais) e `src/backends/detect.ts` (padrão de fonte injetável) sem alterá-los.
 - Consome o mecanismo de aprovação da `SPEC-0007` (`resolveChannel`, `interpret`, `DecisionSource`) sem alterar seu contrato externo.
 
 #### Riscos
@@ -796,7 +796,7 @@ O fechamento admite paralelismo entre `T015` e `T016`, que tocam arquivos difere
 - [x] Todas as tarefas na seção 14 estão concluídas.
 - [x] `npx tsc --noEmit`, `npm run build` e a suíte completa passam.
 - [x] O mecanismo de aprovação e registro em si — decidir o que pedir, o que já está aprovado, o que gravar — não faz chamada de rede nem prompt de autenticação, conferido por inspeção do código; a instalação real da ponte Python (`uv pip install`), quando de fato dispara, depende de rede por natureza, e sua falha é reportada, nunca lançada como exceção.
-- [x] `node dist/cli.js setup`, executado de verdade num diretório temporário, mostra o plano completo (hooks, skills, Specsfy, ponte Python quando aplicável) e, aprovado, cria `.venv-crg/` de verdade quando `code-review-graph` está ausente das duas origens.
+- [x] `node dist/cli.js setup`, executado de verdade num diretório temporário, mostra o plano completo (hooks, skills, former project tool, ponte Python quando aplicável) e, aprovado, cria `.venv-crg/` de verdade quando `code-review-graph` está ausente das duas origens.
 - [x] Uma segunda execução, com tudo já aprovado antes e drift forçando reinstalação, não pergunta de novo.
-- [x] `.specsfy/STACK.md` registra o registro de aprovação e o wireup real da ponte Python.
+- [x] `.project-context/STACK.md` registra o registro de aprovação e o wireup real da ponte Python.
 - [x] `PROJECT.md` descreve o mecanismo de aprovação em lote e que a ponte Python agora executa de verdade quando aprovada.

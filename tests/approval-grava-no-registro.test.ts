@@ -3,10 +3,10 @@ import { recordApproval } from "../src/approval/plan";
 import { registryFake, itemFake } from "./approval-command-fixtures";
 
 describe("AC-114 — approving records the new command in the registry", () => {
-  // SPECSFY: US-070 FR-073 NFR-071 AC-114
+  // TRACEABILITY: US-070 FR-073 NFR-071 AC-114
   it("an approved command ends up in the returned registry", () => {
-    const item = itemFake("specsfy", "install Specsfy framework", "node", [
-      "specsfy.cjs",
+    const item = itemFake("skills", "install skills", "node", [
+      "framework.cjs",
       "install",
       "--project",
       "/tmp/proj",
@@ -16,10 +16,10 @@ describe("AC-114 — approving records the new command in the registry", () => {
     expect(registry.commands).toEqual([{ bin: item.bin, args: item.args }]);
   });
 
-  // SPECSFY: FR-073 AC-114
+  // TRACEABILITY: FR-073 AC-114
   it("a command already present in the registry doesn't duplicate", () => {
-    const item = itemFake("specsfy", "install Specsfy framework", "node", [
-      "specsfy.cjs",
+    const item = itemFake("skills", "install skills", "node", [
+      "framework.cjs",
       "install",
       "--project",
       "/tmp/proj",

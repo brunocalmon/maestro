@@ -6,7 +6,7 @@ import { join, relative } from "node:path";
  * Projects skills from the canonical directory to a target's own one.
  *
  * `.agents/skills` is where the `skills` CLI (`-a universal`) and the
- * Specsfy's specialists land; the Claude Code 2.1.x doesn't read it
+ * third-party specialists land; the Claude Code 2.1.x doesn't read it
  * (FIND-EXT-002), so the maestro copies each skill into `.claude/skills`.
  * Every copy is recorded with the checksum of what was written, which is
  * how a later run tells "the copy I made" from "a copy someone edited": the

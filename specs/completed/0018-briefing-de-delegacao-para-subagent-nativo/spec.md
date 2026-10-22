@@ -2,7 +2,7 @@
 
 | Campo | Valor |
 | --- | --- |
-| Formato | Specsfy/2.0 |
+| Formato | former project tool/2.0 |
 | ID | SPEC-0018 |
 | Slug | 0018-briefing-de-delegacao-para-subagent-nativo |
 | Status | Complete |
@@ -522,26 +522,26 @@ tests/
 #### Gate do Ato I — Definição
 
 - **Resultado**: READY (2026-09-07)
-- **Comando**: `node .claude/skills/specsfy-04-validate/scripts/validate_spec.mjs specs/draft/0018-briefing-de-delegacao-para-subagent-nativo/spec.md --allow-draft` → `VALID DRAFT`.
+- **Comando**: `node .claude/skills/framework-04-validate/scripts/validate_spec.mjs specs/draft/0018-briefing-de-delegacao-para-subagent-nativo/spec.md --allow-draft` → `VALID DRAFT`.
 - **Achados**: Nenhum `BLOCKER`. As quatro decisões da entrevista viraram `FR`, `AC` ou `DEC` rastreáveis. Cobertura: US-001 → 12 AC; FR-001 → 3; FR-002 → 3; FR-003 → 3; FR-004 → 3; NFR-001 → 8; NFR-002 → 4. A fatia tem uma fronteira incomum e ela está declarada em vez de contornada: a CLI não aciona subagent porque não tem acesso ao mecanismo da ferramenta hospedeira, e o escopo diz isso explicitamente em vez de prometer execução. `Interface para pessoas: Não` justificada. Sem findings de segurança: nada executa e nada é gravado.
 
 #### Gate do Ato II — Plano
 
 - **Resultado**: READY (2026-09-07)
-- **Comando**: `node .claude/skills/specsfy-05-tasks/scripts/validate_tasks.mjs specs/defined/0018-briefing-de-delegacao-para-subagent-nativo/spec.md` — `READY` (`total=18 complete=12 tdd=13 code=4 covered_spec_ids=19 required_spec_ids=19`).
+- **Comando**: `node .claude/skills/framework-05-tasks/scripts/validate_tasks.mjs specs/defined/0018-briefing-de-delegacao-para-subagent-nativo/spec.md` — `READY` (`total=18 complete=12 tdd=13 code=4 covered_spec_ids=19 required_spec_ids=19`).
 - **Achados**: Nenhum bloqueio. As 12 tarefas `[TEST][TDD]` (uma por `AC`) estão concluídas com RED real — três porque `run` ainda não existe na tabela do CLI, nove por módulo inexistente (`src/delegation/{behavior,brief,run}.ts`). Nenhum RED foi fabricado. As quatro `[CODE]` (T013–T016) têm três predecessores TDD concluídos cada.
 
 #### Gate do Ato III — Entrega
 
 - **Resultado**: READY (2026-09-07) — 18/18 tarefas, 108/108 itens de checklist
-- **Comando**: `node .claude/skills/specsfy-06-tdd-bdd/scripts/check_traceability.mjs specs/in-progress/0018-briefing-de-delegacao-para-subagent-nativo/spec.md .` — `Rastreabilidade: 19/19 IDs cobertos em 190 arquivos de teste`.
+- **Comando**: `node .claude/skills/framework-06-tdd-bdd/scripts/check_traceability.mjs specs/in-progress/0018-briefing-de-delegacao-para-subagent-nativo/spec.md .` — `Rastreabilidade: 19/19 IDs cobertos em 190 arquivos de teste`.
 - **Achados**: Nenhum bloqueio. **488/488 testes** em 180 arquivos, `tsc` limpo, `build_documentation.mjs --check` limpo. Verificado com o binário instalado: ciclo real `maestro plan` (aprovado) seguido de `maestro run <trace>` produziu o briefing do perfil `maestro`, autossuficiente — comportamento composto, modelo, capacidades — e nada novo foi escrito em disco além do plano já existente.
 - Duas regressões apareceram, terceira vez que a mesma família se repete: testes de specs anteriores (`SPEC-0003`, `SPEC-0004`) fixam a lista exata de comandos do CLI e precisam de ajuste a cada comando novo. Atualizadas preservando a intenção. Candidato a melhoria futura, fora do escopo desta spec: um guard que afirme a propriedade real (nenhum comando ganha tool MCP própria) em vez de comparar a lista inteira.
 
-#### Aceite final (`$specsfy-04-validate`)
+#### Aceite final (`$framework-04-validate`)
 
 - **Resultado**: READY (2026-09-07)
-- **Comando**: `node .claude/skills/specsfy-04-validate/scripts/validate_spec.mjs specs/review/0018-briefing-de-delegacao-para-subagent-nativo/spec.md` — `RESULTADO: READY`.
+- **Comando**: `node .claude/skills/framework-04-validate/scripts/validate_spec.mjs specs/review/0018-briefing-de-delegacao-para-subagent-nativo/spec.md` — `RESULTADO: READY`.
 - **Achados**: Nenhum `BLOCKER`. Três gates `Passed`, Definition of Done comprovada. A fatia entrega exatamente o que declarou desde o Ato I — nenhuma promessa de execução que a arquitetura não permite. O plano aprovado da SPEC-0016 tem consumidor agora: verificado de ponta a ponta com o binário real, `plan` seguido de `run` produzindo briefing autossuficiente sem escrever nada novo. `Status: Complete`.
 
 ### 14. Tarefas
@@ -564,7 +564,7 @@ Cada tarefa possui exatamente este checklist, atualizado durante a execução:
 
 - [x] T001 [P] [TEST] [TDD] [US-001] Derivar de AC-001 um caso Vitest falhando em tests/run-command.test.ts — Refs: US-001, FR-001, NFR-002, AC-001 — Depends: none
   - [x] **PREP**: Ler o Gherkin de AC-001; confirmar que `run` não está na tabela de comandos de `src/cli.ts`.
-  - [x] **EXECUTE**: Escrever o caso com marcador `SPECSFY: US-001 FR-001 NFR-002 AC-001` — sem identificador, recusa explicando o que falta.
+  - [x] **EXECUTE**: Escrever o caso com marcador `TRACEABILITY: US-001 FR-001 NFR-002 AC-001` — sem identificador, recusa explicando o que falta.
   - [x] **VERIFY**: `npx vitest run tests/run-command.test.ts` — **RED observado**: `unrecognized command "run"` — o comando não existe na tabela.
   - [x] **VISUAL**: Não aplicável — arquivo de teste sem superfície visual.
   - [x] **EVIDENCE**: Registrar comando e causa do RED nas seções 11–12.
@@ -572,7 +572,7 @@ Cada tarefa possui exatamente este checklist, atualizado durante a execução:
 
 - [x] T002 [P] [TEST] [TDD] [US-001] Derivar de AC-002 um caso Vitest falhando em tests/run-command.test.ts — Refs: US-001, FR-001, NFR-001, AC-002 — Depends: none
   - [x] **PREP**: Ler o Gherkin de AC-002.
-  - [x] **EXECUTE**: Escrever o caso com marcador `SPECSFY: US-001 FR-001 NFR-001 AC-002` — `run --help` imprime o uso e sai com zero.
+  - [x] **EXECUTE**: Escrever o caso com marcador `TRACEABILITY: US-001 FR-001 NFR-001 AC-002` — `run --help` imprime o uso e sai com zero.
   - [x] **VERIFY**: `npx vitest run tests/run-command.test.ts` — **RED observado**: saída 2 em vez de 0; `run --help` não é reconhecido.
   - [x] **VISUAL**: Não aplicável — arquivo de teste sem superfície visual.
   - [x] **EVIDENCE**: Registrar comando e causa do RED nas seções 11–12.
@@ -580,7 +580,7 @@ Cada tarefa possui exatamente este checklist, atualizado durante a execução:
 
 - [x] T003 [P] [TEST] [TDD] [US-001] Derivar de AC-003 um caso Vitest falhando em tests/run-command.test.ts — Refs: US-001, FR-001, NFR-002, AC-003 — Depends: none
   - [x] **PREP**: Ler o Gherkin de AC-003.
-  - [x] **EXECUTE**: Escrever o caso com marcador `SPECSFY: US-001 FR-001 NFR-002 AC-003` — identificador sem plano gravado é recusado dizendo isso.
+  - [x] **EXECUTE**: Escrever o caso com marcador `TRACEABILITY: US-001 FR-001 NFR-002 AC-003` — identificador sem plano gravado é recusado dizendo isso.
   - [x] **VERIFY**: `npx vitest run tests/run-command.test.ts` — **RED observado**: `unrecognized command "run"` — nem chega a checar o plano.
   - [x] **VISUAL**: Não aplicável — arquivo de teste sem superfície visual.
   - [x] **EVIDENCE**: Registrar comando e causa do RED nas seções 11–12.
@@ -588,7 +588,7 @@ Cada tarefa possui exatamente este checklist, atualizado durante a execução:
 
 - [x] T004 [P] [TEST] [TDD] [US-001] Derivar de AC-004 um caso Vitest falhando em tests/delegation-behavior.test.ts — Refs: US-001, FR-002, NFR-001, AC-004 — Depends: none
   - [x] **PREP**: Ler o Gherkin de AC-004; confirmar que `src/delegation/behavior.ts` não existe.
-  - [x] **EXECUTE**: Escrever o caso com marcador `SPECSFY: US-001 FR-002 NFR-001 AC-004` — sem `behavior` nem `additional_behavior`, o resultado é o padrão.
+  - [x] **EXECUTE**: Escrever o caso com marcador `TRACEABILITY: US-001 FR-002 NFR-001 AC-004` — sem `behavior` nem `additional_behavior`, o resultado é o padrão.
   - [x] **VERIFY**: `npx vitest run tests/delegation-behavior.test.ts` — **RED observado**: `Cannot find module '../src/delegation/behavior'`.
   - [x] **VISUAL**: Não aplicável — arquivo de teste sem superfície visual.
   - [x] **EVIDENCE**: Registrar comando e causa do RED nas seções 11–12.
@@ -596,7 +596,7 @@ Cada tarefa possui exatamente este checklist, atualizado durante a execução:
 
 - [x] T005 [P] [TEST] [TDD] [US-001] Derivar de AC-005 um caso Vitest falhando em tests/delegation-behavior.test.ts — Refs: US-001, FR-002, NFR-001, AC-005 — Depends: none
   - [x] **PREP**: Ler o Gherkin de AC-005.
-  - [x] **EXECUTE**: Escrever o caso com marcador `SPECSFY: US-001 FR-002 NFR-001 AC-005` — com `behavior`, o padrão não aparece no resultado.
+  - [x] **EXECUTE**: Escrever o caso com marcador `TRACEABILITY: US-001 FR-002 NFR-001 AC-005` — com `behavior`, o padrão não aparece no resultado.
   - [x] **VERIFY**: `npx vitest run tests/delegation-behavior.test.ts` — **RED observado**: `Cannot find module '../src/delegation/behavior'`.
   - [x] **VISUAL**: Não aplicável — arquivo de teste sem superfície visual.
   - [x] **EVIDENCE**: Registrar comando e causa do RED nas seções 11–12.
@@ -604,7 +604,7 @@ Cada tarefa possui exatamente este checklist, atualizado durante a execução:
 
 - [x] T006 [P] [TEST] [TDD] [US-001] Derivar de AC-006 um caso Vitest falhando em tests/delegation-behavior.test.ts — Refs: US-001, FR-002, NFR-001, AC-006 — Depends: none
   - [x] **PREP**: Ler o Gherkin de AC-006.
-  - [x] **EXECUTE**: Escrever o caso com marcador `SPECSFY: US-001 FR-002 NFR-001 AC-006` — com `additional_behavior` e sem `behavior`, o resultado traz os dois textos.
+  - [x] **EXECUTE**: Escrever o caso com marcador `TRACEABILITY: US-001 FR-002 NFR-001 AC-006` — com `additional_behavior` e sem `behavior`, o resultado traz os dois textos.
   - [x] **VERIFY**: `npx vitest run tests/delegation-behavior.test.ts` — **RED observado**: `Cannot find module '../src/delegation/behavior'`.
   - [x] **VISUAL**: Não aplicável — arquivo de teste sem superfície visual.
   - [x] **EVIDENCE**: Registrar comando e causa do RED nas seções 11–12.
@@ -612,7 +612,7 @@ Cada tarefa possui exatamente este checklist, atualizado durante a execução:
 
 - [x] T007 [P] [TEST] [TDD] [US-001] Derivar de AC-007 um caso Vitest falhando em tests/delegation-brief.test.ts — Refs: US-001, FR-003, NFR-001, AC-007 — Depends: none
   - [x] **PREP**: Ler o Gherkin de AC-007; confirmar que `src/delegation/brief.ts` não existe.
-  - [x] **EXECUTE**: Escrever o caso com marcador `SPECSFY: US-001 FR-003 NFR-001 AC-007` — o briefing contém o texto do comportamento, não o caminho.
+  - [x] **EXECUTE**: Escrever o caso com marcador `TRACEABILITY: US-001 FR-003 NFR-001 AC-007` — o briefing contém o texto do comportamento, não o caminho.
   - [x] **VERIFY**: `npx vitest run tests/delegation-brief.test.ts` — **RED observado**: `Cannot find module '../src/delegation/brief'`.
   - [x] **VISUAL**: Não aplicável — arquivo de teste sem superfície visual.
   - [x] **EVIDENCE**: Registrar comando e causa do RED nas seções 11–12.
@@ -620,7 +620,7 @@ Cada tarefa possui exatamente este checklist, atualizado durante a execução:
 
 - [x] T008 [P] [TEST] [TDD] [US-001] Derivar de AC-008 um caso Vitest falhando em tests/delegation-brief.test.ts — Refs: US-001, FR-003, NFR-001, AC-008 — Depends: none
   - [x] **PREP**: Ler o Gherkin de AC-008.
-  - [x] **EXECUTE**: Escrever o caso com marcador `SPECSFY: US-001 FR-003 NFR-001 AC-008` — o briefing nomeia o modelo do plano e lista skills e tools do perfil.
+  - [x] **EXECUTE**: Escrever o caso com marcador `TRACEABILITY: US-001 FR-003 NFR-001 AC-008` — o briefing nomeia o modelo do plano e lista skills e tools do perfil.
   - [x] **VERIFY**: `npx vitest run tests/delegation-brief.test.ts` — **RED observado**: `Cannot find module '../src/delegation/brief'`.
   - [x] **VISUAL**: Não aplicável — arquivo de teste sem superfície visual.
   - [x] **EVIDENCE**: Registrar comando e causa do RED nas seções 11–12.
@@ -628,7 +628,7 @@ Cada tarefa possui exatamente este checklist, atualizado durante a execução:
 
 - [x] T009 [P] [TEST] [TDD] [US-001] Derivar de AC-009 um caso Vitest falhando em tests/delegation-brief.test.ts — Refs: US-001, FR-003, NFR-001, AC-009 — Depends: none
   - [x] **PREP**: Ler o Gherkin de AC-009.
-  - [x] **EXECUTE**: Escrever o caso com marcador `SPECSFY: US-001 FR-003 NFR-001 AC-009` — plano com dois agentes gera dois blocos, cada um nomeando seu perfil.
+  - [x] **EXECUTE**: Escrever o caso com marcador `TRACEABILITY: US-001 FR-003 NFR-001 AC-009` — plano com dois agentes gera dois blocos, cada um nomeando seu perfil.
   - [x] **VERIFY**: `npx vitest run tests/delegation-brief.test.ts` — **RED observado**: `Cannot find module '../src/delegation/brief'`.
   - [x] **VISUAL**: Não aplicável — arquivo de teste sem superfície visual.
   - [x] **EVIDENCE**: Registrar comando e causa do RED nas seções 11–12.
@@ -636,7 +636,7 @@ Cada tarefa possui exatamente este checklist, atualizado durante a execução:
 
 - [x] T010 [P] [TEST] [TDD] [US-001] Derivar de AC-010 um caso Vitest falhando em tests/delegation-runtime.test.ts — Refs: US-001, FR-004, NFR-002, AC-010 — Depends: none
   - [x] **PREP**: Ler o Gherkin de AC-010; confirmar que `src/delegation/run.ts` não existe.
-  - [x] **EXECUTE**: Escrever o caso com marcador `SPECSFY: US-001 FR-004 NFR-002 AC-010` — runtime `cli` é recusado nomeando a fatia ausente.
+  - [x] **EXECUTE**: Escrever o caso com marcador `TRACEABILITY: US-001 FR-004 NFR-002 AC-010` — runtime `cli` é recusado nomeando a fatia ausente.
   - [x] **VERIFY**: `npx vitest run tests/delegation-runtime.test.ts` — **RED observado**: `Cannot find module '../src/delegation/run'`.
   - [x] **VISUAL**: Não aplicável — arquivo de teste sem superfície visual.
   - [x] **EVIDENCE**: Registrar comando e causa do RED nas seções 11–12.
@@ -644,7 +644,7 @@ Cada tarefa possui exatamente este checklist, atualizado durante a execução:
 
 - [x] T011 [P] [TEST] [TDD] [US-001] Derivar de AC-011 um caso Vitest falhando em tests/delegation-runtime.test.ts — Refs: US-001, FR-004, NFR-001, AC-011 — Depends: none
   - [x] **PREP**: Ler o Gherkin de AC-011.
-  - [x] **EXECUTE**: Escrever o caso com marcador `SPECSFY: US-001 FR-004 NFR-001 AC-011` — runtime `auto` emite briefing normalmente.
+  - [x] **EXECUTE**: Escrever o caso com marcador `TRACEABILITY: US-001 FR-004 NFR-001 AC-011` — runtime `auto` emite briefing normalmente.
   - [x] **VERIFY**: `npx vitest run tests/delegation-runtime.test.ts` — **RED observado**: `Cannot find module '../src/delegation/run'`.
   - [x] **VISUAL**: Não aplicável — arquivo de teste sem superfície visual.
   - [x] **EVIDENCE**: Registrar comando e causa do RED nas seções 11–12.
@@ -652,7 +652,7 @@ Cada tarefa possui exatamente este checklist, atualizado durante a execução:
 
 - [x] T012 [P] [TEST] [TDD] [US-001] Derivar de AC-012 um caso Vitest falhando em tests/delegation-runtime.test.ts — Refs: US-001, FR-004, NFR-002, AC-012 — Depends: none
   - [x] **PREP**: Ler o Gherkin de AC-012.
-  - [x] **EXECUTE**: Escrever o caso com root isolado e marcador `SPECSFY: US-001 FR-004 NFR-002 AC-012` — hash da árvore antes e depois da emissão permanece idêntico.
+  - [x] **EXECUTE**: Escrever o caso com root isolado e marcador `TRACEABILITY: US-001 FR-004 NFR-002 AC-012` — hash da árvore antes e depois da emissão permanece idêntico.
   - [x] **VERIFY**: `npx vitest run tests/delegation-runtime.test.ts` — **RED observado**: `Cannot find module '../src/delegation/run'`.
   - [x] **VISUAL**: Não aplicável — arquivo de teste sem superfície visual.
   - [x] **EVIDENCE**: Registrar comando e causa do RED nas seções 11–12.
@@ -665,48 +665,48 @@ Cada tarefa possui exatamente este checklist, atualizado durante a execução:
 
 - [x] T013 [CODE] [US-001] Implementar a composição do comportamento em src/delegation/behavior.ts — Refs: US-001, FR-002, NFR-001, AC-004, AC-005, AC-006 — Depends: T004, T005, T006
   - [x] **PREP**: Confirmar RED de T004/T005/T006 e a regra de substituir-versus-somar da `SPEC-0015`.
-  - [x] **EXECUTE**: `composeBehavior` puro sobre conteúdo já lido, com os três casos: padrão, substituição e soma. Reconstruir `docs/` com `$specsfy-documentator` antes de fechar este item.
+  - [x] **EXECUTE**: `composeBehavior` puro sobre conteúdo já lido, com os três casos: padrão, substituição e soma. Reconstruir `docs/` com `$framework-documentator` antes de fechar este item.
   - [x] **VERIFY**: `npx vitest run tests/delegation-behavior.test.ts` — AC-004, AC-005 e AC-006 **GREEN**; `npx tsc --noEmit` limpo.
   - [x] **VISUAL**: Não aplicável — função pura, sem superfície visual.
   - [x] **EVIDENCE**: Registrar GREEN e arquivo criado nas seções 11–13.
   - [x] **IMPROVE**: Nenhuma melhoria adicional — a função é intencionalmente pequena, três ramos que espelham exatamente a regra da SPEC-0015.
-  <!-- specsfy:evidence {"task":"T013","refs":["US-001","FR-002","NFR-001","AC-004","AC-005","AC-006"],"files":["src/delegation/behavior.ts"],"commands":[{"run":"npx vitest run tests/delegation-behavior.test.ts","exit":0}]} -->
+  <!-- framework:evidence {"task":"T013","refs":["US-001","FR-002","NFR-001","AC-004","AC-005","AC-006"],"files":["src/delegation/behavior.ts"],"commands":[{"run":"npx vitest run tests/delegation-behavior.test.ts","exit":0}]} -->
 
 - [x] T014 [CODE] [US-001] Implementar a montagem e a renderização do briefing em src/delegation/brief.ts — Refs: US-001, FR-003, NFR-001, AC-007, AC-008, AC-009 — Depends: T007, T008, T009
   - [x] **PREP**: Confirmar RED de T007/T008/T009 e o formato de `ApprovedPlan` e `AgentProfile`.
-  - [x] **EXECUTE**: `buildBriefs` resolvendo perfil por nome e compondo o comportamento, e `renderBriefs` produzindo um bloco por agente. Reconstruir `docs/` com `$specsfy-documentator` antes de fechar este item.
+  - [x] **EXECUTE**: `buildBriefs` resolvendo perfil por nome e compondo o comportamento, e `renderBriefs` produzindo um bloco por agente. Reconstruir `docs/` com `$framework-documentator` antes de fechar este item.
   - [x] **VERIFY**: `npx vitest run tests/delegation-brief.test.ts` — AC-007, AC-008 e AC-009 **GREEN**.
   - [x] **VISUAL**: Não aplicável — texto para leitura de agente, sem tela.
   - [x] **EVIDENCE**: Registrar GREEN e arquivo criado nas seções 11–13.
   - [x] **IMPROVE**: Melhoria aplicada: `readOrNull` trata `""` (nada declarado, convenção da SPEC-0015) como ausência antes de chamar o leitor — sem isso, um perfil sem `behavior` tentaria ler um arquivo chamado string vazia.
-  <!-- specsfy:evidence {"task":"T014","refs":["US-001","FR-003","NFR-001","AC-007","AC-008","AC-009"],"files":["src/delegation/brief.ts"],"commands":[{"run":"npx vitest run tests/delegation-brief.test.ts","exit":0}]} -->
+  <!-- framework:evidence {"task":"T014","refs":["US-001","FR-003","NFR-001","AC-007","AC-008","AC-009"],"files":["src/delegation/brief.ts"],"commands":[{"run":"npx vitest run tests/delegation-brief.test.ts","exit":0}]} -->
 
 - [x] T015 [CODE] [US-001] Implementar a fronteira de runtime e a orquestração em src/delegation/run.ts — Refs: US-001, FR-004, NFR-001, NFR-002, AC-010, AC-011, AC-012 — Depends: T010, T011, T012
   - [x] **PREP**: Confirmar RED de T010/T011/T012 e o domínio de `runtime` no plano.
-  - [x] **EXECUTE**: Leitura do plano, validação de runtime (`native`/`auto` emitem, `cli` recusa nomeando a fatia), composição e devolução do texto — sem escrever nada em disco. Reconstruir `docs/` com `$specsfy-documentator` antes de fechar este item.
+  - [x] **EXECUTE**: Leitura do plano, validação de runtime (`native`/`auto` emitem, `cli` recusa nomeando a fatia), composição e devolução do texto — sem escrever nada em disco. Reconstruir `docs/` com `$framework-documentator` antes de fechar este item.
   - [x] **VERIFY**: `npx vitest run tests/delegation-runtime.test.ts` — AC-010, AC-011 e AC-012 **GREEN**.
   - [x] **VISUAL**: Não aplicável — sem superfície visual.
   - [x] **EVIDENCE**: Registrar GREEN e arquivo criado nas seções 11–13.
   - [x] **IMPROVE**: Nenhuma melhoria adicional — a recusa por `cli` e a ausência de escrita são o resultado mais direto possível da decisão já tomada.
-  <!-- specsfy:evidence {"task":"T015","refs":["US-001","FR-004","NFR-001","NFR-002","AC-010","AC-011","AC-012"],"files":["src/delegation/run.ts"],"commands":[{"run":"npx vitest run tests/delegation-runtime.test.ts","exit":0}]} -->
+  <!-- framework:evidence {"task":"T015","refs":["US-001","FR-004","NFR-001","NFR-002","AC-010","AC-011","AC-012"],"files":["src/delegation/run.ts"],"commands":[{"run":"npx vitest run tests/delegation-runtime.test.ts","exit":0}]} -->
 
 - [x] T016 [CODE] [US-001] Ligar o comando run em src/cli.ts, com USAGE_RUN e o identificador posicional — Refs: US-001, FR-001, NFR-001, NFR-002, AC-001, AC-002, AC-003 — Depends: T001, T002, T003
   - [x] **PREP**: Confirmar RED de T001/T002/T003 e o padrão de `hasHelp` e recusa de flag desconhecida.
-  - [x] **EXECUTE**: `USAGE_RUN`, entrada `run` na tabela, identificador posicional obrigatório e recusa nomeada quando ausente ou sem plano. Reconstruir `docs/` com `$specsfy-documentator` antes de fechar este item.
+  - [x] **EXECUTE**: `USAGE_RUN`, entrada `run` na tabela, identificador posicional obrigatório e recusa nomeada quando ausente ou sem plano. Reconstruir `docs/` com `$framework-documentator` antes de fechar este item.
   - [x] **VERIFY**: `npx vitest run tests/run-command.test.ts` — AC-001, AC-002 e AC-003 **GREEN**. Verificado com o binário real: ciclo completo `maestro plan` (aprovado) seguido de `maestro run <trace>` produziu o briefing autossuficiente do perfil `maestro`, com comportamento composto, modelo e capacidades — e nenhum arquivo novo foi criado além do próprio plano já existente.
   - [x] **VISUAL**: Não aplicável — comando de terminal, sem tela.
   - [x] **EVIDENCE**: Registrar GREEN e arquivos alterados nas seções 11–13.
   - [x] **IMPROVE**: **Correção durante a implementação**: o teste de AC-001 original esperava a mensagem em português/inglês combinados; a mensagem real do comando é em inglês, como todas as outras `USAGE_*` do projeto — ajustado o caso, não o comando, para manter consistência de idioma entre comandos.
-  <!-- specsfy:evidence {"task":"T016","refs":["US-001","FR-001","NFR-001","NFR-002","AC-001","AC-002","AC-003"],"files":["src/cli.ts"],"commands":[{"run":"npx vitest run tests/run-command.test.ts","exit":0}]} -->
+  <!-- framework:evidence {"task":"T016","refs":["US-001","FR-001","NFR-001","NFR-002","AC-001","AC-002","AC-003"],"files":["src/cli.ts"],"commands":[{"run":"npx vitest run tests/run-command.test.ts","exit":0}]} -->
 
 **Checkpoint**: `maestro plan` aprova, `maestro run` emite o briefing pronto para o agente delegar.
 
 #### Fase final — Documentação e qualidade
 
-- [x] T017 [DOC] [US-001] Registrar o comando e o formato do briefing em .specsfy/STACK.md e revisar PROJECT.md — Refs: US-001, FR-001, FR-003, AC-002, AC-007 — Depends: T013, T014, T015, T016
+- [x] T017 [DOC] [US-001] Registrar o comando e o formato do briefing em .project-context/STACK.md e revisar PROJECT.md — Refs: US-001, FR-001, FR-003, AC-002, AC-007 — Depends: T013, T014, T015, T016
   - [x] **PREP**: Confirmar T013–T016 GREEN e o conteúdo atual dos dois documentos.
-  - [x] **EXECUTE**: Seção nova em `.specsfy/STACK.md` (comando, composição do comportamento, fronteira de runtime) e revisão de `PROJECT.md`, corrigindo "O que ainda não existe" para dizer que o plano já tem consumidor, e o que continua faltando.
-  - [x] **VERIFY**: `build_documentation.mjs --project . --check` limpo; `docs/` reconstruído. `.specsfy/STACK.md` ganhou a seção do comando e `PROJECT.md` registrou a capacidade nova, corrigindo "O que ainda não existe" para dizer que o briefing sai pronto, mas ninguém prova que um subagent de fato rodou. `monitor_context.mjs --check` sinaliza `.specsfy/PACKAGES.md` pendente por causa do bump de versão do próprio pacote — sem dependência real alterada (`git diff package.json` mostra só a versão).
+  - [x] **EXECUTE**: Seção nova em `.project-context/STACK.md` (comando, composição do comportamento, fronteira de runtime) e revisão de `PROJECT.md`, corrigindo "O que ainda não existe" para dizer que o plano já tem consumidor, e o que continua faltando.
+  - [x] **VERIFY**: `build_documentation.mjs --project . --check` limpo; `docs/` reconstruído. `.project-context/STACK.md` ganhou a seção do comando e `PROJECT.md` registrou a capacidade nova, corrigindo "O que ainda não existe" para dizer que o briefing sai pronto, mas ninguém prova que um subagent de fato rodou. `monitor_context.mjs --check` sinaliza `.project-context/PACKAGES.md` pendente por causa do bump de versão do próprio pacote — sem dependência real alterada (`git diff package.json` mostra só a versão).
   - [x] **VISUAL**: Não aplicável — documentação em Markdown, sem tela.
   - [x] **EVIDENCE**: Registrar comandos e resultado nas seções 11–13.
   - [x] **IMPROVE**: Registrar melhoria aplicada ou ausência justificada.
@@ -761,5 +761,5 @@ Cada tarefa possui exatamente este checklist, atualizado durante a execução:
 - [x] Os cenários `AC-001` a `AC-012` passam.
 - [x] `FR-001` a `FR-004` e `NFR-001`/`NFR-002` têm evidência de verificação nas seções 11–12.
 - [x] Todas as tarefas da seção 14 estão concluídas — 18/18, 108/108 itens.
-- [x] `.specsfy/STACK.md` registra o comando novo e o formato do briefing.
+- [x] `.project-context/STACK.md` registra o comando novo e o formato do briefing.
 - [x] `PROJECT.md` revisado quanto à capacidade nova e à correção de "O que ainda não existe".

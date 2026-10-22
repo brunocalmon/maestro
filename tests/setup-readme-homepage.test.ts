@@ -56,7 +56,7 @@ describe("Root README Homepage and Docs Relative Links Sanitization", () => {
 });
 
 describe("AC-007 — a missing README gets a generic placeholder, never maestro's own content", () => {
-  // SPECSFY: US-002 FR-003 AC-007
+  // TRACEABILITY: US-002 FR-003 AC-007
   test("does not mention maestro, its package name or its own commands", () => {
     const root = mkdtempSync(join(tmpdir(), "maestro-test-readme-generic-"));
     mkdirSync(join(root, "docs"), { recursive: true });
@@ -66,10 +66,10 @@ describe("AC-007 — a missing README gets a generic placeholder, never maestro'
     const content = readFileSync(join(root, "README.md"), "utf8").toLowerCase();
     expect(content).not.toContain("maestro");
     expect(content).not.toContain("@brunocalmon");
-    expect(content).not.toContain("specsfy");
+    expect(content).not.toContain("framework");
   });
 
-  // SPECSFY: US-002 FR-003 AC-007
+  // TRACEABILITY: US-002 FR-003 AC-007
   test("still points to docs/README.md as the index and warns that title/description are pending", () => {
     const root = mkdtempSync(join(tmpdir(), "maestro-test-readme-generic-index-"));
     mkdirSync(join(root, "docs"), { recursive: true });
@@ -83,7 +83,7 @@ describe("AC-007 — a missing README gets a generic placeholder, never maestro'
 });
 
 describe("AC-008 — an existing README is never replaced by the generic placeholder", () => {
-  // SPECSFY: US-002 FR-003 AC-008
+  // TRACEABILITY: US-002 FR-003 AC-008
   test("keeps the project's own content untouched", () => {
     const root = mkdtempSync(join(tmpdir(), "maestro-test-readme-preserve-"));
     mkdirSync(join(root, "docs"), { recursive: true });
@@ -97,7 +97,7 @@ describe("AC-008 — an existing README is never replaced by the generic placeho
 });
 
 describe("AC-009 — malformed links in an existing README are still sanitized", () => {
-  // SPECSFY: US-002 FR-003 AC-009
+  // TRACEABILITY: US-002 FR-003 AC-009
   test("old-style docs/ links are normalized without touching the rest of the content", () => {
     const root = mkdtempSync(join(tmpdir(), "maestro-test-readme-sanitize-only-"));
     mkdirSync(join(root, "docs"), { recursive: true });

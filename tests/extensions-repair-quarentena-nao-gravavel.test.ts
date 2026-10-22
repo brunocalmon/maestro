@@ -4,7 +4,7 @@ import { registryFake, targetEnvFake } from "./extensions-fixtures";
 import { computeChecksum } from "../src/extensions/anchor";
 
 describe("AC-139 — an unwritable quarantine refuses the whole repair", () => {
-  // SPECSFY: US-081 FR-084 FR-085 NFR-080 NFR-081 AC-139
+  // TRACEABILITY: US-081 FR-084 FR-085 NFR-080 NFR-081 AC-139
   it("an unwritable quarantine directory keeps the divergent one exactly as it was", () => {
     const target = ".maestro/extensions/my-hook.md";
     const targetEnv = targetEnvFake({ [target]: "# divergent content" });

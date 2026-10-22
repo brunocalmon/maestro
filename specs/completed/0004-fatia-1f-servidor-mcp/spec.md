@@ -2,7 +2,7 @@
 
 | Campo | Valor |
 | --- | --- |
-| Formato | Specsfy/2.0 |
+| Formato | former project tool/2.0 |
 | ID | SPEC-0004 |
 | Slug | 0004-fatia-1f-servidor-mcp |
 | Status | Complete |
@@ -520,7 +520,7 @@ O ponto sensível desta fatia não é o protocolo: é o confinamento. A observa�
 #### Gate do Ato I — Definição
 
 - **Resultado**: READY (2026-08-24), reconfirmado no aceite final em 2026-08-29
-- **Comando**: `node .claude/skills/specsfy-04-validate/scripts/validate_spec.mjs specs/completed/0004-fatia-1f-servidor-mcp/spec.md`
+- **Comando**: `node .claude/skills/framework-04-validate/scripts/validate_spec.mjs specs/completed/0004-fatia-1f-servidor-mcp/spec.md`
 - **Cobertura**: 3 US, 6 FR, 3 NFR, 13 AC, 6 DEC; mínimo de 3 AC por ID satisfeito, sem ID inexistente citado em `**Cobre**`.
 - **Research**: `load_research.mjs` em `PASSED`, com `R-001` verificado e um artefato indexado.
 
@@ -547,9 +547,9 @@ O ponto sensível desta fatia não é o protocolo: é o confinamento. A observa�
 #### Gate do Ato II — Plano
 
 - **Resultado**: Passed (2026-08-24)
-- **Comando**: `node .claude/skills/specsfy-05-tasks/scripts/validate_tasks.mjs specs/completed/0004-fatia-1f-servidor-mcp/spec.md`
+- **Comando**: `node .claude/skills/framework-05-tasks/scripts/validate_tasks.mjs specs/completed/0004-fatia-1f-servidor-mcp/spec.md`
 - **Plano**: 21 tarefas — 13 `[TEST] [TDD]`, 4 `[CODE]`, 2 `[DOC]`, 2 `[OPS]`; 105 itens de checklist; 25 de 25 IDs cobertos.
-- **RED**: `npm run test:tdd` com dez arquivos novos reprovando por `Cannot find module` sobre `src/mcp/root`, `src/mcp/tool` e `src/mcp/server`, e os 94 casos anteriores verdes. 39 casos marcados com `SPECSFY`, cobrindo os treze `AC`.
+- **RED**: `npm run test:tdd` com dez arquivos novos reprovando por `Cannot find module` sobre `src/mcp/root`, `src/mcp/tool` e `src/mcp/server`, e os 94 casos anteriores verdes. 39 casos marcados com `TRACEABILITY`, cobrindo os treze `AC`.
 - **Rastreabilidade**: `check_traceability.mjs` em 25/25 IDs cobertos sobre 38 arquivos de teste.
 
 **Sobre a dependência.** `@modelcontextprotocol/sdk` entrou fixado em 1.30.0. A inspeção de `server/zod-compat.d.ts` mostrou que `inputSchema` aceita apenas esquema zod — `AnySchema = z3.ZodTypeAny | z4.$ZodType` —, sem porta de entrada para esquema JSON puro. Por isso `zod` foi declarada direta e fixa em 3.25.76, a mesma que o SDK resolve, em vez de consumida por resolução transitiva, que a regra de fixação do projeto não alcançaria.
@@ -612,91 +612,91 @@ Treze tarefas, uma por `AC`. Onde o arquivo de destino é compartilhado, a taref
 
 - [x] T002 [TEST] [TDD] [US-001] Derivar de AC-001 o caso em tests/mcp-surface.test.ts — Refs: US-001, FR-001, NFR-002, AC-001 — Depends: none
   - [x] **PREP**: Ler o Gherkin de AC-001 e fixar o critério: a listagem devolve exatamente uma tool, chamada `setup`, cujo esquema declara `project_root` como obrigatório.
-  - [x] **EXECUTE**: Escrever o caso em `tests/mcp-surface.test.ts`, com marcador `SPECSFY` por asserção e raízes em diretório temporário, para que nenhum caso toque o projeto real.
+  - [x] **EXECUTE**: Escrever o caso em `tests/mcp-surface.test.ts`, com marcador `TRACEABILITY` por asserção e raízes em diretório temporário, para que nenhum caso toque o projeto real.
   - [x] **VERIFY**: RED observado — `npm run test:tdd` reprova o arquivo inteiro por `Cannot find module '../src/mcp/server'`, e não por erro de escrita do caso.
   - [x] **EVIDENCE**: `npm run test:tdd` com 10 arquivos em RED e os 94 casos anteriores verdes; 7 casos marcados no arquivo. Registrado na seção 12.
   - [x] **IMPROVE**: Contar as tools e inspecionar o esquema declarado, em vez de conferir apenas que `setup` está presente: presença não exclui excedente.
 
 - [x] T003 [P] [TEST] [TDD] [US-002] Derivar de AC-002 o caso em tests/mcp-tool-missing-root.test.ts — Refs: US-002, FR-002, FR-006, AC-002 — Depends: none
   - [x] **PREP**: Ler o Gherkin de AC-002 e fixar o critério: acionar sem `project_root` devolve erro que nomeia o parâmetro e não cria arquivo algum.
-  - [x] **EXECUTE**: Escrever o caso em `tests/mcp-tool-missing-root.test.ts`, com marcador `SPECSFY` por asserção e raízes em diretório temporário, para que nenhum caso toque o projeto real.
+  - [x] **EXECUTE**: Escrever o caso em `tests/mcp-tool-missing-root.test.ts`, com marcador `TRACEABILITY` por asserção e raízes em diretório temporário, para que nenhum caso toque o projeto real.
   - [x] **VERIFY**: RED observado — `npm run test:tdd` reprova o arquivo inteiro por `Cannot find module '../src/mcp/tool'`, e não por erro de escrita do caso.
   - [x] **EVIDENCE**: `npm run test:tdd` com 10 arquivos em RED e os 94 casos anteriores verdes; 3 casos marcados no arquivo. Registrado na seção 12.
   - [x] **IMPROVE**: Fotografar a árvore antes e depois e comparar, porque um erro devolvido não prova que nada foi escrito antes dele.
 
 - [x] T004 [P] [TEST] [TDD] [US-002] Derivar de AC-003 o caso em tests/mcp-tool-invalid-root.test.ts — Refs: US-002, FR-003, FR-006, NFR-001, AC-003 — Depends: none
   - [x] **PREP**: Ler o Gherkin de AC-003 e fixar o critério: um diretório vazio, sem marcador de projeto, é recusado com explicação do critério e sem escrita.
-  - [x] **EXECUTE**: Escrever o caso em `tests/mcp-tool-invalid-root.test.ts`, com marcador `SPECSFY` por asserção e raízes em diretório temporário, para que nenhum caso toque o projeto real.
+  - [x] **EXECUTE**: Escrever o caso em `tests/mcp-tool-invalid-root.test.ts`, com marcador `TRACEABILITY` por asserção e raízes em diretório temporário, para que nenhum caso toque o projeto real.
   - [x] **VERIFY**: RED observado — `npm run test:tdd` reprova o arquivo inteiro por `Cannot find module '../src/mcp/tool'`, e não por erro de escrita do caso.
   - [x] **EVIDENCE**: `npm run test:tdd` com 10 arquivos em RED e os 94 casos anteriores verdes; 3 casos marcados no arquivo. Registrado na seção 12.
   - [x] **IMPROVE**: Usar diretório temporário recém-criado, para que a ausência de marcador seja um fato do caso e não da máquina.
 
 - [x] T005 [P] [TEST] [TDD] [US-001] Derivar de AC-004 o caso em tests/mcp-tool-install.test.ts — Refs: US-001, FR-004, FR-005, AC-004 — Depends: none
   - [x] **PREP**: Ler o Gherkin de AC-004 e fixar o critério: com raiz válida a tool instala os sete hooks e a resposta lista nome e evento de cada um.
-  - [x] **EXECUTE**: Escrever o caso em `tests/mcp-tool-install.test.ts`, com marcador `SPECSFY` por asserção e raízes em diretório temporário, para que nenhum caso toque o projeto real.
+  - [x] **EXECUTE**: Escrever o caso em `tests/mcp-tool-install.test.ts`, com marcador `TRACEABILITY` por asserção e raízes em diretório temporário, para que nenhum caso toque o projeto real.
   - [x] **VERIFY**: RED observado — `npm run test:tdd` reprova o arquivo inteiro por `Cannot find module '../src/mcp/tool'`, e não por erro de escrita do caso.
   - [x] **EVIDENCE**: `npm run test:tdd` com 10 arquivos em RED e os 94 casos anteriores verdes; 3 casos marcados no arquivo. Registrado na seção 12.
   - [x] **IMPROVE**: Conferir o disco além da resposta — foi exatamente a divergência entre relato e escrita que a fatia 1b descobriu tarde.
 
 - [x] T006 [P] [TEST] [TDD] [US-002] Derivar de AC-005 o caso em tests/mcp-confinement.test.ts — Refs: US-002, FR-002, NFR-001, NFR-003, AC-005 — Depends: none
   - [x] **PREP**: Ler o Gherkin de AC-005 e fixar o critério: com o diretório de trabalho do processo apontando para fora, a escrita aparece só na raiz informada.
-  - [x] **EXECUTE**: Escrever o caso em `tests/mcp-confinement.test.ts`, com marcador `SPECSFY` por asserção e raízes em diretório temporário, para que nenhum caso toque o projeto real.
+  - [x] **EXECUTE**: Escrever o caso em `tests/mcp-confinement.test.ts`, com marcador `TRACEABILITY` por asserção e raízes em diretório temporário, para que nenhum caso toque o projeto real.
   - [x] **VERIFY**: RED observado — `npm run test:tdd` reprova o arquivo inteiro por `Cannot find module '../src/mcp/tool'`, e não por erro de escrita do caso.
   - [x] **EVIDENCE**: `npm run test:tdd` com 10 arquivos em RED e os 94 casos anteriores verdes; 3 casos marcados no arquivo. Registrado na seção 12.
   - [x] **IMPROVE**: Apontar o diretório de trabalho para um segundo projeto real e conferir que ele fica intocado; conferir apenas o projeto certo não distingue confinamento de coincidência.
 
 - [x] T007 [P] [TEST] [TDD] [US-003] Derivar de AC-006 o caso em tests/mcp-parity.test.ts — Refs: US-003, FR-004, FR-005, NFR-002, AC-006 — Depends: none
   - [x] **PREP**: Ler o Gherkin de AC-006 e fixar o critério: dois projetos idênticos, um configurado pelo terminal e outro pela tool, terminam com os mesmos hooks e registros.
-  - [x] **EXECUTE**: Escrever o caso em `tests/mcp-parity.test.ts`, com marcador `SPECSFY` por asserção e raízes em diretório temporário, para que nenhum caso toque o projeto real.
+  - [x] **EXECUTE**: Escrever o caso em `tests/mcp-parity.test.ts`, com marcador `TRACEABILITY` por asserção e raízes em diretório temporário, para que nenhum caso toque o projeto real.
   - [x] **VERIFY**: RED observado — `npm run test:tdd` reprova o arquivo inteiro por `Cannot find module '../src/mcp/tool'`, e não por erro de escrita do caso.
   - [x] **EVIDENCE**: `npm run test:tdd` com 10 arquivos em RED e os 94 casos anteriores verdes; 3 casos marcados no arquivo. Registrado na seção 12.
   - [x] **IMPROVE**: Comparar estruturas normalizadas, ignorando carimbo de tempo, que a fatia 1b já fixa em época zero.
 
 - [x] T008 [P] [TEST] [TDD] [US-003] Derivar de AC-007 o caso em tests/mcp-idempotent.test.ts — Refs: US-003, FR-004, NFR-002, AC-007 — Depends: none
   - [x] **PREP**: Ler o Gherkin de AC-007 e fixar o critério: a segunda chamada sobre a mesma raiz informa que já estava configurado e mantém sete entradas.
-  - [x] **EXECUTE**: Escrever o caso em `tests/mcp-idempotent.test.ts`, com marcador `SPECSFY` por asserção e raízes em diretório temporário, para que nenhum caso toque o projeto real.
+  - [x] **EXECUTE**: Escrever o caso em `tests/mcp-idempotent.test.ts`, com marcador `TRACEABILITY` por asserção e raízes em diretório temporário, para que nenhum caso toque o projeto real.
   - [x] **VERIFY**: RED observado — `npm run test:tdd` reprova o arquivo inteiro por `Cannot find module '../src/mcp/tool'`, e não por erro de escrita do caso.
   - [x] **EVIDENCE**: `npm run test:tdd` com 10 arquivos em RED e os 94 casos anteriores verdes; 3 casos marcados no arquivo. Registrado na seção 12.
   - [x] **IMPROVE**: Passar o registro anterior de fato, já que a idempotência da fatia 1b só funciona quando ele é lido e repassado.
 
 - [x] T009 [P] [TEST] [TDD] [US-002] Derivar de AC-008 o caso em tests/mcp-environment.test.ts — Refs: US-002, FR-002, NFR-001, NFR-003, AC-008 — Depends: none
   - [x] **PREP**: Ler o Gherkin de AC-008 e fixar o critério: com variável de projeto no ambiente apontando para outro lugar, só a raiz informada é escrita.
-  - [x] **EXECUTE**: Escrever o caso em `tests/mcp-environment.test.ts`, com marcador `SPECSFY` por asserção e raízes em diretório temporário, para que nenhum caso toque o projeto real.
+  - [x] **EXECUTE**: Escrever o caso em `tests/mcp-environment.test.ts`, com marcador `TRACEABILITY` por asserção e raízes em diretório temporário, para que nenhum caso toque o projeto real.
   - [x] **VERIFY**: RED observado — `npm run test:tdd` reprova o arquivo inteiro por `Cannot find module '../src/mcp/tool'`, e não por erro de escrita do caso.
   - [x] **EVIDENCE**: `npm run test:tdd` com 10 arquivos em RED e os 94 casos anteriores verdes; 3 casos marcados no arquivo. Registrado na seção 12.
   - [x] **IMPROVE**: Restaurar o ambiente ao fim do caso, para não contaminar os demais arquivos da suíte.
 
 - [x] T010 [P] [TEST] [TDD] [US-001] Derivar de AC-009 o caso em tests/mcp-failure.test.ts — Refs: US-001, US-003, FR-005, FR-006, AC-009 — Depends: none
   - [x] **PREP**: Ler o Gherkin de AC-009 e fixar o critério: quando a escrita não pode ocorrer, a resposta indica erro e não afirma conclusão.
-  - [x] **EXECUTE**: Escrever o caso em `tests/mcp-failure.test.ts`, com marcador `SPECSFY` por asserção e raízes em diretório temporário, para que nenhum caso toque o projeto real.
+  - [x] **EXECUTE**: Escrever o caso em `tests/mcp-failure.test.ts`, com marcador `TRACEABILITY` por asserção e raízes em diretório temporário, para que nenhum caso toque o projeto real.
   - [x] **VERIFY**: RED observado — `npm run test:tdd` reprova o arquivo inteiro por `Cannot find module '../src/mcp/tool'`, e não por erro de escrita do caso.
   - [x] **EVIDENCE**: `npm run test:tdd` com 10 arquivos em RED e os 94 casos anteriores verdes; 3 casos marcados no arquivo. Registrado na seção 12.
   - [x] **IMPROVE**: Provocar a falha por permissão real em diretório temporário, e não por simulação, para que o caminho de erro exercitado seja o verdadeiro.
 
 - [x] T011 [TEST] [TDD] [US-001] Derivar de AC-010 o caso em tests/mcp-surface.test.ts — Refs: US-001, FR-001, NFR-002, AC-010 — Depends: T002
   - [x] **PREP**: Ler o Gherkin de AC-010 e fixar o critério: a listagem não traz tool de aprovação, detecção de agente ou seleção de modelo, e o terminal segue com três comandos.
-  - [x] **EXECUTE**: Escrever o caso em `tests/mcp-surface.test.ts`, com marcador `SPECSFY` por asserção e raízes em diretório temporário, para que nenhum caso toque o projeto real.
+  - [x] **EXECUTE**: Escrever o caso em `tests/mcp-surface.test.ts`, com marcador `TRACEABILITY` por asserção e raízes em diretório temporário, para que nenhum caso toque o projeto real.
   - [x] **VERIFY**: RED observado — `npm run test:tdd` reprova o arquivo inteiro por `Cannot find module '../src/mcp/server'`, e não por erro de escrita do caso.
   - [x] **EVIDENCE**: `npm run test:tdd` com 10 arquivos em RED e os 94 casos anteriores verdes; 7 casos marcados no arquivo. Registrado na seção 12.
   - [x] **IMPROVE**: Derivar a expectativa da superfície declarada, não de uma lista literal que envelhece a cada fatia nova.
 
 - [x] T012 [P] [TEST] [TDD] [US-002] Derivar de AC-011 o caso em tests/mcp-root.test.ts — Refs: US-002, FR-003, FR-006, NFR-001, AC-011 — Depends: none
   - [x] **PREP**: Ler o Gherkin de AC-011 e fixar o critério: um caminho que não existe é recusado sem que diretório algum seja criado para acomodá-lo.
-  - [x] **EXECUTE**: Escrever o caso em `tests/mcp-root.test.ts`, com marcador `SPECSFY` por asserção e raízes em diretório temporário, para que nenhum caso toque o projeto real.
+  - [x] **EXECUTE**: Escrever o caso em `tests/mcp-root.test.ts`, com marcador `TRACEABILITY` por asserção e raízes em diretório temporário, para que nenhum caso toque o projeto real.
   - [x] **VERIFY**: RED observado — `npm run test:tdd` reprova o arquivo inteiro por `Cannot find module '../src/mcp/root'`, e não por erro de escrita do caso.
   - [x] **EVIDENCE**: `npm run test:tdd` com 10 arquivos em RED e os 94 casos anteriores verdes; 8 casos marcados no arquivo. Registrado na seção 12.
   - [x] **IMPROVE**: Conferir que o caminho continua ausente depois da chamada, e não só que houve erro.
 
 - [x] T013 [TEST] [TDD] [US-002] Derivar de AC-012 o caso em tests/mcp-root.test.ts — Refs: US-002, FR-002, FR-003, NFR-003, AC-012 — Depends: T012
   - [x] **PREP**: Ler o Gherkin de AC-012 e fixar o critério: um caminho relativo é recusado pedindo caminho absoluto, sem escrever no diretório de trabalho do processo.
-  - [x] **EXECUTE**: Escrever o caso em `tests/mcp-root.test.ts`, com marcador `SPECSFY` por asserção e raízes em diretório temporário, para que nenhum caso toque o projeto real.
+  - [x] **EXECUTE**: Escrever o caso em `tests/mcp-root.test.ts`, com marcador `TRACEABILITY` por asserção e raízes em diretório temporário, para que nenhum caso toque o projeto real.
   - [x] **VERIFY**: RED observado — `npm run test:tdd` reprova o arquivo inteiro por `Cannot find module '../src/mcp/root'`, e não por erro de escrita do caso.
   - [x] **EVIDENCE**: `npm run test:tdd` com 10 arquivos em RED e os 94 casos anteriores verdes; 8 casos marcados no arquivo. Registrado na seção 12.
   - [x] **IMPROVE**: Executar com o diretório de trabalho dentro de um projeto válido, onde resolver o relativo produziria escrita plausível e silenciosa.
 
 - [x] T014 [TEST] [TDD] [US-001] Derivar de AC-013 o caso em tests/mcp-surface.test.ts — Refs: US-001, FR-001, NFR-002, AC-013 — Depends: T011
   - [x] **PREP**: Ler o Gherkin de AC-013 e fixar o critério: o handshake devolve nome do servidor e a mesma versão que o terminal reporta.
-  - [x] **EXECUTE**: Escrever o caso em `tests/mcp-surface.test.ts`, com marcador `SPECSFY` por asserção e raízes em diretório temporário, para que nenhum caso toque o projeto real.
+  - [x] **EXECUTE**: Escrever o caso em `tests/mcp-surface.test.ts`, com marcador `TRACEABILITY` por asserção e raízes em diretório temporário, para que nenhum caso toque o projeto real.
   - [x] **VERIFY**: RED observado — `npm run test:tdd` reprova o arquivo inteiro por `Cannot find module '../src/mcp/server'`, e não por erro de escrita do caso.
   - [x] **EVIDENCE**: `npm run test:tdd` com 10 arquivos em RED e os 94 casos anteriores verdes; 7 casos marcados no arquivo. Registrado na seção 12.
   - [x] **IMPROVE**: Comparar contra `readVersion()` em vez de literal, para que a expectativa não precise de edição a cada versão.
@@ -704,13 +704,13 @@ Treze tarefas, uma por `AC`. Onde o arquivo de destino é compartilhado, a taref
 #### Fase 3 — Código, cada tarefa atrás do seu RED
 
 - [x] T015 [CODE] [US-002] Implementar em src/mcp/root.ts — Refs: FR-003, NFR-003, AC-003, AC-011, AC-012 — Depends: T004, T012, T013
-  - [x] **PREP**: RED confirmado em T004, T012 e T013; `docs/` reconstruído por `$specsfy-documentator` antes da alteração, com `build_documentation --check` em exit 0.
+  - [x] **PREP**: RED confirmado em T004, T012 e T013; `docs/` reconstruído por `$framework-documentator` antes da alteração, com `build_documentation --check` em exit 0.
   - [x] **EXECUTE**: `src/mcp/root.ts` valida na ordem tipo, caminho absoluto, existência, ser diretório e conter marcador. Devolve `{ ok }` discriminado em vez de lançar, para que quem chama escolha como reportar. Os marcadores vivem em `PROJECT_MARKERS`.
   - [x] **VERIFY**: `npx vitest run tests/mcp-root.test.ts` com 8 de 8 aprovando, e a suíte inteira subindo de 94 para 102 casos. `npx tsc --noEmit` em exit 0. `grep` por `process.cwd`, `process.env`, `import.meta` e `node:process` no arquivo devolve apenas a linha de comentário que explica a ausência — nenhuma chamada.
   - [x] **EVIDENCE**: Comandos, contagens e o resultado do `grep` registrados na seção 12.
   - [x] **IMPROVE**: A primeira redação da recusa por caminho ausente dizia "não foi encontrado", e a asserção de `AC-011` casa `não encontrad`; o "foi" no meio quebrava o casamento. Corrigi a mensagem para `caminho não encontrado: <caminho>`, e não a asserção — afrouxar o teste para acomodar a redação teria fabricado GREEN.
 
-  <!-- specsfy:evidence {"task": "T015", "refs": ["US-002", "FR-003", "NFR-003", "AC-003", "AC-011", "AC-012"], "files": ["src/mcp/root.ts"], "commands": [{"run": "npx vitest run tests/mcp-root.test.ts", "exit": 0}, {"run": "npx tsc --noEmit", "exit": 0}]} -->
+  <!-- framework:evidence {"task": "T015", "refs": ["US-002", "FR-003", "NFR-003", "AC-003", "AC-011", "AC-012"], "files": ["src/mcp/root.ts"], "commands": [{"run": "npx vitest run tests/mcp-root.test.ts", "exit": 0}, {"run": "npx tsc --noEmit", "exit": 0}]} -->
 
 - [x] T016 [CODE] [US-002] Implementar em src/mcp/tool.ts — Refs: FR-002, FR-004, FR-005, FR-006, NFR-001, AC-002, AC-004, AC-005, AC-006, AC-007, AC-008, AC-009 — Depends: T003, T005, T006, T007, T008, T009, T010, T015
   - [x] **PREP**: RED confirmado nas sete tarefas de teste e T015 em GREEN; `docs/` reconstruído antes da alteração.
@@ -719,7 +719,7 @@ Treze tarefas, uma por `AC`. Onde o arquivo de destino é compartilhado, a taref
   - [x] **EVIDENCE**: Comandos, contagens e a verificação da árvore vizinha registrados na seção 12.
   - [x] **IMPROVE**: O fixture de paridade chamava `writeSettings` com dois argumentos, quando a assinatura pede três, e escrevia de novo o que `runSetup` já grava. Corrigi o fixture, não a asserção. O defeito só apareceu porque o caso executa de verdade contra o disco; um teste que conferisse apenas o retorno teria passado com o fixture quebrado — que é exatamente o modo de falha descoberto na fatia 1b.
 
-  <!-- specsfy:evidence {"task": "T016", "refs": ["US-002", "US-003", "FR-002", "FR-004", "FR-005", "FR-006", "NFR-001", "AC-002", "AC-004", "AC-005", "AC-006", "AC-007", "AC-008", "AC-009"], "files": ["src/mcp/tool.ts", "tests/mcp-parity.test.ts"], "commands": [{"run": "npm run test:tdd", "exit": 0}, {"run": "npx tsc --noEmit", "exit": 0}]} -->
+  <!-- framework:evidence {"task": "T016", "refs": ["US-002", "US-003", "FR-002", "FR-004", "FR-005", "FR-006", "NFR-001", "AC-002", "AC-004", "AC-005", "AC-006", "AC-007", "AC-008", "AC-009"], "files": ["src/mcp/tool.ts", "tests/mcp-parity.test.ts"], "commands": [{"run": "npm run test:tdd", "exit": 0}, {"run": "npx tsc --noEmit", "exit": 0}]} -->
 
 - [x] T017 [CODE] [US-001] Implementar em src/mcp/server.ts — Refs: FR-001, NFR-002, AC-001, AC-010, AC-013 — Depends: T002, T011, T014, T016
   - [x] **PREP**: RED confirmado em T002, T011 e T014, e T016 em GREEN; `docs/` reconstruído antes da alteração.
@@ -728,7 +728,7 @@ Treze tarefas, uma por `AC`. Onde o arquivo de destino é compartilhado, a taref
   - [x] **EVIDENCE**: Comandos, contagens e o nome e versão do handshake registrados na seção 12.
   - [x] **IMPROVE**: A suíte ficou verde antes de o projeto compilar: o Vitest não checa tipos, e `tsc` reprovava porque o retorno da tool não tinha a assinatura de índice que o SDK exige. Verde na suíte não é prova de build. Passei a conferir `tsc` e `build` como parte do `VERIFY` desta fatia, e não apenas no fechamento.
 
-  <!-- specsfy:evidence {"task": "T017", "refs": ["US-001", "FR-001", "NFR-002", "AC-001", "AC-010", "AC-013"], "files": ["src/mcp/server.ts", "src/mcp/tool.ts"], "commands": [{"run": "npm run test:tdd", "exit": 0}, {"run": "npx tsc --noEmit", "exit": 0}, {"run": "npm run build", "exit": 0}]} -->
+  <!-- framework:evidence {"task": "T017", "refs": ["US-001", "FR-001", "NFR-002", "AC-001", "AC-010", "AC-013"], "files": ["src/mcp/server.ts", "src/mcp/tool.ts"], "commands": [{"run": "npm run test:tdd", "exit": 0}, {"run": "npx tsc --noEmit", "exit": 0}, {"run": "npm run build", "exit": 0}]} -->
 
 - [x] T018 [CODE] [US-001] Implementar em src/mcp/main.ts e package.json — Refs: FR-001, AC-013 — Depends: T017
   - [x] **PREP**: T017 em GREEN; `docs/` reconstruído antes da alteração.
@@ -737,13 +737,13 @@ Treze tarefas, uma por `AC`. Onde o arquivo de destino é compartilhado, a taref
   - [x] **EVIDENCE**: Comandos, exit codes e a resposta do handshake por subprocesso registrados na seção 12.
   - [x] **IMPROVE**: A verificação foi feita por subprocesso, e não pelo transporte em memória que a suíte usa. Os dois caminhos exercitam código diferente, e só o subprocesso prova que o cabeçalho executável, o caminho em `dist/` e a declaração do binário estão corretos ao mesmo tempo.
 
-  <!-- specsfy:evidence {"task": "T018", "refs": ["US-001", "FR-001", "AC-013"], "files": ["src/mcp/main.ts", "package.json"], "commands": [{"run": "npm run build", "exit": 0}, {"run": "npm run test:tdd", "exit": 0}]} -->
+  <!-- framework:evidence {"task": "T018", "refs": ["US-001", "FR-001", "AC-013"], "files": ["src/mcp/main.ts", "package.json"], "commands": [{"run": "npm run build", "exit": 0}, {"run": "npm run test:tdd", "exit": 0}]} -->
 
 #### Fase 4 — Fechamento
 
-- [x] T019 [DOC] Registrar servidor, módulos e dependência em .specsfy/STACK.md — Refs: FR-001 — Depends: T018
+- [x] T019 [DOC] Registrar servidor, módulos e dependência em .project-context/STACK.md — Refs: FR-001 — Depends: T018
   - [x] **PREP**: Mudanças de estrutura conferidas: quatro arquivos em `src/mcp/`, duas dependências novas e um segundo binário.
-  - [x] **EXECUTE**: `.specsfy/STACK.md` ganhou a linha do binário `common-rules-mcp` e a seção `Servidor do protocolo`, com a responsabilidade de cada um dos quatro módulos. As duas dependências já haviam entrado durante T015, quando o monitor as cobrou antes do previsto.
+  - [x] **EXECUTE**: `.project-context/STACK.md` ganhou a linha do binário `common-rules-mcp` e a seção `Servidor do protocolo`, com a responsabilidade de cada um dos quatro módulos. As duas dependências já haviam entrado durante T015, quando o monitor as cobrou antes do previsto.
   - [x] **VERIFY**: `build_documentation --check` em exit 0 e o monitor de contexto em `CURRENT`.
   - [x] **EVIDENCE**: Comandos e exit codes registrados na seção 12.
   - [x] **IMPROVE**: A seção registra por que a raiz é parâmetro, citando a observação dos três servidores em execução, para que a decisão não precise ser redescoberta na próxima fatia que tocar o protocolo.
@@ -815,5 +815,5 @@ Registradas na seção 13, todas reversíveis nesta fatia.
 - [x] O confinamento foi exercitado com diretório de trabalho e ambiente apontando para outro projeto, e esse outro projeto permanece intocado.
 - [x] A paridade com o comando de terminal foi conferida sobre projetos equivalentes.
 - [x] O código do servidor não contém leitura de diretório de trabalho nem de variável de ambiente para decidir onde escrever.
-- [x] `.specsfy/STACK.md` registra o servidor, seus módulos e a dependência do SDK.
+- [x] `.project-context/STACK.md` registra o servidor, seus módulos e a dependência do SDK.
 - [x] `PROJECT.md` move o servidor MCP da lista de ausências para a de capacidades.

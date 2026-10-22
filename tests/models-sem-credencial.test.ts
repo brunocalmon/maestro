@@ -11,7 +11,7 @@ const CREDENTIAL_VARIABLES = [
 ];
 
 describe("AC-102 — no credential environment variable is read during the calculation", () => {
-  // SPECSFY: FR-037 NFR-033 NFR-034 NFR-035 AC-102
+  // TRACEABILITY: FR-037 NFR-033 NFR-034 NFR-035 AC-102
   it("the result doesn't change based on the absence of these variables, without throwing", () => {
     const original = CREDENTIAL_VARIABLES.map((name) => [name, process.env[name]] as const);
     try {

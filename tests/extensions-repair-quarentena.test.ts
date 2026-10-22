@@ -35,7 +35,7 @@ function realTargetEnv(dir: string): TargetFileEnvironment {
 }
 
 describe("AC-134 — repair moves the divergent one to quarantine and restores the original", () => {
-  // SPECSFY: US-081 FR-083 FR-084 FR-085 NFR-081 NFR-082 AC-134
+  // TRACEABILITY: US-081 FR-083 FR-084 FR-085 NFR-081 NFR-082 AC-134
   it("for real in a temp directory: create, diverge, repair", () => {
     const root = mkdtempSync(join(tmpdir(), "crs-ext-"));
     const registryEnv = realRegistryEnv(join(root, ".maestro"));

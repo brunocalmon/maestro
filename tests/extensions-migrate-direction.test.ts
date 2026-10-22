@@ -9,7 +9,7 @@ const opts = { upstream: { contextModeHooksJson: null } };
 const quarantine = (root: string): string[] => (existsSync(resolve(root, ".maestro", "quarantine")) ? readdirSync(resolve(root, ".maestro", "quarantine")) : []);
 
 describe("AC-004 — migração de blocos íntegros da direção antiga", () => {
-  // SPECSFY: US-001 FR-002 NFR-001 NFR-002 AC-004
+  // TRACEABILITY: US-001 FR-002 NFR-001 NFR-002 AC-004
   it("blocos movidos, ponteiros removidos, registro atualizado sem duplicata", () => {
     const root = oldDirectionRoot();
     runSetup({ env: claudeEnv, root, write: true, ...opts });
@@ -29,7 +29,7 @@ describe("AC-004 — migração de blocos íntegros da direção antiga", () => 
 });
 
 describe("AC-005 — bloco divergente vai para quarentena", () => {
-  // SPECSFY: US-001 FR-002 NFR-002 AC-005
+  // TRACEABILITY: US-001 FR-002 NFR-002 AC-005
   it("router editado à mão é preservado em quarentena e AGENTS.md recebe o registrado", () => {
     const root = oldDirectionRoot();
     writeFileSync(resolve(root, "CLAUDE.md"), read(root, "CLAUDE.md").replace("router text from an older release", "router text edited by hand"));
@@ -43,26 +43,8 @@ describe("AC-005 — bloco divergente vai para quarentena", () => {
   });
 });
 
-describe("AC-006 — blocos do Specsfy e conteúdo humano intocados", () => {
-  // SPECSFY: US-001 FR-002 NFR-002 AC-006
-  it("specsfy:framework nos dois arquivos e parágrafo humano em CLAUDE.md permanecem", () => {
-    const root = oldDirectionRoot();
-    writeFileSync(resolve(root, "CLAUDE.md"), `${read(root, "CLAUDE.md")}\nUm parágrafo humano sem assinatura que deve ficar aqui.\n`);
-    const specsfyClaude = /<!-- specsfy:framework:start -->[\s\S]*?<!-- specsfy:framework:end -->/.exec(read(root, "CLAUDE.md"))![0];
-    const specsfyAgents = /<!-- specsfy:framework:start -->[\s\S]*?<!-- specsfy:framework:end -->/.exec(read(root, "AGENTS.md"))![0];
-    runSetup({ env: claudeEnv, root, write: true, ...opts });
-    expect(read(root, "CLAUDE.md")).toContain(specsfyClaude);
-    expect(read(root, "AGENTS.md")).toContain(specsfyAgents);
-    expect(read(root, "CLAUDE.md")).toContain("Um parágrafo humano sem assinatura que deve ficar aqui.");
-    expect(count(read(root, "AGENTS.md"), "specsfy:framework:start")).toBe(1);
-    // A preservação só prova algo se a migração de fato aconteceu ao redor do conteúdo alheio.
-    expect(block(root, "AGENTS.md", "router")).toBe(OLD_ROUTER);
-    expect(block(root, "CLAUDE.md", "router")).toBeNull();
-  });
-});
-
 describe("AC-007 — renomeação dos artefatos agents-* do Antigravity", () => {
-  // SPECSFY: US-001 FR-002 NFR-001 AC-007
+  // TRACEABILITY: US-001 FR-002 NFR-001 AC-007
   it("registro passa a usar os nomes compartilhados com os mesmos conteúdos", () => {
     const root = project();
     writeFileSync(resolve(root, "AGENTS.md"), "");

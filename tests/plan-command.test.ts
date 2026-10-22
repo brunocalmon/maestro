@@ -2,7 +2,7 @@ import { describe, it, expect } from "vitest";
 import { run } from "../src/cli";
 
 describe("AC-001 — o comando exige a tarefa", () => {
-  // SPECSFY: US-001 FR-001 NFR-002 AC-001
+  // TRACEABILITY: US-001 FR-001 NFR-002 AC-001
   it("recusa quando --task não é informado, sem apresentar plano", () => {
     const outcome = run(["plan"]);
 
@@ -12,7 +12,7 @@ describe("AC-001 — o comando exige a tarefa", () => {
 });
 
 describe("AC-002 — o comando publica seu uso", () => {
-  // SPECSFY: US-001 FR-001 NFR-001 AC-002
+  // TRACEABILITY: US-001 FR-001 NFR-001 AC-002
   it("imprime o uso e sai com zero em --help", () => {
     const outcome = run(["plan", "--help"]);
 
@@ -22,7 +22,7 @@ describe("AC-002 — o comando publica seu uso", () => {
 });
 
 describe("AC-013 — flag desconhecida é recusada, não ignorada", () => {
-  // SPECSFY: US-001 FR-001 NFR-002 AC-013
+  // TRACEABILITY: US-001 FR-001 NFR-002 AC-013
   it("nomeia a opção que não reconhece", () => {
     const outcome = run(["plan", "--task", "x", "--modo-turbo"]);
 

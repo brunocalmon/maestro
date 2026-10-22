@@ -4,7 +4,7 @@ import { detectEnvironment } from "../src/setup/env";
 import { project, fixedDecision } from "./aprovacao-fixtures";
 
 describe("AC-071 — the decision comes from wherever the case says", () => {
-  // SPECSFY: US-062 FR-065 NFR-061 AC-071
+  // TRACEABILITY: US-062 FR-065 NFR-061 AC-071
   it("two runs with always-approving sources write, on distinct projects", () => {
     const rootA = project("crs-ap-a-");
     const rootB = project("crs-ap-b-");
@@ -14,7 +14,7 @@ describe("AC-071 — the decision comes from wherever the case says", () => {
     expect(b.exitCode).toBe(0);
   });
 
-  // SPECSFY: US-062 NFR-061 AC-071
+  // TRACEABILITY: US-062 NFR-061 AC-071
   it("each call uses the source it was given, not a shared global", () => {
     const rootA = project("crs-ap-a2-");
     const rootB = project("crs-ap-b2-");
@@ -24,7 +24,7 @@ describe("AC-071 — the decision comes from wherever the case says", () => {
     expect(rb.exitCode).not.toBe(0);
   });
 
-  // SPECSFY: US-062 FR-065 AC-071
+  // TRACEABILITY: US-062 FR-065 AC-071
   it("the injected source is what decides, and is actually consulted", () => {
     const rootA = project("crs-ap-a3-");
     const received: { name: string }[][] = [];

@@ -19,7 +19,7 @@ const ran = (agent: string): AgentTelemetryEntry => ({
 });
 
 describe("AC-006 — dois agentes do mesmo plano acumulam sem se sobrescrever", () => {
-  // SPECSFY: US-001 FR-003 NFR-001 AC-006
+  // TRACEABILITY: US-001 FR-003 NFR-001 AC-006
   it("o arquivo de telemetria daquele trace contém os dois registros", async () => {
     const { appendTelemetryEntry, readTelemetryRecord } = await import("../src/telemetry/store");
     const root = project();
@@ -34,7 +34,7 @@ describe("AC-006 — dois agentes do mesmo plano acumulam sem se sobrescrever", 
 });
 
 describe("AC-012 — duas chamadas para o mesmo trace acumulam, não sobrescrevem", () => {
-  // SPECSFY: US-001 FR-003 NFR-001 AC-012
+  // TRACEABILITY: US-001 FR-003 NFR-001 AC-012
   it("preserva a ordem em que os registros foram gravados", async () => {
     const { appendTelemetryEntry, readTelemetryRecord } = await import("../src/telemetry/store");
     const root = project();
@@ -49,7 +49,7 @@ describe("AC-012 — duas chamadas para o mesmo trace acumulam, não sobrescreve
 });
 
 describe("AC-013 — diretório de telemetria é criado quando ausente", () => {
-  // SPECSFY: US-001 FR-003 NFR-001 AC-013
+  // TRACEABILITY: US-001 FR-003 NFR-001 AC-013
   it("cria o diretório e o arquivo do trace com o primeiro registro", async () => {
     const { appendTelemetryEntry, TELEMETRY_DIR } = await import("../src/telemetry/store");
     const root = project();

@@ -9,7 +9,7 @@ describe("AC-013 — the MCP tool accepts an explicit target", () => {
   // none of detectTarget's evidence — this is the scenario found running
   // `maestro setup` for real against a fresh project, from inside
   // Claude Code itself.
-  // SPECSFY: US-001 FR-001 AC-013
+  // TRACEABILITY: US-001 FR-001 AC-013
   it("configures a project with no target evidence at all, given an explicit target", async () => {
     const root = projectWithoutClaudeCode();
     const r = await executeSetup({ project_root: root, target: "claude-code" });
@@ -17,7 +17,7 @@ describe("AC-013 — the MCP tool accepts an explicit target", () => {
     expect(existsSync(join(root, ".claude", "settings.json"))).toBe(true);
   });
 
-  // SPECSFY: US-001 FR-001 AC-013
+  // TRACEABILITY: US-001 FR-001 AC-013
   it("refuses an unknown target instead of silently doing nothing", async () => {
     const root = projectWithoutClaudeCode();
     const r = await executeSetup({ project_root: root, target: "some-editor-nobody-made" });
@@ -25,14 +25,14 @@ describe("AC-013 — the MCP tool accepts an explicit target", () => {
     expect(r.content[0]?.text).toMatch(/unknown target/);
   });
 
-  // SPECSFY: US-001 FR-001 AC-013
+  // TRACEABILITY: US-001 FR-001 AC-013
   it("refuses a non-string target", async () => {
     const root = projectWithoutClaudeCode();
     const r = await executeSetup({ project_root: root, target: 42 });
     expect(r.isError).toBe(true);
   });
 
-  // SPECSFY: US-001 FR-001 AC-006
+  // TRACEABILITY: US-001 FR-001 AC-006
   it("still falls back to filesystem evidence when no target is given", async () => {
     const root = projectWithoutClaudeCode();
     const r = await executeSetup({ project_root: root });

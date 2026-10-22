@@ -65,7 +65,7 @@ idêntico antes e depois da rodada completa.
 - **AC-1**: Dado o repositório limpo (`git status --porcelain` vazio), quando
   `npx vitest run` roda a suíte completa, então `git status --porcelain`
   continua vazio ao final — nenhuma modificação em `.common-rules/`,
-  `.claude/`, `.specsfy/` ou qualquer outro caminho do repositório real.
+  `.claude/`, `.project-context/` ou qualquer outro caminho do repositório real.
 - **AC-2**: Dado `tests/setup-idempotent.test.ts`, `tests/setup-revert.test.ts`,
   `tests/setup-record.test.ts`, `tests/setup-install.test.ts` e
   `tests/setup-dryrun.test.ts`, quando cada um chama `runSetup`, então passa
@@ -156,4 +156,4 @@ idêntico antes e depois da rodada completa.
 
 ## Próximo passo
 
-Pronto para `$specsfy-03-specify`.
+Pronto para `$framework-03-specify`.

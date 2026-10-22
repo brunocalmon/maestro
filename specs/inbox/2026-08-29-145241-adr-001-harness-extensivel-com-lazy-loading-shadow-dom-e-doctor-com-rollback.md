@@ -21,7 +21,7 @@ Criei esse ADR com a ajuda no chat gemini e as skills do matt_pocock/skills. Nã
 
 ## 1. Contexto (O Problema)
 O desenvolvimento de software impulsionado por agentes de IA locais (como Cursor, pi.dev, Windsurf) sofre com a explosão do consumo da janela de contexto e o risco constante de alucinações.
-Atualmente, o LLM é sobrecarregado com regras de conduta estáticas e definições globais de como operar ferramentas (como `specsfy`, skills de engenharia, `context-mode`, etc.). Isso drena tokens e repassa ao LLM o peso cognitivo de rotear, mesclar e executar tarefas de infraestrutura.
+Atualmente, o LLM é sobrecarregado com regras de conduta estáticas e definições globais de como operar ferramentas (como `framework`, skills de engenharia, `context-mode`, etc.). Isso drena tokens e repassa ao LLM o peso cognitivo de rotear, mesclar e executar tarefas de infraestrutura.
 Existe a necessidade de um wrapper orquestrador unificado (`common-rules-server`) que abstraia essa complexidade, garanta consistência absoluta de ambiente e inverta o controle: transferindo a execução para scripts determinísticos e limitando o agente estritamente a decisões cognitivas.
 
 ## 2. Decisões Arquiteturais (A Solução)
@@ -30,7 +30,7 @@ O `common-rules-server` deixa de ser um agrupador de regras e assume o papel de 
 
 ### 2.1. Imutabilidade Estrita do Upstream
 O wrapper encapsula ferramentas de terceiros sem violar suas fontes.
-* **Dependências Intocáveis:** Ferramentas oficiais geridas (como o ecossistema `specsfy` e as Skills base) permanecem 100% imutáveis em seus diretórios originais.
+* **Dependências Intocáveis:** Ferramentas oficiais geridas (como o ecossistema `framework` e as Skills base) permanecem 100% imutáveis em seus diretórios originais.
 * **Modelo "Immutable OS":** A atualização de qualquer dependência subjacente exige obrigatoriamente a atualização do próprio `common-rules-server`. Não existem rotas de fuga ou atalhos para atualizações parciais.
 * **Enforcement via Doctor:** O comando `doctor` atuará bloqueando e revertendo (rollback) ativamente qualquer tentativa manual de adulteração nas versões travadas das dependências originais.
 
@@ -66,7 +66,7 @@ O repositório consumidor contará com o diretório `.common-rules-server/`, ent
 
 ### 2.4. Permissões de Execução e Orquestração de Processos
 A barreira entre a intenção do LLM e a mutação de estado local é delegada às capacidades nativas do agente hospedeiro.
-* **Execução Direta:** As skills e o `common-rules-server-creator` operam executando comandos bash reais (ex: CLI do `specsfy` ou da própria `common-rules` CLI). O orquestrador (Cursor, Claude, etc.) lida naturalmente com essa execução.
+* **Execução Direta:** As skills e o `common-rules-server-creator` operam executando comandos bash reais (ex: CLI do `framework` ou da própria `common-rules` CLI). O orquestrador (Cursor, Claude, etc.) lida naturalmente com essa execução.
 * **Autorização Consolidada:** O comando universal de `setup` mapeará os comandos disponíveis das dependências e solicitará aprovação em lote (*whitelist* permanente) ou *on-demand*, unificando a governança de permissões na inicialização do projeto e eliminando o atrito repetitivo.
 
 ## 2.5. Telemetria e Observabilidade Tática
@@ -82,7 +82,7 @@ Para evitar que o wrapper torne-se um buraco negro de depuração, o sistema con
 * **TICKET-1.3: O Comando `doctor` e Fallback Silencioso** - Construir o comando `common-rules-server doctor`. Ler a pasta `.common-rules-server/` e validar o conteúdo contra o lockfile. Emitir log de aviso e ignorar/excluir o arquivo infrator em caso de divergência. (Bloqueia: 2.2)
 
 ### Épico 2: Orquestração Upstream e o "Setup Universal"
-* **TICKET-2.1: Comando `setup` com Imutabilidade Upstream** - Implementar o `setup` que orquestra a instalação das ferramentas upstream (`specsfy`, skills). Versões chumbadas no código da CLI, instaladas em diretórios padrão intocados. (Bloqueia: 2.2, 2.3)
+* **TICKET-2.1: Comando `setup` com Imutabilidade Upstream** - Implementar o `setup` que orquestra a instalação das ferramentas upstream (`framework`, skills). Versões chumbadas no código da CLI, instaladas em diretórios padrão intocados. (Bloqueia: 2.2, 2.3)
 * **TICKET-2.2: Integração do `doctor` no Ciclo Upstream** - Expandir o `doctor` para varrer diretórios oficiais. Reverter (rollback) mutações rodando o instalador da versão chumbada.
 * **TICKET-2.3: Whitelisting Consolidado (Permissões de Execução)** - Mapear binários/comandos disponibilizados pelas dependências no `setup`. Solicitar aprovação em lote via prompt nativo para adicionar à *whitelist* permanente ou configurar sob demanda. (Bloqueia: Épico 4)
 
@@ -148,4 +148,4 @@ Nenhuma fonte contextual consultada.
 
 ## Próximo passo
 
-Manter em `specs/inbox/` ou refinar com `$specsfy-02-backlog`.
+Manter em `specs/inbox/` ou refinar com `$framework-02-backlog`.

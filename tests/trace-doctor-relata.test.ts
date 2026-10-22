@@ -17,18 +17,18 @@ describe("AC-046 — the identifier appears in the diagnosis", () => {
     return root;
   };
 
-  // SPECSFY: US-040 FR-044 AC-046
+  // TRACEABILITY: US-040 FR-044 AC-046
   it("the report names the recorded identifier", () => {
     expect(report(withTrace()).trace?.kind).toBe("identified");
   });
 
-  // SPECSFY: US-040 FR-041 AC-046
+  // TRACEABILITY: US-040 FR-041 AC-046
   it("the named value is the one from the record", () => {
     const t = report(withTrace()).trace;
     expect(t?.kind === "identified" ? t.trace : null).toBe(FIXED_ID);
   });
 
-  // SPECSFY: US-040 FR-044 AC-046
+  // TRACEABILITY: US-040 FR-044 AC-046
   it("the dependency report remains", () => {
     expect(report(withTrace()).results.length).toBeGreaterThan(0);
   });

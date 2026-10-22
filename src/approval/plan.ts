@@ -1,7 +1,7 @@
 import type { ApprovalRegistry } from "./registry.js";
 import { isApproved } from "./registry.js";
 
-export type DependencyCommandKind = "skills" | "specsfy" | "bridge";
+export type DependencyCommandKind = "skills" | "bridge";
 
 export interface DependencyCommandItem {
   kind: DependencyCommandKind;

@@ -14,7 +14,7 @@ const REAL_OUTPUT = `  Model
 `;
 
 describe("AC-001 — a janela é lida do modelo, localmente", () => {
-  // SPECSFY: US-001 FR-001 NFR-001 AC-001
+  // TRACEABILITY: US-001 FR-001 NFR-001 AC-001
   it("extrai o número declarado como context length", async () => {
     const { parseContextLength } = await import("../src/models/context-window");
     expect(parseContextLength(REAL_OUTPUT)).toBe(131072);
@@ -22,7 +22,7 @@ describe("AC-001 — a janela é lida do modelo, localmente", () => {
 });
 
 describe("AC-002 — saída sem janela não vira zero", () => {
-  // SPECSFY: US-001 FR-001 NFR-002 AC-002
+  // TRACEABILITY: US-001 FR-001 NFR-002 AC-002
   it("devolve ausência declarada, não o número zero", async () => {
     const { parseContextLength } = await import("../src/models/context-window");
     const without = REAL_OUTPUT.split("\n").filter((l) => !l.includes("context length")).join("\n");
@@ -35,7 +35,7 @@ describe("AC-002 — saída sem janela não vira zero", () => {
 });
 
 describe("AC-003 — falha na leitura é ausência, não exceção", () => {
-  // SPECSFY: US-001 FR-001 NFR-002 AC-003
+  // TRACEABILITY: US-001 FR-001 NFR-002 AC-003
   it("um comando que falha devolve null sem lançar", async () => {
     const { contextWindowReader } = await import("../src/models/context-window");
     const reader = contextWindowReader({

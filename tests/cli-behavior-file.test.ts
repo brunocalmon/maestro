@@ -8,7 +8,7 @@ function project(): string {
 }
 
 describe("AC-005 — agy e codex recebem comportamento por arquivo temporário", () => {
-  // SPECSFY: US-001 FR-002 NFR-001 AC-005
+  // TRACEABILITY: US-001 FR-002 NFR-001 AC-005
   it("escreve o comportamento em AGENTS.md antes de chamar a função recebida", async () => {
     const { withTemporaryAgentsFile } = await import("../src/delegation/cli-behavior-file");
     const root = project();
@@ -25,7 +25,7 @@ describe("AC-005 — agy e codex recebem comportamento por arquivo temporário",
 });
 
 describe("AC-006 — o arquivo temporário é sempre removido", () => {
-  // SPECSFY: US-001 FR-002 NFR-002 AC-006
+  // TRACEABILITY: US-001 FR-002 NFR-002 AC-006
   it("some depois, inclusive quando a função recebida lança", async () => {
     const { withTemporaryAgentsFile } = await import("../src/delegation/cli-behavior-file");
     const root = project();
@@ -42,7 +42,7 @@ describe("AC-006 — o arquivo temporário é sempre removido", () => {
 });
 
 describe("AC-005 (terceiro caso) — não sobrescreve um AGENTS.md real", () => {
-  // SPECSFY: US-001 FR-002 NFR-001 AC-005
+  // TRACEABILITY: US-001 FR-002 NFR-001 AC-005
   it("chama a função recebida somente depois do arquivo escrito em disco, não antes", async () => {
     const { withTemporaryAgentsFile } = await import("../src/delegation/cli-behavior-file");
     const root = project();

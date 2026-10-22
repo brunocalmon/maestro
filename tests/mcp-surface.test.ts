@@ -13,17 +13,17 @@ async function connect(): Promise<Client> {
 }
 
 describe("AC-001 — the listing returns only setup", () => {
-  // SPECSFY: US-001 FR-001 AC-001
+  // TRACEABILITY: US-001 FR-001 AC-001
   it("exactly one tool exists", async () => {
     expect((await (await connect()).listTools()).tools).toHaveLength(1);
   });
 
-  // SPECSFY: US-001 FR-001 AC-001
+  // TRACEABILITY: US-001 FR-001 AC-001
   it("it's called setup", async () => {
     expect((await (await connect()).listTools()).tools[0]?.name).toBe("setup");
   });
 
-  // SPECSFY: US-001 NFR-002 AC-001
+  // TRACEABILITY: US-001 NFR-002 AC-001
   it("its schema declares project_root as required", async () => {
     const tool = (await (await connect()).listTools()).tools[0];
     expect(tool?.inputSchema?.properties).toHaveProperty("project_root");
@@ -32,13 +32,13 @@ describe("AC-001 — the listing returns only setup", () => {
 });
 
 describe("AC-010 — no surface from the remaining fatias appears", () => {
-  // SPECSFY: US-001 FR-001 AC-010
+  // TRACEABILITY: US-001 FR-001 AC-010
   it("there's no approval, agent detection or model selection tool", async () => {
     const names = (await (await connect()).listTools()).tools.map((t) => t.name);
     for (const n of names) expect(n).toBe("setup");
   });
 
-  // SPECSFY: US-001 NFR-002 AC-010
+  // TRACEABILITY: US-001 NFR-002 AC-010
   it("the terminal command's surface doesn't gain its own MCP tool", async () => {
     const { COMMANDS } = await import("../src/cli");
     // The list grows as slices land — `plan` arrived with SPEC-0016. What
@@ -54,12 +54,12 @@ describe("AC-010 — no surface from the remaining fatias appears", () => {
 });
 
 describe("AC-013 — the server identifies itself to the client", () => {
-  // SPECSFY: US-001 FR-001 AC-013
+  // TRACEABILITY: US-001 FR-001 AC-013
   it("declares its name", async () => {
     expect((await connect()).getServerVersion()?.name).toBe("maestro");
   });
 
-  // SPECSFY: US-001 NFR-002 AC-013
+  // TRACEABILITY: US-001 NFR-002 AC-013
   it("declares the same version the terminal command reports", async () => {
     expect((await connect()).getServerVersion()?.version).toBe(readVersion());
   });

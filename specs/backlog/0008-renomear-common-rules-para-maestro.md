@@ -19,7 +19,7 @@ A pessoa responsável mencionou querer renomear a ferramenta para maestro, e ped
 
 ## Problema percebido
 
-Decisão (rodada 1): `common-rules` descrevia um agrupador de regras; hoje a ferramenta é um orchestrator/wrapper de subsistemas (specsfy, context-mode, code-review-graph) e agentes de codificação. O nome atual não representa mais o papel real da ferramenta.
+Decisão (rodada 1): `common-rules` descrevia um agrupador de regras; hoje a ferramenta é um orchestrator/wrapper de subsistemas (framework, context-mode, code-review-graph) e agentes de codificação. O nome atual não representa mais o papel real da ferramenta.
 
 ## Pessoa afetada ou beneficiada
 
@@ -133,4 +133,4 @@ Scenario: CI publica exclusivamente sob o nome novo
 
 ## Próximo passo
 
-Brief pronto para `$specsfy-03-specify`. Um risco não decidido permanece registrado acima (colisão `.common-rules/`/`.maestro/` coexistindo) — a especificação inicial deve resolvê-lo ou registrá-lo como decisão explícita do Ato I.
+Brief pronto para `$framework-03-specify`. Um risco não decidido permanece registrado acima (colisão `.common-rules/`/`.maestro/` coexistindo) — a especificação inicial deve resolvê-lo ou registrá-lo como decisão explícita do Ato I.

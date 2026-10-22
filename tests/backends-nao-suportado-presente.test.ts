@@ -3,7 +3,7 @@ import { detectBackends } from "../src/backends/detect";
 import { sourceFake } from "./backends-fixtures";
 
 describe("AC-082 — a present unsupported backend appears as such, not as absent", () => {
-  // SPECSFY: US-031 FR-032 FR-033 AC-082
+  // TRACEABILITY: US-031 FR-032 FR-033 AC-082
   it("dsh present and unsupported is distinct from absent", () => {
     const { env } = sourceFake({ dsh: "0.1.1-rc.1" });
     const result = detectBackends(env);

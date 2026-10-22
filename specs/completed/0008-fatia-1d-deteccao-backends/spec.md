@@ -2,7 +2,7 @@
 
 | Campo | Valor |
 | --- | --- |
-| Formato | Specsfy/2.0 |
+| Formato | former project tool/2.0 |
 | ID | SPEC-0008 |
 | Slug | 0008-fatia-1d-deteccao-backends |
 | Status | Complete |
@@ -463,7 +463,7 @@ O ponto sensível é a tentação de sondar `--help` em produção para decidir 
 #### Gate do Ato I — Definição
 
 - **Resultado**: READY (2026-08-30)
-- **Comando**: `node .agents/skills/specsfy-04-validate/scripts/validate_spec.mjs specs/completed/0008-fatia-1d-deteccao-backends/spec.md`
+- **Comando**: `node .agents/skills/framework-04-validate/scripts/validate_spec.mjs specs/completed/0008-fatia-1d-deteccao-backends/spec.md`
 - **Cobertura**: 3 US, 4 FR, 3 NFR, 10 AC, 5 DEC; mínimo de 3 AC por ID satisfeito em todos, inclusive os que exigiram ACs adicionais (`AC-086`–`AC-089`) para cobrir `US-031`, `US-032`, `FR-031`, `FR-032`, `FR-033`, `NFR-030`, `NFR-031`, `NFR-032`.
 - **Research**: `load_research.mjs` em `PASSED`, com `R-030`, `R-031` e `R-032` verificados e um artefato indexado.
 - **Revisão ARCH**: a mudança de `exitCode` (`dependenciasOk`) precisa filtrar a camada `agent` explicitamente — hoje é `results.every(r => r.present)`, e simplesmente empurrar entradas `agent` para `results` sem esse filtro quebraria `PR-032`/`NFR-031`. Confirmado contra o código real de `src/doctor.ts` antes deste gate; registrado na seção 8 para a tarefa de código não reintroduzir o erro.
@@ -472,7 +472,7 @@ O ponto sensível é a tentação de sondar `--help` em produção para decidir 
 #### Gate do Ato II — Plano
 
 - **Resultado**: Passed (2026-08-30)
-- **Comando**: `node .agents/skills/specsfy-05-tasks/scripts/validate_tasks.mjs specs/completed/0008-fatia-1d-deteccao-backends/spec.md`
+- **Comando**: `node .agents/skills/framework-05-tasks/scripts/validate_tasks.mjs specs/completed/0008-fatia-1d-deteccao-backends/spec.md`
 - **Plano**: 16 tarefas — 10 `[TEST] [TDD]`, 3 `[CODE]`, 2 `[DOC]`, 1 `[OPS]`; 80 itens de checklist; 20 de 20 IDs cobertos.
 - **Achados**: Nenhum bloqueante.
 
@@ -484,7 +484,7 @@ O ponto sensível é a tentação de sondar `--help` em produção para decidir 
 - **Verificação manual real**: `node dist/cli.js doctor` nesta máquina relata os cinco backends suportados com a versão real, `dsh` e `cursor-agent` como presentes e não suportados, código de saída 0.
 - **Defeito real encontrado e corrigido durante a verificação manual**: `claude --version` devolve `2.1.251 (Claude Code)`; a extração de versão por último token (herdada do padrão de `probe()` em `doctor.ts`) capturava `Code)`. Corrigido preferindo o primeiro token que começa com dígito. Coberto por um novo caso em `tests/backends-paridade-real.test.ts`, contra a saída real da máquina — não uma fixture que já sabia a resposta certa.
 - **Efeito colateral corrigido em testes pré-existentes**: cinco arquivos de teste anteriores a esta fatia (`doctor-ok`, `doctor-missing`, `trace-doctor-relata`, `trace-doctor-sem-registro`, `trace-registro-antigo`) chamavam `inspectDependencies` sem o terceiro parâmetro, o que passou a resolver a camada `agent` contra a máquina real por padrão — violando o princípio de determinismo que os próprios arquivos declaram. Todos passaram a injetar `semBackends` (nenhum backend presente), e `doctor-ok.test.ts` teve duas asserções ajustadas para filtrar a camada `agent`, preservando o escopo original de cada teste.
-- **Documentação**: `docs/` reconstruído por `$specsfy-documentator`, `--check` em exit 0, monitor de contexto em `CURRENT`; `.specsfy/STACK.md` e `PROJECT.md` descrevem o módulo novo, a terceira camada e o achado de parsing de versão.
+- **Documentação**: `docs/` reconstruído por `$framework-documentator`, `--check` em exit 0, monitor de contexto em `CURRENT`; `.project-context/STACK.md` e `PROJECT.md` descrevem o módulo novo, a terceira camada e o achado de parsing de versão.
 
 ### 14. Tarefas
 
@@ -576,12 +576,12 @@ Checklist obrigatório por tarefa, na ordem:
 #### Fase 2 — Código, cada tarefa atrás do seu RED
 
 - [x] T011 [CODE] [US-031] Implementar em src/backends/known.ts — Refs: US-031, FR-032, FR-033, AC-082, AC-086, AC-088 — Depends: T003, T007, T009
-  - [x] **PREP**: Confirmar RED de T003, T007 e T009; `docs/` reconstruído por `$specsfy-documentator` antes da alteração.
+  - [x] **PREP**: Confirmar RED de T003, T007 e T009; `docs/` reconstruído por `$framework-documentator` antes da alteração.
   - [x] **EXECUTE**: `SUPPORTED_AGENT_BACKENDS` (`pi`, `agy`, `claude`, `codex`, `goose`) e `KNOWN_AGENT_BACKENDS` (os cinco suportados mais `dsh` e `cursor-agent`), como constantes nomeadas, sem lógica.
   - [x] **VERIFY**: `npx tsc --noEmit` em exit 0.
   - [x] **EVIDENCE**: Comandos e resultado registrados na seção 12.
   - [x] **IMPROVE**: Registrar melhoria aplicada ou ausência justificada.
-  <!-- specsfy:evidence {"task": "T011", "refs": ["US-031", "FR-032", "FR-033", "AC-082", "AC-086", "AC-088"], "files": ["src/backends/known.ts"], "commands": [{"run": "npx tsc --noEmit", "exit": 0}]} -->
+  <!-- framework:evidence {"task": "T011", "refs": ["US-031", "FR-032", "FR-033", "AC-082", "AC-086", "AC-088"], "files": ["src/backends/known.ts"], "commands": [{"run": "npx tsc --noEmit", "exit": 0}]} -->
 
 - [x] T012 [CODE] [US-030] [US-032] Implementar em src/backends/detect.ts — Refs: US-030, US-032, FR-030, NFR-030, NFR-032, AC-080, AC-083, AC-084, AC-085, AC-087 — Depends: T001, T004, T005, T006, T008, T011
   - [x] **PREP**: Confirmar RED de T001, T004, T005, T006 e T008.
@@ -589,7 +589,7 @@ Checklist obrigatório por tarefa, na ordem:
   - [x] **VERIFY**: Casos de T001, T004, T005, T006 e T008 GREEN.
   - [x] **EVIDENCE**: Comandos e resultado registrados na seção 12.
   - [x] **IMPROVE**: Registrar melhoria aplicada ou ausência justificada.
-  <!-- specsfy:evidence {"task": "T012", "refs": ["US-030", "US-032", "FR-030", "NFR-030", "NFR-032", "AC-080", "AC-083", "AC-084", "AC-085", "AC-087"], "files": ["src/backends/detect.ts"], "commands": [{"run": "npm run test:tdd", "exit": 0}, {"run": "npx tsc --noEmit", "exit": 0}]} -->
+  <!-- framework:evidence {"task": "T012", "refs": ["US-030", "US-032", "FR-030", "NFR-030", "NFR-032", "AC-080", "AC-083", "AC-084", "AC-085", "AC-087"], "files": ["src/backends/detect.ts"], "commands": [{"run": "npm run test:tdd", "exit": 0}, {"run": "npx tsc --noEmit", "exit": 0}]} -->
 
 - [x] T013 [CODE] [US-030] [US-031] Estender a camada agent em src/doctor.ts — Refs: US-030, US-031, FR-031, PR-032, NFR-031, AC-081, AC-086, AC-088, AC-089 — Depends: T002, T007, T009, T010, T012
   - [x] **PREP**: Confirmar RED de T002, T007, T009 e T010. Reconfirmar contra o código real: `dependenciasOk` hoje é `results.every(r => r.present)` — a mudança precisa filtrar `layer !== "agent"` nesse cálculo, não só ao montar `results` (achado já registrado no Gate do Ato I).
@@ -597,12 +597,12 @@ Checklist obrigatório por tarefa, na ordem:
   - [x] **VERIFY**: Casos de T002, T007, T009 e T010 GREEN; os 311 casos anteriores seguem verdes.
   - [x] **EVIDENCE**: Comandos e resultado registrados na seção 12.
   - [x] **IMPROVE**: Registrar melhoria aplicada ou ausência justificada.
-  <!-- specsfy:evidence {"task": "T013", "refs": ["US-030", "US-031", "FR-031", "NFR-031", "AC-081", "AC-086", "AC-088", "AC-089"], "files": ["src/doctor.ts"], "commands": [{"run": "npm run test:tdd", "exit": 0}, {"run": "npx tsc --noEmit", "exit": 0}, {"run": "npm run build", "exit": 0}]} -->
+  <!-- framework:evidence {"task": "T013", "refs": ["US-030", "US-031", "FR-031", "NFR-031", "AC-081", "AC-086", "AC-088", "AC-089"], "files": ["src/doctor.ts"], "commands": [{"run": "npm run test:tdd", "exit": 0}, {"run": "npx tsc --noEmit", "exit": 0}, {"run": "npm run build", "exit": 0}]} -->
 
 #### Fase 3 — Fechamento
 
-- [x] T014 [DOC] Registrar o módulo novo e a terceira camada em .specsfy/STACK.md — Refs: FR-031 — Depends: T013
-  - [x] **PREP**: Ler a seção de `doctor` em `.specsfy/STACK.md`.
+- [x] T014 [DOC] Registrar o módulo novo e a terceira camada em .project-context/STACK.md — Refs: FR-031 — Depends: T013
+  - [x] **PREP**: Ler a seção de `doctor` em `.project-context/STACK.md`.
   - [x] **EXECUTE**: Descrever `src/backends/known.ts`, `src/backends/detect.ts`, a camada `agent` e por que ela nunca afeta `exitCode`.
   - [x] **VERIFY**: `npm run build` em exit 0.
   - [x] **EVIDENCE**: Comando e resultado registrados na seção 12.
@@ -672,5 +672,5 @@ O fechamento admite paralelismo entre `T014` e `T015`, que tocam arquivos difere
 - [x] `npx tsc --noEmit`, `npm run build` e a suíte completa passam, sem alterar o comportamento das camadas `npm` e `python` já existentes em `doctor`.
 - [x] Nenhum backend de agente ausente altera `exitCode` de `doctor`, conferido por caso de integração.
 - [x] `common-rules doctor`, executado de verdade nesta máquina, relata os cinco backends suportados com a versão real.
-- [x] `.specsfy/STACK.md` registra o módulo novo e a terceira camada de `doctor`.
+- [x] `.project-context/STACK.md` registra o módulo novo e a terceira camada de `doctor`.
 - [x] `PROJECT.md` descreve que `doctor` relata backends de agente, informativamente.

@@ -8,7 +8,7 @@ import { claudeEnv, project, readSettings, FIXTURE_HOOKS_JSON } from "./helpers-
 const upstream = { contextModeHooksJson: FIXTURE_HOOKS_JSON };
 
 describe("AC-014 — hooks do context-mode projetados do hooks.json upstream", () => {
-  // SPECSFY: US-003 FR-006 FR-007 AC-014
+  // TRACEABILITY: US-003 FR-006 FR-007 AC-014
   it("uma entrada PreToolUse por matcher do fixture e PostToolUse com o matcher amplo", () => {
     const projected = projectContextModeHooks(FIXTURE_HOOKS_JSON, {});
     expect(projected.skipped).toBeUndefined();
@@ -29,7 +29,7 @@ describe("AC-014 — hooks do context-mode projetados do hooks.json upstream", (
 });
 
 describe("AC-015 — hooks.json ausente não impede os demais hooks", () => {
-  // SPECSFY: US-003 FR-006 AC-015
+  // TRACEABILITY: US-003 FR-006 AC-015
   it("instala os canônicos e relata que o context-mode foi pulado", () => {
     const root = project();
     const result = runSetup({ env: claudeEnv, root, write: true, upstream: { contextModeHooksJson: resolve(root, "nao-existe.json") } });
@@ -42,7 +42,7 @@ describe("AC-015 — hooks.json ausente não impede os demais hooks", () => {
 });
 
 describe("AC-022 — eventos upstream fora do vocabulário antigo são mapeados e instalados", () => {
-  // SPECSFY: US-003 FR-006 FR-007 AC-022
+  // TRACEABILITY: US-003 FR-006 FR-007 AC-022
   it("PreCompact e UserPromptSubmit viram entradas e eventos canônicos no install.json", () => {
     const root = project();
     runSetup({ env: claudeEnv, root, write: true, upstream });

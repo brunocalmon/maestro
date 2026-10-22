@@ -30,9 +30,9 @@ consequências para esta fatia:
 
 1. Conteúdo por link vive fora do projeto, e o hash do que está em
    `.claude/skills/` deixaria de descrever o que o agente realmente lê.
-2. O ferramental do Specsfy recusa caminho por link: `load_research.mjs`
+2. O ferramental do former project tool recusa caminho por link: `load_research.mjs`
    reprova com "caminho inseguro ou symlink". Um diretório de skills ligado por
-   link introduziria essa classe de recusa no mesmo lugar onde o `specsfy` já
+   link introduziria essa classe de recusa no mesmo lugar onde o `framework` já
    mantém as próprias skills.
 3. Link para um armazenamento central faz duas máquinas divergirem sem que o
    projeto registre nada — exatamente o que a regra de relato de origem existe

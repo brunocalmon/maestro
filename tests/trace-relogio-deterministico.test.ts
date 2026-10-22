@@ -12,17 +12,17 @@ function instantOf(root: string): string {
 }
 
 describe("AC-043 — two runs with the same clock record the same instant", () => {
-  // SPECSFY: US-042 FR-043 AC-043
+  // TRACEABILITY: US-042 FR-043 AC-043
   it("distinct projects get the same instant", () => {
     expect(instantOf(project("crs-a-"))).toBe(instantOf(project("crs-b-")));
   });
 
-  // SPECSFY: US-042 NFR-040 AC-043
+  // TRACEABILITY: US-042 NFR-040 AC-043
   it("the value is the injected one, not the machine's clock", () => {
     expect(instantOf(project())).toBe(FIXED_INSTANT);
   });
 
-  // SPECSFY: US-042 FR-043 NFR-040 AC-043
+  // TRACEABILITY: US-042 FR-043 NFR-040 AC-043
   it("the case doesn't depend on the real clock", () => {
     const before = instantOf(project());
     const after = instantOf(project());

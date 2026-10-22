@@ -16,7 +16,7 @@ import { spawnSync } from "node:child_process";
  * would be read as an empty document — refused, no write.
  */
 describe("AC-036 / AC-038 — maestro setup, end to end, no fixture", () => {
-  it("installs both skill sources and the Specsfy framework for real", () => {
+  it("installs skills and hooks without requiring a project framework", () => {
     const root = mkdtempSync(join(tmpdir(), "crs-e2e-"));
     mkdirSync(join(root, ".claude"), { recursive: true });
     const cli = resolve(__dirname, "..", "dist", "cli.js");
@@ -31,9 +31,9 @@ describe("AC-036 / AC-038 — maestro setup, end to end, no fixture", () => {
 
     const skills = existsSync(join(root, ".claude", "skills")) ? readdirSync(join(root, ".claude", "skills")) : [];
     expect(skills.some((n) => n === "ask-matt" || n === "code-review")).toBe(true);
-    expect(skills.some((n) => n.startsWith("specsfy-"))).toBe(true);
+    expect(skills.some((n) => n.startsWith("framework-"))).toBe(false);
 
-    expect(existsSync(join(root, ".specsfy"))).toBe(true);
+    expect(existsSync(join(root, ".project-context"))).toBe(false);
     expect(existsSync(join(root, ".agents", "skills"))).toBe(true);
     expect(existsSync(join(root, "CLAUDE.md"))).toBe(true);
     expect(existsSync(join(root, "AGENTS.md"))).toBe(true);

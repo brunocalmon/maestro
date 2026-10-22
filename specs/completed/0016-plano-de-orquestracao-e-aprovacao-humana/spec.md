@@ -2,7 +2,7 @@
 
 | Campo | Valor |
 | --- | --- |
-| Formato | Specsfy/2.0 |
+| Formato | former project tool/2.0 |
 | ID | SPEC-0016 |
 | Slug | 0016-plano-de-orquestracao-e-aprovacao-humana |
 | Status | Complete |
@@ -556,27 +556,27 @@ tests/
 #### Gate do Ato I — Definição
 
 - **Resultado**: READY (2026-09-07)
-- **Comando**: `node .claude/skills/specsfy-04-validate/scripts/validate_spec.mjs specs/draft/0016-plano-de-orquestracao-e-aprovacao-humana/spec.md --allow-draft` → `VALID DRAFT`.
+- **Comando**: `node .claude/skills/framework-04-validate/scripts/validate_spec.mjs specs/draft/0016-plano-de-orquestracao-e-aprovacao-humana/spec.md --allow-draft` → `VALID DRAFT`.
 - **Achados**: Nenhum `BLOCKER`. As seis decisões da entrevista viraram `FR`, `AC` ou `DEC` rastreáveis. Cobertura: US-001 → 13 AC; FR-001 → 3 (AC-001, AC-002, AC-013); FR-002 → 3 (AC-003, AC-004, AC-005); FR-003 → 4 (AC-006 a AC-009); FR-004 → 4 (AC-007, AC-008, AC-010 a AC-012); NFR-001 → 8; NFR-002 → 4. Uma correção durante a própria validação: `FR-001` tinha só dois cenários, e o validador barrou; em vez de dividir um cenário existente em dois, entrou `AC-013` cobrindo comportamento real e ainda não coberto — flag desconhecida recusada em vez de ignorada, no mesmo padrão que `SETUP_FLAGS` já aplica. `Interface para pessoas: Não` justificada. Sem findings de segurança: o gate é justamente o que impede execução não autorizada, e nada nesta fatia executa.
 
 #### Gate do Ato II — Plano
 
 - **Resultado**: READY (2026-09-07)
-- **Comando**: `node .claude/skills/specsfy-05-tasks/scripts/validate_tasks.mjs specs/defined/0016-plano-de-orquestracao-e-aprovacao-humana/spec.md` — `READY` (`total=19 complete=13 tdd=14 code=4 covered_spec_ids=20 required_spec_ids=20`).
+- **Comando**: `node .claude/skills/framework-05-tasks/scripts/validate_tasks.mjs specs/defined/0016-plano-de-orquestracao-e-aprovacao-humana/spec.md` — `READY` (`total=19 complete=13 tdd=14 code=4 covered_spec_ids=20 required_spec_ids=20`).
 - **Achados**: Nenhum bloqueio. As 13 tarefas `[TEST][TDD]` (uma por `AC`) estão concluídas com RED real: três porque o comando `plan` ainda não existe na tabela do CLI, e dez por módulo inexistente (`src/plan/{assemble,render,run,store}.ts`). Nenhum RED foi fabricado alterando produção. As quatro `[CODE]` (T014–T017) têm três ou mais predecessores TDD concluídos cada. O gate desta fatia é integralmente automatizável porque o canal de decisão da `SPEC-0007` aceita fonte injetada — não sobrou `AC` dependendo de verificação manual, diferente do que aconteceu na `SPEC-0014`.
 
 #### Gate do Ato III — Entrega
 
 - **Resultado**: READY (2026-09-07) — 19/19 tarefas, 114/114 itens de checklist
-- **Comando**: `node .claude/skills/specsfy-06-tdd-bdd/scripts/check_traceability.mjs specs/in-progress/0016-plano-de-orquestracao-e-aprovacao-humana/spec.md .` — `Rastreabilidade: 20/20 IDs cobertos em 179 arquivos de teste`.
+- **Comando**: `node .claude/skills/framework-06-tdd-bdd/scripts/check_traceability.mjs specs/in-progress/0016-plano-de-orquestracao-e-aprovacao-humana/spec.md .` — `Rastreabilidade: 20/20 IDs cobertos em 179 arquivos de teste`.
 - **Achados**: Nenhum bloqueio. **462/462 testes** em 171 arquivos, `tsc` limpo, `build_documentation.mjs --check` limpo. Verificado com o binário instalado, não só pela suíte: `maestro plan --help` imprime o uso; sem `--task` recusa com saída 2; flag desconhecida é recusada nomeando-a; recusa imprime o plano e não grava nada; aprovação grava `.maestro/plans/<trace>.json` com agente, modelo, runtime e candidatos idênticos aos apresentados.
 - Uma refatoração de código já entregue aconteceu aqui, e é o cumprimento da `DEC-002` em vez de um desvio dela: `interpret()` da `SPEC-0007` era tipado ao conteúdo daquela fatia, então "reusar o canal" ainda deixaria a regra de recusa duplicada. A regra virou `interpretDecision(ask)` e os dois gates passam por ela.
 - Duas regressões apareceram, ambas de testes de specs anteriores que fixavam a lista exata de comandos do CLI (`SPEC-0003`, `SPEC-0004`). Nenhuma era defeito — a lista cresce a cada fatia. Atualizadas preservando a intenção de cada guard; a de `mcp-surface` passou a afirmar o que realmente protege (o servidor MCP mantém uma tool só enquanto o CLI cresce) em vez de depender de uma lista que envelhece a cada entrega.
 
-#### Aceite final (`$specsfy-04-validate`)
+#### Aceite final (`$framework-04-validate`)
 
 - **Resultado**: READY (2026-09-07)
-- **Comando**: `node .claude/skills/specsfy-04-validate/scripts/validate_spec.mjs specs/review/0016-plano-de-orquestracao-e-aprovacao-humana/spec.md` — `RESULTADO: READY`.
+- **Comando**: `node .claude/skills/framework-04-validate/scripts/validate_spec.mjs specs/review/0016-plano-de-orquestracao-e-aprovacao-humana/spec.md` — `RESULTADO: READY`.
 - **Achados**: Nenhum `BLOCKER`. Três gates `Passed` com evidência verificável e Definition of Done comprovada. A garantia central do épico — nada delegado sem aprovação humana explícita — deixou de ser convenção de prompt e virou comportamento verificado: recusa, silêncio e documento malformado chegam ao mesmo ponto do código e nenhum deles grava. Diferente da `SPEC-0014`, nenhum `AC` dependeu de inspeção externa, e diferente da `SPEC-0015`, nenhum defeito escapou para a verificação com o binário real. `Status: Complete`.
 
 ### 14. Tarefas
@@ -599,7 +599,7 @@ Cada tarefa possui exatamente este checklist, atualizado durante a execução:
 
 - [x] T001 [P] [TEST] [TDD] [US-001] Derivar de AC-001 um caso Vitest falhando em tests/plan-command.test.ts — Refs: US-001, FR-001, NFR-002, AC-001 — Depends: none
   - [x] **PREP**: Ler o Gherkin de AC-001; confirmar que `plan` ainda não existe na tabela de comandos de `src/cli.ts`.
-  - [x] **EXECUTE**: Escrever o caso com marcador `SPECSFY: US-001 FR-001 NFR-002 AC-001` — invoca o comando sem `--task` e afirma recusa nomeando o que falta, sem plano apresentado.
+  - [x] **EXECUTE**: Escrever o caso com marcador `TRACEABILITY: US-001 FR-001 NFR-002 AC-001` — invoca o comando sem `--task` e afirma recusa nomeando o que falta, sem plano apresentado.
   - [x] **VERIFY**: `npx vitest run tests/plan-command.test.ts` — **RED observado**: `unrecognized command "plan"` — o comando não existe na tabela.
   - [x] **VISUAL**: Não aplicável — arquivo de teste sem superfície visual.
   - [x] **EVIDENCE**: Registrar comando e causa do RED nas seções 11–12.
@@ -607,7 +607,7 @@ Cada tarefa possui exatamente este checklist, atualizado durante a execução:
 
 - [x] T002 [P] [TEST] [TDD] [US-001] Derivar de AC-002 um caso Vitest falhando em tests/plan-command.test.ts — Refs: US-001, FR-001, NFR-001, AC-002 — Depends: none
   - [x] **PREP**: Ler o Gherkin de AC-002; confirmar o padrão de `--help` dos comandos existentes.
-  - [x] **EXECUTE**: Escrever o caso com marcador `SPECSFY: US-001 FR-001 NFR-001 AC-002` — `plan --help` imprime o uso e sai com zero.
+  - [x] **EXECUTE**: Escrever o caso com marcador `TRACEABILITY: US-001 FR-001 NFR-001 AC-002` — `plan --help` imprime o uso e sai com zero.
   - [x] **VERIFY**: `npx vitest run tests/plan-command.test.ts` — **RED observado**: saída 2 em vez de 0; `plan --help` não é reconhecido.
   - [x] **VISUAL**: Não aplicável — arquivo de teste sem superfície visual.
   - [x] **EVIDENCE**: Registrar comando e causa do RED nas seções 11–12.
@@ -615,7 +615,7 @@ Cada tarefa possui exatamente este checklist, atualizado durante a execução:
 
 - [x] T013 [P] [TEST] [TDD] [US-001] Derivar de AC-013 um caso Vitest falhando em tests/plan-command.test.ts — Refs: US-001, FR-001, NFR-002, AC-013 — Depends: none
   - [x] **PREP**: Ler o Gherkin de AC-013; confirmar como `SETUP_FLAGS` recusa flag desconhecida hoje.
-  - [x] **EXECUTE**: Escrever o caso com marcador `SPECSFY: US-001 FR-001 NFR-002 AC-013` — flag não reconhecida é recusada nomeando-a, nunca ignorada.
+  - [x] **EXECUTE**: Escrever o caso com marcador `TRACEABILITY: US-001 FR-001 NFR-002 AC-013` — flag não reconhecida é recusada nomeando-a, nunca ignorada.
   - [x] **VERIFY**: `npx vitest run tests/plan-command.test.ts` — **RED observado**: `unrecognized command "plan"` — flag nem chega a ser avaliada.
   - [x] **VISUAL**: Não aplicável — arquivo de teste sem superfície visual.
   - [x] **EVIDENCE**: Registrar comando e causa do RED nas seções 11–12.
@@ -623,7 +623,7 @@ Cada tarefa possui exatamente este checklist, atualizado durante a execução:
 
 - [x] T003 [P] [TEST] [TDD] [US-001] Derivar de AC-003 um caso Vitest falhando em tests/plan-assemble.test.ts — Refs: US-001, FR-002, NFR-001, AC-003 — Depends: none
   - [x] **PREP**: Ler o Gherkin de AC-003; confirmar que `src/plan/assemble.ts` ainda não existe.
-  - [x] **EXECUTE**: Escrever o caso com marcador `SPECSFY: US-001 FR-002 NFR-001 AC-003` — ambiente com perfil e backend produz exatamente um agente, com perfil, modelo e runtime nomeados.
+  - [x] **EXECUTE**: Escrever o caso com marcador `TRACEABILITY: US-001 FR-002 NFR-001 AC-003` — ambiente com perfil e backend produz exatamente um agente, com perfil, modelo e runtime nomeados.
   - [x] **VERIFY**: `npx vitest run tests/plan-assemble.test.ts` — **RED observado**: `Cannot find module '../src/plan/assemble'`.
   - [x] **VISUAL**: Não aplicável — arquivo de teste sem superfície visual.
   - [x] **EVIDENCE**: Registrar comando e causa do RED nas seções 11–12.
@@ -631,7 +631,7 @@ Cada tarefa possui exatamente este checklist, atualizado durante a execução:
 
 - [x] T004 [P] [TEST] [TDD] [US-001] Derivar de AC-004 um caso Vitest falhando em tests/plan-assemble.test.ts — Refs: US-001, FR-002, NFR-001, AC-004 — Depends: none
   - [x] **PREP**: Ler o Gherkin de AC-004.
-  - [x] **EXECUTE**: Escrever o caso com marcador `SPECSFY: US-001 FR-002 NFR-001 AC-004` — ambiente sem backend e sem modelo local produz `model` nulo declarado, sem nome inventado.
+  - [x] **EXECUTE**: Escrever o caso com marcador `TRACEABILITY: US-001 FR-002 NFR-001 AC-004` — ambiente sem backend e sem modelo local produz `model` nulo declarado, sem nome inventado.
   - [x] **VERIFY**: `npx vitest run tests/plan-assemble.test.ts` — **RED observado**: `Cannot find module '../src/plan/assemble'`.
   - [x] **VISUAL**: Não aplicável — arquivo de teste sem superfície visual.
   - [x] **EVIDENCE**: Registrar comando e causa do RED nas seções 11–12.
@@ -639,7 +639,7 @@ Cada tarefa possui exatamente este checklist, atualizado durante a execução:
 
 - [x] T005 [P] [TEST] [TDD] [US-001] Derivar de AC-005 um caso Vitest falhando em tests/plan-assemble.test.ts — Refs: US-001, FR-002, NFR-001, AC-005 — Depends: none
   - [x] **PREP**: Ler o Gherkin de AC-005.
-  - [x] **EXECUTE**: Escrever o caso com marcador `SPECSFY: US-001 FR-002 NFR-001 AC-005` — o plano carrega perfis disponíveis e backends detectados como candidatos anexados.
+  - [x] **EXECUTE**: Escrever o caso com marcador `TRACEABILITY: US-001 FR-002 NFR-001 AC-005` — o plano carrega perfis disponíveis e backends detectados como candidatos anexados.
   - [x] **VERIFY**: `npx vitest run tests/plan-assemble.test.ts` — **RED observado**: `Cannot find module '../src/plan/assemble'`.
   - [x] **VISUAL**: Não aplicável — arquivo de teste sem superfície visual.
   - [x] **EVIDENCE**: Registrar comando e causa do RED nas seções 11–12.
@@ -647,7 +647,7 @@ Cada tarefa possui exatamente este checklist, atualizado durante a execução:
 
 - [x] T006 [P] [TEST] [TDD] [US-001] Derivar de AC-006 um caso Vitest falhando em tests/plan-approval.test.ts — Refs: US-001, FR-003, NFR-001, AC-006 — Depends: none
   - [x] **PREP**: Ler o Gherkin de AC-006; confirmar o formato de `src/approval/render.ts`.
-  - [x] **EXECUTE**: Escrever o caso com marcador `SPECSFY: US-001 FR-003 NFR-001 AC-006` — o texto renderizado nomeia agente, modelo e runtime e declara que nada roda sem aprovação.
+  - [x] **EXECUTE**: Escrever o caso com marcador `TRACEABILITY: US-001 FR-003 NFR-001 AC-006` — o texto renderizado nomeia agente, modelo e runtime e declara que nada roda sem aprovação.
   - [x] **VERIFY**: `npx vitest run tests/plan-approval.test.ts` — **RED observado**: `Cannot find module '../src/plan/render'`.
   - [x] **VISUAL**: Não aplicável — arquivo de teste sem superfície visual.
   - [x] **EVIDENCE**: Registrar comando e causa do RED nas seções 11–12.
@@ -655,7 +655,7 @@ Cada tarefa possui exatamente este checklist, atualizado durante a execução:
 
 - [x] T007 [P] [TEST] [TDD] [US-001] Derivar de AC-007 um caso Vitest falhando em tests/plan-approval.test.ts — Refs: US-001, FR-003, FR-004, AC-007 — Depends: none
   - [x] **PREP**: Ler o Gherkin de AC-007; confirmar a assinatura de `interpret()` e `DecisionSource`.
-  - [x] **EXECUTE**: Escrever o caso com marcador `SPECSFY: US-001 FR-003 FR-004 AC-007` — decisão positiva injetada devolve plano aprovado e grava o artefato.
+  - [x] **EXECUTE**: Escrever o caso com marcador `TRACEABILITY: US-001 FR-003 FR-004 AC-007` — decisão positiva injetada devolve plano aprovado e grava o artefato.
   - [x] **VERIFY**: `npx vitest run tests/plan-approval.test.ts` — **RED observado**: `Cannot find module '../src/plan/run'`.
   - [x] **VISUAL**: Não aplicável — arquivo de teste sem superfície visual.
   - [x] **EVIDENCE**: Registrar comando e causa do RED nas seções 11–12.
@@ -663,7 +663,7 @@ Cada tarefa possui exatamente este checklist, atualizado durante a execução:
 
 - [x] T008 [P] [TEST] [TDD] [US-001] Derivar de AC-008 um caso Vitest falhando em tests/plan-approval.test.ts — Refs: US-001, FR-003, FR-004, NFR-002, AC-008 — Depends: none
   - [x] **PREP**: Ler o Gherkin de AC-008.
-  - [x] **EXECUTE**: Escrever o caso com marcador `SPECSFY: US-001 FR-003 FR-004 NFR-002 AC-008` — recusa não grava nada em `.maestro/plans/` e sai diferente de zero.
+  - [x] **EXECUTE**: Escrever o caso com marcador `TRACEABILITY: US-001 FR-003 FR-004 NFR-002 AC-008` — recusa não grava nada em `.maestro/plans/` e sai diferente de zero.
   - [x] **VERIFY**: `npx vitest run tests/plan-approval.test.ts` — **RED observado**: `Cannot find module '../src/plan/run'`.
   - [x] **VISUAL**: Não aplicável — arquivo de teste sem superfície visual.
   - [x] **EVIDENCE**: Registrar comando e causa do RED nas seções 11–12.
@@ -671,7 +671,7 @@ Cada tarefa possui exatamente este checklist, atualizado durante a execução:
 
 - [x] T009 [P] [TEST] [TDD] [US-001] Derivar de AC-009 um caso Vitest falhando em tests/plan-approval.test.ts — Refs: US-001, FR-003, NFR-002, AC-009 — Depends: none
   - [x] **PREP**: Ler o Gherkin de AC-009.
-  - [x] **EXECUTE**: Escrever o caso com marcador `SPECSFY: US-001 FR-003 NFR-002 AC-009` — documento malformado e ausência de resposta são tratados como recusa, sem gravar.
+  - [x] **EXECUTE**: Escrever o caso com marcador `TRACEABILITY: US-001 FR-003 NFR-002 AC-009` — documento malformado e ausência de resposta são tratados como recusa, sem gravar.
   - [x] **VERIFY**: `npx vitest run tests/plan-approval.test.ts` — **RED observado**: `Cannot find module '../src/plan/run'`.
   - [x] **VISUAL**: Não aplicável — arquivo de teste sem superfície visual.
   - [x] **EVIDENCE**: Registrar comando e causa do RED nas seções 11–12.
@@ -679,7 +679,7 @@ Cada tarefa possui exatamente este checklist, atualizado durante a execução:
 
 - [x] T010 [P] [TEST] [TDD] [US-001] Derivar de AC-010 um caso Vitest falhando em tests/plan-store.test.ts — Refs: US-001, FR-004, NFR-001, AC-010 — Depends: none
   - [x] **PREP**: Ler o Gherkin de AC-010; confirmar `TraceSource` e `generateId()`.
-  - [x] **EXECUTE**: Escrever o caso com root isolado e marcador `SPECSFY: US-001 FR-004 NFR-001 AC-010` — o nome do arquivo é o identificador da execução, e o conteúdo declara o mesmo identificador.
+  - [x] **EXECUTE**: Escrever o caso com root isolado e marcador `TRACEABILITY: US-001 FR-004 NFR-001 AC-010` — o nome do arquivo é o identificador da execução, e o conteúdo declara o mesmo identificador.
   - [x] **VERIFY**: `npx vitest run tests/plan-store.test.ts` — **RED observado**: `Cannot find module '../src/plan/store'`.
   - [x] **VISUAL**: Não aplicável — arquivo de teste sem superfície visual.
   - [x] **EVIDENCE**: Registrar comando e causa do RED nas seções 11–12.
@@ -687,7 +687,7 @@ Cada tarefa possui exatamente este checklist, atualizado durante a execução:
 
 - [x] T011 [P] [TEST] [TDD] [US-001] Derivar de AC-011 um caso Vitest falhando em tests/plan-store.test.ts — Refs: US-001, FR-004, NFR-001, AC-011 — Depends: none
   - [x] **PREP**: Ler o Gherkin de AC-011.
-  - [x] **EXECUTE**: Escrever o caso com root isolado e marcador `SPECSFY: US-001 FR-004 NFR-001 AC-011` — agente, modelo e runtime lidos de volta são os apresentados.
+  - [x] **EXECUTE**: Escrever o caso com root isolado e marcador `TRACEABILITY: US-001 FR-004 NFR-001 AC-011` — agente, modelo e runtime lidos de volta são os apresentados.
   - [x] **VERIFY**: `npx vitest run tests/plan-store.test.ts` — **RED observado**: `Cannot find module '../src/plan/store'`.
   - [x] **VISUAL**: Não aplicável — arquivo de teste sem superfície visual.
   - [x] **EVIDENCE**: Registrar comando e causa do RED nas seções 11–12.
@@ -695,7 +695,7 @@ Cada tarefa possui exatamente este checklist, atualizado durante a execução:
 
 - [x] T012 [P] [TEST] [TDD] [US-001] Derivar de AC-012 um caso Vitest falhando em tests/plan-store.test.ts — Refs: US-001, FR-004, NFR-001, AC-012 — Depends: none
   - [x] **PREP**: Ler o Gherkin de AC-012.
-  - [x] **EXECUTE**: Escrever o caso com root isolado e marcador `SPECSFY: US-001 FR-004 NFR-001 AC-012` — o artefato volta pela leitura por identificador, sem montar esqueleto.
+  - [x] **EXECUTE**: Escrever o caso com root isolado e marcador `TRACEABILITY: US-001 FR-004 NFR-001 AC-012` — o artefato volta pela leitura por identificador, sem montar esqueleto.
   - [x] **VERIFY**: `npx vitest run tests/plan-store.test.ts` — **RED observado**: `Cannot find module '../src/plan/store'`.
   - [x] **VISUAL**: Não aplicável — arquivo de teste sem superfície visual.
   - [x] **EVIDENCE**: Registrar comando e causa do RED nas seções 11–12.
@@ -708,48 +708,48 @@ Cada tarefa possui exatamente este checklist, atualizado durante a execução:
 
 - [x] T014 [CODE] [US-001] Declarar os tipos do plano em src/plan/model.ts e a montagem pura em src/plan/assemble.ts — Refs: US-001, FR-002, NFR-001, AC-003, AC-004, AC-005 — Depends: T003, T004, T005
   - [x] **PREP**: Confirmar RED de T003/T004/T005 e os tipos devolvidos por `readAgentConfig` e `recommend`.
-  - [x] **EXECUTE**: `PlannedAgent`, `OrchestrationPlan` e `ApprovedPlan` em `model.ts`; `assemblePlan` puro em `assemble.ts`, sempre um agente, `model` nulo quando ausente, candidatos anexados. Reconstruir `docs/` com `$specsfy-documentator` antes de fechar este item.
+  - [x] **EXECUTE**: `PlannedAgent`, `OrchestrationPlan` e `ApprovedPlan` em `model.ts`; `assemblePlan` puro em `assemble.ts`, sempre um agente, `model` nulo quando ausente, candidatos anexados. Reconstruir `docs/` com `$framework-documentator` antes de fechar este item.
   - [x] **VERIFY**: `npx vitest run tests/plan-assemble.test.ts` — AC-003, AC-004 e AC-005 **GREEN**; `npx tsc --noEmit` limpo.
   - [x] **VISUAL**: Não aplicável — tipos e função pura, sem superfície visual.
   - [x] **EVIDENCE**: Registrar GREEN e arquivos criados nas seções 11–13.
   - [x] **IMPROVE**: Melhoria aplicada: o modelo configurado no perfil tem precedência sobre a recomendação — a pessoa escreveu, o cálculo apenas sugeriu. Vazio cai para o detectado e, na ausência, para `null`.
-  <!-- specsfy:evidence {"task":"T014","refs":["US-001","FR-002","NFR-001","AC-003","AC-004","AC-005"],"files":["src/plan/model.ts","src/plan/assemble.ts"],"commands":[{"run":"npx vitest run tests/plan-assemble.test.ts","exit":0}]} -->
+  <!-- framework:evidence {"task":"T014","refs":["US-001","FR-002","NFR-001","AC-003","AC-004","AC-005"],"files":["src/plan/model.ts","src/plan/assemble.ts"],"commands":[{"run":"npx vitest run tests/plan-assemble.test.ts","exit":0}]} -->
 
 - [x] T015 [CODE] [US-001] Implementar a persistência do plano aprovado em src/plan/store.ts — Refs: US-001, FR-004, NFR-001, AC-010, AC-011, AC-012 — Depends: T010, T011, T012
   - [x] **PREP**: Confirmar RED de T010/T011/T012 e o padrão de escrita local dos outros estados em `.maestro/`.
-  - [x] **EXECUTE**: `PLANS_DIR`, `writeApprovedPlan(root, plan)` criando o diretório quando ausente, e `readApprovedPlan(root, traceId)`. Reconstruir `docs/` com `$specsfy-documentator` antes de fechar este item.
+  - [x] **EXECUTE**: `PLANS_DIR`, `writeApprovedPlan(root, plan)` criando o diretório quando ausente, e `readApprovedPlan(root, traceId)`. Reconstruir `docs/` com `$framework-documentator` antes de fechar este item.
   - [x] **VERIFY**: `npx vitest run tests/plan-store.test.ts` — AC-010, AC-011 e AC-012 **GREEN**.
   - [x] **VISUAL**: Não aplicável — persistência em disco, sem tela.
   - [x] **EVIDENCE**: Registrar GREEN e arquivos criados nas seções 11–13.
   - [x] **IMPROVE**: Melhoria aplicada: `readApprovedPlan` devolve `null` para artefato ilegível em vez de lançar — um arquivo corrompido prova que nada foi aprovado, que é a leitura segura para quem for executar.
-  <!-- specsfy:evidence {"task":"T015","refs":["US-001","FR-004","NFR-001","AC-010","AC-011","AC-012"],"files":["src/plan/store.ts"],"commands":[{"run":"npx vitest run tests/plan-store.test.ts","exit":0}]} -->
+  <!-- framework:evidence {"task":"T015","refs":["US-001","FR-004","NFR-001","AC-010","AC-011","AC-012"],"files":["src/plan/store.ts"],"commands":[{"run":"npx vitest run tests/plan-store.test.ts","exit":0}]} -->
 
 - [x] T016 [CODE] [US-001] Implementar a renderização em src/plan/render.ts e o gate em src/plan/run.ts, reusando o canal da SPEC-0007 — Refs: US-001, FR-003, FR-004, NFR-001, NFR-002, AC-006, AC-007, AC-008, AC-009 — Depends: T006, T007, T008, T009
   - [x] **PREP**: Confirmar RED de T006/T007/T008/T009 e as assinaturas de `realSource`/`interpret` em `src/approval/decide.ts`.
-  - [x] **EXECUTE**: `renderPlan` derivando o texto do mesmo objeto que será gravado; `runPlan` lendo perfis, detectando backends, recomendando, montando, renderizando, decidindo pelo canal existente e gravando só na aprovação. Reconstruir `docs/` com `$specsfy-documentator` antes de fechar este item.
+  - [x] **EXECUTE**: `renderPlan` derivando o texto do mesmo objeto que será gravado; `runPlan` lendo perfis, detectando backends, recomendando, montando, renderizando, decidindo pelo canal existente e gravando só na aprovação. Reconstruir `docs/` com `$framework-documentator` antes de fechar este item.
   - [x] **VERIFY**: `npx vitest run tests/plan-approval.test.ts` — AC-006, AC-007, AC-008 e AC-009 **GREEN**.
   - [x] **VISUAL**: Não aplicável — texto em stdout, sem tela.
   - [x] **EVIDENCE**: Registrar GREEN e arquivos criados nas seções 11–13.
   - [x] **IMPROVE**: **Refatoração feita para honrar a DEC-002 de verdade**: `interpret()` da `SPEC-0007` era tipado ao conteúdo dela (hooks e comandos), então reusar "o canal" ainda deixaria a regra "exceção é recusa" duplicada. A regra foi extraída para `interpretDecision(ask)` em `src/approval/decide.ts`, e os dois gates passam por ela — o `interpret` original agora delega. Duplicar esse try/catch é exatamente onde um consentimento silencioso apareceria.
-  <!-- specsfy:evidence {"task":"T016","refs":["US-001","FR-003","FR-004","NFR-001","NFR-002","AC-006","AC-007","AC-008","AC-009"],"files":["src/plan/render.ts","src/plan/run.ts"],"commands":[{"run":"npx vitest run tests/plan-approval.test.ts","exit":0}]} -->
+  <!-- framework:evidence {"task":"T016","refs":["US-001","FR-003","FR-004","NFR-001","NFR-002","AC-006","AC-007","AC-008","AC-009"],"files":["src/plan/render.ts","src/plan/run.ts"],"commands":[{"run":"npx vitest run tests/plan-approval.test.ts","exit":0}]} -->
 
 - [x] T017 [CODE] [US-001] Ligar o comando plan em src/cli.ts, com USAGE_PLAN, parsing de --task e recusa de flag desconhecida — Refs: US-001, FR-001, NFR-001, NFR-002, AC-001, AC-002, AC-013 — Depends: T001, T002, T013
   - [x] **PREP**: Confirmar RED de T001/T002/T013 e o padrão de `SETUP_FLAGS`/`hasHelp`.
-  - [x] **EXECUTE**: `USAGE_PLAN`, entrada `plan` na tabela de comandos, parsing de `--task` com recusa quando ausente e recusa nomeada para flag desconhecida. Reconstruir `docs/` com `$specsfy-documentator` antes de fechar este item.
+  - [x] **EXECUTE**: `USAGE_PLAN`, entrada `plan` na tabela de comandos, parsing de `--task` com recusa quando ausente e recusa nomeada para flag desconhecida. Reconstruir `docs/` com `$framework-documentator` antes de fechar este item.
   - [x] **VERIFY**: `npx vitest run tests/plan-command.test.ts` — AC-001, AC-002 e AC-013 **GREEN**. Verificado com o binário real: `maestro plan --help` imprime o uso; sem `--task` recusa com saída 2; `--modo-turbo` é recusada nomeando a flag.
   - [x] **VISUAL**: Não aplicável — comando de terminal, sem tela.
   - [x] **EVIDENCE**: Registrar GREEN e arquivos alterados nas seções 11–13.
   - [x] **IMPROVE**: Melhoria aplicada: a recusa de flag desconhecida também cobre flag sem valor (`--modo-turbo` sozinha), que `parseFlags` descartaria em silêncio — o mesmo buraco que a `SPEC-0007` já tinha encontrado com `--help`.
-  <!-- specsfy:evidence {"task":"T017","refs":["US-001","FR-001","NFR-001","NFR-002","AC-001","AC-002","AC-013"],"files":["src/cli.ts"],"commands":[{"run":"npx vitest run tests/plan-command.test.ts","exit":0}]} -->
+  <!-- framework:evidence {"task":"T017","refs":["US-001","FR-001","NFR-001","NFR-002","AC-001","AC-002","AC-013"],"files":["src/cli.ts"],"commands":[{"run":"npx vitest run tests/plan-command.test.ts","exit":0}]} -->
 
 **Checkpoint**: `maestro plan --task "..."` apresenta o plano; aprovar deixa `.maestro/plans/<trace>.json` legível; recusar não deixa nada.
 
 #### Fase final — Documentação e qualidade
 
-- [x] T018 [DOC] [US-001] Registrar o comando e o artefato de plano em .specsfy/STACK.md e revisar PROJECT.md — Refs: US-001, FR-001, FR-004, AC-002, AC-010 — Depends: T014, T015, T016, T017
-  - [x] **PREP**: Confirmar T014–T017 GREEN e o conteúdo atual de `.specsfy/STACK.md` e `PROJECT.md`.
-  - [x] **EXECUTE**: Seção nova em `.specsfy/STACK.md` para o comando `plan` e o artefato `.maestro/plans/`; em `PROJECT.md`, registrar a capacidade e corrigir "O que ainda não existe", que hoje diz que nada consome os perfis.
-  - [x] **VERIFY**: `build_documentation.mjs --project . --check` limpo. `.specsfy/STACK.md` ganhou a seção do comando `plan` e do artefato; `PROJECT.md` registrou a capacidade e corrigiu "O que ainda não existe", que dizia que nada consumia os perfis — agora nomeia exatamente o que falta (execução, MA-3 a MA-6).
+- [x] T018 [DOC] [US-001] Registrar o comando e o artefato de plano em .project-context/STACK.md e revisar PROJECT.md — Refs: US-001, FR-001, FR-004, AC-002, AC-010 — Depends: T014, T015, T016, T017
+  - [x] **PREP**: Confirmar T014–T017 GREEN e o conteúdo atual de `.project-context/STACK.md` e `PROJECT.md`.
+  - [x] **EXECUTE**: Seção nova em `.project-context/STACK.md` para o comando `plan` e o artefato `.maestro/plans/`; em `PROJECT.md`, registrar a capacidade e corrigir "O que ainda não existe", que hoje diz que nada consome os perfis.
+  - [x] **VERIFY**: `build_documentation.mjs --project . --check` limpo. `.project-context/STACK.md` ganhou a seção do comando `plan` e do artefato; `PROJECT.md` registrou a capacidade e corrigiu "O que ainda não existe", que dizia que nada consumia os perfis — agora nomeia exatamente o que falta (execução, MA-3 a MA-6).
   - [x] **VISUAL**: Não aplicável — documentação em Markdown, sem tela.
   - [x] **EVIDENCE**: Registrar comandos e resultado nas seções 11–13.
   - [x] **IMPROVE**: Registrar melhoria aplicada ou ausência justificada.
@@ -808,5 +808,5 @@ Cada tarefa possui exatamente este checklist, atualizado durante a execução:
 - [x] Os cenários `AC-001` a `AC-013` passam.
 - [x] `FR-001` a `FR-004` e `NFR-001`/`NFR-002` têm evidência de verificação nas seções 11–12.
 - [x] Todas as tarefas da seção 14 estão concluídas — 19/19, 114/114 itens.
-- [x] `.specsfy/STACK.md` registra o comando novo e o artefato de plano.
+- [x] `.project-context/STACK.md` registra o comando novo e o artefato de plano.
 - [x] `PROJECT.md` revisado quanto à capacidade nova e à correção de "O que ainda não existe".

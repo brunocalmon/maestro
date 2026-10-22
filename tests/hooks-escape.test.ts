@@ -15,19 +15,19 @@ const hook: Hook = {
 const serialized = (): string => (JSON.parse(JSON.stringify(translateForClaudeCode(hook))) as { scriptBody: string }).scriptBody;
 
 describe("AC-010 — escaping survives the round trip", () => {
-  // SPECSFY: US-002 FR-002 NFR-003 AC-010
+  // TRACEABILITY: US-002 FR-002 NFR-003 AC-010
   it("recovers the script identical to the original, byte for byte", () => {
     expect(unwrap(serialized())).toBe(HOSTILE);
   });
 
-  // SPECSFY: US-002 FR-002 NFR-003 AC-010
+  // TRACEABILITY: US-002 FR-002 NFR-003 AC-010
   it("gains no backslash and loses none", () => {
     const recovered = unwrap(serialized());
     const count = (s: string) => (s.match(/\\/g) ?? []).length;
     expect(count(recovered)).toBe(count(HOSTILE));
   });
 
-  // SPECSFY: US-002 FR-006 NFR-003 AC-010
+  // TRACEABILITY: US-002 FR-006 NFR-003 AC-010
   it("keeps the recovered guard refusing what the source refused", () => {
     const full = serialized();
     expect(full).toContain("HOOK_COMMAND=");

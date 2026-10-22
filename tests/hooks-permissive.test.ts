@@ -25,17 +25,17 @@ function runGuard(name: string, command: string): number {
 }
 
 describe("AC-003 — ordinary work stays allowed", () => {
-  // SPECSFY: US-002 FR-003 FR-006 AC-003
+  // TRACEABILITY: US-002 FR-003 FR-006 AC-003
   it("allows editing a credential file, because editing isn't displaying", () => {
     expect(runGuard("guard-secrets", "vim .env")).toBe(0);
   });
 
-  // SPECSFY: US-002 FR-003 FR-006 AC-003
+  // TRACEABILITY: US-002 FR-003 FR-006 AC-003
   it("allows ordinary file removal inside the project", () => {
     expect(runGuard("guard-destructive", "rm dist/cli.js")).toBe(0);
   });
 
-  // SPECSFY: US-002 FR-006 AC-003
+  // TRACEABILITY: US-002 FR-006 AC-003
   it("allows an ordinary command that merely mentions the protected path", () => {
     expect(runGuard("guard-secrets", "grep -l KEY .env.example")).toBe(0);
   });

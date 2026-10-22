@@ -1,7 +1,7 @@
 import { describe, it, expect } from "vitest";
 
 describe("AC-012 — mensagens de commit desta entrega seguem convenção verificável", () => {
-  // SPECSFY: US-001 FR-004 NFR-002 AC-012
+  // TRACEABILITY: US-001 FR-004 NFR-002 AC-012
   it("classifica commits com prefixo rename: como rebranding puro e sinaliza os demais", async () => {
     const { classifyRenameCommits } = await import("../scripts/check-rename-commits.mjs");
     const result = classifyRenameCommits([

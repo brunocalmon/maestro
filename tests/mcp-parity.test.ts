@@ -16,7 +16,7 @@ function viaCommandLine(root: string) {
 }
 
 describe("AC-006 — both entry points describe the same result", () => {
-  // SPECSFY: US-003 FR-004 AC-006
+  // TRACEABILITY: US-003 FR-004 AC-006
   it("the installed hooks match by name", async () => {
     const viaTerminal = viaCommandLine(disposableProject("crs-cli-"));
     const viaTool = await executeSetup({ project_root: disposableProject("crs-mcp-") });
@@ -24,7 +24,7 @@ describe("AC-006 — both entry points describe the same result", () => {
       .toEqual(viaTerminal.installed.map((h) => h.name).sort());
   });
 
-  // SPECSFY: US-003 FR-005 AC-006
+  // TRACEABILITY: US-003 FR-005 AC-006
   it("the hooks match by event", async () => {
     const viaTerminal = viaCommandLine(disposableProject("crs-cli-"));
     const viaTool = await executeSetup({ project_root: disposableProject("crs-mcp-") });
@@ -33,7 +33,7 @@ describe("AC-006 — both entry points describe the same result", () => {
       .toEqual(viaTerminal.installed.map(key).sort());
   });
 
-  // SPECSFY: US-003 NFR-002 AC-006
+  // TRACEABILITY: US-003 NFR-002 AC-006
   it("the records match by target and entry count", async () => {
     const rootCli = disposableProject("crs-cli-");
     const rootMcp = disposableProject("crs-mcp-");

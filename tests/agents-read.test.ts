@@ -18,7 +18,7 @@ const MAESTRO_BASE = `  identity:
 `;
 
 describe("AC-007 — o leitor carrega perfis válidos", () => {
-  // SPECSFY: US-001 FR-003 NFR-001 AC-007
+  // TRACEABILITY: US-001 FR-003 NFR-001 AC-007
   it("devolve o subagent declarado com modelo e mode preservados, junto do maestro", async () => {
     const { readAgentConfig } = await import("../src/agents/read");
     const root = writeConfig(
@@ -40,7 +40,7 @@ describe("AC-007 — o leitor carrega perfis válidos", () => {
 });
 
 describe("AC-008 — referência quebrada faz a leitura recusar em voz alta", () => {
-  // SPECSFY: US-001 FR-003 NFR-002 AC-008
+  // TRACEABILITY: US-001 FR-003 NFR-002 AC-008
   it("falha nomeando o perfil e o caminho quando o behavior não existe", async () => {
     const { readAgentConfig } = await import("../src/agents/read");
     const root = writeConfig(
@@ -57,7 +57,7 @@ describe("AC-008 — referência quebrada faz a leitura recusar em voz alta", ()
 });
 
 describe("AC-009 — mode inválido é recusado", () => {
-  // SPECSFY: US-001 FR-003 NFR-002 AC-009
+  // TRACEABILITY: US-001 FR-003 NFR-002 AC-009
   it("falha nomeando a propriedade e o valor fora do domínio", async () => {
     const { readAgentConfig } = await import("../src/agents/read");
     const root = writeConfig(

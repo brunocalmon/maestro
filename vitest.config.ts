@@ -3,7 +3,7 @@ import { defineConfig } from "vitest/config";
 
 // O escopo é restrito a tests/ por necessidade, não por estilo.
 // As asserções da Phase 0, em .claude/scripts/phase0/, chamam-se *.test.js
-// porque o auditor de rastreabilidade do Specsfy só reconhece arquivo cujo nome
+// porque o auditor de rastreabilidade do Framework só reconhece arquivo cujo nome
 // pareça de teste. São scripts autônomos que executam no import e encerram o
 // processo, não suítes Vitest. Sem esta restrição o runner tenta executá-las e
 // reprova em dezesseis arquivos que não lhe dizem respeito.
@@ -33,7 +33,7 @@ export default defineConfig({
     // O "4" fixo original foi calibrado para a máquina de 16 núcleos do
     // achado acima — mas o mesmo sintoma (spawnSync falhando por exaustão
     // de fork(), não por timeout) reapareceu de verdade rodando esta suíte
-    // no runner padrão do GitHub Actions (2 vCPUs): tests/specsfy-install-
+    // no runner padrão do GitHub Actions (2 vCPUs): tests/framework-install-
     // real.test.ts falhava de forma consistente dentro da suíte completa
     // (3/3 tentativas, incluindo retries) enquanto a mesma chamada
     // spawnSync, isolada, sempre teve sucesso no mesmo runner — a

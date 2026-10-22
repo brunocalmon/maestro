@@ -7,7 +7,7 @@ specs
 docs
 .claude
 .agents
-.specsfy
+.project-context
 .common-rules
 *.log
 .vitest

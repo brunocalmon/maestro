@@ -8,20 +8,6 @@ import { readAnchor } from "../extensions/anchor.js";
 import { extractSection } from "../extensions/foreign.js";
 import { directoryChecksum } from "../skills/project.js";
 
-/**
- * "Configured" means more than "installed": the on-disk trail a
- * conversational skill leaves once it actually ran (`specsfy-setup`,
- * `setup-matt-pocock-skills`). This is the fixed table the checks below
- * compare against — a real signal of what those skills do today, not a
- * flag the maestro itself writes (SPEC-0025, R-002, FIND-PROD-001).
- */
-export const SPECSFY_SETUP_TRACES: readonly string[] = [
-  "PROJECT.md",
-  ".specsfy/STACK.md",
-  ".specsfy/RULES.md",
-  ".specsfy/USER-PROFILE.md",
-];
-
 /** The section `setup-matt-pocock-skills` writes, moved to AGENTS.md since SPEC-0024. */
 export const AGENT_SKILLS_HEADING = "## Agent skills";
 
@@ -37,8 +23,6 @@ export interface ExpectedLayout {
   agentsBlocks: readonly string[];
   /** Whether the target also expects the `agents-import` block in CLAUDE.md. */
   claudeImport: boolean;
-  /** Files a completed `specsfy-setup` leaves behind. */
-  traces: readonly string[];
   /** Heading the `setup-matt-pocock-skills` skill writes into AGENTS.md. */
   agentSkillsHeading: string;
 }
@@ -59,7 +43,6 @@ export function expectedLayout(target: "claude-code" | "antigravity" = "claude-c
     hooks,
     agentsBlocks: SHARED_INSTRUCTION_BLOCKS,
     claudeImport: target === "claude-code",
-    traces: SPECSFY_SETUP_TRACES,
     agentSkillsHeading: AGENT_SKILLS_HEADING,
   };
 }
@@ -117,7 +100,7 @@ export function assessConfiguration(root: string, target: "claude-code" | "antig
   const agents = readIfExists(join(root, "AGENTS.md"));
   const claude = readIfExists(join(root, "CLAUDE.md"));
 
-  const missingTraces = layout.traces.filter((t) => !existsSync(join(root, t)));
+  const missingTraces: string[] = [];
   const missingSkillSection = extractSection(agents, layout.agentSkillsHeading) === null;
 
   const missingBlocks = layout.agentsBlocks.filter((name) => readAnchor(agents, "extension", name) === null);
@@ -197,7 +180,6 @@ export function assessConfiguration(root: string, target: "claude-code" | "antig
  */
 export function nextStepsNote(assessment: ConfigurationAssessment): string | null {
   const skills: string[] = [];
-  if (assessment.missingTraces.length > 0) skills.push("/specsfy-setup");
   if (assessment.missingSkillSection) skills.push("/setup-matt-pocock-skills");
   if (skills.length === 0) return null;
   return `next: run ${skills.join(" and ")} in your agent`;

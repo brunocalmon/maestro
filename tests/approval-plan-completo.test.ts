@@ -3,12 +3,12 @@ import { renderPlan } from "../src/approval/render";
 import { itemFake } from "./approval-command-fixtures";
 
 describe("AC-110 — the full plan lists every dependency command", () => {
-  // SPECSFY: US-071 FR-071 AC-110
-  it("hooks, skills, Specsfy and the bridge, all pending, appear in the text and the document", () => {
+  // TRACEABILITY: US-071 FR-071 AC-110
+  it("hooks, skills, Framework and the bridge, all pending, appear in the text and the document", () => {
     const hooks = [{ name: "guard-destructive", target: ".claude/settings.json", event: "PreToolUse" }];
     const commands = [
       itemFake("skills", "install skills from mattpocock", "node", ["cli.mjs", "add", "mattpocock/skills"]),
-      itemFake("specsfy", "install Specsfy framework", "node", ["specsfy.cjs", "install", "--project", "/tmp/proj", "--json"]),
+      itemFake("skills", "install skills", "node", ["skills", "add", "example-org/skills"]),
       itemFake("bridge", "install code-review-graph via uv", "uv", [
         "pip",
         "install",

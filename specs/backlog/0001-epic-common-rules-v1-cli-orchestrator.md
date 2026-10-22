@@ -15,11 +15,11 @@
 
 ## Ideia original
 
-Rewrite radical do common-rules-server: de MCP-centric Python para CLI-first TypeScript. Wrapper que orquestra agentes (specsfy, context-mode, code-review-graph, pi.dev) com Orchestrator self-aware que solicita aprovação de plano e recomenda modelo baseado em análise completa de custo/capacidade/recursos. Setup híbrido MCP+CLI. Graceful degradation: apenas backends disponíveis. Zero compatibilidade com v0.2.8. Branch experimental refactor/v1-cli-first, versão 1.0.0.
+Rewrite radical do common-rules-server: de MCP-centric Python para CLI-first TypeScript. Wrapper que orquestra agentes (framework, context-mode, code-review-graph, pi.dev) com Orchestrator self-aware que solicita aprovação de plano e recomenda modelo baseado em análise completa de custo/capacidade/recursos. Setup híbrido MCP+CLI. Graceful degradation: apenas backends disponíveis. Zero compatibilidade com v0.2.8. Branch experimental refactor/v1-cli-first, versão 1.0.0.
 
 ## Problema percebido
 
-v0.2.8 é pesado (Python, 6 tools MCP, 47 recursos built-in), replica funcionalidades de ferramentas especializadas (specsfy, context-mode, code-review-graph), não força aprovação de plano antes de orquestração, sem detecção clara de ambiente.
+v0.2.8 é pesado (Python, 6 tools MCP, 47 recursos built-in), replica funcionalidades de ferramentas especializadas (framework, context-mode, code-review-graph), não força aprovação de plano antes de orquestração, sem detecção clara de ambiente.
 
 ## Pessoa afetada ou beneficiada
 
@@ -27,7 +27,7 @@ Desenvolvedores usando agentes em CLI e IDEs; times com ambientes heterogêneos;
 
 ## Resultado ou valor esperado
 
-Projeto simples como wrapper/orchestrator em TypeScript; aprovação explícita de plano antes de execução; recomendação automática de modelo; detecção de backends com fallback graceful; instalação determinística via npm; isolamento de ambiente garantido; reutilização de specsfy/context-mode/code-review-graph.
+Projeto simples como wrapper/orchestrator em TypeScript; aprovação explícita de plano antes de execução; recomendação automática de modelo; detecção de backends com fallback graceful; instalação determinística via npm; isolamento de ambiente garantido; reutilização de framework/context-mode/code-review-graph.
 
 ## Contexto
 
@@ -49,7 +49,7 @@ Este épico não virou uma spec: desdobrou-se em fases, e cada fase em fatias.
 | `specs/completed/0004-fatia-1f-servidor-mcp/spec.md` | entregue |
 | `specs/defined/0005-fatia-1h-skills-lado-a-lado/spec.md` | em definição |
 
-**Correção de 2026-08-29.** A formulação original cita `pi.dev` entre as dependências. A pessoa responsável corrigiu isso depois: agentes de codificação são detectados e nunca instalados, e as dependências do projeto são `specsfy`, `context-mode` e `code-review-graph`. A formulação acima é preservada como registro; a `DEC-002` da `SPEC-0002` é que governa.
+**Correção de 2026-08-29.** A formulação original cita `pi.dev` entre as dependências. A pessoa responsável corrigiu isso depois: agentes de codificação são detectados e nunca instalados, e as dependências do projeto são `framework`, `context-mode` e `code-review-graph`. A formulação acima é preservada como registro; a `DEC-002` da `SPEC-0002` é que governa.
 
 ## Comportamento esperado
 

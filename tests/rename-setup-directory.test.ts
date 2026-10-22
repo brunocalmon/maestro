@@ -8,7 +8,7 @@ import { readRecordFile } from "../src/setup/write";
 
 const env = { hasClaudeCode: true, files: [".claude/settings.json"] };
 
-// SPECSFY: US-001 FR-002 AC-002 AC-004 — isolated disposable project (SPEC-0013 pattern).
+// TRACEABILITY: US-001 FR-002 AC-002 AC-004 — isolated disposable project (SPEC-0013 pattern).
 function project(): string {
   const root = mkdtempSync(join(tmpdir(), "rename-setup-"));
   mkdirSync(resolve(root, ".claude"), { recursive: true });
@@ -18,7 +18,7 @@ function project(): string {
 const LEGACY_RECORD = { target: "claude", version: "0.0.1-legacy", hooks: [] };
 
 describe("AC-004 — setup cria .maestro/ do zero, ignorando .common-rules/", () => {
-  // SPECSFY: US-001 FR-002 NFR-002 AC-004
+  // TRACEABILITY: US-001 FR-002 NFR-002 AC-004
   it("cria .maestro/install.json sem ler o conteúdo de .common-rules/install.json", () => {
     const root = project();
     mkdirSync(resolve(root, ".common-rules"), { recursive: true });
@@ -34,7 +34,7 @@ describe("AC-004 — setup cria .maestro/ do zero, ignorando .common-rules/", ()
 });
 
 describe("AC-005 — .common-rules/ e .maestro/ coexistindo: o antigo é ignorado", () => {
-  // SPECSFY: US-001 FR-002 NFR-002 AC-005
+  // TRACEABILITY: US-001 FR-002 NFR-002 AC-005
   it("lê apenas .maestro/install.json quando os dois diretórios existem", () => {
     const root = project();
     mkdirSync(resolve(root, ".common-rules"), { recursive: true });
@@ -50,7 +50,7 @@ describe("AC-005 — .common-rules/ e .maestro/ coexistindo: o antigo é ignorad
 });
 
 describe("AC-006 — a execução é relatada como primeira instalação", () => {
-  // SPECSFY: US-001 FR-002 NFR-002 AC-006
+  // TRACEABILITY: US-001 FR-002 NFR-002 AC-006
   it("não relata atualização mesmo quando .common-rules/ (legado) contém um registro que bateria com os hooks atuais", () => {
     // Bootstrap: gera um registro real e válido, do jeito que uma
     // instalação de antes da renomeação realmente ficaria em disco.

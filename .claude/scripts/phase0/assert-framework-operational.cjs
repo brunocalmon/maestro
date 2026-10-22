@@ -6,30 +6,30 @@ const { resolve } = require("node:path");
 const { filesIn, refExists, assert, WORK_BRANCH } = require("./lib.cjs");
 
 const ROOT = resolve(__dirname, "../../..");
-const CAPTURE = resolve(ROOT, ".claude/skills/specsfy-01-inbox/scripts/capturar_inbox.mjs");
-const TEMPLATE = resolve(ROOT, ".specsfy/templates/Inbox.md");
+const CAPTURE = resolve(ROOT, ".claude/skills/framework-01-inbox/scripts/capturar_inbox.mjs");
+const TEMPLATE = resolve(ROOT, ".project-context/templates/Inbox.md");
 
 assert("assert-framework-operational", [
-  // SPECSFY: US-001 FR-003 AC-011
+  // TRACEABILITY: US-001 FR-003 AC-011
   [`branch ${WORK_BRANCH} existe`, () =>
     refExists(WORK_BRANCH) || `referência ${WORK_BRANCH} não encontrada`],
 
-  // SPECSFY: US-001 FR-003 NFR-003 AC-011
+  // TRACEABILITY: US-001 FR-003 NFR-003 AC-011
   ["a skill de captura sobreviveu à limpeza", () => {
     if (!refExists(WORK_BRANCH)) return "referência ausente";
-    const files = filesIn(WORK_BRANCH, [".claude/skills/specsfy-01-inbox"]);
+    const files = filesIn(WORK_BRANCH, [".claude/skills/framework-01-inbox"]);
     return files && files.length ? true : "skill ausente na branch de trabalho";
   }],
 
-  // SPECSFY: US-001 FR-003 NFR-003 AC-011
+  // TRACEABILITY: US-001 FR-003 NFR-003 AC-011
   ["o template resolve na branch de trabalho", () => {
     if (!refExists(WORK_BRANCH)) return "referência ausente";
-    const files = filesIn(WORK_BRANCH, [".specsfy/templates"]);
-    if (!files || !files.length) return ".specsfy/templates ausente na branch";
+    const files = filesIn(WORK_BRANCH, [".project-context/templates"]);
+    if (!files || !files.length) return ".project-context/templates ausente na branch";
     return files.some((f) => f.endsWith("/Inbox.md")) || "Inbox.md ausente entre os templates";
   }],
 
-  // SPECSFY: US-001 FR-003 AC-011
+  // TRACEABILITY: US-001 FR-003 AC-011
   ["uma captura real é criada sem reinstalação", () => {
     if (!existsSync(CAPTURE)) return `script de captura ausente em ${CAPTURE}`;
     if (!existsSync(TEMPLATE)) return `template ausente em ${TEMPLATE}`;

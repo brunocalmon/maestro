@@ -8,14 +8,14 @@ describe("AC-091 — every command documents its own usage", () => {
   // parseFlags and ran the real command instead (the incident this whole
   // fatia guards against, reproduced running `setup --help` for real: it
   // wrote to disk instead of printing usage).
-  // SPECSFY: US-060 FR-060 AC-091
+  // TRACEABILITY: US-060 FR-060 AC-091
   it("a bare invocation lists every command, refusing rather than succeeding silently", () => {
     const r = run([]);
     expect(r.exitCode).not.toBe(0);
     for (const c of ["version", "doctor", "setup", "recommend", "extension"]) expect(r.output).toContain(c);
   });
 
-  // SPECSFY: US-060 FR-060 AC-091
+  // TRACEABILITY: US-060 FR-060 AC-091
   it("--help and -h at the top level both succeed and list every command", () => {
     for (const flag of ["--help", "-h"]) {
       const r = run([flag]);
@@ -24,7 +24,7 @@ describe("AC-091 — every command documents its own usage", () => {
     }
   });
 
-  // SPECSFY: US-060 FR-060 AC-091
+  // TRACEABILITY: US-060 FR-060 AC-091
   it("setup --help documents --target without running setup", () => {
     const r = run(["setup", "--help"]);
     expect(r.exitCode).toBe(0);
@@ -34,21 +34,21 @@ describe("AC-091 — every command documents its own usage", () => {
 
   // The exact incident: an unrecognized flag used to be silently dropped
   // and the real command ran anyway.
-  // SPECSFY: US-060 FR-060 NFR-060 AC-091
+  // TRACEABILITY: US-060 FR-060 NFR-060 AC-091
   it("an unknown flag on setup is refused, not silently ignored", () => {
     const r = run(["setup", "--bogus", "whatever"]);
     expect(r.exitCode).not.toBe(0);
     expect(r.output).toMatch(/unrecognized/);
   });
 
-  // SPECSFY: US-060 FR-060 AC-091
+  // TRACEABILITY: US-060 FR-060 AC-091
   it("doctor --help documents itself without running the real check", () => {
     const r = run(["doctor", "--help"]);
     expect(r.exitCode).toBe(0);
     expect(r.output).toMatch(/usage: maestro doctor/);
   });
 
-  // SPECSFY: US-060 FR-060 AC-091
+  // TRACEABILITY: US-060 FR-060 AC-091
   it("recommend --help documents its flags", () => {
     const r = run(["recommend", "--help"]);
     expect(r.exitCode).toBe(0);
@@ -56,7 +56,7 @@ describe("AC-091 — every command documents its own usage", () => {
     expect(r.output).toContain("--local-model");
   });
 
-  // SPECSFY: US-060 FR-060 AC-091
+  // TRACEABILITY: US-060 FR-060 AC-091
   it("extension --help lists both subcommands", () => {
     const r = run(["extension", "--help"]);
     expect(r.exitCode).toBe(0);
@@ -64,7 +64,7 @@ describe("AC-091 — every command documents its own usage", () => {
     expect(r.output).toContain("repair");
   });
 
-  // SPECSFY: US-060 FR-060 AC-091
+  // TRACEABILITY: US-060 FR-060 AC-091
   it("extension create --help and extension repair --help each document their own flags", () => {
     const create = run(["extension", "create", "--help"]);
     expect(create.exitCode).toBe(0);
@@ -75,7 +75,7 @@ describe("AC-091 — every command documents its own usage", () => {
     expect(repair.output).toContain("--name");
   });
 
-  // SPECSFY: US-060 FR-060 AC-091
+  // TRACEABILITY: US-060 FR-060 AC-091
   it("version --help doesn't just print the version number", () => {
     const r = run(["version", "--help"]);
     expect(r.exitCode).toBe(0);

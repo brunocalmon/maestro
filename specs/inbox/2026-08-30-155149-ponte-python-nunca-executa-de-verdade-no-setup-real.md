@@ -39,8 +39,8 @@ A fatia 1i ("aprovação em lote dos comandos das dependências, no `setup`")
 pressupõe que existam comandos de dependência realmente executados para
 aprovar. Hoje, dos três instaladores que `setup` poderia disparar:
 
-- skills (mattpocock/specsfy via instalador oficial) — executa de verdade, coberto por `tests/skills-executor-real.test.ts`.
-- framework Specsfy (`specsfy install --project`) — executa de verdade.
+- skills (mattpocock/framework via instalador oficial) — executa de verdade, coberto por `tests/skills-executor-real.test.ts`.
+- framework former project tool (`former tool install --project`) — executa de verdade.
 - ponte Python (`uv venv`/`uv pip install`) — **nunca executa**, por este achado.
 
 Especificar 1i sem notar isso arriscaria desenhar um mecanismo de aprovação em
@@ -68,7 +68,7 @@ Python entra no escopo da própria fatia 1i.
 que a pessoa vê antes de aprovar (`SPEC-0007`) — só descrevem hooks (`name`,
 `target`, `event`). `src/setup/run.ts`'s `planned` vem só de
 `traduzidos.map(...)`, os hooks traduzidos; a instalação de skills, do
-framework Specsfy e (quando ligada) da ponte Python acontece depois da mesma
+framework former project tool e (quando ligada) da ponte Python acontece depois da mesma
 aprovação, sem aparecer no plano que a pessoa de fato viu. Aprovação em lote
 de "comandos das dependências" pressupõe que esses comandos apareçam no
 plano — este achado é pré-condição direta da 1i, na mesma investigação, não

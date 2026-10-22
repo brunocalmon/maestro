@@ -4,7 +4,7 @@
 
 # Persistence and Data Storage Schemas in Maestro
 
-<!-- specsfy:documentator:start -->
+<!-- maestro:inventory:start -->
 ## Fontes de persistência
 
 | Arquivo |
@@ -15,9 +15,9 @@
 erDiagram
   ENTITY { string id }
 ```
-<!-- specsfy:documentator:end -->
+<!-- maestro:inventory:end -->
 
-<!-- O bloco specsfy:documentator acima é o inventário mecânico gerado pelo Specsfy e é reescrito a cada build (findings/external/FIND-EXT-001). A documentação do projeto vive fora dele, a partir daqui. -->
+<!-- O bloco maestro:inventory acima é o inventário mecânico gerado pelo former project tool e é reescrito a cada build (findings/external/FIND-EXT-001). A documentação do projeto vive fora dele, a partir daqui. -->
 
 ## Persistence Overview
 
@@ -25,7 +25,7 @@ erDiagram
 
 Project persistence is divided into two primary areas:
 1. **Maestro Configurations and Records (`.maestro/`)**: Structured files maintained at the user's project root.
-2. **Editor Integration Artifacts (`.claude/`, `.specsfy/`)**: Hook configurations and integrated specification manifests.
+2. **Editor Integration Artifacts (`.claude/`, `.project-context/`)**: Hook configurations and integrated specification manifests.
 
 ---
 
@@ -117,7 +117,7 @@ erDiagram
 ### 1. `config.yaml` (`.maestro/config.yaml`)
 Primary configuration file created and kept complete by `maestro setup`.
 - **`language`**: Defines `default` (response language) and `exceptions` (paths allowed to use localized languages).
-- **`project`**: Stack fields automatically synchronized from `.specsfy/STACK.md` (when Specsfy is active).
+- **`project`**: Stack fields automatically synchronized from `.project-context/STACK.md` (when former project tool is active).
 - **`system`**: Environment profile and hardware resource definitions.
 - **`maestro.subagents`**: Subagent profiles registered in the system.
 - **`maestro.task_types`**: Task type definitions and their required minimum context window sizes.

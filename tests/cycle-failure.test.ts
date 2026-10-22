@@ -6,14 +6,14 @@ const ROOT = resolve(__dirname, "..");
 const scriptPath = resolve(ROOT, "scripts", "cycle.mjs");
 
 describe("AC-013 — the cycle fails loudly when a step fails", () => {
-  // SPECSFY: US-001 FR-007 NFR-001 AC-013
+  // TRACEABILITY: US-001 FR-007 NFR-001 AC-013
   it("stops at the first failure, without continuing", () => {
     const source = readFileSync(scriptPath, "utf8");
     expect(source).toMatch(/exit\(|exitCode/);
     expect(source).toMatch(/break|return|process\.exit/);
   });
 
-  // SPECSFY: US-001 FR-007 AC-013
+  // TRACEABILITY: US-001 FR-007 AC-013
   it("names the step that failed", () => {
     expect(readFileSync(scriptPath, "utf8")).toMatch(/step/i);
   });

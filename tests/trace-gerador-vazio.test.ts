@@ -17,17 +17,17 @@ function record(): { root: string; rec: Record<string, unknown> } {
 }
 
 describe("Edge case — generator that returns an empty value", () => {
-  // SPECSFY: US-040 FR-040 AC-040
+  // TRACEABILITY: US-040 FR-040 AC-040
   it("the field isn't written empty", () => {
     expect("trace" in record().rec).toBe(false);
   });
 
-  // SPECSFY: US-040 FR-044 AC-047
+  // TRACEABILITY: US-040 FR-044 AC-047
   it("the read reports unidentified", () => {
     expect(readTrace(record().root).kind).toBe("unidentified");
   });
 
-  // SPECSFY: US-040 FR-040 AC-040
+  // TRACEABILITY: US-040 FR-040 AC-040
   it("the rest of the record remains", () => {
     const { rec } = record();
     expect((rec["hooks"] as unknown[]).length).toBe(installedHookCount());

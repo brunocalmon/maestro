@@ -7,7 +7,7 @@ const PLANO = [
 ];
 
 describe("AC-069 — texto e documento contam a mesma história", () => {
-  // SPECSFY: US-062 FR-063 NFR-062 AC-069
+  // TRACEABILITY: US-062 FR-063 NFR-062 AC-069
   it("os hooks nomeados coincidem nos dois", () => {
     const r = renderPlan(PLANO);
     const doc = JSON.parse(r.document) as { items: { name: string }[] };
@@ -19,7 +19,7 @@ describe("AC-069 — texto e documento contam a mesma história", () => {
     }
   });
 
-  // SPECSFY: US-062 FR-063 NFR-062 AC-069
+  // TRACEABILITY: US-062 FR-063 NFR-062 AC-069
   it("os destinos e eventos coincidem nos dois", () => {
     const r = renderPlan(PLANO);
     const doc = JSON.parse(r.document) as { items: { name: string; target: string; event: string }[] };
@@ -31,7 +31,7 @@ describe("AC-069 — texto e documento contam a mesma história", () => {
     }
   });
 
-  // SPECSFY: US-062 NFR-062 AC-069
+  // TRACEABILITY: US-062 NFR-062 AC-069
   it("a quantidade de itens é a mesma nas duas formas", () => {
     const r = renderPlan(PLANO);
     const doc = JSON.parse(r.document) as { items: unknown[] };

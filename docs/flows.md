@@ -4,7 +4,7 @@
 
 # Execution Flows of Maestro
 
-<!-- specsfy:documentator:start -->
+<!-- maestro:inventory:start -->
 ## Fluxo principal
 
 ```mermaid
@@ -18,9 +18,9 @@ sequenceDiagram
   participant Aplicação
   Cliente->>Aplicação: requisição
 ```
-<!-- specsfy:documentator:end -->
+<!-- maestro:inventory:end -->
 
-<!-- O bloco specsfy:documentator acima é o inventário mecânico gerado pelo Specsfy e é reescrito a cada build (findings/external/FIND-EXT-001). A documentação do projeto vive fora dele, a partir daqui. -->
+<!-- O bloco maestro:inventory acima é o inventário mecânico gerado pelo former project tool e é reescrito a cada build (findings/external/FIND-EXT-001). A documentação do projeto vive fora dele, a partir daqui. -->
 
 ## Flow Overview
 
@@ -30,7 +30,7 @@ sequenceDiagram
 
 ## 1. Bootstrapping and Reconciliation Flow (`maestro setup`)
 
-`maestro setup` verifies whether hooks, skills, and the Specsfy framework are present on disk. When drift or missing files are detected, the system calculates an execution plan and requests human approval prior to applying changes.
+`maestro setup` verifies whether hooks, skills, and the Maestro-owned setup are present on disk. When drift or missing files are detected, the system calculates an execution plan and requests human approval prior to applying changes.
 
 ```mermaid
 sequenceDiagram
@@ -43,7 +43,7 @@ sequenceDiagram
     participant FS as Filesystem
 
     User->>CLI: maestro setup
-    CLI->>Doctor: Probe hooks, skills, and Specsfy presence
+    CLI->>Doctor: Probe hooks, skills, and former project tool presence
     Doctor-->>CLI: Drift Report (missing or modified files)
     
     CLI->>Gate: Assemble dependency installation command plan
@@ -59,7 +59,7 @@ sequenceDiagram
     alt Approval Granted
         Gate->>FS: Install 7 hooks into .claude/settings.json
         Gate->>FS: Deliver skills to .claude/skills/ and .agents/skills/
-        Gate->>FS: Execute specsfy install --project <root>
+        Gate->>FS: Execute former tool install --project <root>
         Gate->>FS: Synchronize & backfill .maestro/config.yaml
         Gate->>Registry: Record approved commands
         CLI-->>User: Success: Setup completed & recorded

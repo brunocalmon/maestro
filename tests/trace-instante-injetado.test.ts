@@ -12,17 +12,17 @@ const rec = () => {
 };
 
 describe("AC-042 — the stamp matches the moment of the run", () => {
-  // SPECSFY: US-041 FR-042 AC-042
+  // TRACEABILITY: US-041 FR-042 AC-042
   it("the recorded instant is the injected clock's", () => {
     for (const h of rec()["hooks"]) expect(h.installedAt).toBe(FIXED_INSTANT);
   });
 
-  // SPECSFY: US-041 FR-042 AC-042
+  // TRACEABILITY: US-041 FR-042 AC-042
   it("the recorded instant isn't the epoch", () => {
     for (const h of rec()["hooks"]) expect(h.installedAt).not.toBe(EPOCH);
   });
 
-  // SPECSFY: US-041 FR-042 AC-042
+  // TRACEABILITY: US-041 FR-042 AC-042
   it("all entries carry the same instant", () => {
     const instants = new Set(rec()["hooks"].map((h: { installedAt: string }) => h.installedAt));
     expect(instants.size).toBe(1);

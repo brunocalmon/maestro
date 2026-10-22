@@ -2,7 +2,7 @@
 
 | Campo | Valor |
 | --- | --- |
-| Formato | Specsfy/2.0 |
+| Formato | former project tool/2.0 |
 | ID | SPEC-0017 |
 | Slug | 0017-recomendacao-de-modelo-com-janela-de-contexto-e-tipo-de-tarefa |
 | Status | Complete |
@@ -561,27 +561,27 @@ tests/
 #### Gate do Ato I — Definição
 
 - **Resultado**: READY (2026-09-07)
-- **Comando**: `node .claude/skills/specsfy-04-validate/scripts/validate_spec.mjs specs/draft/0017-recomendacao-de-modelo-com-janela-de-contexto-e-tipo-de-tarefa/spec.md --allow-draft` → `VALID DRAFT`.
+- **Comando**: `node .claude/skills/framework-04-validate/scripts/validate_spec.mjs specs/draft/0017-recomendacao-de-modelo-com-janela-de-contexto-e-tipo-de-tarefa/spec.md --allow-draft` → `VALID DRAFT`.
 - **Achados**: Nenhum `BLOCKER`. As seis decisões da entrevista viraram `FR`, `AC` ou `DEC` rastreáveis. Cobertura: US-001 → 14 AC; FR-001 → 5; FR-002 → 3; FR-003 → 5; FR-004 → 5; NFR-001 → 6; NFR-002 → 7. `R-001` é o único claim material da fatia e foi verificado por execução real (`ollama show cogito:14b` devolvendo `context length 131072`), não por leitura de documentação — o que importa porque a fatia inteira depende de esse dado existir localmente, sem rede. `Interface para pessoas: Não` justificada. Sem findings de segurança: a leitura é subprocesso local na mesma fronteira do `ollama list` já em uso.
 
 #### Gate do Ato II — Plano
 
 - **Resultado**: READY (2026-09-07)
-- **Comando**: `node .claude/skills/specsfy-05-tasks/scripts/validate_tasks.mjs specs/defined/0017-recomendacao-de-modelo-com-janela-de-contexto-e-tipo-de-tarefa/spec.md` — `READY` (`total=20 complete=14 tdd=15 code=4 covered_spec_ids=21 required_spec_ids=21`).
+- **Comando**: `node .claude/skills/framework-05-tasks/scripts/validate_tasks.mjs specs/defined/0017-recomendacao-de-modelo-com-janela-de-contexto-e-tipo-de-tarefa/spec.md` — `READY` (`total=20 complete=14 tdd=15 code=4 covered_spec_ids=21 required_spec_ids=21`).
 - **Achados**: Nenhum bloqueio. Das 14 tarefas `[TEST][TDD]` (uma por `AC`), **onze observaram RED literal** — módulo inexistente, seção de schema ausente, ou a recomendação atual escolhendo o modelo errado. As outras três (`AC-008`, `AC-011`, `AC-014`) passam hoje e estão registradas como **guard-rails**, não como RED: elas afirmam comportamento que já existe e que precisa sobreviver ao filtro novo — o maior vence entre os viáveis, nenhuma janela é consultada sem tipo, e o override escapa do filtro. Forçá-las a falhar exigiria mudar o que o `AC` afirma, o que seria fabricar evidência em vez de produzi-la. Mesma postura já registrada em `AC-010` da `SPEC-0014`. As quatro `[CODE]` têm três ou mais predecessores TDD concluídos cada.
 
 #### Gate do Ato III — Entrega
 
 - **Resultado**: READY (2026-09-07) — 20/20 tarefas, 120/120 itens de checklist
-- **Comando**: `node .claude/skills/specsfy-06-tdd-bdd/scripts/check_traceability.mjs specs/in-progress/0017-recomendacao-de-modelo-com-janela-de-contexto-e-tipo-de-tarefa/spec.md .`
+- **Comando**: `node .claude/skills/framework-06-tdd-bdd/scripts/check_traceability.mjs specs/in-progress/0017-recomendacao-de-modelo-com-janela-de-contexto-e-tipo-de-tarefa/spec.md .`
 - **Achados**: Nenhum bloqueio. **476/476 testes** em 176 arquivos, `tsc` limpo, `build_documentation.mjs --check` limpo. Verificado com o binário instalado numa máquina com três modelos de janelas reais diferentes (32768, 40960, 131072): sem tipo, recomenda como antes e declara a ausência; com um tipo de exigência baixa, recomenda citando a exigência; com um tipo de exigência alta, não recomenda e explica por quê; tipo inexistente é recusado nomeando os disponíveis.
 - Um defeito foi encontrado e corrigido nessa verificação, e não aparecia em teste nenhum: o relatório dizia `Largest available window: 32768` quando havia um modelo de 131072 instalado — cortado antes pela memória. A frase induzia a conclusão de que a ferramenta estava errada; passou a nomear a restrição real.
 - Uma regressão apareceu, e era interação legítima entre fatias: o `AC-002` da `SPEC-0015` percorre toda propriedade da seção `maestro:` exigindo o formato `{ value, mode }`, e `task_types` é mapa de tipos, não propriedade — mesmo status de `subagents`. O guard foi estendido para alcançar as propriedades aninhadas, em vez de apenas ignorar o grupo novo: assim um grupo futuro não escapa da invariante só por ser aninhado.
 
-#### Aceite final (`$specsfy-04-validate`)
+#### Aceite final (`$framework-04-validate`)
 
 - **Resultado**: READY (2026-09-07)
-- **Comando**: `node .claude/skills/specsfy-04-validate/scripts/validate_spec.mjs specs/review/0017-recomendacao-de-modelo-com-janela-de-contexto-e-tipo-de-tarefa/spec.md` — `RESULTADO: READY`.
+- **Comando**: `node .claude/skills/framework-04-validate/scripts/validate_spec.mjs specs/review/0017-recomendacao-de-modelo-com-janela-de-contexto-e-tipo-de-tarefa/spec.md` — `RESULTADO: READY`.
 - **Achados**: Nenhum `BLOCKER`. Três gates `Passed` e Definition of Done comprovada. A instrução que a `SPEC-0015` semeou no `behavior.md` — "vigie a janela de contexto antes de delegar" — passou a ter dado que a sustente: antes era conselho sem base no sistema. Os três guard-rails declarados no Plan Gate seguiram verdes depois do filtro entrar, que era exatamente sua função. O único defeito da fatia foi de clareza do relatório e só apareceu com modelos reais de janelas diferentes; está corrigido e registrado. `Status: Complete`.
 
 ### 14. Tarefas
@@ -604,7 +604,7 @@ Cada tarefa possui exatamente este checklist, atualizado durante a execução:
 
 - [x] T001 [P] [TEST] [TDD] [US-001] Derivar de AC-001 um caso Vitest falhando em tests/context-window.test.ts — Refs: US-001, FR-001, NFR-001, AC-001 — Depends: none
   - [x] **PREP**: Ler o Gherkin de AC-001; confirmar que `src/models/context-window.ts` não existe e capturar uma saída real de `ollama show`.
-  - [x] **EXECUTE**: Escrever o caso com marcador `SPECSFY: US-001 FR-001 NFR-001 AC-001` — `parseContextLength` sobre a saída real devolve o número declarado como `context length`.
+  - [x] **EXECUTE**: Escrever o caso com marcador `TRACEABILITY: US-001 FR-001 NFR-001 AC-001` — `parseContextLength` sobre a saída real devolve o número declarado como `context length`.
   - [x] **VERIFY**: `npx vitest run tests/context-window.test.ts` — **RED observado**: `Cannot find module '../src/models/context-window'`.
   - [x] **VISUAL**: Não aplicável — arquivo de teste sem superfície visual.
   - [x] **EVIDENCE**: Registrar comando e causa do RED nas seções 11–12.
@@ -612,7 +612,7 @@ Cada tarefa possui exatamente este checklist, atualizado durante a execução:
 
 - [x] T002 [P] [TEST] [TDD] [US-001] Derivar de AC-002 um caso Vitest falhando em tests/context-window.test.ts — Refs: US-001, FR-001, NFR-002, AC-002 — Depends: none
   - [x] **PREP**: Ler o Gherkin de AC-002.
-  - [x] **EXECUTE**: Escrever o caso com marcador `SPECSFY: US-001 FR-001 NFR-002 AC-002` — saída sem a linha devolve `null`, e o caso afirma explicitamente que não é `0`.
+  - [x] **EXECUTE**: Escrever o caso com marcador `TRACEABILITY: US-001 FR-001 NFR-002 AC-002` — saída sem a linha devolve `null`, e o caso afirma explicitamente que não é `0`.
   - [x] **VERIFY**: `npx vitest run tests/context-window.test.ts` — **RED observado**: `Cannot find module '../src/models/context-window'`.
   - [x] **VISUAL**: Não aplicável — arquivo de teste sem superfície visual.
   - [x] **EVIDENCE**: Registrar comando e causa do RED nas seções 11–12.
@@ -620,7 +620,7 @@ Cada tarefa possui exatamente este checklist, atualizado durante a execução:
 
 - [x] T003 [P] [TEST] [TDD] [US-001] Derivar de AC-003 um caso Vitest falhando em tests/context-window.test.ts — Refs: US-001, FR-001, NFR-002, AC-003 — Depends: none
   - [x] **PREP**: Ler o Gherkin de AC-003.
-  - [x] **EXECUTE**: Escrever o caso com marcador `SPECSFY: US-001 FR-001 NFR-002 AC-003` — leitor com ambiente injetado que falha devolve `null` sem lançar.
+  - [x] **EXECUTE**: Escrever o caso com marcador `TRACEABILITY: US-001 FR-001 NFR-002 AC-003` — leitor com ambiente injetado que falha devolve `null` sem lançar.
   - [x] **VERIFY**: `npx vitest run tests/context-window.test.ts` — **RED observado**: `Cannot find module '../src/models/context-window'`.
   - [x] **VISUAL**: Não aplicável — arquivo de teste sem superfície visual.
   - [x] **EVIDENCE**: Registrar comando e causa do RED nas seções 11–12.
@@ -628,7 +628,7 @@ Cada tarefa possui exatamente este checklist, atualizado durante a execução:
 
 - [x] T004 [P] [TEST] [TDD] [US-001] Derivar de AC-004 um caso Vitest falhando em tests/task-types-config.test.ts — Refs: US-001, FR-002, NFR-001, AC-004 — Depends: none
   - [x] **PREP**: Ler o Gherkin de AC-004; confirmar que `maestro.task_types` não existe no schema.
-  - [x] **EXECUTE**: Escrever o caso com root isolado e marcador `SPECSFY: US-001 FR-002 NFR-001 AC-004` — depois do `setup`, a seção existe e cada tipo declara sua janela mínima.
+  - [x] **EXECUTE**: Escrever o caso com root isolado e marcador `TRACEABILITY: US-001 FR-002 NFR-001 AC-004` — depois do `setup`, a seção existe e cada tipo declara sua janela mínima.
   - [x] **VERIFY**: `npx vitest run tests/task-types-config.test.ts` — **RED observado**: `maestro.task_types` ausente na config semeada.
   - [x] **VISUAL**: Não aplicável — arquivo de teste sem superfície visual.
   - [x] **EVIDENCE**: Registrar comando e causa do RED nas seções 11–12.
@@ -636,7 +636,7 @@ Cada tarefa possui exatamente este checklist, atualizado durante a execução:
 
 - [x] T005 [P] [TEST] [TDD] [US-001] Derivar de AC-005 um caso Vitest falhando em tests/task-types-config.test.ts — Refs: US-001, FR-002, NFR-002, AC-005 — Depends: none
   - [x] **PREP**: Ler o Gherkin de AC-005.
-  - [x] **EXECUTE**: Escrever o caso com root isolado e marcador `SPECSFY: US-001 FR-002 NFR-002 AC-005` — tipo próprio declarado pela pessoa sobrevive a uma segunda execução do `setup`.
+  - [x] **EXECUTE**: Escrever o caso com root isolado e marcador `TRACEABILITY: US-001 FR-002 NFR-002 AC-005` — tipo próprio declarado pela pessoa sobrevive a uma segunda execução do `setup`.
   - [x] **VERIFY**: `npx vitest run tests/task-types-config.test.ts` — **RED observado**: `task_types` inexistente, então o tipo próprio não tem onde sobreviver.
   - [x] **VISUAL**: Não aplicável — arquivo de teste sem superfície visual.
   - [x] **EVIDENCE**: Registrar comando e causa do RED nas seções 11–12.
@@ -644,7 +644,7 @@ Cada tarefa possui exatamente este checklist, atualizado durante a execução:
 
 - [x] T006 [P] [TEST] [TDD] [US-001] Derivar de AC-006 um caso Vitest falhando em tests/task-types-config.test.ts — Refs: US-001, FR-002, NFR-002, AC-006 — Depends: none
   - [x] **PREP**: Ler o Gherkin de AC-006.
-  - [x] **EXECUTE**: Escrever o caso com marcador `SPECSFY: US-001 FR-002 NFR-002 AC-006` — `resolveTaskType` com nome inexistente recusa nomeando o pedido e os disponíveis.
+  - [x] **EXECUTE**: Escrever o caso com marcador `TRACEABILITY: US-001 FR-002 NFR-002 AC-006` — `resolveTaskType` com nome inexistente recusa nomeando o pedido e os disponíveis.
   - [x] **VERIFY**: `npx vitest run tests/task-types-config.test.ts` — **RED observado**: `Cannot find module '../src/models/task-type'`.
   - [x] **VISUAL**: Não aplicável — arquivo de teste sem superfície visual.
   - [x] **EVIDENCE**: Registrar comando e causa do RED nas seções 11–12.
@@ -652,7 +652,7 @@ Cada tarefa possui exatamente este checklist, atualizado durante a execução:
 
 - [x] T007 [P] [TEST] [TDD] [US-001] Derivar de AC-007 um caso Vitest falhando em tests/recommend-context-window.test.ts — Refs: US-001, FR-003, NFR-001, AC-007 — Depends: none
   - [x] **PREP**: Ler o Gherkin de AC-007; confirmar a assinatura atual de `recommend`.
-  - [x] **EXECUTE**: Escrever o caso com marcador `SPECSFY: US-001 FR-003 NFR-001 AC-007` — modelo grande de janela pequena perde para o menor de janela suficiente.
+  - [x] **EXECUTE**: Escrever o caso com marcador `TRACEABILITY: US-001 FR-003 NFR-001 AC-007` — modelo grande de janela pequena perde para o menor de janela suficiente.
   - [x] **VERIFY**: `npx vitest run tests/recommend-context-window.test.ts` — **RED observado**: recomenda `grande:14b` (o maior que cabe), ignorando a janela insuficiente.
   - [x] **VISUAL**: Não aplicável — arquivo de teste sem superfície visual.
   - [x] **EVIDENCE**: Registrar comando e causa do RED nas seções 11–12.
@@ -660,7 +660,7 @@ Cada tarefa possui exatamente este checklist, atualizado durante a execução:
 
 - [x] T008 [P] [TEST] [TDD] [US-001] Derivar de AC-008 um caso Vitest falhando em tests/recommend-context-window.test.ts — Refs: US-001, FR-003, NFR-001, AC-008 — Depends: none
   - [x] **PREP**: Ler o Gherkin de AC-008.
-  - [x] **EXECUTE**: Escrever o caso com marcador `SPECSFY: US-001 FR-003 NFR-001 AC-008` — entre dois viáveis, o maior continua vencendo.
+  - [x] **EXECUTE**: Escrever o caso com marcador `TRACEABILITY: US-001 FR-003 NFR-001 AC-008` — entre dois viáveis, o maior continua vencendo.
   - [x] **VERIFY**: `npx vitest run tests/recommend-context-window.test.ts` — **Resultado observado**: **guard-rail**: passa hoje, porque sem filtro o maior já vence — precisa continuar vencendo entre os viáveis depois do filtro.
   - [x] **VISUAL**: Não aplicável — arquivo de teste sem superfície visual.
   - [x] **EVIDENCE**: Registrar comando e causa do RED nas seções 11–12.
@@ -668,7 +668,7 @@ Cada tarefa possui exatamente este checklist, atualizado durante a execução:
 
 - [x] T009 [P] [TEST] [TDD] [US-001] Derivar de AC-009 um caso Vitest falhando em tests/recommend-context-window.test.ts — Refs: US-001, FR-003, FR-004, NFR-002, AC-009 — Depends: none
   - [x] **PREP**: Ler o Gherkin de AC-009.
-  - [x] **EXECUTE**: Escrever o caso com marcador `SPECSFY: US-001 FR-003 FR-004 NFR-002 AC-009` — nenhum modelo alcança o mínimo: `localModel` nulo e relatório citando mínimo exigido e maior janela disponível.
+  - [x] **EXECUTE**: Escrever o caso com marcador `TRACEABILITY: US-001 FR-003 FR-004 NFR-002 AC-009` — nenhum modelo alcança o mínimo: `localModel` nulo e relatório citando mínimo exigido e maior janela disponível.
   - [x] **VERIFY**: `npx vitest run tests/recommend-context-window.test.ts` — **RED observado**: recomenda um modelo em vez de declarar ausência; o relatório não cita mínimo nem maior janela.
   - [x] **VISUAL**: Não aplicável — arquivo de teste sem superfície visual.
   - [x] **EVIDENCE**: Registrar comando e causa do RED nas seções 11–12.
@@ -676,7 +676,7 @@ Cada tarefa possui exatamente este checklist, atualizado durante a execução:
 
 - [x] T010 [P] [TEST] [TDD] [US-001] Derivar de AC-010 um caso Vitest falhando em tests/recommend-sem-tipo.test.ts — Refs: US-001, FR-004, NFR-002, AC-010 — Depends: none
   - [x] **PREP**: Ler o Gherkin de AC-010; capturar o relatório atual como baseline.
-  - [x] **EXECUTE**: Escrever o caso com marcador `SPECSFY: US-001 FR-004 NFR-002 AC-010` — sem tipo, o modelo escolhido é o maior que cabe e o relatório declara a ausência de tipo.
+  - [x] **EXECUTE**: Escrever o caso com marcador `TRACEABILITY: US-001 FR-004 NFR-002 AC-010` — sem tipo, o modelo escolhido é o maior que cabe e o relatório declara a ausência de tipo.
   - [x] **VERIFY**: `npx vitest run tests/recommend-sem-tipo.test.ts` — **RED observado**: o relatório não declara que nenhum tipo foi informado.
   - [x] **VISUAL**: Não aplicável — arquivo de teste sem superfície visual.
   - [x] **EVIDENCE**: Registrar comando e causa do RED nas seções 11–12.
@@ -684,7 +684,7 @@ Cada tarefa possui exatamente este checklist, atualizado durante a execução:
 
 - [x] T011 [P] [TEST] [TDD] [US-001] Derivar de AC-011 um caso Vitest falhando em tests/recommend-sem-tipo.test.ts — Refs: US-001, FR-001, FR-004, NFR-001, AC-011 — Depends: none
   - [x] **PREP**: Ler o Gherkin de AC-011.
-  - [x] **EXECUTE**: Escrever o caso com marcador `SPECSFY: US-001 FR-001 FR-004 NFR-001 AC-011` — leitor de janela instrumentado registra zero consultas quando nenhum tipo é informado.
+  - [x] **EXECUTE**: Escrever o caso com marcador `TRACEABILITY: US-001 FR-001 FR-004 NFR-001 AC-011` — leitor de janela instrumentado registra zero consultas quando nenhum tipo é informado.
   - [x] **VERIFY**: `npx vitest run tests/recommend-sem-tipo.test.ts` — **Resultado observado**: **guard-rail**: passa hoje, porque o leitor ainda não existe — precisa seguir sem consultas depois do filtro existir.
   - [x] **VISUAL**: Não aplicável — arquivo de teste sem superfície visual.
   - [x] **EVIDENCE**: Registrar comando e causa do RED nas seções 11–12.
@@ -692,7 +692,7 @@ Cada tarefa possui exatamente este checklist, atualizado durante a execução:
 
 - [x] T012 [P] [TEST] [TDD] [US-001] Derivar de AC-012 um caso Vitest falhando em tests/recommend-sem-tipo.test.ts — Refs: US-001, FR-001, NFR-001, AC-012 — Depends: none
   - [x] **PREP**: Ler o Gherkin de AC-012.
-  - [x] **EXECUTE**: Escrever o caso com marcador `SPECSFY: US-001 FR-001 NFR-001 AC-012` — com tipo informado, o leitor é chamado só para o modelo que passou no filtro de memória.
+  - [x] **EXECUTE**: Escrever o caso com marcador `TRACEABILITY: US-001 FR-001 NFR-001 AC-012` — com tipo informado, o leitor é chamado só para o modelo que passou no filtro de memória.
   - [x] **VERIFY**: `npx vitest run tests/recommend-sem-tipo.test.ts` — **RED observado**: nenhuma consulta é feita (`[]`), quando o esperado é uma só, para o modelo que coube.
   - [x] **VISUAL**: Não aplicável — arquivo de teste sem superfície visual.
   - [x] **EVIDENCE**: Registrar comando e causa do RED nas seções 11–12.
@@ -700,7 +700,7 @@ Cada tarefa possui exatamente este checklist, atualizado durante a execução:
 
 - [x] T013 [P] [TEST] [TDD] [US-001] Derivar de AC-013 um caso Vitest falhando em tests/recommend-relato.test.ts — Refs: US-001, FR-004, NFR-001, AC-013 — Depends: none
   - [x] **PREP**: Ler o Gherkin de AC-013; confirmar o formato atual de `renderReport`.
-  - [x] **EXECUTE**: Escrever o caso com marcador `SPECSFY: US-001 FR-004 NFR-001 AC-013` — o relatório nomeia o tipo considerado e a janela mínima exigida.
+  - [x] **EXECUTE**: Escrever o caso com marcador `TRACEABILITY: US-001 FR-004 NFR-001 AC-013` — o relatório nomeia o tipo considerado e a janela mínima exigida.
   - [x] **VERIFY**: `npx vitest run tests/recommend-relato.test.ts` — **RED observado**: o relatório não nomeia o tipo nem a janela mínima.
   - [x] **VISUAL**: Não aplicável — arquivo de teste sem superfície visual.
   - [x] **EVIDENCE**: Registrar comando e causa do RED nas seções 11–12.
@@ -708,7 +708,7 @@ Cada tarefa possui exatamente este checklist, atualizado durante a execução:
 
 - [x] T014 [P] [TEST] [TDD] [US-001] Derivar de AC-014 um caso Vitest falhando em tests/recommend-relato.test.ts — Refs: US-001, FR-003, NFR-002, AC-014 — Depends: none
   - [x] **PREP**: Ler o Gherkin de AC-014; confirmar a regra de override que não revalida (`DEC-039`).
-  - [x] **EXECUTE**: Escrever o caso com marcador `SPECSFY: US-001 FR-003 NFR-002 AC-014` — override de modelo com janela insuficiente é mantido e marcado como escolha humana.
+  - [x] **EXECUTE**: Escrever o caso com marcador `TRACEABILITY: US-001 FR-003 NFR-002 AC-014` — override de modelo com janela insuficiente é mantido e marcado como escolha humana.
   - [x] **VERIFY**: `npx vitest run tests/recommend-relato.test.ts` — **Resultado observado**: **guard-rail**: passa hoje, porque não há filtro do qual escapar — o override precisa continuar escapando depois.
   - [x] **VISUAL**: Não aplicável — arquivo de teste sem superfície visual.
   - [x] **EVIDENCE**: Registrar comando e causa do RED nas seções 11–12.
@@ -721,48 +721,48 @@ Cada tarefa possui exatamente este checklist, atualizado durante a execução:
 
 - [x] T015 [CODE] [US-001] Implementar a leitura da janela de contexto em src/models/context-window.ts — Refs: US-001, FR-001, NFR-001, NFR-002, AC-001, AC-002, AC-003 — Depends: T001, T002, T003
   - [x] **PREP**: Confirmar RED de T001/T002/T003 e a saída real de `ollama show` usada como referência.
-  - [x] **EXECUTE**: `parseContextLength` puro e `realContextWindowReader` com ambiente injetável, ambos devolvendo `number | null`; falha e ausência produzem `null`, nunca `0` nem exceção. Reconstruir `docs/` com `$specsfy-documentator` antes de fechar este item.
+  - [x] **EXECUTE**: `parseContextLength` puro e `realContextWindowReader` com ambiente injetável, ambos devolvendo `number | null`; falha e ausência produzem `null`, nunca `0` nem exceção. Reconstruir `docs/` com `$framework-documentator` antes de fechar este item.
   - [x] **VERIFY**: `npx vitest run tests/context-window.test.ts` — AC-001, AC-002 e AC-003 **GREEN**; `npx tsc --noEmit` limpo.
   - [x] **VISUAL**: Não aplicável — leitura local, sem superfície visual.
   - [x] **EVIDENCE**: Registrar GREEN e arquivos criados nas seções 11–13.
   - [x] **IMPROVE**: Melhoria aplicada: `parseContextLength` rejeita zero e não-finito além de ausência da linha — um `0` vindo de saída estranha compararia como "menor que qualquer exigência" e desqualificaria o modelo pelo motivo errado.
-  <!-- specsfy:evidence {"task":"T015","refs":["US-001","FR-001","NFR-001","NFR-002","AC-001","AC-002","AC-003"],"files":["src/models/context-window.ts"],"commands":[{"run":"npx vitest run tests/context-window.test.ts","exit":0}]} -->
+  <!-- framework:evidence {"task":"T015","refs":["US-001","FR-001","NFR-001","NFR-002","AC-001","AC-002","AC-003"],"files":["src/models/context-window.ts"],"commands":[{"run":"npx vitest run tests/context-window.test.ts","exit":0}]} -->
 
 - [x] T016 [CODE] [US-001] Declarar maestro.task_types em src/config/schema.ts e a resolução em src/models/task-type.ts — Refs: US-001, FR-002, NFR-001, NFR-002, AC-004, AC-005, AC-006 — Depends: T004, T005, T006
   - [x] **PREP**: Confirmar RED de T004/T005/T006 e o padrão da seção `maestro:` já entregue.
-  - [x] **EXECUTE**: Seção `task_types` no default semeado e em `SCHEMA_KEYS`, com `context_window_min` por tipo; `resolveTaskType` devolvendo o requisito ou recusa nomeando os disponíveis. Reconstruir `docs/` com `$specsfy-documentator` antes de fechar este item.
+  - [x] **EXECUTE**: Seção `task_types` no default semeado e em `SCHEMA_KEYS`, com `context_window_min` por tipo; `resolveTaskType` devolvendo o requisito ou recusa nomeando os disponíveis. Reconstruir `docs/` com `$framework-documentator` antes de fechar este item.
   - [x] **VERIFY**: `npx vitest run tests/task-types-config.test.ts` — AC-004, AC-005 e AC-006 **GREEN**.
   - [x] **VISUAL**: Não aplicável — schema e resolução, sem tela.
   - [x] **EVIDENCE**: Registrar GREEN e arquivos alterados nas seções 11–13.
   - [x] **IMPROVE**: Melhoria aplicada: os três tipos de fábrica trazem no próprio comentário do schema por que aqueles valores (8k para ajuste pontual, 32k para trabalho em arquivos, 128k para leitura ampla), para quem editar não tratar os números como mágicos.
-  <!-- specsfy:evidence {"task":"T016","refs":["US-001","FR-002","NFR-001","NFR-002","AC-004","AC-005","AC-006"],"files":["src/config/schema.ts","src/models/task-type.ts"],"commands":[{"run":"npx vitest run tests/task-types-config.test.ts","exit":0}]} -->
+  <!-- framework:evidence {"task":"T016","refs":["US-001","FR-002","NFR-001","NFR-002","AC-004","AC-005","AC-006"],"files":["src/config/schema.ts","src/models/task-type.ts"],"commands":[{"run":"npx vitest run tests/task-types-config.test.ts","exit":0}]} -->
 
 - [x] T017 [CODE] [US-001] Aplicar o filtro de janela e as linhas novas do relatório em src/models/recommend.ts — Refs: US-001, FR-003, FR-004, NFR-001, NFR-002, AC-007, AC-008, AC-009, AC-010, AC-011, AC-012, AC-013, AC-014 — Depends: T007, T008, T009, T010, T011, T012, T013, T014
   - [x] **PREP**: Confirmar RED das oito tarefas predecessoras e a regra de override que não revalida.
-  - [x] **EXECUTE**: `recommend` recebe requisito opcional e leitor injetável; filtro de janela antes da redução por tamanho; leitor não é chamado sem tipo nem para modelo já descartado por memória; relatório declara tipo, mínimo, ausência de tipo e o motivo quando nada é viável. Reconstruir `docs/` com `$specsfy-documentator` antes de fechar este item.
+  - [x] **EXECUTE**: `recommend` recebe requisito opcional e leitor injetável; filtro de janela antes da redução por tamanho; leitor não é chamado sem tipo nem para modelo já descartado por memória; relatório declara tipo, mínimo, ausência de tipo e o motivo quando nada é viável. Reconstruir `docs/` com `$framework-documentator` antes de fechar este item.
   - [x] **VERIFY**: `npx vitest run tests/recommend-context-window.test.ts tests/recommend-sem-tipo.test.ts tests/recommend-relato.test.ts` — os 8 casos **GREEN**, incluindo os três guard-rails que precisavam sobreviver ao filtro.
   - [x] **VISUAL**: Não aplicável — função pura, sem tela.
   - [x] **EVIDENCE**: Registrar GREEN e arquivos alterados nas seções 11–13.
   - [x] **IMPROVE**: **Defeito de clareza encontrado só com o binário real**: o relatório dizia `Largest available window: 32768`, mas `cogito:14b` tem 131072 — ele fora cortado antes, pela memória. A frase lia-se como "a maior janela desta máquina", e quem soubesse do modelo maior concluiria que a ferramenta estava errada. Passou a nomear a restrição: `Largest window among the models that fit in free memory`. Um relatório que engana é pior que um que cala.
-  <!-- specsfy:evidence {"task":"T017","refs":["US-001","FR-003","FR-004","NFR-001","NFR-002","AC-007","AC-008","AC-009","AC-010","AC-011","AC-012","AC-013","AC-014"],"files":["src/models/recommend.ts"],"commands":[{"run":"npx vitest run tests/recommend-context-window.test.ts","exit":0}]} -->
+  <!-- framework:evidence {"task":"T017","refs":["US-001","FR-003","FR-004","NFR-001","NFR-002","AC-007","AC-008","AC-009","AC-010","AC-011","AC-012","AC-013","AC-014"],"files":["src/models/recommend.ts"],"commands":[{"run":"npx vitest run tests/recommend-context-window.test.ts","exit":0}]} -->
 
 - [x] T018 [CODE] [US-001] Aceitar --task-type em recommend e plan, resolvendo contra a configuração, em src/cli.ts — Refs: US-001, FR-002, FR-004, NFR-002, AC-006, AC-010, AC-013 — Depends: T006, T010, T013
   - [x] **PREP**: Confirmar RED de T006/T010/T013 e o padrão de `PLAN_FLAGS`/`parseRecommendOverride`.
-  - [x] **EXECUTE**: Flag `--task-type` nos dois comandos, resolvida por `resolveTaskType` antes de chamar `recommend`; tipo desconhecido recusado nomeando os disponíveis; ausência mantém o comportamento atual. Reconstruir `docs/` com `$specsfy-documentator` antes de fechar este item.
+  - [x] **EXECUTE**: Flag `--task-type` nos dois comandos, resolvida por `resolveTaskType` antes de chamar `recommend`; tipo desconhecido recusado nomeando os disponíveis; ausência mantém o comportamento atual. Reconstruir `docs/` com `$framework-documentator` antes de fechar este item.
   - [x] **VERIFY**: Suíte de CLI verde. Verificado com o binário real nesta máquina, que tem três modelos de janelas diferentes (32768, 40960, 131072): sem tipo recomenda `qwen2.5:3b` e declara a ausência de tipo; com `ajuste_pontual` (8192) recomenda o mesmo modelo citando a exigência; com `leitura_ampla` (131072) recomenda nada e explica o motivo; tipo inexistente é recusado com saída 2 nomeando os disponíveis.
   - [x] **VISUAL**: Não aplicável — comando de terminal, sem tela.
   - [x] **EVIDENCE**: Registrar GREEN e arquivos alterados nas seções 11–13.
   - [x] **IMPROVE**: Melhoria aplicada: o leitor de janela só é construído quando há tipo informado, então a ausência de exigência não paga nem a criação do leitor, muito menos um subprocesso.
-  <!-- specsfy:evidence {"task":"T018","refs":["US-001","FR-002","FR-004","NFR-002","AC-006","AC-010","AC-013"],"files":["src/cli.ts"],"commands":[{"run":"npx vitest run tests/plan-command.test.ts","exit":0}]} -->
+  <!-- framework:evidence {"task":"T018","refs":["US-001","FR-002","FR-004","NFR-002","AC-006","AC-010","AC-013"],"files":["src/cli.ts"],"commands":[{"run":"npx vitest run tests/plan-command.test.ts","exit":0}]} -->
 
 **Checkpoint**: um tipo que exige janela grande deixa de recomendar o modelo de janela pequena, mesmo sendo o maior que cabe na memória.
 
 #### Fase final — Documentação e qualidade
 
-- [x] T019 [DOC] [US-001] Registrar a seção de tipos e a leitura de janela em .specsfy/STACK.md e revisar PROJECT.md — Refs: US-001, FR-001, FR-002, AC-001, AC-004 — Depends: T015, T016, T017, T018
+- [x] T019 [DOC] [US-001] Registrar a seção de tipos e a leitura de janela em .project-context/STACK.md e revisar PROJECT.md — Refs: US-001, FR-001, FR-002, AC-001, AC-004 — Depends: T015, T016, T017, T018
   - [x] **PREP**: Confirmar T015–T018 GREEN e o conteúdo atual dos dois documentos.
-  - [x] **EXECUTE**: Seção nova em `.specsfy/STACK.md` (schema de tipos, leitura via `ollama show`, filtro duro) e revisão de `PROJECT.md` sobre a capacidade nova de seleção de modelo.
-  - [x] **VERIFY**: `build_documentation.mjs --project . --check` limpo; `docs/` reconstruído. `.specsfy/STACK.md` ganhou a seção da recomendação por janela e `PROJECT.md` registrou a capacidade nova.
+  - [x] **EXECUTE**: Seção nova em `.project-context/STACK.md` (schema de tipos, leitura via `ollama show`, filtro duro) e revisão de `PROJECT.md` sobre a capacidade nova de seleção de modelo.
+  - [x] **VERIFY**: `build_documentation.mjs --project . --check` limpo; `docs/` reconstruído. `.project-context/STACK.md` ganhou a seção da recomendação por janela e `PROJECT.md` registrou a capacidade nova.
   - [x] **VISUAL**: Não aplicável — documentação em Markdown, sem tela.
   - [x] **EVIDENCE**: Registrar comandos e resultado nas seções 11–13.
   - [x] **IMPROVE**: Registrar melhoria aplicada ou ausência justificada.
@@ -821,5 +821,5 @@ Cada tarefa possui exatamente este checklist, atualizado durante a execução:
 - [x] Os cenários `AC-001` a `AC-014` passam.
 - [x] `FR-001` a `FR-004` e `NFR-001`/`NFR-002` têm evidência de verificação nas seções 11–12.
 - [x] Todas as tarefas da seção 14 estão concluídas — 20/20, 120/120 itens.
-- [x] `.specsfy/STACK.md` registra a seção nova do schema e a leitura de janela.
+- [x] `.project-context/STACK.md` registra a seção nova do schema e a leitura de janela.
 - [x] `PROJECT.md` revisado quanto à capacidade nova.

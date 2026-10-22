@@ -14,9 +14,9 @@ self_check:
 ## Why this exists
 
 `.agents/skills` is the canonical directory (the `skills` CLI with
-`-a universal`, the Specsfy's specialists), and the Claude Code 2.1.x doesn't
+`-a universal`, the former project tool's specialists), and the Claude Code 2.1.x doesn't
 read it (`findings/external/FIND-EXT-002`). The `setup` projects it with
-checksums; this hook runs right after `skills add` or `specsfy skills`, so a specialist
+checksums; this hook runs right after `skills add` or `former tool skills`, so a specialist
 installed mid-conversation is usable in that same conversation: a plain
 additive copy, in shell, needing no `maestro` binary (SPEC-0024, DEC-005).
 
@@ -24,7 +24,7 @@ additive copy, in shell, needing no `maestro` binary (SPEC-0024, DEC-005).
 
 ```sh
 case "$HOOK_COMMAND" in
-  *"skills add"*|*"specsfy skills"*) _hook_install=1 ;;
+  *"skills add"*|*"former tool skills"*) _hook_install=1 ;;
   *) _hook_install="" ;;
 esac
 if [ -n "$_hook_install" ] && [ -d "$PROJECT_DIR/.claude" ] && [ -d "$PROJECT_DIR/.agents/skills" ]; then

@@ -6,7 +6,7 @@ import { detectEnvironment } from "../src/setup/env";
 import { project, fixedDecision } from "./aprovacao-fixtures";
 
 describe("setup delivers .maestro/config.yaml and the language instruction", () => {
-  // SPECSFY: US-001 US-002 US-003 FR-001 FR-006 FR-007 AC-001 AC-007 AC-010
+  // TRACEABILITY: US-001 US-002 US-003 FR-001 FR-006 FR-007 AC-001 AC-007 AC-010
   it("creates a complete config.yaml and the CLAUDE.md/AGENTS.md language blocks on first run", () => {
     const root = project();
     runSetup({

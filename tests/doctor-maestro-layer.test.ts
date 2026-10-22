@@ -11,7 +11,6 @@ import type { SubsystemResult } from "../src/doctor/subsystems";
 
 const opts = { upstream: { contextModeHooksJson: null } };
 const allOkSubsystems: SubsystemResult[] = [
-  { name: "specsfy", status: "OK" },
   { name: "context-mode", status: "OK" },
   { name: "skills", status: "OK" },
   { name: "code-review-graph", status: "OK" },
@@ -19,11 +18,7 @@ const allOkSubsystems: SubsystemResult[] = [
 
 function configuredProject(): string {
   const root = freshProject();
-  mkdirSync(resolve(root, ".specsfy"), { recursive: true });
   writeFileSync(resolve(root, "PROJECT.md"), "x\n");
-  writeFileSync(resolve(root, ".specsfy", "STACK.md"), "x\n");
-  writeFileSync(resolve(root, ".specsfy", "RULES.md"), "x\n");
-  writeFileSync(resolve(root, ".specsfy", "USER-PROFILE.md"), "x\n");
   runSetup({ env: claudeEnv, root, write: true, ...opts });
   writeFileSync(resolve(root, "AGENTS.md"), `${readFileSync(resolve(root, "AGENTS.md"), "utf8")}\n## Agent skills\n\nfoo\n`);
   return root;
@@ -47,7 +42,7 @@ function hashTree(dir: string): string {
 }
 
 describe("AC-012 — entrada legada e script ausente: FAIL hooks, exit 1", () => {
-  // SPECSFY: US-003 FR-006 FR-008 AC-012
+  // TRACEABILITY: US-003 FR-006 FR-008 AC-012
   it("relata as duas causas e o exit fica em 1", () => {
     const root = configuredProject();
     const settingsPath = resolve(root, ".claude", "settings.json");
@@ -78,7 +73,7 @@ describe("AC-012 — entrada legada e script ausente: FAIL hooks, exit 1", () =>
 });
 
 describe("AC-013 — direção antiga e marcador sem par: FAIL; seção desconhecida: WARN", () => {
-  // SPECSFY: US-003 FR-006 FR-007 FR-008 AC-013
+  // TRACEABILITY: US-003 FR-006 FR-007 FR-008 AC-013
   it("três desvios classificados corretamente", () => {
     const root = configuredProject();
     const claudePath = resolve(root, "CLAUDE.md");
@@ -99,48 +94,29 @@ describe("AC-013 — direção antiga e marcador sem par: FAIL; seção desconhe
   });
 });
 
-describe("AC-014 — rastros ausentes são WARN com a skill a executar; exit 0", () => {
-  // SPECSFY: US-003 FR-006 FR-008 NFR-001 AC-014
-  it("sem PROJECT.md: WARN citando /specsfy-setup, exit 0", () => {
-    const root = configuredProject();
-    rmSync(resolve(root, "PROJECT.md"));
-    const assessment = assessConfiguration(root, "claude-code");
-    const findings = diagnoseMaestro(assessment);
-    expect(findings.some((f) => f.level === "WARN" && f.message.includes("PROJECT.md") && f.message.includes("/specsfy-setup"))).toBe(true);
-    expect(findings.every((f) => f.level !== "FAIL")).toBe(true);
-
-    const report = inspectDependencies(
-      defaultEnvironment(), root, undefined, undefined, undefined,
-      () => allOkSubsystems,
-      () => findings,
-    );
-    expect(report.exitCode).toBe(0);
-  });
-});
-
 describe("AC-015 — projeção divergente e cobertura hook ↔ regra", () => {
-  // SPECSFY: US-003 FR-006 FR-007 AC-015
+  // TRACEABILITY: US-003 FR-006 FR-007 AC-015
   it("cópia editada: WARN; hook citado no fallback sem script: FAIL", () => {
     const root = configuredProject();
-    mkdirSync(resolve(root, ".agents", "skills", "specsfy-specialist-x"), { recursive: true });
-    writeFileSync(resolve(root, ".agents", "skills", "specsfy-specialist-x", "SKILL.md"), "---\nname: specsfy-specialist-x\n---\nv1\n");
+    mkdirSync(resolve(root, ".agents", "skills", "sample-skill"), { recursive: true });
+    writeFileSync(resolve(root, ".agents", "skills", "sample-skill", "SKILL.md"), "---\nname: sample-skill\n---\nv1\n");
     runSetup({ env: claudeEnv, root, write: true, ...opts });
-    writeFileSync(resolve(root, ".claude", "skills", "specsfy-specialist-x", "SKILL.md"), "edited by hand\n");
+    writeFileSync(resolve(root, ".claude", "skills", "sample-skill", "SKILL.md"), "edited by hand\n");
 
-    rmSync(resolve(root, ".maestro", "hooks", "guard-docs.sh"));
+    rmSync(resolve(root, ".maestro", "hooks", "graph-hint.sh"));
 
     const assessment = assessConfiguration(root, "claude-code");
-    expect(assessment.divergentProjections.map((p) => p.name)).toContain("specsfy-specialist-x");
-    expect(assessment.uncoveredFallbackHooks.map((h) => h.name)).toContain("guard-docs");
+    expect(assessment.divergentProjections.map((p) => p.name)).toContain("sample-skill");
+    expect(assessment.uncoveredFallbackHooks.map((h) => h.name)).toContain("graph-hint");
 
     const findings = diagnoseMaestro(assessment);
-    expect(findings.some((f) => f.level === "WARN" && f.message.includes("specsfy-specialist-x"))).toBe(true);
-    expect(findings.some((f) => f.level === "FAIL" && f.message.includes("guard-docs"))).toBe(true);
+    expect(findings.some((f) => f.level === "WARN" && f.message.includes("sample-skill"))).toBe(true);
+    expect(findings.some((f) => f.level === "FAIL" && f.message.includes("graph-hint"))).toBe(true);
   });
 });
 
 describe("AC-016 — layout esperado é a mesma função no setup e no doctor", () => {
-  // SPECSFY: US-003 FR-007 NFR-001 AC-016
+  // TRACEABILITY: US-003 FR-007 NFR-001 AC-016
   it("logo após um setup, assessConfiguration não acusa nada de hooks/blocos/projeções", () => {
     const root = configuredProject();
     const assessment = assessConfiguration(root, "claude-code");
@@ -157,10 +133,9 @@ describe("AC-016 — layout esperado é a mesma função no setup e no doctor", 
 });
 
 describe("AC-017 — doctor nunca escreve", () => {
-  // SPECSFY: US-003 FR-008 NFR-001 AC-017
+  // TRACEABILITY: US-003 FR-008 NFR-001 AC-017
   it("hash da raiz antes = hash depois, mesmo com todos os desvios", () => {
     const root = configuredProject();
-    rmSync(resolve(root, "PROJECT.md"));
     writeFileSync(resolve(root, "CLAUDE.md"), `${readFileSync(resolve(root, "CLAUDE.md"), "utf8")}\n## Minhas notas\n\nx\n`);
     const before = hashTree(root);
     diagnoseMaestroProject(root);
@@ -170,7 +145,7 @@ describe("AC-017 — doctor nunca escreve", () => {
 });
 
 describe("AC-018 — nível WARN não altera o exit; qualquer FAIL altera", () => {
-  // SPECSFY: US-003 FR-008 NFR-002 AC-018
+  // TRACEABILITY: US-003 FR-008 NFR-002 AC-018
   it("só WARN: exit 0; com um FAIL: exit 1", () => {
     const root = configuredProject();
     writeFileSync(resolve(root, "CLAUDE.md"), `${readFileSync(resolve(root, "CLAUDE.md"), "utf8")}\n## Minhas notas\n\nx\n`);

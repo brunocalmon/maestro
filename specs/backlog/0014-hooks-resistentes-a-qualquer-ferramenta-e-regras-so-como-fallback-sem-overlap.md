@@ -49,7 +49,7 @@ Origem: specs/inbox/2026-09-17-160600-hooks-resistentes-a-qualquer-ferramenta-e-
 3. `code-review-graph-update` dispara em `PostToolUse` para `Edit|Write|MultiEdit|NotebookEdit|Bash|mcp__.*` e só executa `update --brief` quando o working tree mudou desde a última execução (hash de `git status --porcelain` em `.maestro/state/`); um segundo hook em `Stop` fecha a rodada. Saída suprimida: zero contexto gasto.
 4. Um hook `PreToolUse` em `Grep|Glob` injeta, **uma única vez por sessão** e só se `.code-review-graph/` existir, uma dica curta apontando `code-review-graph search/impact`; sem grafo, silêncio.
 5. Hooks valem para subagentes (escopo de projeto); a spec registra a verificação.
-6. `.specsfy/RULES.md` e o bloco router recebem no máximo três regras-fallback, cada uma no formato "o hook X garante Y; se `maestro doctor` reportar X ausente ou inerte, faça Y manualmente" — nenhuma descreve o comportamento que o hook já executa.
+6. `.project-context/RULES.md` e o bloco router recebem no máximo três regras-fallback, cada uma no formato "o hook X garante Y; se `maestro doctor` reportar X ausente ou inerte, faça Y manualmente" — nenhuma descreve o comportamento que o hook já executa.
 7. O doctor (BACKLOG-0013) verifica que cada regra-fallback aponta para um hook instalado e ativo e que cada hook cobre as ferramentas que a regra assume.
 
 ## Regras de negócio
@@ -110,4 +110,4 @@ Origem: specs/inbox/2026-09-17-160600-hooks-resistentes-a-qualquer-ferramenta-e-
 
 ## Próximo passo
 
-Promover com `$specsfy-03-specify` antes de BACKLOG-0013.
+Promover com `$framework-03-specify` antes de BACKLOG-0013.

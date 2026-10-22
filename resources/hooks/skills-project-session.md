@@ -13,7 +13,7 @@ self_check:
 ## Why this exists
 
 `.agents/skills` is the canonical directory (the `skills` CLI with
-`-a universal`, the Specsfy's specialists), and the Claude Code 2.1.x doesn't
+`-a universal`, the former project tool's specialists), and the Claude Code 2.1.x doesn't
 read it (`findings/external/FIND-EXT-002`). The `setup` projects it with
 checksums; this hook is the cheap safety net between setups: a plain
 additive copy, in shell, needing no `maestro` binary (SPEC-0024, DEC-005).

@@ -1,6 +1,6 @@
 {
   "name": "@brunocalmon/maestro",
-  "version": "2.1.34",
+  "version": "2.1.36",
   "description": "Wrapper de linha de comando que orquestra subsistemas e agentes de codificação a partir de um contrato verificável de dependências.",
   "private": true,
   "repository": {
@@ -21,7 +21,6 @@
   ],
   "dependencies": {
     "@modelcontextprotocol/sdk": "1.30.0",
-    "@promovaweb/specsfy": "0.23.0",
     "context-mode": "1.0.169",
     "skills": "1.5.26",
     "yaml": "2.9.1",

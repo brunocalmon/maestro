@@ -10,7 +10,7 @@ const fullEnv = {
 };
 
 describe("AC-089 — the agent layer appears in the report text", () => {
-  // SPECSFY: FR-031 NFR-030 NFR-031 AC-089
+  // TRACEABILITY: FR-031 NFR-030 NFR-031 AC-089
   it("the text names the agent layer, distinct from npm and python, without affecting the exit code", () => {
     const { env: backendEnv } = sourceFake({ pi: "0.84.3" });
     const report = inspectDependencies(fullEnv, undefined, backendEnv);
@@ -22,7 +22,7 @@ describe("AC-089 — the agent layer appears in the report text", () => {
     expect(report.exitCode).toBe(0);
   });
 
-  // SPECSFY: FR-031 NFR-030 NFR-031 AC-089
+  // TRACEABILITY: FR-031 NFR-030 NFR-031 AC-089
   it("a present, unsupported backend appears marked as such in the text", () => {
     const { env: backendEnv } = sourceFake({ dsh: "0.1.1-rc.1" });
     const report = inspectDependencies(fullEnv, undefined, backendEnv);

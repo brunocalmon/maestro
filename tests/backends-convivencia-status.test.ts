@@ -9,7 +9,7 @@ const fullEnv = {
 };
 
 describe("AC-086 — supported, unsupported and absent coexist in the same report", () => {
-  // SPECSFY: US-031 FR-031 FR-033 NFR-031 AC-086
+  // TRACEABILITY: US-031 FR-031 FR-033 NFR-031 AC-086
   it("pi present and supported, dsh present and unsupported, agy absent", () => {
     const { env: backendEnv } = sourceFake({ pi: "0.84.3", dsh: "0.1.1-rc.1" });
     const r = inspectDependencies(fullEnv, undefined, backendEnv);

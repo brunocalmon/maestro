@@ -6,7 +6,7 @@ import { isMaestroEntry } from "../src/hooks/identity";
 import { claudeEnv, project, readSettings } from "./helpers-spec-0022";
 
 describe("AC-006 — identidade reconhecida pelo caminho, não pelo matcher", () => {
-  // SPECSFY: US-001 FR-002 NFR-001 AC-006
+  // TRACEABILITY: US-001 FR-002 NFR-001 AC-006
   it("reconhece pelo command e registra o mesmo nome e evento no install.json", () => {
     expect(isMaestroEntry({ matcher: "Bash", hooks: [{ type: "command", command: '"$CLAUDE_PROJECT_DIR/.maestro/hooks/guard-secrets.sh"' }] })).toBe("guard-secrets");
     expect(isMaestroEntry({ matcher: "qualquer-coisa", hooks: [{ type: "command", command: '"$CLAUDE_PROJECT_DIR/.maestro/hooks/guard-secrets.sh"' }] })).toBe("guard-secrets");

@@ -13,18 +13,18 @@ function rootWithoutPermission(): string {
 }
 
 describe("AC-009 — an error during configuration doesn't become success", () => {
-  // SPECSFY: US-001 FR-006 AC-009
+  // TRACEABILITY: US-001 FR-006 AC-009
   it("returns an error", async () => {
     expect((await executeSetup({ project_root: rootWithoutPermission() })).isError).toBe(true);
   });
 
-  // SPECSFY: US-003 FR-005 AC-009
+  // TRACEABILITY: US-003 FR-005 AC-009
   it("describes what prevented the operation", async () => {
     const r = await executeSetup({ project_root: rootWithoutPermission() });
     expect(JSON.stringify(r.content)).toMatch(/permission|EACCES/i);
   });
 
-  // SPECSFY: US-001 FR-005 AC-009
+  // TRACEABILITY: US-001 FR-005 AC-009
   it("doesn't claim the configuration was completed", async () => {
     const r = await executeSetup({ project_root: rootWithoutPermission() });
     expect(JSON.stringify(r.content)).not.toMatch(/installed|configured successfully/i);

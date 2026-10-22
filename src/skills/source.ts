@@ -4,16 +4,15 @@
  * `mattpocock/skills`'s author doesn't publish to the npm registry. The
  * `mattpocock-skills` package that exists there is a third-party publish,
  * and the path the author's README documents is
- * `npx skills@latest add mattpocock/skills`. `promovaweb/specsfy` is the
- * second official source: it's where the Specsfy framework's own skills
- * arrive at `.claude/skills/` from, via the same installer (`DEC-029`).
+ * `npx skills@latest add mattpocock/skills`. This is the only source
+ * configured for Maestro-managed skill installation.
  * Skills enter the agent's context as instructions, so provenance is a
  * rule, not a preference.
  */
 export const OFFICIAL_SOURCE = "mattpocock/skills";
 
-/** The two official sources, in the order `setup` installs them. */
-export const OFFICIAL_SOURCES = [OFFICIAL_SOURCE, "promovaweb/specsfy"] as const;
+/** The source configured for Maestro-managed skill installation. */
+export const OFFICIAL_SOURCES = [OFFICIAL_SOURCE] as const;
 
 export type SourceCheck =
   | { ok: true; source: string }

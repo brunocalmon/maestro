@@ -18,7 +18,7 @@ function run(root: string) {
 }
 
 describe("AC-077 — deleted skills are restored even with hooks already configured", () => {
-  // SPECSFY: US-020 FR-030 AC-077
+  // TRACEABILITY: US-020 FR-030 AC-077
   it("rm -rf .claude/skills followed by setup restores the skills", () => {
     const root = projectWithTarget();
     run(root);
@@ -30,21 +30,5 @@ describe("AC-077 — deleted skills are restored even with hooks already configu
     const second = run(root);
     expect(second.stdout).not.toMatch(/^already configured/);
     expect(existsSync(join(root, ".claude", "skills"))).toBe(true);
-  }, 180_000);
-});
-
-describe("AC-078 — a deleted Specsfy framework is restored even with hooks already configured", () => {
-  // SPECSFY: US-023 FR-030 AC-078
-  it("rm -rf .specsfy followed by setup restores the framework", () => {
-    const root = projectWithTarget();
-    run(root);
-    expect(existsSync(join(root, ".specsfy"))).toBe(true);
-
-    rmSync(join(root, ".specsfy"), { recursive: true, force: true });
-    expect(existsSync(join(root, ".specsfy"))).toBe(false);
-
-    const second = run(root);
-    expect(second.stdout).not.toMatch(/^already configured/);
-    expect(existsSync(join(root, ".specsfy"))).toBe(true);
   }, 180_000);
 });

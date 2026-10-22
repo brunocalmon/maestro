@@ -3,7 +3,7 @@ import { createExtension } from "../src/extensions/create";
 import { checksumEnvFake, targetEnvFake } from "./extensions-fixtures";
 
 describe("AC-131 — category new is refused for the seven hooks", () => {
-  // SPECSFY: US-080 FR-080 FR-081 FR-082 AC-131
+  // TRACEABILITY: US-080 FR-080 FR-081 FR-082 AC-131
   it("a request for category new on a managed hook is refused with a reason", () => {
     const r = createExtension({
       category: "new",

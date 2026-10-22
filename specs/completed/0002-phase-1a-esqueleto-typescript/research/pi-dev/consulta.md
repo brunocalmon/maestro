@@ -31,7 +31,7 @@ Não é o agente de codificação.
 ## Impacto na spec
 
 A consulta refutou a premissa registrada em `R-001`. O backlog tratava quatro
-ferramentas como dependências fixadas por npm sob os nomes `specsfy`,
+ferramentas como dependências fixadas por npm sob os nomes `framework`,
 `context-mode`, `pi.dev` e `code-review-graph`. A verificação mostrou que três
 desses nomes estavam errados e que a categoria era uma só quando deveria ser
 duas: `pi` é agente intercambiável, não subsistema, e pertence à camada 3 de

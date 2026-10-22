@@ -15,9 +15,9 @@
 
 ## Texto original
 
-uma regra basica que eu quero criar, a nível de common-rules, ou seja, superior a qualquer dependencia como matt_pocock ou specsfy é:
+uma regra basica que eu quero criar, a nível de common-rules, ou seja, superior a qualquer dependencia como matt_pocock ou framework é:
 
-sempre responda no idioma que o usuario conversar, porém a lingua base é inglês e todo documento gerado deve ser em inglês, independente do idioma da skill, rules, dependencias (specsfy/skills) a não ser que o usuario estritamente diga o contrario via configuração, essa configuração deve ser em .common-rules, toda configuração deve estar ali em um config.yaml.
+sempre responda no idioma que o usuario conversar, porém a lingua base é inglês e todo documento gerado deve ser em inglês, independente do idioma da skill, rules, dependencias (framework/skills) a não ser que o usuario estritamente diga o contrario via configuração, essa configuração deve ser em .common-rules, toda configuração deve estar ali em um config.yaml.
 
 gere para mim um schema base de configurações que podemos ter a principio, por exemplo, já começaremos com o idioma de persistencia (global), metadados do projeto, em uma lista com chave/valor ali pode ser por exemplo:
 location:
@@ -59,7 +59,7 @@ Mas isso foi uma ideia, seu trabalho agora n é implmentar isso mas planejar e m
 
 O objetivo é ter um config.yaml minimo que ao rodar o setup ele vai ser criado as-is ali no .common-rules/ com os defaults e o resto tudo em branco pq n foi definido, com comentários explicitos dizendo que o usuario pode invocar o agent para completar com grilling esses campos.
 
-Meu objetivo é instruir, via regra, independente de como o usuario estiver interagindo com o prompt, seja com skills, specsfy ou livremente, que o comon-rules garanta de identificar quando a conversa chegar num ponto onde um valor deveria ser incluso ali ou atualizado, ou recomendar que o usuario inicie o grilling para gerar o config.yaml.
+Meu objetivo é instruir, via regra, independente de como o usuario estiver interagindo com o prompt, seja com skills, framework ou livremente, que o comon-rules garanta de identificar quando a conversa chegar num ponto onde um valor deveria ser incluso ali ou atualizado, ou recomendar que o usuario inicie o grilling para gerar o config.yaml.
 
 ## Contexto consultado
 
@@ -67,13 +67,13 @@ Nenhuma fonte contextual consultada.
 
 ## Resumo processado
 
-**Inferência:** Criar uma regra de nível common-rules (acima de specsfy/mattpocock) fixando idioma de resposta (o da conversa) e de documentos gerados (inglês por padrão, salvo override via configuração), e um arquivo .common-rules/config.yaml sempre presente e completo (com defaults ou vazio) guiando o agente com metadados de idioma, projeto e sistema.
+**Inferência:** Criar uma regra de nível common-rules (acima de framework/mattpocock) fixando idioma de resposta (o da conversa) e de documentos gerados (inglês por padrão, salvo override via configuração), e um arquivo .common-rules/config.yaml sempre presente e completo (com defaults ou vazio) guiando o agente com metadados de idioma, projeto e sistema.
 
 ## Análise inicial
 
 ### Problema ou oportunidade
 
-**Declaração ou inferência identificada:** Não existe hoje um mecanismo de configuração no nível do próprio common-rules, acima de specsfy/skills, que fixe idioma-padrão e outros metadados-guia (stack do projeto, ambiente/sistema) de forma sempre presente e legível pelo agente — ele precisa redescobrir ou assumir contexto a cada interação.
+**Declaração ou inferência identificada:** Não existe hoje um mecanismo de configuração no nível do próprio common-rules, acima de framework/skills, que fixe idioma-padrão e outros metadados-guia (stack do projeto, ambiente/sistema) de forma sempre presente e legível pelo agente — ele precisa redescobrir ou assumir contexto a cada interação.
 
 ### Pessoas afetadas ou beneficiadas
 
@@ -85,7 +85,7 @@ Nenhuma fonte contextual consultada.
 
 ### Sinais de escopo, regras ou solução
 
-**Sinais extraídos, não decisões:** Regra: idioma de resposta = idioma da conversa; idioma de documentos gerados = inglês por padrão, com override via configuração. Restrição dura: config.yaml nunca pode omitir chaves — sempre presentes, preenchidas com default real ou vazias. Mecanismo mencionado: 'grilling' (entrevista) para completar campos pendentes. Solução esboçada, não definitiva (o próprio usuário chamou de 'inventei'): schema com seções location (idioma de persistência global), projeto (prog_lang, package_manager, framework, test_framework, documentation_style etc.) e system (perfil de SO/hardware: Linux/EndeavourOS, MacOS, Windows, Alpine — RAM, CPU, GPU, baremetal vs. docker_container). Escopo: nível 'common-rules', superior a specsfy e a skills como mattpocock.
+**Sinais extraídos, não decisões:** Regra: idioma de resposta = idioma da conversa; idioma de documentos gerados = inglês por padrão, com override via configuração. Restrição dura: config.yaml nunca pode omitir chaves — sempre presentes, preenchidas com default real ou vazias. Mecanismo mencionado: 'grilling' (entrevista) para completar campos pendentes. Solução esboçada, não definitiva (o próprio usuário chamou de 'inventei'): schema com seções location (idioma de persistência global), projeto (prog_lang, package_manager, framework, test_framework, documentation_style etc.) e system (perfil de SO/hardware: Linux/EndeavourOS, MacOS, Windows, Alpine — RAM, CPU, GPU, baremetal vs. docker_container). Escopo: nível 'common-rules', superior a framework e a skills como mattpocock.
 
 ### Informações que talvez precisem ser guardadas
 
@@ -93,15 +93,15 @@ Nenhuma fonte contextual consultada.
 
 ### Riscos e dependências
 
-**Análise preliminar:** Depende de decidir a relação com .specsfy/STACK.md e .specsfy/RULES.md já existentes, para não duplicar fonte de verdade. Depende do mecanismo de escrita idempotente em .common-rules/ que o setup do common-rules já usa (install.json, approved-commands.json, extensions.json). Risco de este novo arquivo virar uma segunda fonte de verdade conflitando com o que o Specsfy já mantém, exigindo desenho cuidadoso de fronteira.
+**Análise preliminar:** Depende de decidir a relação com .project-context/STACK.md e .project-context/RULES.md já existentes, para não duplicar fonte de verdade. Depende do mecanismo de escrita idempotente em .common-rules/ que o setup do common-rules já usa (install.json, approved-commands.json, extensions.json). Risco de este novo arquivo virar uma segunda fonte de verdade conflitando com o que o former project tool já mantém, exigindo desenho cuidadoso de fronteira.
 
 ## Possíveis direções futuras
 
-**Hipóteses para backlog ou spec, não requisitos:** Poderia virar uma fatia/épico dentro do próprio common-rules (nível core, não specsfy) — pede refinamento de backlog antes de especificar. Poderia reaproveitar o padrão de artefato/checksum/caminho único de escrita já criado na SPEC-0011 (resources/, .common-rules/extensions.json) para este config.yaml, ou ser um mecanismo totalmente novo — decisão em aberto.
+**Hipóteses para backlog ou spec, não requisitos:** Poderia virar uma fatia/épico dentro do próprio common-rules (nível core, não framework) — pede refinamento de backlog antes de especificar. Poderia reaproveitar o padrão de artefato/checksum/caminho único de escrita já criado na SPEC-0011 (resources/, .common-rules/extensions.json) para este config.yaml, ou ser um mecanismo totalmente novo — decisão em aberto.
 
 ## Pontos a revisar no futuro
 
-**A revisar:** Schema completo do config.yaml ainda não definido — pedido explícito do usuário é que o agente planeje isso depois, usando /home/bcalmon/Projects/dev-bootstrap/config.yaml como referência, sem implementar ainda. Mecanismo técnico exato de detecção de 'a conversa chegou a um ponto onde deveria atualizar o config.yaml' não especificado (hook? verificação no doctor? prompt injetado?). Relação/fronteira entre este config.yaml e .specsfy/STACK.md/RULES.md não definida. Se o arquivo é versionado no git do projeto-alvo ou fica fora (gitignored) não foi dito. Precedência exata entre a regra de idioma do common-rules e o idioma que specsfy/skills eventualmente usem não foi detalhada além de 'superior a qualquer dependência'.
+**A revisar:** Schema completo do config.yaml ainda não definido — pedido explícito do usuário é que o agente planeje isso depois, usando /home/bcalmon/Projects/dev-bootstrap/config.yaml como referência, sem implementar ainda. Mecanismo técnico exato de detecção de 'a conversa chegou a um ponto onde deveria atualizar o config.yaml' não especificado (hook? verificação no doctor? prompt injetado?). Relação/fronteira entre este config.yaml e .project-context/STACK.md/RULES.md não definida. Se o arquivo é versionado no git do projeto-alvo ou fica fora (gitignored) não foi dito. Precedência exata entre a regra de idioma do common-rules e o idioma que framework/skills eventualmente usem não foi detalhada além de 'superior a qualquer dependência'.
 
 ## Rastreabilidade
 
@@ -111,4 +111,4 @@ Nenhuma fonte contextual consultada.
 
 ## Próximo passo
 
-Manter em `specs/inbox/` ou refinar com `$specsfy-02-backlog`.
+Manter em `specs/inbox/` ou refinar com `$framework-02-backlog`.

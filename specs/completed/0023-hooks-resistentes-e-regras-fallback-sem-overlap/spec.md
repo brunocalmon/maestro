@@ -2,7 +2,7 @@
 
 | Campo | Valor |
 | --- | --- |
-| Formato | Specsfy/2.0 |
+| Formato | former project tool/2.0 |
 | ID | SPEC-0023 |
 | Slug | 0023-hooks-resistentes-e-regras-fallback-sem-overlap |
 | Status | Complete |
@@ -24,7 +24,7 @@
 
 #### Problema
 
-Os guards do maestro (`guard-destructive`, `guard-secrets`, `protect-authorship`) só interceptam o tool `Bash` e só leem `tool_input.command`; qualquer ferramenta que execute shell por outro caminho — `mcp__…context-mode__ctx_execute` com `language: shell`, `ctx_batch_execute`, `mcp__terminal__run_in_terminal` — passa sem guarda. O `code-review-graph-update` só dispara em `Edit|Write|MultiEdit|NotebookEdit`: uma edição por `sed -i`, heredoc ou `git rm` via `Bash` nunca atualiza o grafo (o deste repositório ficou parado de 2026-08-30 a 2026-09-17 apesar de dezenas de edições). Nenhum hook garante o uso do `code-review-graph` durante pesquisa e discovery, e a alternativa — regras em texto — infla o contexto a cada sessão e tende a repetir o que o hook já faz. Além disso, o `build_documentation.mjs` do Specsfy sobrescreve `docs/` com um esqueleto quando executado sem `--check` (FIND-EXT-001), e nada impede o agente de executá-lo.
+Os guards do maestro (`guard-destructive`, `guard-secrets`, `protect-authorship`) só interceptam o tool `Bash` e só leem `tool_input.command`; qualquer ferramenta que execute shell por outro caminho — `mcp__…context-mode__ctx_execute` com `language: shell`, `ctx_batch_execute`, `mcp__terminal__run_in_terminal` — passa sem guarda. O `code-review-graph-update` só dispara em `Edit|Write|MultiEdit|NotebookEdit`: uma edição por `sed -i`, heredoc ou `git rm` via `Bash` nunca atualiza o grafo (o deste repositório ficou parado de 2026-08-30 a 2026-09-17 apesar de dezenas de edições). Nenhum hook garante o uso do `code-review-graph` durante pesquisa e discovery, e a alternativa — regras em texto — infla o contexto a cada sessão e tende a repetir o que o hook já faz. Além disso, o `build_documentation.mjs` do former project tool sobrescreve `docs/` com um esqueleto quando executado sem `--check` (FIND-EXT-001), e nada impede o agente de executá-lo.
 
 #### Resultado desejado
 
@@ -55,7 +55,7 @@ Cada hook do maestro é resistente à ferramenta usada: os guards bloqueiam os m
 - `specs/completed/0022-hooks-do-maestro-validos-no-claude-code/spec.md` — base desta spec.
 - `specs/backlog/0014-hooks-resistentes-a-qualquer-ferramenta-e-regras-so-como-fallback-sem-overlap.md` — brief promovido.
 - `specs/inbox/2026-09-17-160600-hooks-resistentes-a-qualquer-ferramenta-e-uso-garantido-dos-clis-em-pesquisa-com-regras-so-como-fallback-sem-overlap.md` — captura de origem, preservada.
-- `findings/external/FIND-EXT-001-specsfy-documentator-sobrescreve-docs.md`, `findings/internal/FIND-INT-001-guards-so-interceptam-bash.md`, `findings/internal/FIND-INT-002-code-review-graph-update-nao-cobre-edicoes-via-bash.md`.
+- `findings/external/FIND-EXT-001-framework-documentator-sobrescreve-docs.md`, `findings/internal/FIND-INT-001-guards-so-interceptam-bash.md`, `findings/internal/FIND-INT-002-code-review-graph-update-nao-cobre-edicoes-via-bash.md`.
 - Decisões do usuário em 2026-09-17: hook resolve, regra só como fallback sem overlap; backlog próprio antes da 0013.
 
 #### Documentação consultada
@@ -97,7 +97,7 @@ Cada hook do maestro é resistente à ferramenta usada: os guards bloqueiam os m
 #### Fora de escopo
 
 - Negar `Grep`/`Read`/`Glob` para forçar o grafo.
-- Alterar o context-mode ou o Specsfy upstream (FIND-EXT-001 segue como issue).
+- Alterar o context-mode ou o former project tool upstream (FIND-EXT-001 segue como issue).
 - O doctor em si (BACKLOG-0013) — esta spec define a cobertura; a 0013 a confere.
 - Direção dos blocos `AGENTS.md`/`CLAUDE.md` (BACKLOG-0012); o bloco `hooks-fallback` segue a direção vigente no momento da entrega.
 - Guard para o playwright (`browser_run_code_unsafe` executa JS no browser, não shell).
@@ -153,7 +153,7 @@ Como pessoa que mantém o projeto, quero que as regras em `AGENTS.md`/`CLAUDE.md
 
 #### US-005 — Proteção contra o build destrutivo do documentator (P1)
 
-Como pessoa que mantém `docs/`, quero que a execução de `build_documentation.mjs` sem `--check` seja bloqueada com orientação, para que um bug do Specsfy não apague a documentação.
+Como pessoa que mantém `docs/`, quero que a execução de `build_documentation.mjs` sem `--check` seja bloqueada com orientação, para que um bug do former project tool não apague a documentação.
 
 **Por que P1**: perda real e recorrente (FIND-EXT-001), reproduzida duas vezes em 2026-09-17.
 **Teste independente**: guard com JSON de `Bash` contendo o script sem `--check` → `exit 2`; com `--check` → `exit 0`; com `MAESTRO_ALLOW_DOCS_BUILD=1` → `exit 0`.
@@ -407,7 +407,7 @@ Feature: Proteção do documentator
 
   Scenario: build destrutivo
     Given o script .maestro/hooks/guard-docs.sh instalado
-    When ele recebe {"tool_name":"Bash","tool_input":{"command":"node .claude/skills/specsfy-documentator/scripts/build_documentation.mjs --project ."}}
+    When ele recebe {"tool_name":"Bash","tool_input":{"command":"node .claude/skills/framework-documentator/scripts/build_documentation.mjs --project ."}}
     Then termina com exit 2 e a mensagem cita "--check" e "MAESTRO_ALLOW_DOCS_BUILD=1"
 ```
 
@@ -718,30 +718,30 @@ tests/
 
 | IDs | BDD de referência | Teste TDD informado pelo BDD | RED observado | GREEN observado | Refactor/regressão |
 | --- | --- | --- | --- | --- | --- |
-| US-001, FR-001, FR-002, FR-006, NFR-002, AC-001 | AC-001 na seção 6 | caso 1 em tests/hooks-any-shell-guards.test.ts com marcador próprio `SPECSFY:` | RED 2026-09-17: exit 0 em vez de 2: o preâmbulo só extrai `command`, não `code` | GREEN 2026-09-17: `npm run test:tdd` focal verde | Regressão: 579/590, falhas restantes são o RED da SPEC-0021 |
-| US-001, FR-001, FR-002, FR-006, NFR-002, AC-002 | AC-002 na seção 6 | caso 2 em tests/hooks-any-shell-guards.test.ts com marcador próprio `SPECSFY:` | RED 2026-09-17: matcher da entrada é `Bash` e não casa `mcp__terminal__run_in_terminal` (o script isolado já bloqueia; o gap é o `tools:`) | GREEN 2026-09-17: `npm run test:tdd` focal verde | Regressão: 579/590, falhas restantes são o RED da SPEC-0021 |
-| US-001, FR-001, NFR-002, AC-003 | AC-003 na seção 6 | caso 3 em tests/hooks-any-shell-guards.test.ts com marcador próprio `SPECSFY:` | RED 2026-09-17: exit 0 esperado ocorre, mas o par shell devolve 0 em vez de 2 (`code` não extraído) | GREEN 2026-09-17: `npm run test:tdd` focal verde | Regressão: 579/590, falhas restantes são o RED da SPEC-0021 |
-| US-001, FR-001, FR-002, AC-004 | AC-004 na seção 6 | caso 4 em tests/hooks-any-shell-guards.test.ts com marcador próprio `SPECSFY:` | RED 2026-09-17: exit 0 em vez de 2: `commands[]` não é extraído | GREEN 2026-09-17: `npm run test:tdd` focal verde | Regressão: 579/590, falhas restantes são o RED da SPEC-0021 |
-| US-001, FR-002, AC-005 | AC-005 na seção 6 | caso 5 em tests/hooks-any-shell-guards.test.ts com marcador próprio `SPECSFY:` | RED 2026-09-17: matcher `Bash` em vez do regex de ferramentas de shell | GREEN 2026-09-17: `npm run test:tdd` focal verde | Regressão: 579/590, falhas restantes são o RED da SPEC-0021 |
-| US-001, FR-006, AC-006 | AC-006 na seção 6 | caso documental 6 em tests/hooks-any-shell-guards.test.ts com marcador próprio `SPECSFY:` (verificação manual) | RED 2026-09-17: célula GREEN de AC-006 na seção 11 ainda era `Pending` | Verificação manual 2026-09-17, responsável: Bruno Calmon (sessão do Claude Code neste repositório, operada pelo agente com sua autorização): subagente `general-purpose` (Haiku) lançado por `Agent` executou `cat .env` via `Bash` e recebeu `Blocked: this command would print credentials into the transcript…` (guard-secrets); `echo probe-ok` executou normalmente — os hooks de projeto valem para subagentes | Caso documental verde após o registro |
-| US-002, FR-003, FR-007, NFR-001, AC-007 | AC-007 na seção 6 | caso 1 em tests/hooks-graph-update.test.ts com marcador próprio `SPECSFY:` | RED 2026-09-17: `hook code-review-graph-update produced no script body` (ainda é despacho) | GREEN 2026-09-17: `npm run test:tdd` focal verde | Regressão: 579/590, falhas restantes são o RED da SPEC-0021 |
-| US-002, FR-003, FR-007, NFR-001, AC-008 | AC-008 na seção 6 | caso 2 em tests/hooks-graph-update.test.ts com marcador próprio `SPECSFY:` | RED 2026-09-17: idem — sem script | GREEN 2026-09-17: `npm run test:tdd` focal verde | Regressão: 579/590, falhas restantes são o RED da SPEC-0021 |
-| US-002, FR-003, NFR-001, AC-009 | AC-009 na seção 6 | caso 3 em tests/hooks-graph-update.test.ts com marcador próprio `SPECSFY:` | RED 2026-09-17: `ENOENT resources/hooks/code-review-graph-stop.md` | GREEN 2026-09-17: `npm run test:tdd` focal verde | Regressão: 579/590, falhas restantes são o RED da SPEC-0021 |
-| US-002, FR-003, AC-010 | AC-010 na seção 6 | caso 4 em tests/hooks-graph-update.test.ts com marcador próprio `SPECSFY:` | RED 2026-09-17: matcher `undefined`: entrada continua como despacho `code-review-graph update --brief` | GREEN 2026-09-17: `npm run test:tdd` focal verde | Regressão: 579/590, falhas restantes são o RED da SPEC-0021 |
-| US-003, FR-004, FR-007, NFR-001, AC-011 | AC-011 na seção 6 | caso 1 em tests/hooks-graph-hint.test.ts com marcador próprio `SPECSFY:` | RED 2026-09-17: `ENOENT resources/hooks/graph-hint.md` | GREEN 2026-09-17: `npm run test:tdd` focal verde | Regressão: 579/590, falhas restantes são o RED da SPEC-0021 |
-| US-003, FR-004, NFR-001, AC-012 | AC-012 na seção 6 | caso 2 em tests/hooks-graph-hint.test.ts com marcador próprio `SPECSFY:` | RED 2026-09-17: idem | GREEN 2026-09-17: `npm run test:tdd` focal verde | Regressão: 579/590, falhas restantes são o RED da SPEC-0021 |
-| US-003, FR-004, FR-007, AC-013 | AC-013 na seção 6 | caso 3 em tests/hooks-graph-hint.test.ts com marcador próprio `SPECSFY:` | RED 2026-09-17: idem | GREEN 2026-09-17: `npm run test:tdd` focal verde | Regressão: 579/590, falhas restantes são o RED da SPEC-0021 |
-| US-004, FR-005, NFR-003, AC-014 | AC-014 na seção 6 | caso 1 em tests/hooks-fallback-block.test.ts com marcador próprio `SPECSFY:` | RED 2026-09-17: `buildHooksFallbackBlock` inexistente (`expected 0 to be greater than 0`) | GREEN 2026-09-17: `npm run test:tdd` focal verde | Regressão: 579/590, falhas restantes são o RED da SPEC-0021 |
-| US-004, FR-005, NFR-003, AC-015 | AC-015 na seção 6 | caso 2 em tests/hooks-fallback-block.test.ts com marcador próprio `SPECSFY:` | RED 2026-09-17: nenhuma âncora `hooks-fallback` nos arquivos (`expected [] to have length 1`) | GREEN 2026-09-17: `npm run test:tdd` focal verde | Regressão: 579/590, falhas restantes são o RED da SPEC-0021 |
-| US-004, FR-005, NFR-003, AC-016 | AC-016 na seção 6 | caso 3 em tests/hooks-fallback-block.test.ts com marcador próprio `SPECSFY:` | RED 2026-09-17: artefato `hooks-fallback` ausente no registro | GREEN 2026-09-17: `npm run test:tdd` focal verde | Regressão: 579/590, falhas restantes são o RED da SPEC-0021 |
-| US-005, FR-008, NFR-002, AC-017 | AC-017 na seção 6 | caso 1 em tests/hooks-guard-docs.test.ts com marcador próprio `SPECSFY:` | RED 2026-09-17: `ENOENT resources/hooks/guard-docs.md` | GREEN 2026-09-17: `npm run test:tdd` focal verde | Regressão: 579/590, falhas restantes são o RED da SPEC-0021 |
-| US-005, FR-008, NFR-002, AC-018 | AC-018 na seção 6 | caso 2 em tests/hooks-guard-docs.test.ts com marcador próprio `SPECSFY:` | RED 2026-09-17: idem | GREEN 2026-09-17: `npm run test:tdd` focal verde | Regressão: 579/590, falhas restantes são o RED da SPEC-0021 |
-| US-005, FR-008, FR-002, AC-019 | AC-019 na seção 6 | caso 3 em tests/hooks-guard-docs.test.ts com marcador próprio `SPECSFY:` | RED 2026-09-17: idem | GREEN 2026-09-17: `npm run test:tdd` focal verde | Regressão: 579/590, falhas restantes são o RED da SPEC-0021 |
-| US-002, FR-003, FR-007, AC-020 | AC-020 na seção 6 | caso 5 em tests/hooks-graph-update.test.ts com marcador próprio `SPECSFY:` | RED 2026-09-17: sem script body; `kind` é `dispatch` | GREEN 2026-09-17: `npm run test:tdd` focal verde | Regressão: 579/590, falhas restantes são o RED da SPEC-0021 |
-| FR-007, NFR-001, NFR-003, AC-021 | AC-021 na seção 6 | caso 1 em tests/setup-state-dir.test.ts com marcador próprio `SPECSFY:` | RED 2026-09-17: `.maestro/state/` não criado pelo setup (`expected false to be true`) | GREEN 2026-09-17: `npm run test:tdd` focal verde | Regressão: 579/590, falhas restantes são o RED da SPEC-0021 |
-| FR-007, FR-003, FR-004, AC-022 | AC-022 na seção 6 | caso 2 em tests/setup-state-dir.test.ts com marcador próprio `SPECSFY:` | RED 2026-09-17: sem script de update | GREEN 2026-09-17: `npm run test:tdd` focal verde | Regressão: 579/590, falhas restantes são o RED da SPEC-0021 |
-| FR-001, FR-004, NFR-002, AC-023 | AC-023 na seção 6 | caso 1 em tests/hooks-wrapper-context.test.ts com marcador próprio `SPECSFY:` | RED 2026-09-17: stdout vazio: postâmbulo não emite `context` (`Unexpected end of JSON input`) | GREEN 2026-09-17: `npm run test:tdd` focal verde | Regressão: 579/590, falhas restantes são o RED da SPEC-0021 |
-| NFR-001, FR-003, AC-024 | AC-024 na seção 6 | caso 6 em tests/hooks-graph-update.test.ts com marcador próprio `SPECSFY:` | RED 2026-09-17: sem script de update | GREEN 2026-09-17: `npm run test:tdd` focal verde | Regressão: 579/590, falhas restantes são o RED da SPEC-0021 |
+| US-001, FR-001, FR-002, FR-006, NFR-002, AC-001 | AC-001 na seção 6 | caso 1 em tests/hooks-any-shell-guards.test.ts com marcador próprio `TRACEABILITY:` | RED 2026-09-17: exit 0 em vez de 2: o preâmbulo só extrai `command`, não `code` | GREEN 2026-09-17: `npm run test:tdd` focal verde | Regressão: 579/590, falhas restantes são o RED da SPEC-0021 |
+| US-001, FR-001, FR-002, FR-006, NFR-002, AC-002 | AC-002 na seção 6 | caso 2 em tests/hooks-any-shell-guards.test.ts com marcador próprio `TRACEABILITY:` | RED 2026-09-17: matcher da entrada é `Bash` e não casa `mcp__terminal__run_in_terminal` (o script isolado já bloqueia; o gap é o `tools:`) | GREEN 2026-09-17: `npm run test:tdd` focal verde | Regressão: 579/590, falhas restantes são o RED da SPEC-0021 |
+| US-001, FR-001, NFR-002, AC-003 | AC-003 na seção 6 | caso 3 em tests/hooks-any-shell-guards.test.ts com marcador próprio `TRACEABILITY:` | RED 2026-09-17: exit 0 esperado ocorre, mas o par shell devolve 0 em vez de 2 (`code` não extraído) | GREEN 2026-09-17: `npm run test:tdd` focal verde | Regressão: 579/590, falhas restantes são o RED da SPEC-0021 |
+| US-001, FR-001, FR-002, AC-004 | AC-004 na seção 6 | caso 4 em tests/hooks-any-shell-guards.test.ts com marcador próprio `TRACEABILITY:` | RED 2026-09-17: exit 0 em vez de 2: `commands[]` não é extraído | GREEN 2026-09-17: `npm run test:tdd` focal verde | Regressão: 579/590, falhas restantes são o RED da SPEC-0021 |
+| US-001, FR-002, AC-005 | AC-005 na seção 6 | caso 5 em tests/hooks-any-shell-guards.test.ts com marcador próprio `TRACEABILITY:` | RED 2026-09-17: matcher `Bash` em vez do regex de ferramentas de shell | GREEN 2026-09-17: `npm run test:tdd` focal verde | Regressão: 579/590, falhas restantes são o RED da SPEC-0021 |
+| US-001, FR-006, AC-006 | AC-006 na seção 6 | caso documental 6 em tests/hooks-any-shell-guards.test.ts com marcador próprio `TRACEABILITY:` (verificação manual) | RED 2026-09-17: célula GREEN de AC-006 na seção 11 ainda era `Pending` | Verificação manual 2026-09-17, responsável: Bruno Calmon (sessão do Claude Code neste repositório, operada pelo agente com sua autorização): subagente `general-purpose` (Haiku) lançado por `Agent` executou `cat .env` via `Bash` e recebeu `Blocked: this command would print credentials into the transcript…` (guard-secrets); `echo probe-ok` executou normalmente — os hooks de projeto valem para subagentes | Caso documental verde após o registro |
+| US-002, FR-003, FR-007, NFR-001, AC-007 | AC-007 na seção 6 | caso 1 em tests/hooks-graph-update.test.ts com marcador próprio `TRACEABILITY:` | RED 2026-09-17: `hook code-review-graph-update produced no script body` (ainda é despacho) | GREEN 2026-09-17: `npm run test:tdd` focal verde | Regressão: 579/590, falhas restantes são o RED da SPEC-0021 |
+| US-002, FR-003, FR-007, NFR-001, AC-008 | AC-008 na seção 6 | caso 2 em tests/hooks-graph-update.test.ts com marcador próprio `TRACEABILITY:` | RED 2026-09-17: idem — sem script | GREEN 2026-09-17: `npm run test:tdd` focal verde | Regressão: 579/590, falhas restantes são o RED da SPEC-0021 |
+| US-002, FR-003, NFR-001, AC-009 | AC-009 na seção 6 | caso 3 em tests/hooks-graph-update.test.ts com marcador próprio `TRACEABILITY:` | RED 2026-09-17: `ENOENT resources/hooks/code-review-graph-stop.md` | GREEN 2026-09-17: `npm run test:tdd` focal verde | Regressão: 579/590, falhas restantes são o RED da SPEC-0021 |
+| US-002, FR-003, AC-010 | AC-010 na seção 6 | caso 4 em tests/hooks-graph-update.test.ts com marcador próprio `TRACEABILITY:` | RED 2026-09-17: matcher `undefined`: entrada continua como despacho `code-review-graph update --brief` | GREEN 2026-09-17: `npm run test:tdd` focal verde | Regressão: 579/590, falhas restantes são o RED da SPEC-0021 |
+| US-003, FR-004, FR-007, NFR-001, AC-011 | AC-011 na seção 6 | caso 1 em tests/hooks-graph-hint.test.ts com marcador próprio `TRACEABILITY:` | RED 2026-09-17: `ENOENT resources/hooks/graph-hint.md` | GREEN 2026-09-17: `npm run test:tdd` focal verde | Regressão: 579/590, falhas restantes são o RED da SPEC-0021 |
+| US-003, FR-004, NFR-001, AC-012 | AC-012 na seção 6 | caso 2 em tests/hooks-graph-hint.test.ts com marcador próprio `TRACEABILITY:` | RED 2026-09-17: idem | GREEN 2026-09-17: `npm run test:tdd` focal verde | Regressão: 579/590, falhas restantes são o RED da SPEC-0021 |
+| US-003, FR-004, FR-007, AC-013 | AC-013 na seção 6 | caso 3 em tests/hooks-graph-hint.test.ts com marcador próprio `TRACEABILITY:` | RED 2026-09-17: idem | GREEN 2026-09-17: `npm run test:tdd` focal verde | Regressão: 579/590, falhas restantes são o RED da SPEC-0021 |
+| US-004, FR-005, NFR-003, AC-014 | AC-014 na seção 6 | caso 1 em tests/hooks-fallback-block.test.ts com marcador próprio `TRACEABILITY:` | RED 2026-09-17: `buildHooksFallbackBlock` inexistente (`expected 0 to be greater than 0`) | GREEN 2026-09-17: `npm run test:tdd` focal verde | Regressão: 579/590, falhas restantes são o RED da SPEC-0021 |
+| US-004, FR-005, NFR-003, AC-015 | AC-015 na seção 6 | caso 2 em tests/hooks-fallback-block.test.ts com marcador próprio `TRACEABILITY:` | RED 2026-09-17: nenhuma âncora `hooks-fallback` nos arquivos (`expected [] to have length 1`) | GREEN 2026-09-17: `npm run test:tdd` focal verde | Regressão: 579/590, falhas restantes são o RED da SPEC-0021 |
+| US-004, FR-005, NFR-003, AC-016 | AC-016 na seção 6 | caso 3 em tests/hooks-fallback-block.test.ts com marcador próprio `TRACEABILITY:` | RED 2026-09-17: artefato `hooks-fallback` ausente no registro | GREEN 2026-09-17: `npm run test:tdd` focal verde | Regressão: 579/590, falhas restantes são o RED da SPEC-0021 |
+| US-005, FR-008, NFR-002, AC-017 | AC-017 na seção 6 | caso 1 em tests/hooks-guard-docs.test.ts com marcador próprio `TRACEABILITY:` | RED 2026-09-17: `ENOENT resources/hooks/guard-docs.md` | GREEN 2026-09-17: `npm run test:tdd` focal verde | Regressão: 579/590, falhas restantes são o RED da SPEC-0021 |
+| US-005, FR-008, NFR-002, AC-018 | AC-018 na seção 6 | caso 2 em tests/hooks-guard-docs.test.ts com marcador próprio `TRACEABILITY:` | RED 2026-09-17: idem | GREEN 2026-09-17: `npm run test:tdd` focal verde | Regressão: 579/590, falhas restantes são o RED da SPEC-0021 |
+| US-005, FR-008, FR-002, AC-019 | AC-019 na seção 6 | caso 3 em tests/hooks-guard-docs.test.ts com marcador próprio `TRACEABILITY:` | RED 2026-09-17: idem | GREEN 2026-09-17: `npm run test:tdd` focal verde | Regressão: 579/590, falhas restantes são o RED da SPEC-0021 |
+| US-002, FR-003, FR-007, AC-020 | AC-020 na seção 6 | caso 5 em tests/hooks-graph-update.test.ts com marcador próprio `TRACEABILITY:` | RED 2026-09-17: sem script body; `kind` é `dispatch` | GREEN 2026-09-17: `npm run test:tdd` focal verde | Regressão: 579/590, falhas restantes são o RED da SPEC-0021 |
+| FR-007, NFR-001, NFR-003, AC-021 | AC-021 na seção 6 | caso 1 em tests/setup-state-dir.test.ts com marcador próprio `TRACEABILITY:` | RED 2026-09-17: `.maestro/state/` não criado pelo setup (`expected false to be true`) | GREEN 2026-09-17: `npm run test:tdd` focal verde | Regressão: 579/590, falhas restantes são o RED da SPEC-0021 |
+| FR-007, FR-003, FR-004, AC-022 | AC-022 na seção 6 | caso 2 em tests/setup-state-dir.test.ts com marcador próprio `TRACEABILITY:` | RED 2026-09-17: sem script de update | GREEN 2026-09-17: `npm run test:tdd` focal verde | Regressão: 579/590, falhas restantes são o RED da SPEC-0021 |
+| FR-001, FR-004, NFR-002, AC-023 | AC-023 na seção 6 | caso 1 em tests/hooks-wrapper-context.test.ts com marcador próprio `TRACEABILITY:` | RED 2026-09-17: stdout vazio: postâmbulo não emite `context` (`Unexpected end of JSON input`) | GREEN 2026-09-17: `npm run test:tdd` focal verde | Regressão: 579/590, falhas restantes são o RED da SPEC-0021 |
+| NFR-001, FR-003, AC-024 | AC-024 na seção 6 | caso 6 em tests/hooks-graph-update.test.ts com marcador próprio `TRACEABILITY:` | RED 2026-09-17: sem script de update | GREEN 2026-09-17: `npm run test:tdd` focal verde | Regressão: 579/590, falhas restantes são o RED da SPEC-0021 |
 
 ### 12. Plano de testes e rastreabilidade
 
@@ -798,9 +798,9 @@ tests/
 #### Gate do Ato I — Definição
 
 - **Resultado**: READY (2026-09-17); aceite final em `review` (2026-09-17): entrega conferida contra cada AC/FR/NFR e a DoD, findings FIND-SEC-001/002 e FIND-PROD-001 permanecem `Accepted` com as mitigações entregues (aviso explícito no guard-docs, cobertura por regex documentada para o doctor da 0013, regra-fallback do grafo) — spec movida para `completed`.
-- **Comando**: `node .agents/skills/specsfy-04-validate/scripts/validate_spec.mjs specs/completed/0023-hooks-resistentes-e-regras-fallback-sem-overlap/spec.md`
+- **Comando**: `node .agents/skills/framework-04-validate/scripts/validate_spec.mjs specs/completed/0023-hooks-resistentes-e-regras-fallback-sem-overlap/spec.md`
 - **Achados**: estrutura VALID; research PASSED (R-001, R-002 critical verificados; R-003 high verificado); cobertura mínima atendida — 5 US, 8 FR, 3 NFR com ≥3 AC cada, 24 AC (ciclo 1 acrescentou FR-006 a AC-001/AC-002); NOTE editorial resolvido (homógrafo de marcador pendente na seção 16). Sem BLOCKER.
-- **FIND-SEC-001** [P2] [Accepted] O escape `MAESTRO_ALLOW_DOCS_BUILD=1` do `guard-docs` pode ser usado pelo próprio agente para contornar o bloqueio — Refs: FR-008, AC-018 — Evidence: findings/external/FIND-EXT-001-specsfy-documentator-sobrescreve-docs.md:1 — Effect: a proteção detém execução acidental, não intenção deliberada — Suggestion: manter o escape explícito (a mensagem do guard torna o risco visível e o `build` sem `--check` com docs relocada é inofensivo); a proteção definitiva é o fix upstream (FIND-EXT-001).
+- **FIND-SEC-001** [P2] [Accepted] O escape `MAESTRO_ALLOW_DOCS_BUILD=1` do `guard-docs` pode ser usado pelo próprio agente para contornar o bloqueio — Refs: FR-008, AC-018 — Evidence: findings/external/FIND-EXT-001-framework-documentator-sobrescreve-docs.md:1 — Effect: a proteção detém execução acidental, não intenção deliberada — Suggestion: manter o escape explícito (a mensagem do guard torna o risco visível e o `build` sem `--check` com docs relocada é inofensivo); a proteção definitiva é o fix upstream (FIND-EXT-001).
 - **FIND-SEC-002** [P3] [Accepted] O regex `Bash|mcp__.*(execute|run_in_terminal|shell).*` cobre as ferramentas de shell observadas; uma ferramenta MCP futura com nome fora do padrão passa sem guarda — Refs: FR-002, AC-005 — Evidence: specs/completed/0023-hooks-resistentes-e-regras-fallback-sem-overlap/research/ferramentas-de-shell-observadas.md:1 — Effect: cobertura por convenção de nome, não por semântica — Suggestion: BACKLOG-0013 faz o doctor listar as ferramentas MCP registradas no projeto e reportar as de shell fora do regex; o `tools:` pode ser ampliado por extensão local sem release.
 - **FIND-ARCH-001** [P2] [Resolved] `code-review-graph-update` muda de despacho (`raw_command`) para script; consumidores já migrados pela SPEC-0022 têm a entrada de despacho com marcador `# maestro:hook=code-review-graph-update` — Refs: FR-003, AC-010 — Evidence: src/hooks/identity.ts:1 — Effect: sem tratamento, a entrada antiga ficaria ao lado da nova — Suggestion: resolvido por desenho — `isMaestroEntry` reconhece o marcador e o merge por identidade substitui a entrada pelo mesmo nome; AC-010 confirma uma única entrada.
 - **FIND-PROD-001** [P3] [Accepted] A dica do grafo é um lembrete, não uma garantia de uso — Refs: FR-004, AC-011 — Evidence: specs/completed/0023-hooks-resistentes-e-regras-fallback-sem-overlap/research/claude-code-hooks-contrato.md:1 — Effect: o agente pode ignorar a dica — Suggestion: aceito por decisão do usuário (negar `Grep`/`Read` está fora de escopo); a regra-fallback única sobre o grafo cobre o caso do hook ausente.
@@ -808,13 +808,13 @@ tests/
 #### Gate do Ato II — Plano
 
 - **Resultado**: Pending
-- **Comando**: `node .agents/skills/specsfy-05-tasks/scripts/validate_tasks.mjs specs/completed/0023-hooks-resistentes-e-regras-fallback-sem-overlap/spec.md`
+- **Comando**: `node .agents/skills/framework-05-tasks/scripts/validate_tasks.mjs specs/completed/0023-hooks-resistentes-e-regras-fallback-sem-overlap/spec.md`
 - **Achados**: Pending.
 
 #### Gate do Ato III — Entrega
 
 - **Resultado**: Pending
-- **Comando**: `node .agents/skills/specsfy-06-tdd-bdd/scripts/check_traceability.mjs specs/completed/0023-hooks-resistentes-e-regras-fallback-sem-overlap/spec.md .`
+- **Comando**: `node .agents/skills/framework-06-tdd-bdd/scripts/check_traceability.mjs specs/completed/0023-hooks-resistentes-e-regras-fallback-sem-overlap/spec.md .`
 - **Achados**: Pending.
 
 ### 14. Tarefas
@@ -839,7 +839,7 @@ Cada tarefa `[CODE]` grava no **PREP** um snapshot do `code-review-graph` (`stat
 
 - [x] T001 [TEST] [TDD] [US-001] Derivar de AC-001 um caso Vitest falhando em tests/hooks-any-shell-guards.test.ts — Refs: US-001, FR-001, FR-002, FR-006, NFR-002, AC-001 — Depends: none
   - [x] **PREP**: Gherkin de AC-001 lido; IDs e nível confirmados conforme a seção 12.
-  - [x] **EXECUTE**: Caso escrito em tests/hooks-any-shell-guards.test.ts com marcador `SPECSFY: … AC-001`; helpers em tests/helpers-spec-0023.ts (scripts gerados, repo git temporário, binário de teste do grafo); sem `.feature`.
+  - [x] **EXECUTE**: Caso escrito em tests/hooks-any-shell-guards.test.ts com marcador `TRACEABILITY: … AC-001`; helpers em tests/helpers-spec-0023.ts (scripts gerados, repo git temporário, binário de teste do grafo); sem `.feature`.
   - [x] **VERIFY**: RED válido — exit 0 em vez de 2: o preâmbulo só extrai `command`, não `code`.
   - [x] **VISUAL**: Não aplicável — a tarefa só materializa teste e a spec não tem interface.
   - [x] **EVIDENCE**: `npm run test:tdd -- hooks-any-shell-guards` → falha em AC-001 (2026-09-17); linha registrada na seção 11.
@@ -847,7 +847,7 @@ Cada tarefa `[CODE]` grava no **PREP** um snapshot do `code-review-graph` (`stat
 
 - [x] T002 [TEST] [TDD] [US-001] Derivar de AC-002 um caso Vitest falhando em tests/hooks-any-shell-guards.test.ts — Refs: US-001, FR-001, FR-002, FR-006, NFR-002, AC-002 — Depends: none
   - [x] **PREP**: Gherkin de AC-002 lido; IDs e nível confirmados conforme a seção 12.
-  - [x] **EXECUTE**: Caso escrito em tests/hooks-any-shell-guards.test.ts com marcador `SPECSFY: … AC-002`; helpers em tests/helpers-spec-0023.ts (scripts gerados, repo git temporário, binário de teste do grafo); sem `.feature`.
+  - [x] **EXECUTE**: Caso escrito em tests/hooks-any-shell-guards.test.ts com marcador `TRACEABILITY: … AC-002`; helpers em tests/helpers-spec-0023.ts (scripts gerados, repo git temporário, binário de teste do grafo); sem `.feature`.
   - [x] **VERIFY**: RED válido — matcher da entrada é `Bash` e não casa `mcp__terminal__run_in_terminal` (o script isolado já bloqueia; o gap é o `tools:`).
   - [x] **VISUAL**: Não aplicável — a tarefa só materializa teste e a spec não tem interface.
   - [x] **EVIDENCE**: `npm run test:tdd -- hooks-any-shell-guards` → falha em AC-002 (2026-09-17); linha registrada na seção 11.
@@ -855,7 +855,7 @@ Cada tarefa `[CODE]` grava no **PREP** um snapshot do `code-review-graph` (`stat
 
 - [x] T003 [TEST] [TDD] [US-001] Derivar de AC-003 um caso Vitest falhando em tests/hooks-any-shell-guards.test.ts — Refs: US-001, FR-001, NFR-002, AC-003 — Depends: none
   - [x] **PREP**: Gherkin de AC-003 lido; IDs e nível confirmados conforme a seção 12.
-  - [x] **EXECUTE**: Caso escrito em tests/hooks-any-shell-guards.test.ts com marcador `SPECSFY: … AC-003`; helpers em tests/helpers-spec-0023.ts (scripts gerados, repo git temporário, binário de teste do grafo); sem `.feature`.
+  - [x] **EXECUTE**: Caso escrito em tests/hooks-any-shell-guards.test.ts com marcador `TRACEABILITY: … AC-003`; helpers em tests/helpers-spec-0023.ts (scripts gerados, repo git temporário, binário de teste do grafo); sem `.feature`.
   - [x] **VERIFY**: RED válido — exit 0 esperado ocorre, mas o par shell devolve 0 em vez de 2 (`code` não extraído).
   - [x] **VISUAL**: Não aplicável — a tarefa só materializa teste e a spec não tem interface.
   - [x] **EVIDENCE**: `npm run test:tdd -- hooks-any-shell-guards` → falha em AC-003 (2026-09-17); linha registrada na seção 11.
@@ -863,7 +863,7 @@ Cada tarefa `[CODE]` grava no **PREP** um snapshot do `code-review-graph` (`stat
 
 - [x] T004 [TEST] [TDD] [US-001] Derivar de AC-004 um caso Vitest falhando em tests/hooks-any-shell-guards.test.ts — Refs: US-001, FR-001, FR-002, AC-004 — Depends: none
   - [x] **PREP**: Gherkin de AC-004 lido; IDs e nível confirmados conforme a seção 12.
-  - [x] **EXECUTE**: Caso escrito em tests/hooks-any-shell-guards.test.ts com marcador `SPECSFY: … AC-004`; helpers em tests/helpers-spec-0023.ts (scripts gerados, repo git temporário, binário de teste do grafo); sem `.feature`.
+  - [x] **EXECUTE**: Caso escrito em tests/hooks-any-shell-guards.test.ts com marcador `TRACEABILITY: … AC-004`; helpers em tests/helpers-spec-0023.ts (scripts gerados, repo git temporário, binário de teste do grafo); sem `.feature`.
   - [x] **VERIFY**: RED válido — exit 0 em vez de 2: `commands[]` não é extraído.
   - [x] **VISUAL**: Não aplicável — a tarefa só materializa teste e a spec não tem interface.
   - [x] **EVIDENCE**: `npm run test:tdd -- hooks-any-shell-guards` → falha em AC-004 (2026-09-17); linha registrada na seção 11.
@@ -871,7 +871,7 @@ Cada tarefa `[CODE]` grava no **PREP** um snapshot do `code-review-graph` (`stat
 
 - [x] T005 [TEST] [TDD] [US-001] Derivar de AC-005 um caso Vitest falhando em tests/hooks-any-shell-guards.test.ts — Refs: US-001, FR-002, AC-005 — Depends: none
   - [x] **PREP**: Gherkin de AC-005 lido; IDs e nível confirmados conforme a seção 12.
-  - [x] **EXECUTE**: Caso escrito em tests/hooks-any-shell-guards.test.ts com marcador `SPECSFY: … AC-005`; helpers em tests/helpers-spec-0023.ts (scripts gerados, repo git temporário, binário de teste do grafo); sem `.feature`.
+  - [x] **EXECUTE**: Caso escrito em tests/hooks-any-shell-guards.test.ts com marcador `TRACEABILITY: … AC-005`; helpers em tests/helpers-spec-0023.ts (scripts gerados, repo git temporário, binário de teste do grafo); sem `.feature`.
   - [x] **VERIFY**: RED válido — matcher `Bash` em vez do regex de ferramentas de shell.
   - [x] **VISUAL**: Não aplicável — a tarefa só materializa teste e a spec não tem interface.
   - [x] **EVIDENCE**: `npm run test:tdd -- hooks-any-shell-guards` → falha em AC-005 (2026-09-17); linha registrada na seção 11.
@@ -879,7 +879,7 @@ Cada tarefa `[CODE]` grava no **PREP** um snapshot do `code-review-graph` (`stat
 
 - [x] T006 [TEST] [TDD] [US-001] Derivar de AC-006 um caso Vitest falhando em tests/hooks-any-shell-guards.test.ts — Refs: US-001, FR-006, AC-006 — Depends: none
   - [x] **PREP**: Gherkin de AC-006 lido; IDs e nível confirmados conforme a seção 12.
-  - [x] **EXECUTE**: Caso escrito em tests/hooks-any-shell-guards.test.ts com marcador `SPECSFY: … AC-006`; helpers em tests/helpers-spec-0023.ts (scripts gerados, repo git temporário, binário de teste do grafo); sem `.feature`.
+  - [x] **EXECUTE**: Caso escrito em tests/hooks-any-shell-guards.test.ts com marcador `TRACEABILITY: … AC-006`; helpers em tests/helpers-spec-0023.ts (scripts gerados, repo git temporário, binário de teste do grafo); sem `.feature`.
   - [x] **VERIFY**: RED válido — célula GREEN de AC-006 na seção 11 ainda é `Pending` (sem data/responsável).
   - [x] **VISUAL**: Não aplicável — a tarefa só materializa teste e a spec não tem interface.
   - [x] **EVIDENCE**: `npm run test:tdd -- hooks-any-shell-guards` → falha em AC-006 (2026-09-17); linha registrada na seção 11.
@@ -887,7 +887,7 @@ Cada tarefa `[CODE]` grava no **PREP** um snapshot do `code-review-graph` (`stat
 
 - [x] T007 [TEST] [TDD] [US-002] Derivar de AC-007 um caso Vitest falhando em tests/hooks-graph-update.test.ts — Refs: US-002, FR-003, FR-007, NFR-001, AC-007 — Depends: none
   - [x] **PREP**: Gherkin de AC-007 lido; IDs e nível confirmados conforme a seção 12.
-  - [x] **EXECUTE**: Caso escrito em tests/hooks-graph-update.test.ts com marcador `SPECSFY: … AC-007`; helpers em tests/helpers-spec-0023.ts (scripts gerados, repo git temporário, binário de teste do grafo); sem `.feature`.
+  - [x] **EXECUTE**: Caso escrito em tests/hooks-graph-update.test.ts com marcador `TRACEABILITY: … AC-007`; helpers em tests/helpers-spec-0023.ts (scripts gerados, repo git temporário, binário de teste do grafo); sem `.feature`.
   - [x] **VERIFY**: RED válido — `hook code-review-graph-update produced no script body` (ainda é despacho).
   - [x] **VISUAL**: Não aplicável — a tarefa só materializa teste e a spec não tem interface.
   - [x] **EVIDENCE**: `npm run test:tdd -- hooks-graph-update` → falha em AC-007 (2026-09-17); linha registrada na seção 11.
@@ -895,7 +895,7 @@ Cada tarefa `[CODE]` grava no **PREP** um snapshot do `code-review-graph` (`stat
 
 - [x] T008 [TEST] [TDD] [US-002] Derivar de AC-008 um caso Vitest falhando em tests/hooks-graph-update.test.ts — Refs: US-002, FR-003, FR-007, NFR-001, AC-008 — Depends: none
   - [x] **PREP**: Gherkin de AC-008 lido; IDs e nível confirmados conforme a seção 12.
-  - [x] **EXECUTE**: Caso escrito em tests/hooks-graph-update.test.ts com marcador `SPECSFY: … AC-008`; helpers em tests/helpers-spec-0023.ts (scripts gerados, repo git temporário, binário de teste do grafo); sem `.feature`.
+  - [x] **EXECUTE**: Caso escrito em tests/hooks-graph-update.test.ts com marcador `TRACEABILITY: … AC-008`; helpers em tests/helpers-spec-0023.ts (scripts gerados, repo git temporário, binário de teste do grafo); sem `.feature`.
   - [x] **VERIFY**: RED válido — idem — sem script.
   - [x] **VISUAL**: Não aplicável — a tarefa só materializa teste e a spec não tem interface.
   - [x] **EVIDENCE**: `npm run test:tdd -- hooks-graph-update` → falha em AC-008 (2026-09-17); linha registrada na seção 11.
@@ -903,7 +903,7 @@ Cada tarefa `[CODE]` grava no **PREP** um snapshot do `code-review-graph` (`stat
 
 - [x] T009 [TEST] [TDD] [US-002] Derivar de AC-009 um caso Vitest falhando em tests/hooks-graph-update.test.ts — Refs: US-002, FR-003, NFR-001, AC-009 — Depends: none
   - [x] **PREP**: Gherkin de AC-009 lido; IDs e nível confirmados conforme a seção 12.
-  - [x] **EXECUTE**: Caso escrito em tests/hooks-graph-update.test.ts com marcador `SPECSFY: … AC-009`; helpers em tests/helpers-spec-0023.ts (scripts gerados, repo git temporário, binário de teste do grafo); sem `.feature`.
+  - [x] **EXECUTE**: Caso escrito em tests/hooks-graph-update.test.ts com marcador `TRACEABILITY: … AC-009`; helpers em tests/helpers-spec-0023.ts (scripts gerados, repo git temporário, binário de teste do grafo); sem `.feature`.
   - [x] **VERIFY**: RED válido — `ENOENT resources/hooks/code-review-graph-stop.md`.
   - [x] **VISUAL**: Não aplicável — a tarefa só materializa teste e a spec não tem interface.
   - [x] **EVIDENCE**: `npm run test:tdd -- hooks-graph-update` → falha em AC-009 (2026-09-17); linha registrada na seção 11.
@@ -911,7 +911,7 @@ Cada tarefa `[CODE]` grava no **PREP** um snapshot do `code-review-graph` (`stat
 
 - [x] T010 [TEST] [TDD] [US-002] Derivar de AC-010 um caso Vitest falhando em tests/hooks-graph-update.test.ts — Refs: US-002, FR-003, AC-010 — Depends: none
   - [x] **PREP**: Gherkin de AC-010 lido; IDs e nível confirmados conforme a seção 12.
-  - [x] **EXECUTE**: Caso escrito em tests/hooks-graph-update.test.ts com marcador `SPECSFY: … AC-010`; helpers em tests/helpers-spec-0023.ts (scripts gerados, repo git temporário, binário de teste do grafo); sem `.feature`.
+  - [x] **EXECUTE**: Caso escrito em tests/hooks-graph-update.test.ts com marcador `TRACEABILITY: … AC-010`; helpers em tests/helpers-spec-0023.ts (scripts gerados, repo git temporário, binário de teste do grafo); sem `.feature`.
   - [x] **VERIFY**: RED válido — matcher `undefined`: entrada continua como despacho `code-review-graph update --brief`.
   - [x] **VISUAL**: Não aplicável — a tarefa só materializa teste e a spec não tem interface.
   - [x] **EVIDENCE**: `npm run test:tdd -- hooks-graph-update` → falha em AC-010 (2026-09-17); linha registrada na seção 11.
@@ -919,7 +919,7 @@ Cada tarefa `[CODE]` grava no **PREP** um snapshot do `code-review-graph` (`stat
 
 - [x] T011 [TEST] [TDD] [US-003] Derivar de AC-011 um caso Vitest falhando em tests/hooks-graph-hint.test.ts — Refs: US-003, FR-004, FR-007, NFR-001, AC-011 — Depends: none
   - [x] **PREP**: Gherkin de AC-011 lido; IDs e nível confirmados conforme a seção 12.
-  - [x] **EXECUTE**: Caso escrito em tests/hooks-graph-hint.test.ts com marcador `SPECSFY: … AC-011`; helpers em tests/helpers-spec-0023.ts (scripts gerados, repo git temporário, binário de teste do grafo); sem `.feature`.
+  - [x] **EXECUTE**: Caso escrito em tests/hooks-graph-hint.test.ts com marcador `TRACEABILITY: … AC-011`; helpers em tests/helpers-spec-0023.ts (scripts gerados, repo git temporário, binário de teste do grafo); sem `.feature`.
   - [x] **VERIFY**: RED válido — `ENOENT resources/hooks/graph-hint.md`.
   - [x] **VISUAL**: Não aplicável — a tarefa só materializa teste e a spec não tem interface.
   - [x] **EVIDENCE**: `npm run test:tdd -- hooks-graph-hint` → falha em AC-011 (2026-09-17); linha registrada na seção 11.
@@ -927,7 +927,7 @@ Cada tarefa `[CODE]` grava no **PREP** um snapshot do `code-review-graph` (`stat
 
 - [x] T012 [TEST] [TDD] [US-003] Derivar de AC-012 um caso Vitest falhando em tests/hooks-graph-hint.test.ts — Refs: US-003, FR-004, NFR-001, AC-012 — Depends: none
   - [x] **PREP**: Gherkin de AC-012 lido; IDs e nível confirmados conforme a seção 12.
-  - [x] **EXECUTE**: Caso escrito em tests/hooks-graph-hint.test.ts com marcador `SPECSFY: … AC-012`; helpers em tests/helpers-spec-0023.ts (scripts gerados, repo git temporário, binário de teste do grafo); sem `.feature`.
+  - [x] **EXECUTE**: Caso escrito em tests/hooks-graph-hint.test.ts com marcador `TRACEABILITY: … AC-012`; helpers em tests/helpers-spec-0023.ts (scripts gerados, repo git temporário, binário de teste do grafo); sem `.feature`.
   - [x] **VERIFY**: RED válido — idem.
   - [x] **VISUAL**: Não aplicável — a tarefa só materializa teste e a spec não tem interface.
   - [x] **EVIDENCE**: `npm run test:tdd -- hooks-graph-hint` → falha em AC-012 (2026-09-17); linha registrada na seção 11.
@@ -935,7 +935,7 @@ Cada tarefa `[CODE]` grava no **PREP** um snapshot do `code-review-graph` (`stat
 
 - [x] T013 [TEST] [TDD] [US-003] Derivar de AC-013 um caso Vitest falhando em tests/hooks-graph-hint.test.ts — Refs: US-003, FR-004, FR-007, AC-013 — Depends: none
   - [x] **PREP**: Gherkin de AC-013 lido; IDs e nível confirmados conforme a seção 12.
-  - [x] **EXECUTE**: Caso escrito em tests/hooks-graph-hint.test.ts com marcador `SPECSFY: … AC-013`; helpers em tests/helpers-spec-0023.ts (scripts gerados, repo git temporário, binário de teste do grafo); sem `.feature`.
+  - [x] **EXECUTE**: Caso escrito em tests/hooks-graph-hint.test.ts com marcador `TRACEABILITY: … AC-013`; helpers em tests/helpers-spec-0023.ts (scripts gerados, repo git temporário, binário de teste do grafo); sem `.feature`.
   - [x] **VERIFY**: RED válido — idem.
   - [x] **VISUAL**: Não aplicável — a tarefa só materializa teste e a spec não tem interface.
   - [x] **EVIDENCE**: `npm run test:tdd -- hooks-graph-hint` → falha em AC-013 (2026-09-17); linha registrada na seção 11.
@@ -943,7 +943,7 @@ Cada tarefa `[CODE]` grava no **PREP** um snapshot do `code-review-graph` (`stat
 
 - [x] T014 [TEST] [TDD] [US-004] Derivar de AC-014 um caso Vitest falhando em tests/hooks-fallback-block.test.ts — Refs: US-004, FR-005, NFR-003, AC-014 — Depends: none
   - [x] **PREP**: Gherkin de AC-014 lido; IDs e nível confirmados conforme a seção 12.
-  - [x] **EXECUTE**: Caso escrito em tests/hooks-fallback-block.test.ts com marcador `SPECSFY: … AC-014`; helpers em tests/helpers-spec-0023.ts (scripts gerados, repo git temporário, binário de teste do grafo); sem `.feature`.
+  - [x] **EXECUTE**: Caso escrito em tests/hooks-fallback-block.test.ts com marcador `TRACEABILITY: … AC-014`; helpers em tests/helpers-spec-0023.ts (scripts gerados, repo git temporário, binário de teste do grafo); sem `.feature`.
   - [x] **VERIFY**: RED válido — `buildHooksFallbackBlock` inexistente (`expected 0 to be greater than 0`).
   - [x] **VISUAL**: Não aplicável — a tarefa só materializa teste e a spec não tem interface.
   - [x] **EVIDENCE**: `npm run test:tdd -- hooks-fallback-block` → falha em AC-014 (2026-09-17); linha registrada na seção 11.
@@ -951,7 +951,7 @@ Cada tarefa `[CODE]` grava no **PREP** um snapshot do `code-review-graph` (`stat
 
 - [x] T015 [TEST] [TDD] [US-004] Derivar de AC-015 um caso Vitest falhando em tests/hooks-fallback-block.test.ts — Refs: US-004, FR-005, NFR-003, AC-015 — Depends: none
   - [x] **PREP**: Gherkin de AC-015 lido; IDs e nível confirmados conforme a seção 12.
-  - [x] **EXECUTE**: Caso escrito em tests/hooks-fallback-block.test.ts com marcador `SPECSFY: … AC-015`; helpers em tests/helpers-spec-0023.ts (scripts gerados, repo git temporário, binário de teste do grafo); sem `.feature`.
+  - [x] **EXECUTE**: Caso escrito em tests/hooks-fallback-block.test.ts com marcador `TRACEABILITY: … AC-015`; helpers em tests/helpers-spec-0023.ts (scripts gerados, repo git temporário, binário de teste do grafo); sem `.feature`.
   - [x] **VERIFY**: RED válido — nenhuma âncora `hooks-fallback` nos arquivos (`expected [] to have length 1`).
   - [x] **VISUAL**: Não aplicável — a tarefa só materializa teste e a spec não tem interface.
   - [x] **EVIDENCE**: `npm run test:tdd -- hooks-fallback-block` → falha em AC-015 (2026-09-17); linha registrada na seção 11.
@@ -959,7 +959,7 @@ Cada tarefa `[CODE]` grava no **PREP** um snapshot do `code-review-graph` (`stat
 
 - [x] T016 [TEST] [TDD] [US-004] Derivar de AC-016 um caso Vitest falhando em tests/hooks-fallback-block.test.ts — Refs: US-004, FR-005, NFR-003, AC-016 — Depends: none
   - [x] **PREP**: Gherkin de AC-016 lido; IDs e nível confirmados conforme a seção 12.
-  - [x] **EXECUTE**: Caso escrito em tests/hooks-fallback-block.test.ts com marcador `SPECSFY: … AC-016`; helpers em tests/helpers-spec-0023.ts (scripts gerados, repo git temporário, binário de teste do grafo); sem `.feature`.
+  - [x] **EXECUTE**: Caso escrito em tests/hooks-fallback-block.test.ts com marcador `TRACEABILITY: … AC-016`; helpers em tests/helpers-spec-0023.ts (scripts gerados, repo git temporário, binário de teste do grafo); sem `.feature`.
   - [x] **VERIFY**: RED válido — artefato `hooks-fallback` ausente no registro.
   - [x] **VISUAL**: Não aplicável — a tarefa só materializa teste e a spec não tem interface.
   - [x] **EVIDENCE**: `npm run test:tdd -- hooks-fallback-block` → falha em AC-016 (2026-09-17); linha registrada na seção 11.
@@ -967,7 +967,7 @@ Cada tarefa `[CODE]` grava no **PREP** um snapshot do `code-review-graph` (`stat
 
 - [x] T017 [TEST] [TDD] [US-005] Derivar de AC-017 um caso Vitest falhando em tests/hooks-guard-docs.test.ts — Refs: US-005, FR-008, NFR-002, AC-017 — Depends: none
   - [x] **PREP**: Gherkin de AC-017 lido; IDs e nível confirmados conforme a seção 12.
-  - [x] **EXECUTE**: Caso escrito em tests/hooks-guard-docs.test.ts com marcador `SPECSFY: … AC-017`; helpers em tests/helpers-spec-0023.ts (scripts gerados, repo git temporário, binário de teste do grafo); sem `.feature`.
+  - [x] **EXECUTE**: Caso escrito em tests/hooks-guard-docs.test.ts com marcador `TRACEABILITY: … AC-017`; helpers em tests/helpers-spec-0023.ts (scripts gerados, repo git temporário, binário de teste do grafo); sem `.feature`.
   - [x] **VERIFY**: RED válido — `ENOENT resources/hooks/guard-docs.md`.
   - [x] **VISUAL**: Não aplicável — a tarefa só materializa teste e a spec não tem interface.
   - [x] **EVIDENCE**: `npm run test:tdd -- hooks-guard-docs` → falha em AC-017 (2026-09-17); linha registrada na seção 11.
@@ -975,7 +975,7 @@ Cada tarefa `[CODE]` grava no **PREP** um snapshot do `code-review-graph` (`stat
 
 - [x] T018 [TEST] [TDD] [US-005] Derivar de AC-018 um caso Vitest falhando em tests/hooks-guard-docs.test.ts — Refs: US-005, FR-008, NFR-002, AC-018 — Depends: none
   - [x] **PREP**: Gherkin de AC-018 lido; IDs e nível confirmados conforme a seção 12.
-  - [x] **EXECUTE**: Caso escrito em tests/hooks-guard-docs.test.ts com marcador `SPECSFY: … AC-018`; helpers em tests/helpers-spec-0023.ts (scripts gerados, repo git temporário, binário de teste do grafo); sem `.feature`.
+  - [x] **EXECUTE**: Caso escrito em tests/hooks-guard-docs.test.ts com marcador `TRACEABILITY: … AC-018`; helpers em tests/helpers-spec-0023.ts (scripts gerados, repo git temporário, binário de teste do grafo); sem `.feature`.
   - [x] **VERIFY**: RED válido — idem.
   - [x] **VISUAL**: Não aplicável — a tarefa só materializa teste e a spec não tem interface.
   - [x] **EVIDENCE**: `npm run test:tdd -- hooks-guard-docs` → falha em AC-018 (2026-09-17); linha registrada na seção 11.
@@ -983,7 +983,7 @@ Cada tarefa `[CODE]` grava no **PREP** um snapshot do `code-review-graph` (`stat
 
 - [x] T019 [TEST] [TDD] [US-005] Derivar de AC-019 um caso Vitest falhando em tests/hooks-guard-docs.test.ts — Refs: US-005, FR-008, FR-002, AC-019 — Depends: none
   - [x] **PREP**: Gherkin de AC-019 lido; IDs e nível confirmados conforme a seção 12.
-  - [x] **EXECUTE**: Caso escrito em tests/hooks-guard-docs.test.ts com marcador `SPECSFY: … AC-019`; helpers em tests/helpers-spec-0023.ts (scripts gerados, repo git temporário, binário de teste do grafo); sem `.feature`.
+  - [x] **EXECUTE**: Caso escrito em tests/hooks-guard-docs.test.ts com marcador `TRACEABILITY: … AC-019`; helpers em tests/helpers-spec-0023.ts (scripts gerados, repo git temporário, binário de teste do grafo); sem `.feature`.
   - [x] **VERIFY**: RED válido — idem.
   - [x] **VISUAL**: Não aplicável — a tarefa só materializa teste e a spec não tem interface.
   - [x] **EVIDENCE**: `npm run test:tdd -- hooks-guard-docs` → falha em AC-019 (2026-09-17); linha registrada na seção 11.
@@ -991,7 +991,7 @@ Cada tarefa `[CODE]` grava no **PREP** um snapshot do `code-review-graph` (`stat
 
 - [x] T020 [TEST] [TDD] [US-002] Derivar de AC-020 um caso Vitest falhando em tests/hooks-graph-update.test.ts — Refs: US-002, FR-003, FR-007, AC-020 — Depends: none
   - [x] **PREP**: Gherkin de AC-020 lido; IDs e nível confirmados conforme a seção 12.
-  - [x] **EXECUTE**: Caso escrito em tests/hooks-graph-update.test.ts com marcador `SPECSFY: … AC-020`; helpers em tests/helpers-spec-0023.ts (scripts gerados, repo git temporário, binário de teste do grafo); sem `.feature`.
+  - [x] **EXECUTE**: Caso escrito em tests/hooks-graph-update.test.ts com marcador `TRACEABILITY: … AC-020`; helpers em tests/helpers-spec-0023.ts (scripts gerados, repo git temporário, binário de teste do grafo); sem `.feature`.
   - [x] **VERIFY**: RED válido — sem script body; `kind` é `dispatch`.
   - [x] **VISUAL**: Não aplicável — a tarefa só materializa teste e a spec não tem interface.
   - [x] **EVIDENCE**: `npm run test:tdd -- hooks-graph-update` → falha em AC-020 (2026-09-17); linha registrada na seção 11.
@@ -999,7 +999,7 @@ Cada tarefa `[CODE]` grava no **PREP** um snapshot do `code-review-graph` (`stat
 
 - [x] T021 [TEST] [TDD] Derivar de AC-021 um caso Vitest falhando em tests/setup-state-dir.test.ts — Refs: FR-007, NFR-001, NFR-003, AC-021 — Depends: none
   - [x] **PREP**: Gherkin de AC-021 lido; IDs e nível confirmados conforme a seção 12.
-  - [x] **EXECUTE**: Caso escrito em tests/setup-state-dir.test.ts com marcador `SPECSFY: … AC-021`; helpers em tests/helpers-spec-0023.ts (scripts gerados, repo git temporário, binário de teste do grafo); sem `.feature`.
+  - [x] **EXECUTE**: Caso escrito em tests/setup-state-dir.test.ts com marcador `TRACEABILITY: … AC-021`; helpers em tests/helpers-spec-0023.ts (scripts gerados, repo git temporário, binário de teste do grafo); sem `.feature`.
   - [x] **VERIFY**: RED válido — `.maestro/state/` não criado pelo setup (`expected false to be true`).
   - [x] **VISUAL**: Não aplicável — a tarefa só materializa teste e a spec não tem interface.
   - [x] **EVIDENCE**: `npm run test:tdd -- setup-state-dir` → falha em AC-021 (2026-09-17); linha registrada na seção 11.
@@ -1007,7 +1007,7 @@ Cada tarefa `[CODE]` grava no **PREP** um snapshot do `code-review-graph` (`stat
 
 - [x] T022 [TEST] [TDD] Derivar de AC-022 um caso Vitest falhando em tests/setup-state-dir.test.ts — Refs: FR-007, FR-003, FR-004, AC-022 — Depends: none
   - [x] **PREP**: Gherkin de AC-022 lido; IDs e nível confirmados conforme a seção 12.
-  - [x] **EXECUTE**: Caso escrito em tests/setup-state-dir.test.ts com marcador `SPECSFY: … AC-022`; helpers em tests/helpers-spec-0023.ts (scripts gerados, repo git temporário, binário de teste do grafo); sem `.feature`.
+  - [x] **EXECUTE**: Caso escrito em tests/setup-state-dir.test.ts com marcador `TRACEABILITY: … AC-022`; helpers em tests/helpers-spec-0023.ts (scripts gerados, repo git temporário, binário de teste do grafo); sem `.feature`.
   - [x] **VERIFY**: RED válido — sem script de update.
   - [x] **VISUAL**: Não aplicável — a tarefa só materializa teste e a spec não tem interface.
   - [x] **EVIDENCE**: `npm run test:tdd -- setup-state-dir` → falha em AC-022 (2026-09-17); linha registrada na seção 11.
@@ -1015,7 +1015,7 @@ Cada tarefa `[CODE]` grava no **PREP** um snapshot do `code-review-graph` (`stat
 
 - [x] T023 [TEST] [TDD] Derivar de AC-023 um caso Vitest falhando em tests/hooks-wrapper-context.test.ts — Refs: FR-001, FR-004, NFR-002, AC-023 — Depends: none
   - [x] **PREP**: Gherkin de AC-023 lido; IDs e nível confirmados conforme a seção 12.
-  - [x] **EXECUTE**: Caso escrito em tests/hooks-wrapper-context.test.ts com marcador `SPECSFY: … AC-023`; helpers em tests/helpers-spec-0023.ts (scripts gerados, repo git temporário, binário de teste do grafo); sem `.feature`.
+  - [x] **EXECUTE**: Caso escrito em tests/hooks-wrapper-context.test.ts com marcador `TRACEABILITY: … AC-023`; helpers em tests/helpers-spec-0023.ts (scripts gerados, repo git temporário, binário de teste do grafo); sem `.feature`.
   - [x] **VERIFY**: RED válido — stdout vazio: postâmbulo não emite `context` (`Unexpected end of JSON input`).
   - [x] **VISUAL**: Não aplicável — a tarefa só materializa teste e a spec não tem interface.
   - [x] **EVIDENCE**: `npm run test:tdd -- hooks-wrapper-context` → falha em AC-023 (2026-09-17); linha registrada na seção 11.
@@ -1023,7 +1023,7 @@ Cada tarefa `[CODE]` grava no **PREP** um snapshot do `code-review-graph` (`stat
 
 - [x] T024 [TEST] [TDD] Derivar de AC-024 um caso Vitest falhando em tests/hooks-graph-update.test.ts — Refs: NFR-001, FR-003, AC-024 — Depends: none
   - [x] **PREP**: Gherkin de AC-024 lido; IDs e nível confirmados conforme a seção 12.
-  - [x] **EXECUTE**: Caso escrito em tests/hooks-graph-update.test.ts com marcador `SPECSFY: … AC-024`; helpers em tests/helpers-spec-0023.ts (scripts gerados, repo git temporário, binário de teste do grafo); sem `.feature`.
+  - [x] **EXECUTE**: Caso escrito em tests/hooks-graph-update.test.ts com marcador `TRACEABILITY: … AC-024`; helpers em tests/helpers-spec-0023.ts (scripts gerados, repo git temporário, binário de teste do grafo); sem `.feature`.
   - [x] **VERIFY**: RED válido — sem script de update.
   - [x] **VISUAL**: Não aplicável — a tarefa só materializa teste e a spec não tem interface.
   - [x] **EVIDENCE**: `npm run test:tdd -- hooks-graph-update` → falha em AC-024 (2026-09-17); linha registrada na seção 11.
@@ -1040,18 +1040,18 @@ Cada tarefa `[CODE]` grava no **PREP** um snapshot do `code-review-graph` (`stat
   - [x] **EXECUTE**: `PREAMBLE` expõe `HOOK_TOOL`, `HOOK_SESSION`, `HOOK_FILE` e `HOOK_COMMAND` (command | code+language shell/bash/sh/zsh | commands[] unidos por `;`) via `_hook_str`; `wrap(hook, bins)` injeta `HOOK_TARGET_EVENT` e `MAESTRO_BIN_*`; `POSTAMBLE` emite o JSON `hookSpecificOutput.additionalContext` quando `context` não é vazio.
   - [x] **VERIFY**: `npm run test:tdd -- hooks-wrapper-context hooks-any-shell-guards hooks-corpus hooks-escape` → GREEN; `npx tsc --noEmit` limpo; grafo após: 1750 nós / 14093 arestas / 322 arquivos, `detect-changes --base HEAD` → 64 arquivos, 94 funções, risco 0,65, 0 fluxos afetados (2026-09-17).
   - [x] **VISUAL**: Não aplicável — sem interface; a mudança é em código, hooks e configuração.
-  - [x] **EVIDENCE**: GREEN e delta do grafo registrados nas seções 11–13; `PROJECT.md` e `docs/integrations.md` atualizados; `.specsfy/RULES.md` com as três regras confirmadas; `STACK.md`/`DATABASE.md` sem impacto.
+  - [x] **EVIDENCE**: GREEN e delta do grafo registrados nas seções 11–13; `PROJECT.md` e `docs/integrations.md` atualizados; `.project-context/RULES.md` com as três regras confirmadas; `STACK.md`/`DATABASE.md` sem impacto.
   - [x] **IMPROVE**: Nenhuma melhoria adicional além da mudança mínima.
-  <!-- specsfy:evidence {"task":"T025","refs":["US-001","FR-001","FR-004","NFR-002","AC-001","AC-003","AC-004","AC-023"],"files":["src/hooks/claude-code.ts"],"commands":[{"run":"npm run test:tdd -- hooks-wrapper-context hooks-any-shell-guards hooks-corpus hooks-escape","exit":0},{"run":"npx tsc --noEmit -p .","exit":0}]} -->
+  <!-- framework:evidence {"task":"T025","refs":["US-001","FR-001","FR-004","NFR-002","AC-001","AC-003","AC-004","AC-023"],"files":["src/hooks/claude-code.ts"],"commands":[{"run":"npm run test:tdd -- hooks-wrapper-context hooks-any-shell-guards hooks-corpus hooks-escape","exit":0},{"run":"npx tsc --noEmit -p .","exit":0}]} -->
 
 - [x] T026 [CODE] [US-002] Gerar variáveis de resolução em src/hooks/resolve.ts e passá-las ao wrapper em src/setup/run.ts — Refs: US-002, FR-003, FR-007, AC-007, AC-020, AC-022 — Depends: T007, T020, T022, T025
   - [x] **PREP**: RED dos predecessores confirmado na seção 11; snapshot do grafo antes: 1746 nós / 14061 arestas / 322 arquivos; `docs/` avaliado (documentator só com `--check`).
   - [x] **EXECUTE**: `binVariables(resolution)` em `resolve.ts`; `formatHooks(hooks, bins)` nos adaptadores e `runSetup` passando `dependencyResolution`.
   - [x] **VERIFY**: `npm run test:tdd -- hooks-graph-update hooks-resolve` → GREEN; `npx tsc --noEmit` limpo; grafo após: 1750 nós / 14093 arestas / 322 arquivos, `detect-changes --base HEAD` → 64 arquivos, 94 funções, risco 0,65, 0 fluxos afetados (2026-09-17).
   - [x] **VISUAL**: Não aplicável — sem interface; a mudança é em código, hooks e configuração.
-  - [x] **EVIDENCE**: GREEN e delta do grafo registrados nas seções 11–13; `PROJECT.md` e `docs/integrations.md` atualizados; `.specsfy/RULES.md` com as três regras confirmadas; `STACK.md`/`DATABASE.md` sem impacto.
+  - [x] **EVIDENCE**: GREEN e delta do grafo registrados nas seções 11–13; `PROJECT.md` e `docs/integrations.md` atualizados; `.project-context/RULES.md` com as três regras confirmadas; `STACK.md`/`DATABASE.md` sem impacto.
   - [x] **IMPROVE**: Nenhuma melhoria adicional além da mudança mínima.
-  <!-- specsfy:evidence {"task":"T026","refs":["US-002","FR-003","FR-007","AC-007","AC-020","AC-022"],"files":["src/hooks/resolve.ts","src/setup/run.ts"],"commands":[{"run":"npm run test:tdd -- hooks-graph-update hooks-resolve","exit":0},{"run":"npx tsc --noEmit -p .","exit":0}]} -->
+  <!-- framework:evidence {"task":"T026","refs":["US-002","FR-003","FR-007","AC-007","AC-020","AC-022"],"files":["src/hooks/resolve.ts","src/setup/run.ts"],"commands":[{"run":"npm run test:tdd -- hooks-graph-update hooks-resolve","exit":0},{"run":"npx tsc --noEmit -p .","exit":0}]} -->
 
 
 **Checkpoint**: um hook sintético com `context="x"` executado com JSON de `ctx_execute` shell expõe `HOOK_TOOL`, `HOOK_COMMAND` e emite o JSON de contexto.
@@ -1066,9 +1066,9 @@ Cada tarefa `[CODE]` grava no **PREP** um snapshot do `code-review-graph` (`stat
   - [x] **EXECUTE**: `tools: Bash|mcp__.*(execute|run_in_terminal|shell).*` nos três guards; `guard-secrets` passou a aceitar `;&|` como fronteira após `.env`/`.pem` para cobrir lotes (achado do AC-004).
   - [x] **VERIFY**: `npm run test:tdd -- hooks-any-shell-guards hooks-blocking hooks-permissive` → GREEN; `npx tsc --noEmit` limpo; grafo após: 1750 nós / 14093 arestas / 322 arquivos, `detect-changes --base HEAD` → 64 arquivos, 94 funções, risco 0,65, 0 fluxos afetados (2026-09-17).
   - [x] **VISUAL**: Não aplicável — sem interface; a mudança é em código, hooks e configuração.
-  - [x] **EVIDENCE**: GREEN e delta do grafo registrados nas seções 11–13; `PROJECT.md` e `docs/integrations.md` atualizados; `.specsfy/RULES.md` com as três regras confirmadas; `STACK.md`/`DATABASE.md` sem impacto.
+  - [x] **EVIDENCE**: GREEN e delta do grafo registrados nas seções 11–13; `PROJECT.md` e `docs/integrations.md` atualizados; `.project-context/RULES.md` com as três regras confirmadas; `STACK.md`/`DATABASE.md` sem impacto.
   - [x] **IMPROVE**: Fronteira `;&|` acrescentada ao guard-secrets — sem ela o lote do AC-004 passava.
-  <!-- specsfy:evidence {"task":"T027","refs":["US-001","FR-002","FR-006","NFR-002","AC-001","AC-002","AC-004","AC-005","AC-006"],"files":["resources/hooks/guard-destructive.md","resources/hooks/guard-secrets.md","resources/hooks/protect-authorship.md"],"commands":[{"run":"npm run test:tdd -- hooks-any-shell-guards hooks-blocking hooks-permissive","exit":0},{"run":"npx tsc --noEmit -p .","exit":0}]} -->
+  <!-- framework:evidence {"task":"T027","refs":["US-001","FR-002","FR-006","NFR-002","AC-001","AC-002","AC-004","AC-005","AC-006"],"files":["resources/hooks/guard-destructive.md","resources/hooks/guard-secrets.md","resources/hooks/protect-authorship.md"],"commands":[{"run":"npm run test:tdd -- hooks-any-shell-guards hooks-blocking hooks-permissive","exit":0},{"run":"npx tsc --noEmit -p .","exit":0}]} -->
 
 
 **Checkpoint**: `.maestro/hooks/protect-authorship.sh` com JSON de `run_in_terminal` contendo trailer de agente → exit 2.
@@ -1083,9 +1083,9 @@ Cada tarefa `[CODE]` grava no **PREP** um snapshot do `code-review-graph` (`stat
   - [x] **EXECUTE**: `resources/hooks/guard-docs.md` criado (before-tool, blocking, tools dos guards) bloqueando `build_documentation.mjs` sem `--check` salvo prefixo `MAESTRO_ALLOW_DOCS_BUILD=1`.
   - [x] **VERIFY**: `npm run test:tdd -- hooks-guard-docs hooks-corpus` → GREEN; `npx tsc --noEmit` limpo; grafo após: 1750 nós / 14093 arestas / 322 arquivos, `detect-changes --base HEAD` → 64 arquivos, 94 funções, risco 0,65, 0 fluxos afetados (2026-09-17).
   - [x] **VISUAL**: Não aplicável — sem interface; a mudança é em código, hooks e configuração.
-  - [x] **EVIDENCE**: GREEN e delta do grafo registrados nas seções 11–13; `PROJECT.md` e `docs/integrations.md` atualizados; `.specsfy/RULES.md` com as três regras confirmadas; `STACK.md`/`DATABASE.md` sem impacto.
+  - [x] **EVIDENCE**: GREEN e delta do grafo registrados nas seções 11–13; `PROJECT.md` e `docs/integrations.md` atualizados; `.project-context/RULES.md` com as três regras confirmadas; `STACK.md`/`DATABASE.md` sem impacto.
   - [x] **IMPROVE**: Nenhuma melhoria adicional além da mudança mínima.
-  <!-- specsfy:evidence {"task":"T028","refs":["US-005","FR-008","FR-002","NFR-002","AC-017","AC-018","AC-019"],"files":["resources/hooks/guard-docs.md"],"commands":[{"run":"npm run test:tdd -- hooks-guard-docs hooks-corpus","exit":0},{"run":"npx tsc --noEmit -p .","exit":0}]} -->
+  <!-- framework:evidence {"task":"T028","refs":["US-005","FR-008","FR-002","NFR-002","AC-017","AC-018","AC-019"],"files":["resources/hooks/guard-docs.md"],"commands":[{"run":"npm run test:tdd -- hooks-guard-docs hooks-corpus","exit":0},{"run":"npx tsc --noEmit -p .","exit":0}]} -->
 
 
 **Checkpoint**: comando com o script sem `--check` bloqueado; com `--check` ou com a variável, permitido.
@@ -1100,18 +1100,18 @@ Cada tarefa `[CODE]` grava no **PREP** um snapshot do `code-review-graph` (`stat
   - [x] **EXECUTE**: `ensureStateDir(root)` em `run.ts` cria `.maestro/state/` e a linha única em `.gitignore`, chamada nos dois caminhos de escrita; `STATE_DIR` exportado.
   - [x] **VERIFY**: `npm run test:tdd -- setup-state-dir setup-idempotent` → GREEN; `npx tsc --noEmit` limpo; grafo após: 1750 nós / 14093 arestas / 322 arquivos, `detect-changes --base HEAD` → 64 arquivos, 94 funções, risco 0,65, 0 fluxos afetados (2026-09-17).
   - [x] **VISUAL**: Não aplicável — sem interface; a mudança é em código, hooks e configuração.
-  - [x] **EVIDENCE**: GREEN e delta do grafo registrados nas seções 11–13; `PROJECT.md` e `docs/integrations.md` atualizados; `.specsfy/RULES.md` com as três regras confirmadas; `STACK.md`/`DATABASE.md` sem impacto.
+  - [x] **EVIDENCE**: GREEN e delta do grafo registrados nas seções 11–13; `PROJECT.md` e `docs/integrations.md` atualizados; `.project-context/RULES.md` com as três regras confirmadas; `STACK.md`/`DATABASE.md` sem impacto.
   - [x] **IMPROVE**: Nenhuma melhoria adicional além da mudança mínima.
-  <!-- specsfy:evidence {"task":"T029","refs":["US-002","FR-007","NFR-001","NFR-003","AC-021","AC-022"],"files":["src/setup/run.ts"],"commands":[{"run":"npm run test:tdd -- setup-state-dir setup-idempotent","exit":0},{"run":"npx tsc --noEmit -p .","exit":0}]} -->
+  <!-- framework:evidence {"task":"T029","refs":["US-002","FR-007","NFR-001","NFR-003","AC-021","AC-022"],"files":["src/setup/run.ts"],"commands":[{"run":"npm run test:tdd -- setup-state-dir setup-idempotent","exit":0},{"run":"npx tsc --noEmit -p .","exit":0}]} -->
 
 - [x] T030 [CODE] [US-002] Reescrever resources/hooks/code-review-graph-update.md como script e criar code-review-graph-stop.md — Refs: US-002, FR-003, FR-007, NFR-001, AC-007, AC-008, AC-009, AC-010, AC-020, AC-022, AC-024 — Depends: T007, T008, T009, T010, T020, T022, T024, T026, T029
   - [x] **PREP**: RED dos predecessores confirmado na seção 11; snapshot do grafo antes: 1746 nós / 14061 arestas / 322 arquivos; `docs/` avaliado (documentator só com `--check`).
   - [x] **EXECUTE**: `code-review-graph-update.md` reescrito como script (after-tool, tools amplo) com hash de `git status --porcelain -- . ':(exclude).maestro' ':(exclude).code-review-graph'` (sha256sum/shasum) e execução silenciosa via `MAESTRO_BIN_code_review_graph` ou `command -v`; `code-review-graph-stop.md` com o mesmo fragmento em `stop`. Achado: sem excluir `.maestro/` e `.code-review-graph/` o próprio hook mudava o hash e rodava duas vezes.
   - [x] **VERIFY**: `npm run test:tdd -- hooks-graph-update hooks-corpus setup-dependency-resolution` → GREEN; `npx tsc --noEmit` limpo; grafo após: 1750 nós / 14093 arestas / 322 arquivos, `detect-changes --base HEAD` → 64 arquivos, 94 funções, risco 0,65, 0 fluxos afetados (2026-09-17).
   - [x] **VISUAL**: Não aplicável — sem interface; a mudança é em código, hooks e configuração.
-  - [x] **EVIDENCE**: GREEN e delta do grafo registrados nas seções 11–13; `PROJECT.md` e `docs/integrations.md` atualizados; `.specsfy/RULES.md` com as três regras confirmadas; `STACK.md`/`DATABASE.md` sem impacto.
+  - [x] **EVIDENCE**: GREEN e delta do grafo registrados nas seções 11–13; `PROJECT.md` e `docs/integrations.md` atualizados; `.project-context/RULES.md` com as três regras confirmadas; `STACK.md`/`DATABASE.md` sem impacto.
   - [x] **IMPROVE**: Exclusão de `.maestro/` e `.code-review-graph/` do hash — evita a dupla execução detectada no GREEN.
-  <!-- specsfy:evidence {"task":"T030","refs":["US-002","FR-003","FR-007","NFR-001","AC-007","AC-008","AC-009","AC-010","AC-020","AC-022","AC-024"],"files":["resources/hooks/code-review-graph-update.md","resources/hooks/code-review-graph-stop.md"],"commands":[{"run":"npm run test:tdd -- hooks-graph-update hooks-corpus setup-dependency-resolution","exit":0},{"run":"npx tsc --noEmit -p .","exit":0}]} -->
+  <!-- framework:evidence {"task":"T030","refs":["US-002","FR-003","FR-007","NFR-001","AC-007","AC-008","AC-009","AC-010","AC-020","AC-022","AC-024"],"files":["resources/hooks/code-review-graph-update.md","resources/hooks/code-review-graph-stop.md"],"commands":[{"run":"npm run test:tdd -- hooks-graph-update hooks-corpus setup-dependency-resolution","exit":0},{"run":"npx tsc --noEmit -p .","exit":0}]} -->
 
 
 **Checkpoint**: `sed -i` via `Bash` seguido do hook invoca o binário de teste uma vez; a chamada seguinte, não.
@@ -1126,9 +1126,9 @@ Cada tarefa `[CODE]` grava no **PREP** um snapshot do `code-review-graph` (`stat
   - [x] **EXECUTE**: `graph-hint.md` (before-tool, tools `Grep|Glob`) emite `context` uma vez por `session_id` com marca em `.maestro/state/`; sem grafo, silêncio; estado não gravável só repete a dica.
   - [x] **VERIFY**: `npm run test:tdd -- hooks-graph-hint hooks-corpus` → GREEN; `npx tsc --noEmit` limpo; grafo após: 1750 nós / 14093 arestas / 322 arquivos, `detect-changes --base HEAD` → 64 arquivos, 94 funções, risco 0,65, 0 fluxos afetados (2026-09-17).
   - [x] **VISUAL**: Não aplicável — sem interface; a mudança é em código, hooks e configuração.
-  - [x] **EVIDENCE**: GREEN e delta do grafo registrados nas seções 11–13; `PROJECT.md` e `docs/integrations.md` atualizados; `.specsfy/RULES.md` com as três regras confirmadas; `STACK.md`/`DATABASE.md` sem impacto.
+  - [x] **EVIDENCE**: GREEN e delta do grafo registrados nas seções 11–13; `PROJECT.md` e `docs/integrations.md` atualizados; `.project-context/RULES.md` com as três regras confirmadas; `STACK.md`/`DATABASE.md` sem impacto.
   - [x] **IMPROVE**: Nenhuma melhoria adicional além da mudança mínima.
-  <!-- specsfy:evidence {"task":"T031","refs":["US-003","FR-004","FR-007","NFR-001","AC-011","AC-012","AC-013","AC-022"],"files":["resources/hooks/graph-hint.md"],"commands":[{"run":"npm run test:tdd -- hooks-graph-hint hooks-corpus","exit":0},{"run":"npx tsc --noEmit -p .","exit":0}]} -->
+  <!-- framework:evidence {"task":"T031","refs":["US-003","FR-004","FR-007","NFR-001","AC-011","AC-012","AC-013","AC-022"],"files":["resources/hooks/graph-hint.md"],"commands":[{"run":"npm run test:tdd -- hooks-graph-hint hooks-corpus","exit":0},{"run":"npx tsc --noEmit -p .","exit":0}]} -->
 
 
 **Checkpoint**: dois eventos `Grep` com o mesmo `session_id` → um JSON, depois silêncio.
@@ -1143,16 +1143,16 @@ Cada tarefa `[CODE]` grava no **PREP** um snapshot do `code-review-graph` (`stat
   - [x] **EXECUTE**: `buildHooksFallbackBlock()`/`buildHooksFallbackPointer()` com três itens condicionados a `maestro doctor`; instalados como `hooks-fallback`/`hooks-fallback-pointer` (Claude Code) e `agents-hooks-fallback` (Antigravity) via `createExtension`.
   - [x] **VERIFY**: `npm run test:tdd -- hooks-fallback-block extensions-router-claude-md setup-antigravity` → GREEN; `npx tsc --noEmit` limpo; grafo após: 1750 nós / 14093 arestas / 322 arquivos, `detect-changes --base HEAD` → 64 arquivos, 94 funções, risco 0,65, 0 fluxos afetados (2026-09-17).
   - [x] **VISUAL**: Não aplicável — sem interface; a mudança é em código, hooks e configuração.
-  - [x] **EVIDENCE**: GREEN e delta do grafo registrados nas seções 11–13; `PROJECT.md` e `docs/integrations.md` atualizados; `.specsfy/RULES.md` com as três regras confirmadas; `STACK.md`/`DATABASE.md` sem impacto.
+  - [x] **EVIDENCE**: GREEN e delta do grafo registrados nas seções 11–13; `PROJECT.md` e `docs/integrations.md` atualizados; `.project-context/RULES.md` com as três regras confirmadas; `STACK.md`/`DATABASE.md` sem impacto.
   - [x] **IMPROVE**: Cada item do bloco passou a carregar a condição `maestro doctor` explicitamente (AC-014 reprovava o texto com a condição só no cabeçalho).
-  <!-- specsfy:evidence {"task":"T032","refs":["US-004","FR-005","NFR-003","AC-014","AC-015","AC-016"],"files":["src/extensions/router.ts","src/setup/run.ts","src/targets/claude-code.ts","src/targets/antigravity.ts"],"commands":[{"run":"npm run test:tdd -- hooks-fallback-block extensions-router-claude-md setup-antigravity","exit":0},{"run":"npx tsc --noEmit -p .","exit":0}]} -->
+  <!-- framework:evidence {"task":"T032","refs":["US-004","FR-005","NFR-003","AC-014","AC-015","AC-016"],"files":["src/extensions/router.ts","src/setup/run.ts","src/targets/claude-code.ts","src/targets/antigravity.ts"],"commands":[{"run":"npm run test:tdd -- hooks-fallback-block extensions-router-claude-md setup-antigravity","exit":0},{"run":"npx tsc --noEmit -p .","exit":0}]} -->
 
 
 **Checkpoint**: dois `runSetup` deixam um único bloco `hooks-fallback` e o router intacto.
 
 #### Fase final — Qualidade
 
-- [x] T033 [TEST] Executar regressão completa e rastreabilidade via node .agents/skills/specsfy-06-tdd-bdd/scripts/check_traceability.mjs — Refs: US-001, US-002, US-003, US-004, US-005, FR-001, FR-002, FR-003, FR-004, FR-005, FR-006, FR-007, FR-008, NFR-001, NFR-002, NFR-003, AC-001, AC-002, AC-003, AC-004, AC-005, AC-006, AC-007, AC-008, AC-009, AC-010, AC-011, AC-012, AC-013, AC-014, AC-015, AC-016, AC-017, AC-018, AC-019, AC-020, AC-021, AC-022, AC-023, AC-024 — Depends: T027, T028, T030, T031, T032
+- [x] T033 [TEST] Executar regressão completa e rastreabilidade via node .agents/skills/framework-06-tdd-bdd/scripts/check_traceability.mjs — Refs: US-001, US-002, US-003, US-004, US-005, FR-001, FR-002, FR-003, FR-004, FR-005, FR-006, FR-007, FR-008, NFR-001, NFR-002, NFR-003, AC-001, AC-002, AC-003, AC-004, AC-005, AC-006, AC-007, AC-008, AC-009, AC-010, AC-011, AC-012, AC-013, AC-014, AC-015, AC-016, AC-017, AC-018, AC-019, AC-020, AC-021, AC-022, AC-023, AC-024 — Depends: T027, T028, T030, T031, T032
   - [x] **PREP**: Suítes: `npm run test:tdd` (590 casos), `npx tsc --noEmit`, `check_traceability.mjs --full-chain`; testes antigos adaptados: `hooks-matcher` (matcher dos guards por regex), `hooks-raw-command` (hook de despacho sintético), `setup-dependency-resolution` (script com `command -v`), `hooks-corpus` (8 hooks).
   - [x] **EXECUTE**: `npm run test:tdd` → 578/590 antes do registro manual e 579/590 após (as 11 falhas são o RED da SPEC-0021, `Planned`); `tsc` limpo; `npm version patch` → 2.1.24; `npm run build` OK; `echo '{"approved": true}' | node dist/cli.js setup --target claude-code` → `22 hooks installed`, 8 scripts em `.maestro/hooks/`, bloco `maestro: hooks fallback` em `CLAUDE.md` + ponteiro em `AGENTS.md`, `.maestro/state/` no `.gitignore`. Verificação manual AC-006 executada e registrada na seção 11 (subagente bloqueado pelo `guard-secrets`).
   - [x] **VERIFY**: Zero regressão em teste que passava; 40/40 IDs cobertos; hooks novos presentes em `.claude/settings.json` deste repositório (matchers conferidos).
@@ -1162,7 +1162,7 @@ Cada tarefa `[CODE]` grava no **PREP** um snapshot do `code-review-graph` (`stat
 
 - [x] T034 [DOC] Revisar PROJECT.md, docs/integrations.md e arquivar findings internos — Refs: US-001, US-002, US-003, US-004, US-005 — Depends: T033
   - [x] **PREP**: Lidos `PROJECT.md`, `docs/integrations.md`, `findings/internal/FIND-INT-001` e `FIND-INT-002`.
-  - [x] **EXECUTE**: `PROJECT.md` (parágrafo *Hooks resistentes a qualquer ferramenta*) e `docs/integrations.md` (§3) atualizados fora do bloco documentator; blocos mecânicos regenerados com `MAESTRO_ALLOW_DOCS_BUILD=1` (conteúdo rico intacto, diff conferido) e `--check` verde; FIND-INT-001 e FIND-INT-002 movidos para `findings/archived/` com o fix; `.specsfy/RULES.md` com três regras confirmadas (hook primeiro; grafo antes/depois; documentator só com --check); `STACK.md`/`DATABASE.md` sem impacto.
+  - [x] **EXECUTE**: `PROJECT.md` (parágrafo *Hooks resistentes a qualquer ferramenta*) e `docs/integrations.md` (§3) atualizados fora do bloco documentator; blocos mecânicos regenerados com `MAESTRO_ALLOW_DOCS_BUILD=1` (conteúdo rico intacto, diff conferido) e `--check` verde; FIND-INT-001 e FIND-INT-002 movidos para `findings/archived/` com o fix; `.project-context/RULES.md` com três regras confirmadas (hook primeiro; grafo antes/depois; documentator só com --check); `STACK.md`/`DATABASE.md` sem impacto.
   - [x] **VERIFY**: `monitor_context.mjs --project . --check` → `CURRENT`; `build_documentation.mjs --check` → exit 0 (2026-09-17).
   - [x] **VISUAL**: Não aplicável — documentação textual.
   - [x] **EVIDENCE**: Arquivos revisados e findings arquivados conforme EXECUTE.
@@ -1214,4 +1214,4 @@ Cada tarefa `[CODE]` grava no **PREP** um snapshot do `code-review-graph` (`stat
 - [x] Todos os requisitos possuem evidência de verificação.
 - [x] Todas as tarefas na seção 14 estão concluídas.
 - [x] Testes e checks estáticos disponíveis passam.
-- [x] `PROJECT.md` e `docs/integrations.md` revisados para os hooks novos; `findings/internal/FIND-INT-001` e `FIND-INT-002` arquivados; `.specsfy/STACK.md`/`DATABASE.md` sem impacto.
+- [x] `PROJECT.md` e `docs/integrations.md` revisados para os hooks novos; `findings/internal/FIND-INT-001` e `FIND-INT-002` arquivados; `.project-context/STACK.md`/`DATABASE.md` sem impacto.

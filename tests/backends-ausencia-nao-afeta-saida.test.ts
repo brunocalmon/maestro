@@ -9,14 +9,14 @@ const fullEnv = {
 };
 
 describe("AC-081 — an absent supported backend doesn't affect the exit code", () => {
-  // SPECSFY: US-030 FR-030 PR-032 NFR-031 AC-081
+  // TRACEABILITY: US-030 FR-030 PR-032 NFR-031 AC-081
   it("no agent backend present still exits with code zero, when npm/python are complete", () => {
     const { env: backendEnv } = sourceFake({});
     const r = inspectDependencies(fullEnv, undefined, backendEnv);
     expect(r.exitCode).toBe(0);
   });
 
-  // SPECSFY: US-030 FR-030 PR-032 NFR-031 AC-081
+  // TRACEABILITY: US-030 FR-030 PR-032 NFR-031 AC-081
   it("the five supported ones appear named as absent", () => {
     const { env: backendEnv } = sourceFake({});
     const r = inspectDependencies(fullEnv, undefined, backendEnv);

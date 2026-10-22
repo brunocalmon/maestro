@@ -13,18 +13,18 @@ describe("AC-041 — whoever ran it can name the run", () => {
     return { report: r.report, recorded: rec["trace"] as string };
   };
 
-  // SPECSFY: US-040 FR-041 AC-041
+  // TRACEABILITY: US-040 FR-041 AC-041
   it("the report contains the recorded identifier", () => {
     const { report, recorded } = run();
     expect(report).toContain(recorded);
   });
 
-  // SPECSFY: US-040 FR-041 AC-041
+  // TRACEABILITY: US-040 FR-041 AC-041
   it("the report still describes the hooks", () => {
     expect(run().report).toMatch(/hooks/);
   });
 
-  // SPECSFY: US-040 FR-041 AC-041
+  // TRACEABILITY: US-040 FR-041 AC-041
   it("the cited identifier is the same as the record's, not a literal", () => {
     const a = run(), b = run();
     expect(a.report).toContain(a.recorded);

@@ -7,19 +7,19 @@ import { disposableProject, emptyDirectory } from "./mcp-fixtures";
 describe("AC-011 — a path that doesn't exist is refused", () => {
   const missing = join(emptyDirectory(), "does-not-exist", "not-even-a-bit");
 
-  // SPECSFY: US-002 FR-003 AC-011
+  // TRACEABILITY: US-002 FR-003 AC-011
   it("refuses the path", () => {
     expect(validateRoot(missing).ok).toBe(false);
   });
 
-  // SPECSFY: US-002 FR-006 AC-011
+  // TRACEABILITY: US-002 FR-006 AC-011
   it("states the path wasn't found", () => {
     const r = validateRoot(missing);
     expect(r.ok).toBe(false);
     if (!r.ok) expect(r.reason).toMatch(/not found/i);
   });
 
-  // SPECSFY: US-002 NFR-001 AC-011
+  // TRACEABILITY: US-002 NFR-001 AC-011
   it("doesn't create any directory to accommodate it", () => {
     validateRoot(missing);
     expect(existsSync(missing)).toBe(false);
@@ -27,19 +27,19 @@ describe("AC-011 — a path that doesn't exist is refused", () => {
 });
 
 describe("AC-012 — a relative path is refused", () => {
-  // SPECSFY: US-002 FR-003 AC-012
+  // TRACEABILITY: US-002 FR-003 AC-012
   it("refuses instead of resolving against some base", () => {
     expect(validateRoot("./some/project").ok).toBe(false);
   });
 
-  // SPECSFY: US-002 FR-002 AC-012
+  // TRACEABILITY: US-002 FR-002 AC-012
   it("asks for an absolute path in the explanation", () => {
     const r = validateRoot("./some/project");
     expect(r.ok).toBe(false);
     if (!r.ok) expect(r.reason).toMatch(/absolut/i);
   });
 
-  // SPECSFY: US-002 NFR-003 AC-012
+  // TRACEABILITY: US-002 NFR-003 AC-012
   it("refuses even when the relative path would exist from the working directory", () => {
     // The name is chosen to exist under the valid root, so resolving
     // against the working directory would produce a plausible, silent write.
@@ -50,12 +50,12 @@ describe("AC-012 — a relative path is refused", () => {
 });
 
 describe("AC-003 — validation accepts a real root and refuses a directory with no marker", () => {
-  // SPECSFY: US-002 FR-003 AC-003
+  // TRACEABILITY: US-002 FR-003 AC-003
   it("accepts a root with a project marker", () => {
     expect(validateRoot(disposableProject()).ok).toBe(true);
   });
 
-  // SPECSFY: US-002 FR-003 AC-003
+  // TRACEABILITY: US-002 FR-003 AC-003
   it("refuses a directory with no marker at all", () => {
     expect(validateRoot(emptyDirectory()).ok).toBe(false);
   });

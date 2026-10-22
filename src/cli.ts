@@ -10,10 +10,7 @@ import { KNOWN_TARGETS } from "./hooks/detect.js";
 import { readRecordFile } from "./setup/write.js";
 import { RECORD_PATH } from "./setup/record.js";
 import { realSkillsExecutor } from "./skills/executor.js";
-import { realSpecsfyExecutor } from "./specsfy/executor.js";
 import { realBridgeEnvironment } from "./setup/bridge.js";
-import { assessConfiguration } from "./setup/layout.js";
-import { configurationContractId, writeDeferral } from "./setup/defer.js";
 import { readVersion } from "./version.js";
 import { detectBackends, realBackendEnvironment } from "./backends/detect.js";
 import { readAgentConfig } from "./agents/read.js";
@@ -68,9 +65,9 @@ const USAGE_DOCTOR =
   "Reports every dependency this project's layers need, whether each is present,\n" +
   "and its version. Exits non-zero when something required is missing.";
 const USAGE_SETUP =
-  "usage: maestro setup [--target claude-code] [--defer-conversational]\n\n" +
+  "usage: maestro setup [--target claude-code]\n\n" +
   "Installs the hooks that connect this project's subsystems to the agent's\n" +
-  "cycle, plus the skills and the Specsfy framework, then records the\n" +
+  "cycle, plus the skills, then records the\n" +
   "installation so a later run is a no-op when nothing changed.\n\n" +
   "  --target <name>   Configure this editor explicitly, skipping filesystem-\n" +
   "                     evidence detection. Known targets: " +
@@ -79,13 +76,6 @@ const USAGE_SETUP =
   "                     Required on a project that has never been configured\n" +
   "                     for it yet — evidence-based detection can never find\n" +
   "                     .claude/ before this command has run once to create it.\n\n" +
-  "  --defer-conversational   Deliberately turns off the setup-gate chat block\n" +
-  "                     (SPEC-0026) until the configuration contract changes,\n" +
-  "                     without running specsfy-setup or\n" +
-  "                     setup-matt-pocock-skills. Only takes effect run\n" +
-  "                     directly in a terminal — an agent tool trying to run\n" +
-  "                     this flag on someone's behalf is refused by a guard\n" +
-  "                     hook. Does nothing else; skips the rest of setup.\n\n" +
   "Without --target, detection falls back to filesystem evidence and does\n" +
   "nothing when none is found — that's a normal exit, not a failure.\n\n" +
   "Prompts for approval on a real terminal; reads a JSON document\n" +
@@ -150,7 +140,7 @@ const USAGE_TOP =
   "Commands:\n" +
   "  version               Print the installed version.\n" +
   "  doctor                Report every dependency this project's layers need.\n" +
-  "  setup [--target ...]  Configure this project: hooks, skills, Specsfy.\n" +
+  "  setup [--target ...]  Configure this project: hooks and skills.\n" +
   "  recommend [options]   Recommend an agent backend and local model.\n" +
   "  plan --task \"...\"     Assemble an orchestration plan, pending approval.\n" +
   "  run <execution>       Delegate an approved plan's agents.\n" +
@@ -209,18 +199,10 @@ const SETUP_FLAGS = new Set(["target"]);
  * expected to pass this explicitly, from its own client handshake, rather
  * than a person needing to type it by hand every time.
  */
-const DEFER_CONVERSATIONAL_FLAG = "--defer-conversational";
-
 function formatSetup(args: readonly string[] = []): CommandOutcome {
   if (hasHelp(args)) return { output: USAGE_SETUP, exitCode: 0 };
 
-  // Boolean, unlike the rest of SETUP_FLAGS: parsed separately so
-  // parseFlags's "next token is the value" convention doesn't swallow
-  // whatever follows it on the command line.
-  const defer = args.includes(DEFER_CONVERSATIONAL_FLAG);
-  const rest = defer ? args.filter((a) => a !== DEFER_CONVERSATIONAL_FLAG) : args;
-
-  const flags = parseFlags(rest);
+  const flags = parseFlags(args);
   const unknown = Object.keys(flags).filter((f) => !SETUP_FLAGS.has(f));
   if (unknown.length > 0) {
     // The incident this guards: --help alone, with nothing recognizable
@@ -230,29 +212,6 @@ function formatSetup(args: readonly string[] = []): CommandOutcome {
     return {
       output: `${USAGE_SETUP}\n\nunrecognized: --${unknown.join(", --")}`,
       exitCode: 2,
-    };
-  }
-
-  if (defer) {
-    // Standalone action (SPEC-0026, FR-003): only records the deferral,
-    // never runs the rest of setup — combining the two would blur "I looked
-    // at what's missing and chose to wait" with "the installer happened to
-    // touch the same run".
-    const root = process.cwd();
-    const assessment = assessConfiguration(root);
-    const nothingPending = assessment.missingTraces.length === 0 && !assessment.missingSkillSection;
-    if (nothingPending) {
-      return {
-        output: "maestro: nothing pending — specsfy-setup and setup-matt-pocock-skills traces are already present, so there is nothing to defer.",
-        exitCode: 0,
-      };
-    }
-    writeDeferral(root, configurationContractId(root));
-    return {
-      output:
-        "maestro: conversational setup deferred. The setup-gate chat block is off until the configuration contract changes " +
-        "(or run /specsfy-setup and /setup-matt-pocock-skills to re-enable it for real).",
-      exitCode: 0,
     };
   }
 
@@ -273,7 +232,6 @@ function formatSetup(args: readonly string[] = []): CommandOutcome {
     previous,
     target,
     skills: { execute: realSkillsExecutor() },
-    specsfy: { execute: realSpecsfyExecutor() },
     bridgeEnv: realBridgeEnvironment(),
     approval: {},
   });

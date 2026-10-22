@@ -3,15 +3,15 @@ import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 
 const manifest = () => JSON.parse(readFileSync(resolve(__dirname, "../package.json"), "utf8"));
-const NPM_SUBSYSTEMS = ["@promovaweb/specsfy", "context-mode"];
+const NPM_SUBSYSTEMS = ["context-mode"];
 
 describe("AC-001 — a clean install completes", () => {
-  // SPECSFY: US-001 FR-001 AC-001
+  // TRACEABILITY: US-001 FR-001 AC-001
   it("declares the product package's name", () => {
     expect(manifest().name).toBe("@brunocalmon/maestro");
   });
 
-  // SPECSFY: US-001 FR-004 AC-001
+  // TRACEABILITY: US-001 FR-004 AC-001
   it("declares the two npm subsystem dependencies at an exact version", () => {
     const deps = manifest().dependencies ?? {};
     // FR-004 requires the two subsystems to be declared and pinned, not
@@ -24,7 +24,7 @@ describe("AC-001 — a clean install completes", () => {
     }
   });
 
-  // SPECSFY: US-001 FR-004 NFR-002 AC-001
+  // TRACEABILITY: US-001 FR-004 NFR-002 AC-001
   it("declares no dependency with a version range", () => {
     const prod = manifest().dependencies ?? {};
     // Without this guard the next assertion would be trivially true over
@@ -35,7 +35,7 @@ describe("AC-001 — a clean install completes", () => {
     expect(ranged).toEqual([]);
   });
 
-  // SPECSFY: US-001 FR-003 AC-001
+  // TRACEABILITY: US-001 FR-003 AC-001
   it("brings the test runner installable via a clean install", () => {
     expect(manifest().devDependencies?.vitest).toBeDefined();
   });

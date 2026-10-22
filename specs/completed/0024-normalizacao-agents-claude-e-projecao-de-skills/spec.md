@@ -2,7 +2,7 @@
 
 | Campo | Valor |
 | --- | --- |
-| Formato | Specsfy/2.0 |
+| Formato | former project tool/2.0 |
 | ID | SPEC-0024 |
 | Slug | 0024-normalizacao-agents-claude-e-projecao-de-skills |
 | Status | Complete |
@@ -24,16 +24,16 @@
 
 #### Problema
 
-Três ferramentas escrevem instruções em direções diferentes no mesmo projeto: o Specsfy coloca o conteúdo em `AGENTS.md` e uma linha `@.specsfy/Spec.md` em `CLAUDE.md`; o maestro faz o inverso (`router`, `config-language-rule` e `hooks-fallback` em `CLAUDE.md`, ponteiros em prosa em `AGENTS.md`); a skill `setup-matt-pocock-skills` escreve `## Agent skills` só em `CLAUDE.md` quando ele existe. Resultado: `AGENTS.md`, o arquivo genérico que outras IDEs leem, fica incompleto, e `CLAUDE.md` acumula conteúdo duplicado por ferramenta. Além disso, os especialistas do Specsfy são instalados com `--agent universal` em `.agents/skills`, pasta que o Claude Code 2.1.273 não lê (FIND-EXT-002): ficam invisíveis na sessão, inclusive em sessão nova; o maestro instala o matt-pocock em `.claude/skills` e só sincroniza `.claude → .agents`, nunca o inverso.
+Três ferramentas escrevem instruções em direções diferentes no mesmo projeto: o former project tool coloca o conteúdo em `AGENTS.md` e uma linha `@.project-context/Spec.md` em `CLAUDE.md`; o maestro faz o inverso (`router`, `config-language-rule` e `hooks-fallback` em `CLAUDE.md`, ponteiros em prosa em `AGENTS.md`); a skill `setup-matt-pocock-skills` escreve `## Agent skills` só em `CLAUDE.md` quando ele existe. Resultado: `AGENTS.md`, o arquivo genérico que outras IDEs leem, fica incompleto, e `CLAUDE.md` acumula conteúdo duplicado por ferramenta. Além disso, os especialistas do former project tool são instalados com `--agent universal` em `.agents/skills`, pasta que o Claude Code 2.1.273 não lê (FIND-EXT-002): ficam invisíveis na sessão, inclusive em sessão nova; o maestro instala o matt-pocock em `.claude/skills` e só sincroniza `.claude → .agents`, nunca o inverso.
 
 #### Resultado desejado
 
-Uma única direção: o conteúdo inteiro do maestro vive em `AGENTS.md`; `CLAUDE.md` recebe uma única linha `@AGENTS.md` (import nativo do Claude Code). Projetos já instalados migram sozinhos quando o checksum bate; divergência vai para quarentena. O bloco `## Agent skills` do matt-pocock é movido para `AGENTS.md` quando ficou em `CLAUDE.md` e passa a ser rastreado como conteúdo de terceiro (nunca reescrito pelo maestro); blocos `specsfy:*` nunca são tocados; conteúdo humano desconhecido não é movido. `.agents/skills` vira a única fonte canônica de skills (matt-pocock passa a `-a universal`), e o maestro projeta `.agents → .claude` no `setup` (com registro por checksum, sem sobrescrever cópia editada à mão) e por hooks de cópia aditiva no início da sessão e após `skills add`/`specsfy skills`.
+Uma única direção: o conteúdo inteiro do maestro vive em `AGENTS.md`; `CLAUDE.md` recebe uma única linha `@AGENTS.md` (import nativo do Claude Code). Projetos já instalados migram sozinhos quando o checksum bate; divergência vai para quarentena. O bloco `## Agent skills` do matt-pocock é movido para `AGENTS.md` quando ficou em `CLAUDE.md` e passa a ser rastreado como conteúdo de terceiro (nunca reescrito pelo maestro); blocos `framework:*` nunca são tocados; conteúdo humano desconhecido não é movido. `.agents/skills` vira a única fonte canônica de skills (matt-pocock passa a `-a universal`), e o maestro projeta `.agents → .claude` no `setup` (com registro por checksum, sem sobrescrever cópia editada à mão) e por hooks de cópia aditiva no início da sessão e após `skills add`/`former tool skills`.
 
 #### Métricas de sucesso
 
 - Após `maestro setup` num projeto novo, `AGENTS.md` contém os blocos completos do maestro e `CLAUDE.md` contém `@AGENTS.md` exatamente uma vez — verificável por teste.
-- Um projeto instalado com a direção antiga e checksums íntegros migra num único `setup`, sem duplicar conteúdo e sem tocar em blocos `specsfy:*` — verificável por teste com fixture do formato antigo.
+- Um projeto instalado com a direção antiga e checksums íntegros migra num único `setup`, sem duplicar conteúdo e sem tocar em blocos `framework:*` — verificável por teste com fixture do formato antigo.
 - Uma skill presente só em `.agents/skills` aparece em `.claude/skills` após o `setup`, após o hook de sessão e após um `skills add` na mesma sessão — verificável por teste de subprocesso dos scripts.
 - Zero cópia editada à mão sobrescrita: uma skill alterada em `.claude/skills` permanece e é reportada — verificável por teste.
 
@@ -41,7 +41,7 @@ Uma única direção: o conteúdo inteiro do maestro vive em `AGENTS.md`; `CLAUD
 
 #### Researchs executados
 
-- **R-001** [critical] Só o maestro está invertido: Specsfy escreve conteúdo em AGENTS.md e um import em CLAUDE.md; matt-pocock escreve só em CLAUDE.md quando ele existe — Verdict: verified — Confidence: high — Evidence: research/direcao-dos-blocos-e-diretorios-de-skills.md#blocos-por-ferramenta — Budget: 1/3
+- **R-001** [critical] Só o maestro está invertido: former project tool escreve conteúdo em AGENTS.md e um import em CLAUDE.md; matt-pocock escreve só em CLAUDE.md quando ele existe — Verdict: verified — Confidence: high — Evidence: research/direcao-dos-blocos-e-diretorios-de-skills.md#blocos-por-ferramenta — Budget: 1/3
   - Tabela levantada dos arquivos deste repositório, de `router.ts`, dos adaptadores e da skill instalada.
 - **R-002** [critical] No CLI skills, `-a universal` escreve em `.agents/skills` e `-a claude-code` em `.claude/skills`, com o mesmo conteúdo sob `--copy` — Verdict: verified — Confidence: high — Evidence: research/direcao-dos-blocos-e-diretorios-de-skills.md#diretorios-por-agente-no-cli-skills — Budget: 1/3
   - Lido em `node_modules/skills/dist/cli.mjs` (definições `universal` e `claude-code`).
@@ -72,9 +72,9 @@ Uma única direção: o conteúdo inteiro do maestro vive em `AGENTS.md`; `CLAUD
 - **Q**: Qual a forma da referência em `CLAUDE.md`? → **A**: uma única linha `@AGENTS.md`, num bloco anchorado próprio (`agents-import`), sem ponteiros por bloco (Q10).
 - **Q**: Migrar projetos já instalados? → **A**: sim, automaticamente quando o checksum registrado bate; divergência vai para quarentena (Q11).
 - **Q**: Como interceptar o matt-pocock? → **A**: router instrui o agente; `setup` move `## Agent skills` de `CLAUDE.md` para `AGENTS.md` e registra como *foreign* (Q12, Q14).
-- **Q**: O que pode ser movido? → **A**: só assinaturas conhecidas de uma tabela; `specsfy:*` nunca; o resto o doctor reporta (Q13).
+- **Q**: O que pode ser movido? → **A**: só assinaturas conhecidas de uma tabela; `framework:*` nunca; o resto o doctor reporta (Q13).
 - **Q**: Fonte canônica de skills? → **A**: `.agents/skills`; matt-pocock com `-a universal`; projeção sempre `.agents → .claude` (Q17, Q23).
-- **Q**: Quando projetar? → **A**: `setup` (projeção completa com registro) + hooks `SessionStart` e `PostToolUse` após `skills add`/`specsfy skills` (cópia aditiva) (Q24).
+- **Q**: Quando projetar? → **A**: `setup` (projeção completa com registro) + hooks `SessionStart` e `PostToolUse` após `skills add`/`former tool skills` (cópia aditiva) (Q24).
 - **Q**: Cópia editada à mão? → **A**: nunca sobrescrita; reportada (Q25).
 
 #### Dúvidas abertas
@@ -91,13 +91,13 @@ Uma única direção: o conteúdo inteiro do maestro vive em `AGENTS.md`; `CLAUD
 - Instrução no router para skills que editam `CLAUDE.md`.
 - `TARGET_AGENT = "universal"` para o instalador de skills; `inspectSkills` e o registro passam a olhar `.agents/skills`.
 - Projeção `.agents/skills → .claude/skills` no `setup`, com `projections` em `install.json` (nome, checksum) e proteção de cópia editada.
-- Hooks `skills-project-session` (`session-start`) e `skills-project` (`after-tool` nas ferramentas de shell, disparando só quando o comando contém `skills add` ou `specsfy skills`): cópia aditiva em shell, nunca sobrescrevendo.
+- Hooks `skills-project-session` (`session-start`) e `skills-project` (`after-tool` nas ferramentas de shell, disparando só quando o comando contém `skills add` ou `former tool skills`): cópia aditiva em shell, nunca sobrescrevendo.
 - Remoção do `syncSkillsToTargetDirs` (`.claude → .agents`).
 
 #### Fora de escopo
 
 - Doctor (BACKLOG-0013): esta spec define o que ele confere (conteúdo não padronizado em `CLAUDE.md`, projeções divergentes).
-- Alterar a skill `setup-matt-pocock-skills` ou o Specsfy upstream.
+- Alterar a skill `setup-matt-pocock-skills` ou o former project tool upstream.
 - Ler `.agents/skills` no Claude Code (FIND-EXT-002, fora do controle).
 - Projeção para targets que já leem `.agents/skills` (Antigravity): não copiar.
 
@@ -105,12 +105,12 @@ Uma única direção: o conteúdo inteiro do maestro vive em `AGENTS.md`; `CLAUD
 
 - **Pessoa que mantém o projeto**: usa Claude Code e outras IDEs; quer um `AGENTS.md` completo e um `CLAUDE.md` mínimo.
 - **Agente no Claude Code**: lê `CLAUDE.md` (que importa `AGENTS.md`) e usa skills de `.claude/skills`.
-- **Skills de terceiros** (`setup-matt-pocock-skills`, `specsfy-setup`): escrevem instruções e instalam especialistas durante a conversa.
+- **Skills de terceiros** (`setup-matt-pocock-skills`, `removed-project-setup`): escrevem instruções e instalam especialistas durante a conversa.
 - **`maestro setup`**: instala, migra, projeta e registra.
 
 ### 4. Princípios e restrições do projeto
 
-- **PR-001**: O maestro nunca edita dentro de blocos delimitados de outras ferramentas (`specsfy:*`) e nunca move conteúdo sem assinatura conhecida.
+- **PR-001**: O maestro nunca edita dentro de blocos delimitados de outras ferramentas (`framework:*`) e nunca move conteúdo sem assinatura conhecida.
 - **PR-002**: Conteúdo de terceiro movido é rastreado como *foreign*: checksum para detectar mudança, nunca reescrita nem reparo pelo maestro.
 - **PR-003**: Migração só com checksum íntegro; divergência vai para `.maestro/quarantine/` pelo mecanismo existente (SPEC-0011).
 - **PR-004**: `.agents/skills` é a fonte canônica; `.claude/skills` é projeção por target. Uma projeção nunca sobrescreve conteúdo que difere do registrado.
@@ -123,7 +123,7 @@ Uma única direção: o conteúdo inteiro do maestro vive em `AGENTS.md`; `CLAUD
 
 Como pessoa que mantém o projeto, quero o conteúdo do maestro em `AGENTS.md` e apenas `@AGENTS.md` em `CLAUDE.md`, para que qualquer IDE veja as instruções completas e o Claude Code não acumule duplicatas.
 
-**Por que P1**: inconsistência estrutural com o Specsfy e com IDEs genéricas (FIND-INT-003).
+**Por que P1**: inconsistência estrutural com o former project tool e com IDEs genéricas (FIND-INT-003).
 **Teste independente**: `runSetup` em raiz nova e em fixture da direção antiga; inspecionar os dois arquivos e o registro.
 **Requisitos**: FR-001, FR-002
 
@@ -137,7 +137,7 @@ Como pessoa que mantém o projeto, quero que o `## Agent skills` escrito em `CLA
 
 #### US-003 — Skills visíveis no Claude Code a partir de `.agents/skills` (P1)
 
-Como pessoa que instala especialistas do Specsfy durante a conversa, quero que eles apareçam em `.claude/skills` sem passo manual e sem perder edições locais, para que o Claude Code os enxergue na mesma sessão.
+Como pessoa que instala especialistas do former project tool durante a conversa, quero que eles apareçam em `.claude/skills` sem passo manual e sem perder edições locais, para que o Claude Code os enxergue na mesma sessão.
 
 **Por que P1**: especialistas invisíveis hoje (FIND-EXT-002), inclusive em sessão nova.
 **Teste independente**: skill só em `.agents/skills` → após `runSetup`/hooks, presente em `.claude/skills`; edição local preservada.
@@ -224,7 +224,7 @@ Feature: Divergência
     And o relatório informa a quarentena
 ```
 
-#### AC-006 — Blocos do Specsfy e conteúdo humano intocados
+#### AC-006 — Blocos do former project tool e conteúdo humano intocados
 
 **Cobre**: US-001, FR-002, NFR-002
 
@@ -233,9 +233,9 @@ Feature: Divergência
 Feature: Preservação
 
   Scenario: migração com conteúdo alheio
-    Given uma raiz na direção antiga cujo CLAUDE.md tem um bloco specsfy:framework e um parágrafo humano sem assinatura, e cujo AGENTS.md tem um bloco specsfy:framework
+    Given uma raiz na direção antiga cujo CLAUDE.md tem um bloco former-tool:context e um parágrafo humano sem assinatura, e cujo AGENTS.md tem um bloco former-tool:context
     When maestro setup roda
-    Then os blocos specsfy:framework dos dois arquivos permanecem byte a byte iguais
+    Then os blocos former-tool:context dos dois arquivos permanecem byte a byte iguais
     And o parágrafo humano permanece em CLAUDE.md
 ```
 
@@ -341,10 +341,10 @@ Feature: Fonte canônica
 Feature: Projeção no setup
 
   Scenario: skill presente só em .agents
-    Given uma raiz com .agents/skills/specsfy-specialist-x/SKILL.md e sem .claude/skills/specsfy-specialist-x
+    Given uma raiz com .agents/skills/framework-specialist-x/SKILL.md e sem .claude/skills/framework-specialist-x
     When maestro setup roda com target claude-code
-    Then .claude/skills/specsfy-specialist-x/SKILL.md existe com o mesmo conteúdo
-    And .maestro/install.json lista projections com nome specsfy-specialist-x e checksum
+    Then .claude/skills/framework-specialist-x/SKILL.md existe com o mesmo conteúdo
+    And .maestro/install.json lista projections com nome framework-specialist-x e checksum
 ```
 
 #### AC-014 — Cópia editada à mão não é sobrescrita e é reportada
@@ -410,7 +410,7 @@ Feature: Cópia aditiva no início da sessão
     And nada é escrito em stdout
 ```
 
-#### AC-018 — Hook pós-ferramenta copia após `skills add` ou `specsfy skills`
+#### AC-018 — Hook pós-ferramenta copia após `skills add` ou `former tool skills`
 
 **Cobre**: US-003, FR-007, NFR-001
 
@@ -420,7 +420,7 @@ Feature: Cópia aditiva após instalação
 
   Scenario: comando de instalação detectado
     Given uma raiz com .claude/ e .agents/skills/c sem cópia em .claude
-    When o script skills-project.sh recebe um evento PostToolUse de Bash com command "npx skills add promovaweb/specsfy --skill x"
+    When o script skills-project.sh recebe um evento PostToolUse de Bash com command "npx skills add removed-project-integration --skill x"
     Then .claude/skills/c passa a existir
     When ele recebe um evento com command "ls"
     Then nenhuma cópia acontece
@@ -478,17 +478,17 @@ Feature: Direção única das skills
 #### Funcionais
 
 - **FR-001**: O setup deve instalar `router`, `config-language-rule` e `hooks-fallback` em `AGENTS.md` para todos os targets, com os mesmos nomes de artefato, e em `CLAUDE.md` (target Claude Code) um bloco `agents-import` cujo conteúdo é exatamente `@AGENTS.md`.
-- **FR-002**: O setup deve migrar projetos na direção antiga: artefatos com checksum íntegro têm o bloco removido de `CLAUDE.md`, inserido em `AGENTS.md` e o `target` atualizado no registro; ponteiros (`agents-pointer`, `config-language-pointer`, `hooks-fallback-pointer`) são removidos do arquivo e do registro; artefatos `agents-*` do Antigravity são renomeados para os nomes compartilhados; divergência vai para quarentena com restauração do conteúdo registrado; blocos `specsfy:*` e conteúdo sem assinatura não são tocados.
+- **FR-002**: O setup deve migrar projetos na direção antiga: artefatos com checksum íntegro têm o bloco removido de `CLAUDE.md`, inserido em `AGENTS.md` e o `target` atualizado no registro; ponteiros (`agents-pointer`, `config-language-pointer`, `hooks-fallback-pointer`) são removidos do arquivo e do registro; artefatos `agents-*` do Antigravity são renomeados para os nomes compartilhados; divergência vai para quarentena com restauração do conteúdo registrado; blocos `framework:*` e conteúdo sem assinatura não são tocados.
 - **FR-003**: O setup deve manter uma tabela de assinaturas de terceiros (inicial: título `## Agent skills`, origem `mattpocock/skills`) e mover a seção correspondente de `CLAUDE.md` para `AGENTS.md` (até o próximo título de nível 2); seção idêntica à já existente em `AGENTS.md` é apenas removida de `CLAUDE.md`; seção diferente da existente é mantida e relatada; o router instrui skills a escrever em `AGENTS.md`.
 - **FR-004**: Conteúdo movido é registrado com categoria `foreign`, `origin` e checksum; o maestro nunca reescreve, repara nem quarentena conteúdo `foreign`; mudança é apenas relatada.
 - **FR-005**: O instalador de skills deve usar `-a universal --copy`, `inspectSkills` e o registro devem enumerar `.agents/skills`, e o sync `.claude → .agents` deve deixar de existir.
 - **FR-006**: Para targets que não leem `.agents/skills` (Claude Code), o setup deve projetar cada diretório de `.agents/skills` para `.claude/skills`, registrando `projections` (`name`, `checksum`) em `install.json`; cópia cujo conteúdo difere do registrado não é sobrescrita e é relatada; cópia íntegra é atualizada quando a fonte muda.
-- **FR-007**: Os hooks `skills-project-session` (`session-start`) e `skills-project` (`after-tool`, `tools` das ferramentas de shell, ativo só quando o comando contém `skills add` ou `specsfy skills`) devem copiar para `.claude/skills` os diretórios de `.agents/skills` ainda ausentes, sem sobrescrever, sem stdout, e ficar inertes sem `.claude/` ou sem `.agents/skills`.
+- **FR-007**: Os hooks `skills-project-session` (`session-start`) e `skills-project` (`after-tool`, `tools` das ferramentas de shell, ativo só quando o comando contém `skills add` ou `former tool skills`) devem copiar para `.claude/skills` os diretórios de `.agents/skills` ainda ausentes, sem sobrescrever, sem stdout, e ficar inertes sem `.claude/` ou sem `.agents/skills`.
 
 #### Não funcionais
 
 - **NFR-001**: Idempotência — dois `setup` consecutivos deixam `AGENTS.md`, `CLAUDE.md`, `.claude/skills` e o registro idênticos; a migração acontece uma única vez. **Verificação**: testes com dupla execução e comparação byte a byte.
-- **NFR-002**: Preservação — nenhum bloco `specsfy:*`, conteúdo humano sem assinatura, conteúdo `foreign` ou cópia de skill editada é reescrito; divergências do maestro vão para quarentena. **Verificação**: fixtures com cada tipo de conteúdo.
+- **NFR-002**: Preservação — nenhum bloco `framework:*`, conteúdo humano sem assinatura, conteúdo `foreign` ou cópia de skill editada é reescrito; divergências do maestro vão para quarentena. **Verificação**: fixtures com cada tipo de conteúdo.
 - **NFR-003**: Contexto mínimo — `CLAUDE.md` recebe do maestro uma única linha; hooks de projeção não escrevem em stdout; Antigravity não recebe projeção. **Verificação**: testes sobre o texto de `CLAUDE.md` e stdout dos scripts.
 
 #### Erros e casos-limite
@@ -676,27 +676,27 @@ tests/
 
 | IDs | BDD de referência | Teste TDD informado pelo BDD | RED observado | GREEN observado | Refactor/regressão |
 | --- | --- | --- | --- | --- | --- |
-| US-001, FR-001, NFR-001, NFR-003, AC-001 | AC-001 na seção 6 | caso 1 em tests/setup-instructions-direction.test.ts com marcador próprio `SPECSFY:` | RED 2026-09-17: `block(AGENTS.md, router)` é `null`: o router ainda é instalado em CLAUDE.md | GREEN 2026-09-17: `npm run test:tdd` focal verde | Regressão: 600/611, falhas restantes são o RED da SPEC-0021 |
-| US-001, FR-001, NFR-001, AC-002 | AC-002 na seção 6 | caso 2 em tests/setup-instructions-direction.test.ts com marcador próprio `SPECSFY:` | RED 2026-09-17: `@AGENTS.md` aparece 0 vezes em CLAUDE.md | GREEN 2026-09-17: `npm run test:tdd` focal verde | Regressão: 600/611, falhas restantes são o RED da SPEC-0021 |
-| US-001, FR-001, NFR-003, AC-003 | AC-003 na seção 6 | caso 3 em tests/setup-instructions-direction.test.ts com marcador próprio `SPECSFY:` | RED 2026-09-17: Antigravity registra `agents-router`, não `router` | GREEN 2026-09-17: `npm run test:tdd` focal verde | Regressão: 600/611, falhas restantes são o RED da SPEC-0021 |
-| US-001, FR-002, NFR-001, NFR-002, AC-004 | AC-004 na seção 6 | caso 1 em tests/extensions-migrate-direction.test.ts com marcador próprio `SPECSFY:` | RED 2026-09-17: router permanece em CLAUDE.md e os ponteiros em AGENTS.md; sem migração | GREEN 2026-09-17: `npm run test:tdd` focal verde | Regressão: 600/611, falhas restantes são o RED da SPEC-0021 |
-| US-001, FR-002, NFR-002, AC-005 | AC-005 na seção 6 | caso 2 em tests/extensions-migrate-direction.test.ts com marcador próprio `SPECSFY:` | RED 2026-09-17: nenhum arquivo de quarentena para o router editado | GREEN 2026-09-17: `npm run test:tdd` focal verde | Regressão: 600/611, falhas restantes são o RED da SPEC-0021 |
-| US-001, FR-002, NFR-002, AC-006 | AC-006 na seção 6 | caso 3 em tests/extensions-migrate-direction.test.ts com marcador próprio `SPECSFY:` | RED 2026-09-17: conteúdo alheio preservado, mas a migração não acontece (router segue em CLAUDE.md) — caso refinado para exigir a migração | GREEN 2026-09-17: `npm run test:tdd` focal verde | Regressão: 600/611, falhas restantes são o RED da SPEC-0021 |
-| US-001, FR-002, NFR-001, AC-007 | AC-007 na seção 6 | caso 4 em tests/extensions-migrate-direction.test.ts com marcador próprio `SPECSFY:` | RED 2026-09-17: `artifact(root, router)` é `undefined`: sem renomeação | GREEN 2026-09-17: `npm run test:tdd` focal verde | Regressão: 600/611, falhas restantes são o RED da SPEC-0021 |
-| US-002, FR-003, FR-004, NFR-002, AC-008 | AC-008 na seção 6 | caso 1 em tests/extensions-foreign-sections.test.ts com marcador próprio `SPECSFY:` | RED 2026-09-17: AGENTS.md não recebe `## Agent skills` | GREEN 2026-09-17: `npm run test:tdd` focal verde | Regressão: 600/611, falhas restantes são o RED da SPEC-0021 |
-| US-002, FR-004, NFR-002, AC-009 | AC-009 na seção 6 | caso 2 em tests/extensions-foreign-sections.test.ts com marcador próprio `SPECSFY:` | RED 2026-09-17: idem — sem relocação, o texto alterado não está em AGENTS.md | GREEN 2026-09-17: `npm run test:tdd` focal verde | Regressão: 600/611, falhas restantes são o RED da SPEC-0021 |
-| US-002, FR-003, FR-004, NFR-002, AC-010 | AC-010 na seção 6 | caso 3 em tests/extensions-foreign-sections.test.ts com marcador próprio `SPECSFY:` | RED 2026-09-17: `## Agent skills` permanece em CLAUDE.md | GREEN 2026-09-17: `npm run test:tdd` focal verde | Regressão: 600/611, falhas restantes são o RED da SPEC-0021 |
-| US-002, FR-003, NFR-003, AC-011 | AC-011 na seção 6 | caso 4 em tests/extensions-foreign-sections.test.ts com marcador próprio `SPECSFY:` | RED 2026-09-17: router não menciona AGENTS.md | GREEN 2026-09-17: `npm run test:tdd` focal verde | Regressão: 600/611, falhas restantes são o RED da SPEC-0021 |
-| US-003, FR-005, NFR-001, AC-012 | AC-012 na seção 6 | caso 1 em tests/skills-canonical-agents.test.ts com marcador próprio `SPECSFY:` | RED 2026-09-17: `buildSkillsAddArgs` usa `claude-code` em vez de `universal` | GREEN 2026-09-17: `npm run test:tdd` focal verde | Regressão: 600/611, falhas restantes são o RED da SPEC-0021 |
-| US-003, FR-005, FR-006, NFR-001, AC-013 | AC-013 na seção 6 | caso 1 em tests/skills-projection.test.ts com marcador próprio `SPECSFY:` | RED 2026-09-17: `.claude/skills/specsfy-specialist-x/SKILL.md` vazio: sem projeção | GREEN 2026-09-17: `npm run test:tdd` focal verde | Regressão: 600/611, falhas restantes são o RED da SPEC-0021 |
-| US-003, FR-006, NFR-002, AC-014 | AC-014 na seção 6 | caso 2 em tests/skills-projection.test.ts com marcador próprio `SPECSFY:` | RED 2026-09-17: `ENOENT .claude/skills/edited/SKILL.md` | GREEN 2026-09-17: `npm run test:tdd` focal verde | Regressão: 600/611, falhas restantes são o RED da SPEC-0021 |
-| US-003, FR-006, NFR-001, AC-015 | AC-015 na seção 6 | caso 3 em tests/skills-projection.test.ts com marcador próprio `SPECSFY:` | RED 2026-09-17: `projections` é `undefined` no install.json | GREEN 2026-09-17: `npm run test:tdd` focal verde | Regressão: 600/611, falhas restantes são o RED da SPEC-0021 |
-| US-003, FR-006, NFR-003, AC-016 | AC-016 na seção 6 | caso 4 em tests/skills-projection.test.ts com marcador próprio `SPECSFY:` | RED 2026-09-17: Antigravity não projeta, mas o Claude Code também não — caso refinado com o contraste | GREEN 2026-09-17: `npm run test:tdd` focal verde | Regressão: 600/611, falhas restantes são o RED da SPEC-0021 |
-| US-003, FR-007, NFR-001, AC-017 | AC-017 na seção 6 | caso 1 em tests/hooks-skills-project.test.ts com marcador próprio `SPECSFY:` | RED 2026-09-17: `ENOENT resources/hooks/skills-project-session.md` | GREEN 2026-09-17: `npm run test:tdd` focal verde | Regressão: 600/611, falhas restantes são o RED da SPEC-0021 |
-| US-003, FR-007, NFR-001, AC-018 | AC-018 na seção 6 | caso 2 em tests/hooks-skills-project.test.ts com marcador próprio `SPECSFY:` | RED 2026-09-17: `ENOENT resources/hooks/skills-project.md` | GREEN 2026-09-17: `npm run test:tdd` focal verde | Regressão: 600/611, falhas restantes são o RED da SPEC-0021 |
-| US-003, FR-007, NFR-003, AC-019 | AC-019 na seção 6 | caso 3 em tests/hooks-skills-project.test.ts com marcador próprio `SPECSFY:` | RED 2026-09-17: idem | GREEN 2026-09-17: `npm run test:tdd` focal verde | Regressão: 600/611, falhas restantes são o RED da SPEC-0021 |
-| US-003, FR-007, FR-006, AC-020 | AC-020 na seção 6 | caso 4 em tests/hooks-skills-project.test.ts com marcador próprio `SPECSFY:` | RED 2026-09-17: nenhuma entrada SessionStart referenciando skills-project-session.sh | GREEN 2026-09-17: `npm run test:tdd` focal verde | Regressão: 600/611, falhas restantes são o RED da SPEC-0021 |
-| US-003, FR-005, NFR-002, AC-021 | AC-021 na seção 6 | caso 2 em tests/skills-canonical-agents.test.ts com marcador próprio `SPECSFY:` | RED 2026-09-17: o sync antigo copia `local-only` para .agents (`expected true to be false`) | GREEN 2026-09-17: `npm run test:tdd` focal verde | Regressão: 600/611, falhas restantes são o RED da SPEC-0021 |
+| US-001, FR-001, NFR-001, NFR-003, AC-001 | AC-001 na seção 6 | caso 1 em tests/setup-instructions-direction.test.ts com marcador próprio `TRACEABILITY:` | RED 2026-09-17: `block(AGENTS.md, router)` é `null`: o router ainda é instalado em CLAUDE.md | GREEN 2026-09-17: `npm run test:tdd` focal verde | Regressão: 600/611, falhas restantes são o RED da SPEC-0021 |
+| US-001, FR-001, NFR-001, AC-002 | AC-002 na seção 6 | caso 2 em tests/setup-instructions-direction.test.ts com marcador próprio `TRACEABILITY:` | RED 2026-09-17: `@AGENTS.md` aparece 0 vezes em CLAUDE.md | GREEN 2026-09-17: `npm run test:tdd` focal verde | Regressão: 600/611, falhas restantes são o RED da SPEC-0021 |
+| US-001, FR-001, NFR-003, AC-003 | AC-003 na seção 6 | caso 3 em tests/setup-instructions-direction.test.ts com marcador próprio `TRACEABILITY:` | RED 2026-09-17: Antigravity registra `agents-router`, não `router` | GREEN 2026-09-17: `npm run test:tdd` focal verde | Regressão: 600/611, falhas restantes são o RED da SPEC-0021 |
+| US-001, FR-002, NFR-001, NFR-002, AC-004 | AC-004 na seção 6 | caso 1 em tests/extensions-migrate-direction.test.ts com marcador próprio `TRACEABILITY:` | RED 2026-09-17: router permanece em CLAUDE.md e os ponteiros em AGENTS.md; sem migração | GREEN 2026-09-17: `npm run test:tdd` focal verde | Regressão: 600/611, falhas restantes são o RED da SPEC-0021 |
+| US-001, FR-002, NFR-002, AC-005 | AC-005 na seção 6 | caso 2 em tests/extensions-migrate-direction.test.ts com marcador próprio `TRACEABILITY:` | RED 2026-09-17: nenhum arquivo de quarentena para o router editado | GREEN 2026-09-17: `npm run test:tdd` focal verde | Regressão: 600/611, falhas restantes são o RED da SPEC-0021 |
+| US-001, FR-002, NFR-002, AC-006 | AC-006 na seção 6 | caso 3 em tests/extensions-migrate-direction.test.ts com marcador próprio `TRACEABILITY:` | RED 2026-09-17: conteúdo alheio preservado, mas a migração não acontece (router segue em CLAUDE.md) — caso refinado para exigir a migração | GREEN 2026-09-17: `npm run test:tdd` focal verde | Regressão: 600/611, falhas restantes são o RED da SPEC-0021 |
+| US-001, FR-002, NFR-001, AC-007 | AC-007 na seção 6 | caso 4 em tests/extensions-migrate-direction.test.ts com marcador próprio `TRACEABILITY:` | RED 2026-09-17: `artifact(root, router)` é `undefined`: sem renomeação | GREEN 2026-09-17: `npm run test:tdd` focal verde | Regressão: 600/611, falhas restantes são o RED da SPEC-0021 |
+| US-002, FR-003, FR-004, NFR-002, AC-008 | AC-008 na seção 6 | caso 1 em tests/extensions-foreign-sections.test.ts com marcador próprio `TRACEABILITY:` | RED 2026-09-17: AGENTS.md não recebe `## Agent skills` | GREEN 2026-09-17: `npm run test:tdd` focal verde | Regressão: 600/611, falhas restantes são o RED da SPEC-0021 |
+| US-002, FR-004, NFR-002, AC-009 | AC-009 na seção 6 | caso 2 em tests/extensions-foreign-sections.test.ts com marcador próprio `TRACEABILITY:` | RED 2026-09-17: idem — sem relocação, o texto alterado não está em AGENTS.md | GREEN 2026-09-17: `npm run test:tdd` focal verde | Regressão: 600/611, falhas restantes são o RED da SPEC-0021 |
+| US-002, FR-003, FR-004, NFR-002, AC-010 | AC-010 na seção 6 | caso 3 em tests/extensions-foreign-sections.test.ts com marcador próprio `TRACEABILITY:` | RED 2026-09-17: `## Agent skills` permanece em CLAUDE.md | GREEN 2026-09-17: `npm run test:tdd` focal verde | Regressão: 600/611, falhas restantes são o RED da SPEC-0021 |
+| US-002, FR-003, NFR-003, AC-011 | AC-011 na seção 6 | caso 4 em tests/extensions-foreign-sections.test.ts com marcador próprio `TRACEABILITY:` | RED 2026-09-17: router não menciona AGENTS.md | GREEN 2026-09-17: `npm run test:tdd` focal verde | Regressão: 600/611, falhas restantes são o RED da SPEC-0021 |
+| US-003, FR-005, NFR-001, AC-012 | AC-012 na seção 6 | caso 1 em tests/skills-canonical-agents.test.ts com marcador próprio `TRACEABILITY:` | RED 2026-09-17: `buildSkillsAddArgs` usa `claude-code` em vez de `universal` | GREEN 2026-09-17: `npm run test:tdd` focal verde | Regressão: 600/611, falhas restantes são o RED da SPEC-0021 |
+| US-003, FR-005, FR-006, NFR-001, AC-013 | AC-013 na seção 6 | caso 1 em tests/skills-projection.test.ts com marcador próprio `TRACEABILITY:` | RED 2026-09-17: `.claude/skills/framework-specialist-x/SKILL.md` vazio: sem projeção | GREEN 2026-09-17: `npm run test:tdd` focal verde | Regressão: 600/611, falhas restantes são o RED da SPEC-0021 |
+| US-003, FR-006, NFR-002, AC-014 | AC-014 na seção 6 | caso 2 em tests/skills-projection.test.ts com marcador próprio `TRACEABILITY:` | RED 2026-09-17: `ENOENT .claude/skills/edited/SKILL.md` | GREEN 2026-09-17: `npm run test:tdd` focal verde | Regressão: 600/611, falhas restantes são o RED da SPEC-0021 |
+| US-003, FR-006, NFR-001, AC-015 | AC-015 na seção 6 | caso 3 em tests/skills-projection.test.ts com marcador próprio `TRACEABILITY:` | RED 2026-09-17: `projections` é `undefined` no install.json | GREEN 2026-09-17: `npm run test:tdd` focal verde | Regressão: 600/611, falhas restantes são o RED da SPEC-0021 |
+| US-003, FR-006, NFR-003, AC-016 | AC-016 na seção 6 | caso 4 em tests/skills-projection.test.ts com marcador próprio `TRACEABILITY:` | RED 2026-09-17: Antigravity não projeta, mas o Claude Code também não — caso refinado com o contraste | GREEN 2026-09-17: `npm run test:tdd` focal verde | Regressão: 600/611, falhas restantes são o RED da SPEC-0021 |
+| US-003, FR-007, NFR-001, AC-017 | AC-017 na seção 6 | caso 1 em tests/hooks-skills-project.test.ts com marcador próprio `TRACEABILITY:` | RED 2026-09-17: `ENOENT resources/hooks/skills-project-session.md` | GREEN 2026-09-17: `npm run test:tdd` focal verde | Regressão: 600/611, falhas restantes são o RED da SPEC-0021 |
+| US-003, FR-007, NFR-001, AC-018 | AC-018 na seção 6 | caso 2 em tests/hooks-skills-project.test.ts com marcador próprio `TRACEABILITY:` | RED 2026-09-17: `ENOENT resources/hooks/skills-project.md` | GREEN 2026-09-17: `npm run test:tdd` focal verde | Regressão: 600/611, falhas restantes são o RED da SPEC-0021 |
+| US-003, FR-007, NFR-003, AC-019 | AC-019 na seção 6 | caso 3 em tests/hooks-skills-project.test.ts com marcador próprio `TRACEABILITY:` | RED 2026-09-17: idem | GREEN 2026-09-17: `npm run test:tdd` focal verde | Regressão: 600/611, falhas restantes são o RED da SPEC-0021 |
+| US-003, FR-007, FR-006, AC-020 | AC-020 na seção 6 | caso 4 em tests/hooks-skills-project.test.ts com marcador próprio `TRACEABILITY:` | RED 2026-09-17: nenhuma entrada SessionStart referenciando skills-project-session.sh | GREEN 2026-09-17: `npm run test:tdd` focal verde | Regressão: 600/611, falhas restantes são o RED da SPEC-0021 |
+| US-003, FR-005, NFR-002, AC-021 | AC-021 na seção 6 | caso 2 em tests/skills-canonical-agents.test.ts com marcador próprio `TRACEABILITY:` | RED 2026-09-17: o sync antigo copia `local-only` para .agents (`expected true to be false`) | GREEN 2026-09-17: `npm run test:tdd` focal verde | Regressão: 600/611, falhas restantes são o RED da SPEC-0021 |
 
 ### 12. Plano de testes e rastreabilidade
 
@@ -744,23 +744,23 @@ tests/
 
 #### Gate do Ato I — Definição
 
-- **Resultado**: READY (2026-09-17); aceite final em `review` (2026-09-17): entrega conferida contra cada AC/FR/NFR e a DoD; migração real deste repositório verificada (blocos do Specsfy intactos, `@AGENTS.md` presente, nada em quarentena) — spec movida para `completed`.
-- **Comando**: `node .agents/skills/specsfy-04-validate/scripts/validate_spec.mjs specs/completed/0024-normalizacao-agents-claude-e-projecao-de-skills/spec.md`
+- **Resultado**: READY (2026-09-17); aceite final em `review` (2026-09-17): entrega conferida contra cada AC/FR/NFR e a DoD; migração real deste repositório verificada (blocos do former project tool intactos, `@AGENTS.md` presente, nada em quarentena) — spec movida para `completed`.
+- **Comando**: `node .agents/skills/framework-04-validate/scripts/validate_spec.mjs specs/completed/0024-normalizacao-agents-claude-e-projecao-de-skills/spec.md`
 - **Achados**: estrutura VALID; research PASSED (R-001, R-002 critical verificados; R-003 high verificado); cobertura mínima atendida — 3 US, 7 FR, 3 NFR com ≥3 AC cada, 21 AC (ciclo 1 acrescentou FR-004 a AC-010 e FR-005 a AC-013; âncoras de research sem acentos). Sem BLOCKER.
 - **FIND-ARCH-001** [P2] [Resolved] `createExtension` recusa nome já registrado, então a inversão não pode recriar os blocos — Refs: FR-002, AC-004 — Evidence: src/extensions/create.ts:1 — Effect: sem migração por movimento, consumidores já instalados ficariam com a direção antiga para sempre — Suggestion: resolvido por desenho com `migrateExtensionTargets` (move `target`/`name` no registro, quarentena em divergência).
-- **FIND-SEC-001** [P3] [Accepted] O import `@AGENTS.md` traz para o contexto do Claude Code tudo o que estiver em `AGENTS.md`, inclusive conteúdo escrito por outras ferramentas — Refs: FR-001, AC-001 — Evidence: specs/completed/0024-normalizacao-agents-claude-e-projecao-de-skills/research/direcao-dos-blocos-e-diretorios-de-skills.md:1 — Effect: uma ferramenta que escreva instruções maliciosas em `AGENTS.md` passa a ser lida pelo Claude Code, o que já acontece hoje com o próprio Specsfy (`@.specsfy/Spec.md`) e com IDEs que leem `AGENTS.md` diretamente — Suggestion: aceito por decisão do usuário (Q10); o doctor (0013) reporta conteúdo sem assinatura conhecida e o registro `foreign` torna mudanças visíveis.
+- **FIND-SEC-001** [P3] [Accepted] O import `@AGENTS.md` traz para o contexto do Claude Code tudo o que estiver em `AGENTS.md`, inclusive conteúdo escrito por outras ferramentas — Refs: FR-001, AC-001 — Evidence: specs/completed/0024-normalizacao-agents-claude-e-projecao-de-skills/research/direcao-dos-blocos-e-diretorios-de-skills.md:1 — Effect: uma ferramenta que escreva instruções maliciosas em `AGENTS.md` passa a ser lida pelo Claude Code, o que já acontece hoje com o próprio former project tool (`@.project-context/Spec.md`) e com IDEs que leem `AGENTS.md` diretamente — Suggestion: aceito por decisão do usuário (Q10); o doctor (0013) reporta conteúdo sem assinatura conhecida e o registro `foreign` torna mudanças visíveis.
 - **FIND-PROD-001** [P3] [Accepted] A tabela de assinaturas começa com uma única entrada (`## Agent skills`); outras ferramentas que escrevam em `CLAUDE.md` não são interceptadas até entrar na tabela — Refs: FR-003, AC-010 — Evidence: src/extensions/router.ts:1 — Effect: normalização parcial por convenção — Suggestion: aceito (Q13: mover conteúdo desconhecido é mais perigoso do que deixá-lo); a instrução no router previne o caso geral e o doctor lista o restante.
 
 #### Gate do Ato II — Plano
 
 - **Resultado**: Pending
-- **Comando**: `node .agents/skills/specsfy-05-tasks/scripts/validate_tasks.mjs specs/completed/0024-normalizacao-agents-claude-e-projecao-de-skills/spec.md`
+- **Comando**: `node .agents/skills/framework-05-tasks/scripts/validate_tasks.mjs specs/completed/0024-normalizacao-agents-claude-e-projecao-de-skills/spec.md`
 - **Achados**: Pending.
 
 #### Gate do Ato III — Entrega
 
 - **Resultado**: Pending
-- **Comando**: `node .agents/skills/specsfy-06-tdd-bdd/scripts/check_traceability.mjs specs/completed/0024-normalizacao-agents-claude-e-projecao-de-skills/spec.md .`
+- **Comando**: `node .agents/skills/framework-06-tdd-bdd/scripts/check_traceability.mjs specs/completed/0024-normalizacao-agents-claude-e-projecao-de-skills/spec.md .`
 - **Achados**: Pending.
 
 ### 14. Tarefas
@@ -785,7 +785,7 @@ Cada tarefa `[CODE]` grava no **PREP** um snapshot do `code-review-graph` (`stat
 
 - [x] T001 [TEST] [TDD] [US-001] Derivar de AC-001 um caso Vitest falhando em tests/setup-instructions-direction.test.ts — Refs: US-001, FR-001, NFR-001, NFR-003, AC-001 — Depends: none
   - [x] **PREP**: Gherkin de AC-001 lido; IDs e nível confirmados conforme a seção 12.
-  - [x] **EXECUTE**: Caso escrito em tests/setup-instructions-direction.test.ts com marcador `SPECSFY: … AC-001`; helpers em tests/helpers-spec-0024.ts (raiz na direção antiga, registro de blocos, skills de fixture); sem `.feature`.
+  - [x] **EXECUTE**: Caso escrito em tests/setup-instructions-direction.test.ts com marcador `TRACEABILITY: … AC-001`; helpers em tests/helpers-spec-0024.ts (raiz na direção antiga, registro de blocos, skills de fixture); sem `.feature`.
   - [x] **VERIFY**: RED válido — `block(AGENTS.md, router)` é `null`: o router ainda é instalado em CLAUDE.md.
   - [x] **VISUAL**: Não aplicável — a tarefa só materializa teste e a spec não tem interface.
   - [x] **EVIDENCE**: `npm run test:tdd -- setup-instructions-direction` → falha em AC-001 (2026-09-17); linha registrada na seção 11.
@@ -793,7 +793,7 @@ Cada tarefa `[CODE]` grava no **PREP** um snapshot do `code-review-graph` (`stat
 
 - [x] T002 [TEST] [TDD] [US-001] Derivar de AC-002 um caso Vitest falhando em tests/setup-instructions-direction.test.ts — Refs: US-001, FR-001, NFR-001, AC-002 — Depends: none
   - [x] **PREP**: Gherkin de AC-002 lido; IDs e nível confirmados conforme a seção 12.
-  - [x] **EXECUTE**: Caso escrito em tests/setup-instructions-direction.test.ts com marcador `SPECSFY: … AC-002`; helpers em tests/helpers-spec-0024.ts (raiz na direção antiga, registro de blocos, skills de fixture); sem `.feature`.
+  - [x] **EXECUTE**: Caso escrito em tests/setup-instructions-direction.test.ts com marcador `TRACEABILITY: … AC-002`; helpers em tests/helpers-spec-0024.ts (raiz na direção antiga, registro de blocos, skills de fixture); sem `.feature`.
   - [x] **VERIFY**: RED válido — `@AGENTS.md` aparece 0 vezes em CLAUDE.md.
   - [x] **VISUAL**: Não aplicável — a tarefa só materializa teste e a spec não tem interface.
   - [x] **EVIDENCE**: `npm run test:tdd -- setup-instructions-direction` → falha em AC-002 (2026-09-17); linha registrada na seção 11.
@@ -801,7 +801,7 @@ Cada tarefa `[CODE]` grava no **PREP** um snapshot do `code-review-graph` (`stat
 
 - [x] T003 [TEST] [TDD] [US-001] Derivar de AC-003 um caso Vitest falhando em tests/setup-instructions-direction.test.ts — Refs: US-001, FR-001, NFR-003, AC-003 — Depends: none
   - [x] **PREP**: Gherkin de AC-003 lido; IDs e nível confirmados conforme a seção 12.
-  - [x] **EXECUTE**: Caso escrito em tests/setup-instructions-direction.test.ts com marcador `SPECSFY: … AC-003`; helpers em tests/helpers-spec-0024.ts (raiz na direção antiga, registro de blocos, skills de fixture); sem `.feature`.
+  - [x] **EXECUTE**: Caso escrito em tests/setup-instructions-direction.test.ts com marcador `TRACEABILITY: … AC-003`; helpers em tests/helpers-spec-0024.ts (raiz na direção antiga, registro de blocos, skills de fixture); sem `.feature`.
   - [x] **VERIFY**: RED válido — Antigravity registra `agents-router`, não `router`.
   - [x] **VISUAL**: Não aplicável — a tarefa só materializa teste e a spec não tem interface.
   - [x] **EVIDENCE**: `npm run test:tdd -- setup-instructions-direction` → falha em AC-003 (2026-09-17); linha registrada na seção 11.
@@ -809,7 +809,7 @@ Cada tarefa `[CODE]` grava no **PREP** um snapshot do `code-review-graph` (`stat
 
 - [x] T004 [TEST] [TDD] [US-001] Derivar de AC-004 um caso Vitest falhando em tests/extensions-migrate-direction.test.ts — Refs: US-001, FR-002, NFR-001, NFR-002, AC-004 — Depends: none
   - [x] **PREP**: Gherkin de AC-004 lido; IDs e nível confirmados conforme a seção 12.
-  - [x] **EXECUTE**: Caso escrito em tests/extensions-migrate-direction.test.ts com marcador `SPECSFY: … AC-004`; helpers em tests/helpers-spec-0024.ts (raiz na direção antiga, registro de blocos, skills de fixture); sem `.feature`.
+  - [x] **EXECUTE**: Caso escrito em tests/extensions-migrate-direction.test.ts com marcador `TRACEABILITY: … AC-004`; helpers em tests/helpers-spec-0024.ts (raiz na direção antiga, registro de blocos, skills de fixture); sem `.feature`.
   - [x] **VERIFY**: RED válido — router permanece em CLAUDE.md e os ponteiros em AGENTS.md; sem migração.
   - [x] **VISUAL**: Não aplicável — a tarefa só materializa teste e a spec não tem interface.
   - [x] **EVIDENCE**: `npm run test:tdd -- extensions-migrate-direction` → falha em AC-004 (2026-09-17); linha registrada na seção 11.
@@ -817,7 +817,7 @@ Cada tarefa `[CODE]` grava no **PREP** um snapshot do `code-review-graph` (`stat
 
 - [x] T005 [TEST] [TDD] [US-001] Derivar de AC-005 um caso Vitest falhando em tests/extensions-migrate-direction.test.ts — Refs: US-001, FR-002, NFR-002, AC-005 — Depends: none
   - [x] **PREP**: Gherkin de AC-005 lido; IDs e nível confirmados conforme a seção 12.
-  - [x] **EXECUTE**: Caso escrito em tests/extensions-migrate-direction.test.ts com marcador `SPECSFY: … AC-005`; helpers em tests/helpers-spec-0024.ts (raiz na direção antiga, registro de blocos, skills de fixture); sem `.feature`.
+  - [x] **EXECUTE**: Caso escrito em tests/extensions-migrate-direction.test.ts com marcador `TRACEABILITY: … AC-005`; helpers em tests/helpers-spec-0024.ts (raiz na direção antiga, registro de blocos, skills de fixture); sem `.feature`.
   - [x] **VERIFY**: RED válido — nenhum arquivo de quarentena para o router editado.
   - [x] **VISUAL**: Não aplicável — a tarefa só materializa teste e a spec não tem interface.
   - [x] **EVIDENCE**: `npm run test:tdd -- extensions-migrate-direction` → falha em AC-005 (2026-09-17); linha registrada na seção 11.
@@ -825,7 +825,7 @@ Cada tarefa `[CODE]` grava no **PREP** um snapshot do `code-review-graph` (`stat
 
 - [x] T006 [TEST] [TDD] [US-001] Derivar de AC-006 um caso Vitest falhando em tests/extensions-migrate-direction.test.ts — Refs: US-001, FR-002, NFR-002, AC-006 — Depends: none
   - [x] **PREP**: Gherkin de AC-006 lido; IDs e nível confirmados conforme a seção 12.
-  - [x] **EXECUTE**: Caso escrito em tests/extensions-migrate-direction.test.ts com marcador `SPECSFY: … AC-006`; helpers em tests/helpers-spec-0024.ts (raiz na direção antiga, registro de blocos, skills de fixture); sem `.feature`.
+  - [x] **EXECUTE**: Caso escrito em tests/extensions-migrate-direction.test.ts com marcador `TRACEABILITY: … AC-006`; helpers em tests/helpers-spec-0024.ts (raiz na direção antiga, registro de blocos, skills de fixture); sem `.feature`.
   - [x] **VERIFY**: RED válido — conteúdo alheio preservado, mas a migração não acontece (router segue em CLAUDE.md) — caso refinado para exigir a migração.
   - [x] **VISUAL**: Não aplicável — a tarefa só materializa teste e a spec não tem interface.
   - [x] **EVIDENCE**: `npm run test:tdd -- extensions-migrate-direction` → falha em AC-006 (2026-09-17); linha registrada na seção 11.
@@ -833,7 +833,7 @@ Cada tarefa `[CODE]` grava no **PREP** um snapshot do `code-review-graph` (`stat
 
 - [x] T007 [TEST] [TDD] [US-001] Derivar de AC-007 um caso Vitest falhando em tests/extensions-migrate-direction.test.ts — Refs: US-001, FR-002, NFR-001, AC-007 — Depends: none
   - [x] **PREP**: Gherkin de AC-007 lido; IDs e nível confirmados conforme a seção 12.
-  - [x] **EXECUTE**: Caso escrito em tests/extensions-migrate-direction.test.ts com marcador `SPECSFY: … AC-007`; helpers em tests/helpers-spec-0024.ts (raiz na direção antiga, registro de blocos, skills de fixture); sem `.feature`.
+  - [x] **EXECUTE**: Caso escrito em tests/extensions-migrate-direction.test.ts com marcador `TRACEABILITY: … AC-007`; helpers em tests/helpers-spec-0024.ts (raiz na direção antiga, registro de blocos, skills de fixture); sem `.feature`.
   - [x] **VERIFY**: RED válido — `artifact(root, router)` é `undefined`: sem renomeação.
   - [x] **VISUAL**: Não aplicável — a tarefa só materializa teste e a spec não tem interface.
   - [x] **EVIDENCE**: `npm run test:tdd -- extensions-migrate-direction` → falha em AC-007 (2026-09-17); linha registrada na seção 11.
@@ -841,7 +841,7 @@ Cada tarefa `[CODE]` grava no **PREP** um snapshot do `code-review-graph` (`stat
 
 - [x] T008 [TEST] [TDD] [US-002] Derivar de AC-008 um caso Vitest falhando em tests/extensions-foreign-sections.test.ts — Refs: US-002, FR-003, FR-004, NFR-002, AC-008 — Depends: none
   - [x] **PREP**: Gherkin de AC-008 lido; IDs e nível confirmados conforme a seção 12.
-  - [x] **EXECUTE**: Caso escrito em tests/extensions-foreign-sections.test.ts com marcador `SPECSFY: … AC-008`; helpers em tests/helpers-spec-0024.ts (raiz na direção antiga, registro de blocos, skills de fixture); sem `.feature`.
+  - [x] **EXECUTE**: Caso escrito em tests/extensions-foreign-sections.test.ts com marcador `TRACEABILITY: … AC-008`; helpers em tests/helpers-spec-0024.ts (raiz na direção antiga, registro de blocos, skills de fixture); sem `.feature`.
   - [x] **VERIFY**: RED válido — AGENTS.md não recebe `## Agent skills`.
   - [x] **VISUAL**: Não aplicável — a tarefa só materializa teste e a spec não tem interface.
   - [x] **EVIDENCE**: `npm run test:tdd -- extensions-foreign-sections` → falha em AC-008 (2026-09-17); linha registrada na seção 11.
@@ -849,7 +849,7 @@ Cada tarefa `[CODE]` grava no **PREP** um snapshot do `code-review-graph` (`stat
 
 - [x] T009 [TEST] [TDD] [US-002] Derivar de AC-009 um caso Vitest falhando em tests/extensions-foreign-sections.test.ts — Refs: US-002, FR-004, NFR-002, AC-009 — Depends: none
   - [x] **PREP**: Gherkin de AC-009 lido; IDs e nível confirmados conforme a seção 12.
-  - [x] **EXECUTE**: Caso escrito em tests/extensions-foreign-sections.test.ts com marcador `SPECSFY: … AC-009`; helpers em tests/helpers-spec-0024.ts (raiz na direção antiga, registro de blocos, skills de fixture); sem `.feature`.
+  - [x] **EXECUTE**: Caso escrito em tests/extensions-foreign-sections.test.ts com marcador `TRACEABILITY: … AC-009`; helpers em tests/helpers-spec-0024.ts (raiz na direção antiga, registro de blocos, skills de fixture); sem `.feature`.
   - [x] **VERIFY**: RED válido — idem — sem relocação, o texto alterado não está em AGENTS.md.
   - [x] **VISUAL**: Não aplicável — a tarefa só materializa teste e a spec não tem interface.
   - [x] **EVIDENCE**: `npm run test:tdd -- extensions-foreign-sections` → falha em AC-009 (2026-09-17); linha registrada na seção 11.
@@ -857,7 +857,7 @@ Cada tarefa `[CODE]` grava no **PREP** um snapshot do `code-review-graph` (`stat
 
 - [x] T010 [TEST] [TDD] [US-002] Derivar de AC-010 um caso Vitest falhando em tests/extensions-foreign-sections.test.ts — Refs: US-002, FR-003, FR-004, NFR-002, AC-010 — Depends: none
   - [x] **PREP**: Gherkin de AC-010 lido; IDs e nível confirmados conforme a seção 12.
-  - [x] **EXECUTE**: Caso escrito em tests/extensions-foreign-sections.test.ts com marcador `SPECSFY: … AC-010`; helpers em tests/helpers-spec-0024.ts (raiz na direção antiga, registro de blocos, skills de fixture); sem `.feature`.
+  - [x] **EXECUTE**: Caso escrito em tests/extensions-foreign-sections.test.ts com marcador `TRACEABILITY: … AC-010`; helpers em tests/helpers-spec-0024.ts (raiz na direção antiga, registro de blocos, skills de fixture); sem `.feature`.
   - [x] **VERIFY**: RED válido — `## Agent skills` permanece em CLAUDE.md.
   - [x] **VISUAL**: Não aplicável — a tarefa só materializa teste e a spec não tem interface.
   - [x] **EVIDENCE**: `npm run test:tdd -- extensions-foreign-sections` → falha em AC-010 (2026-09-17); linha registrada na seção 11.
@@ -865,7 +865,7 @@ Cada tarefa `[CODE]` grava no **PREP** um snapshot do `code-review-graph` (`stat
 
 - [x] T011 [TEST] [TDD] [US-002] Derivar de AC-011 um caso Vitest falhando em tests/extensions-foreign-sections.test.ts — Refs: US-002, FR-003, NFR-003, AC-011 — Depends: none
   - [x] **PREP**: Gherkin de AC-011 lido; IDs e nível confirmados conforme a seção 12.
-  - [x] **EXECUTE**: Caso escrito em tests/extensions-foreign-sections.test.ts com marcador `SPECSFY: … AC-011`; helpers em tests/helpers-spec-0024.ts (raiz na direção antiga, registro de blocos, skills de fixture); sem `.feature`.
+  - [x] **EXECUTE**: Caso escrito em tests/extensions-foreign-sections.test.ts com marcador `TRACEABILITY: … AC-011`; helpers em tests/helpers-spec-0024.ts (raiz na direção antiga, registro de blocos, skills de fixture); sem `.feature`.
   - [x] **VERIFY**: RED válido — router não menciona AGENTS.md.
   - [x] **VISUAL**: Não aplicável — a tarefa só materializa teste e a spec não tem interface.
   - [x] **EVIDENCE**: `npm run test:tdd -- extensions-foreign-sections` → falha em AC-011 (2026-09-17); linha registrada na seção 11.
@@ -873,7 +873,7 @@ Cada tarefa `[CODE]` grava no **PREP** um snapshot do `code-review-graph` (`stat
 
 - [x] T012 [TEST] [TDD] [US-003] Derivar de AC-012 um caso Vitest falhando em tests/skills-canonical-agents.test.ts — Refs: US-003, FR-005, NFR-001, AC-012 — Depends: none
   - [x] **PREP**: Gherkin de AC-012 lido; IDs e nível confirmados conforme a seção 12.
-  - [x] **EXECUTE**: Caso escrito em tests/skills-canonical-agents.test.ts com marcador `SPECSFY: … AC-012`; helpers em tests/helpers-spec-0024.ts (raiz na direção antiga, registro de blocos, skills de fixture); sem `.feature`.
+  - [x] **EXECUTE**: Caso escrito em tests/skills-canonical-agents.test.ts com marcador `TRACEABILITY: … AC-012`; helpers em tests/helpers-spec-0024.ts (raiz na direção antiga, registro de blocos, skills de fixture); sem `.feature`.
   - [x] **VERIFY**: RED válido — `buildSkillsAddArgs` usa `claude-code` em vez de `universal`.
   - [x] **VISUAL**: Não aplicável — a tarefa só materializa teste e a spec não tem interface.
   - [x] **EVIDENCE**: `npm run test:tdd -- skills-canonical-agents` → falha em AC-012 (2026-09-17); linha registrada na seção 11.
@@ -881,15 +881,15 @@ Cada tarefa `[CODE]` grava no **PREP** um snapshot do `code-review-graph` (`stat
 
 - [x] T013 [TEST] [TDD] [US-003] Derivar de AC-013 um caso Vitest falhando em tests/skills-projection.test.ts — Refs: US-003, FR-005, FR-006, NFR-001, AC-013 — Depends: none
   - [x] **PREP**: Gherkin de AC-013 lido; IDs e nível confirmados conforme a seção 12.
-  - [x] **EXECUTE**: Caso escrito em tests/skills-projection.test.ts com marcador `SPECSFY: … AC-013`; helpers em tests/helpers-spec-0024.ts (raiz na direção antiga, registro de blocos, skills de fixture); sem `.feature`.
-  - [x] **VERIFY**: RED válido — `.claude/skills/specsfy-specialist-x/SKILL.md` vazio: sem projeção.
+  - [x] **EXECUTE**: Caso escrito em tests/skills-projection.test.ts com marcador `TRACEABILITY: … AC-013`; helpers em tests/helpers-spec-0024.ts (raiz na direção antiga, registro de blocos, skills de fixture); sem `.feature`.
+  - [x] **VERIFY**: RED válido — `.claude/skills/framework-specialist-x/SKILL.md` vazio: sem projeção.
   - [x] **VISUAL**: Não aplicável — a tarefa só materializa teste e a spec não tem interface.
   - [x] **EVIDENCE**: `npm run test:tdd -- skills-projection` → falha em AC-013 (2026-09-17); linha registrada na seção 11.
   - [x] **IMPROVE**: Nenhuma melhoria necessária além do próprio caso; sem duplicação com outro AC.
 
 - [x] T014 [TEST] [TDD] [US-003] Derivar de AC-014 um caso Vitest falhando em tests/skills-projection.test.ts — Refs: US-003, FR-006, NFR-002, AC-014 — Depends: none
   - [x] **PREP**: Gherkin de AC-014 lido; IDs e nível confirmados conforme a seção 12.
-  - [x] **EXECUTE**: Caso escrito em tests/skills-projection.test.ts com marcador `SPECSFY: … AC-014`; helpers em tests/helpers-spec-0024.ts (raiz na direção antiga, registro de blocos, skills de fixture); sem `.feature`.
+  - [x] **EXECUTE**: Caso escrito em tests/skills-projection.test.ts com marcador `TRACEABILITY: … AC-014`; helpers em tests/helpers-spec-0024.ts (raiz na direção antiga, registro de blocos, skills de fixture); sem `.feature`.
   - [x] **VERIFY**: RED válido — `ENOENT .claude/skills/edited/SKILL.md`.
   - [x] **VISUAL**: Não aplicável — a tarefa só materializa teste e a spec não tem interface.
   - [x] **EVIDENCE**: `npm run test:tdd -- skills-projection` → falha em AC-014 (2026-09-17); linha registrada na seção 11.
@@ -897,7 +897,7 @@ Cada tarefa `[CODE]` grava no **PREP** um snapshot do `code-review-graph` (`stat
 
 - [x] T015 [TEST] [TDD] [US-003] Derivar de AC-015 um caso Vitest falhando em tests/skills-projection.test.ts — Refs: US-003, FR-006, NFR-001, AC-015 — Depends: none
   - [x] **PREP**: Gherkin de AC-015 lido; IDs e nível confirmados conforme a seção 12.
-  - [x] **EXECUTE**: Caso escrito em tests/skills-projection.test.ts com marcador `SPECSFY: … AC-015`; helpers em tests/helpers-spec-0024.ts (raiz na direção antiga, registro de blocos, skills de fixture); sem `.feature`.
+  - [x] **EXECUTE**: Caso escrito em tests/skills-projection.test.ts com marcador `TRACEABILITY: … AC-015`; helpers em tests/helpers-spec-0024.ts (raiz na direção antiga, registro de blocos, skills de fixture); sem `.feature`.
   - [x] **VERIFY**: RED válido — `projections` é `undefined` no install.json.
   - [x] **VISUAL**: Não aplicável — a tarefa só materializa teste e a spec não tem interface.
   - [x] **EVIDENCE**: `npm run test:tdd -- skills-projection` → falha em AC-015 (2026-09-17); linha registrada na seção 11.
@@ -905,7 +905,7 @@ Cada tarefa `[CODE]` grava no **PREP** um snapshot do `code-review-graph` (`stat
 
 - [x] T016 [TEST] [TDD] [US-003] Derivar de AC-016 um caso Vitest falhando em tests/skills-projection.test.ts — Refs: US-003, FR-006, NFR-003, AC-016 — Depends: none
   - [x] **PREP**: Gherkin de AC-016 lido; IDs e nível confirmados conforme a seção 12.
-  - [x] **EXECUTE**: Caso escrito em tests/skills-projection.test.ts com marcador `SPECSFY: … AC-016`; helpers em tests/helpers-spec-0024.ts (raiz na direção antiga, registro de blocos, skills de fixture); sem `.feature`.
+  - [x] **EXECUTE**: Caso escrito em tests/skills-projection.test.ts com marcador `TRACEABILITY: … AC-016`; helpers em tests/helpers-spec-0024.ts (raiz na direção antiga, registro de blocos, skills de fixture); sem `.feature`.
   - [x] **VERIFY**: RED válido — Antigravity não projeta, mas o Claude Code também não — caso refinado com o contraste.
   - [x] **VISUAL**: Não aplicável — a tarefa só materializa teste e a spec não tem interface.
   - [x] **EVIDENCE**: `npm run test:tdd -- skills-projection` → falha em AC-016 (2026-09-17); linha registrada na seção 11.
@@ -913,7 +913,7 @@ Cada tarefa `[CODE]` grava no **PREP** um snapshot do `code-review-graph` (`stat
 
 - [x] T017 [TEST] [TDD] [US-003] Derivar de AC-017 um caso Vitest falhando em tests/hooks-skills-project.test.ts — Refs: US-003, FR-007, NFR-001, AC-017 — Depends: none
   - [x] **PREP**: Gherkin de AC-017 lido; IDs e nível confirmados conforme a seção 12.
-  - [x] **EXECUTE**: Caso escrito em tests/hooks-skills-project.test.ts com marcador `SPECSFY: … AC-017`; helpers em tests/helpers-spec-0024.ts (raiz na direção antiga, registro de blocos, skills de fixture); sem `.feature`.
+  - [x] **EXECUTE**: Caso escrito em tests/hooks-skills-project.test.ts com marcador `TRACEABILITY: … AC-017`; helpers em tests/helpers-spec-0024.ts (raiz na direção antiga, registro de blocos, skills de fixture); sem `.feature`.
   - [x] **VERIFY**: RED válido — `ENOENT resources/hooks/skills-project-session.md`.
   - [x] **VISUAL**: Não aplicável — a tarefa só materializa teste e a spec não tem interface.
   - [x] **EVIDENCE**: `npm run test:tdd -- hooks-skills-project` → falha em AC-017 (2026-09-17); linha registrada na seção 11.
@@ -921,7 +921,7 @@ Cada tarefa `[CODE]` grava no **PREP** um snapshot do `code-review-graph` (`stat
 
 - [x] T018 [TEST] [TDD] [US-003] Derivar de AC-018 um caso Vitest falhando em tests/hooks-skills-project.test.ts — Refs: US-003, FR-007, NFR-001, AC-018 — Depends: none
   - [x] **PREP**: Gherkin de AC-018 lido; IDs e nível confirmados conforme a seção 12.
-  - [x] **EXECUTE**: Caso escrito em tests/hooks-skills-project.test.ts com marcador `SPECSFY: … AC-018`; helpers em tests/helpers-spec-0024.ts (raiz na direção antiga, registro de blocos, skills de fixture); sem `.feature`.
+  - [x] **EXECUTE**: Caso escrito em tests/hooks-skills-project.test.ts com marcador `TRACEABILITY: … AC-018`; helpers em tests/helpers-spec-0024.ts (raiz na direção antiga, registro de blocos, skills de fixture); sem `.feature`.
   - [x] **VERIFY**: RED válido — `ENOENT resources/hooks/skills-project.md`.
   - [x] **VISUAL**: Não aplicável — a tarefa só materializa teste e a spec não tem interface.
   - [x] **EVIDENCE**: `npm run test:tdd -- hooks-skills-project` → falha em AC-018 (2026-09-17); linha registrada na seção 11.
@@ -929,7 +929,7 @@ Cada tarefa `[CODE]` grava no **PREP** um snapshot do `code-review-graph` (`stat
 
 - [x] T019 [TEST] [TDD] [US-003] Derivar de AC-019 um caso Vitest falhando em tests/hooks-skills-project.test.ts — Refs: US-003, FR-007, NFR-003, AC-019 — Depends: none
   - [x] **PREP**: Gherkin de AC-019 lido; IDs e nível confirmados conforme a seção 12.
-  - [x] **EXECUTE**: Caso escrito em tests/hooks-skills-project.test.ts com marcador `SPECSFY: … AC-019`; helpers em tests/helpers-spec-0024.ts (raiz na direção antiga, registro de blocos, skills de fixture); sem `.feature`.
+  - [x] **EXECUTE**: Caso escrito em tests/hooks-skills-project.test.ts com marcador `TRACEABILITY: … AC-019`; helpers em tests/helpers-spec-0024.ts (raiz na direção antiga, registro de blocos, skills de fixture); sem `.feature`.
   - [x] **VERIFY**: RED válido — idem.
   - [x] **VISUAL**: Não aplicável — a tarefa só materializa teste e a spec não tem interface.
   - [x] **EVIDENCE**: `npm run test:tdd -- hooks-skills-project` → falha em AC-019 (2026-09-17); linha registrada na seção 11.
@@ -937,7 +937,7 @@ Cada tarefa `[CODE]` grava no **PREP** um snapshot do `code-review-graph` (`stat
 
 - [x] T020 [TEST] [TDD] [US-003] Derivar de AC-020 um caso Vitest falhando em tests/hooks-skills-project.test.ts — Refs: US-003, FR-007, FR-006, AC-020 — Depends: none
   - [x] **PREP**: Gherkin de AC-020 lido; IDs e nível confirmados conforme a seção 12.
-  - [x] **EXECUTE**: Caso escrito em tests/hooks-skills-project.test.ts com marcador `SPECSFY: … AC-020`; helpers em tests/helpers-spec-0024.ts (raiz na direção antiga, registro de blocos, skills de fixture); sem `.feature`.
+  - [x] **EXECUTE**: Caso escrito em tests/hooks-skills-project.test.ts com marcador `TRACEABILITY: … AC-020`; helpers em tests/helpers-spec-0024.ts (raiz na direção antiga, registro de blocos, skills de fixture); sem `.feature`.
   - [x] **VERIFY**: RED válido — nenhuma entrada SessionStart referenciando skills-project-session.sh.
   - [x] **VISUAL**: Não aplicável — a tarefa só materializa teste e a spec não tem interface.
   - [x] **EVIDENCE**: `npm run test:tdd -- hooks-skills-project` → falha em AC-020 (2026-09-17); linha registrada na seção 11.
@@ -945,7 +945,7 @@ Cada tarefa `[CODE]` grava no **PREP** um snapshot do `code-review-graph` (`stat
 
 - [x] T021 [TEST] [TDD] [US-003] Derivar de AC-021 um caso Vitest falhando em tests/skills-canonical-agents.test.ts — Refs: US-003, FR-005, NFR-002, AC-021 — Depends: none
   - [x] **PREP**: Gherkin de AC-021 lido; IDs e nível confirmados conforme a seção 12.
-  - [x] **EXECUTE**: Caso escrito em tests/skills-canonical-agents.test.ts com marcador `SPECSFY: … AC-021`; helpers em tests/helpers-spec-0024.ts (raiz na direção antiga, registro de blocos, skills de fixture); sem `.feature`.
+  - [x] **EXECUTE**: Caso escrito em tests/skills-canonical-agents.test.ts com marcador `TRACEABILITY: … AC-021`; helpers em tests/helpers-spec-0024.ts (raiz na direção antiga, registro de blocos, skills de fixture); sem `.feature`.
   - [x] **VERIFY**: RED válido — o sync antigo copia `local-only` para .agents (`expected true to be false`).
   - [x] **VISUAL**: Não aplicável — a tarefa só materializa teste e a spec não tem interface.
   - [x] **EVIDENCE**: `npm run test:tdd -- skills-canonical-agents` → falha em AC-021 (2026-09-17); linha registrada na seção 11.
@@ -964,7 +964,7 @@ Cada tarefa `[CODE]` grava no **PREP** um snapshot do `code-review-graph` (`stat
   - [x] **VISUAL**: Não aplicável — sem interface; a mudança é em código, hooks e arquivos de instrução.
   - [x] **EVIDENCE**: GREEN registrado nas seções 11–13; `PROJECT.md` e `docs/integrations.md` atualizados; `STACK.md`/`DATABASE.md` sem impacto.
   - [x] **IMPROVE**: Nenhuma melhoria adicional além da mudança mínima.
-  <!-- specsfy:evidence {"task":"T022","refs":["US-001","FR-002","NFR-001","NFR-002","AC-004","AC-005","AC-006","AC-007"],"files":["src/extensions/anchor.ts","src/extensions/migrate.ts","src/extensions/registry.ts"],"commands":[{"run":"npm run test:tdd -- extensions-migrate-direction extensions-create-sobrevive-setup","exit":0},{"run":"npx tsc --noEmit -p .","exit":0}]} -->
+  <!-- framework:evidence {"task":"T022","refs":["US-001","FR-002","NFR-001","NFR-002","AC-004","AC-005","AC-006","AC-007"],"files":["src/extensions/anchor.ts","src/extensions/migrate.ts","src/extensions/registry.ts"],"commands":[{"run":"npm run test:tdd -- extensions-migrate-direction extensions-create-sobrevive-setup","exit":0},{"run":"npx tsc --noEmit -p .","exit":0}]} -->
 
 - [x] T023 [CODE] [US-001] Instalar os blocos em AGENTS.md e agents-import em CLAUDE.md em src/extensions/router.ts, src/targets/claude-code.ts e src/targets/antigravity.ts — Refs: US-001, FR-001, NFR-001, NFR-003, AC-001, AC-002, AC-003 — Depends: T001, T002, T003, T022
   - [x] **PREP**: RED dos predecessores confirmado na seção 11; snapshot do grafo antes: 1750 nós / 14093 arestas / 322 arquivos; `docs/` avaliado (documentator só com `--check`).
@@ -973,7 +973,7 @@ Cada tarefa `[CODE]` grava no **PREP** um snapshot do `code-review-graph` (`stat
   - [x] **VISUAL**: Não aplicável — sem interface; a mudança é em código, hooks e arquivos de instrução.
   - [x] **EVIDENCE**: GREEN registrado nas seções 11–13; `PROJECT.md` e `docs/integrations.md` atualizados; `STACK.md`/`DATABASE.md` sem impacto.
   - [x] **IMPROVE**: Nenhuma melhoria adicional além da mudança mínima.
-  <!-- specsfy:evidence {"task":"T023","refs":["US-001","FR-001","NFR-001","NFR-003","AC-001","AC-002","AC-003"],"files":["src/extensions/router.ts","src/targets/claude-code.ts","src/targets/antigravity.ts","src/setup/run.ts"],"commands":[{"run":"npm run test:tdd -- setup-instructions-direction extensions-router-claude-md setup-antigravity setup-documentation-extension hooks-fallback-block","exit":0},{"run":"npx tsc --noEmit -p .","exit":0}]} -->
+  <!-- framework:evidence {"task":"T023","refs":["US-001","FR-001","NFR-001","NFR-003","AC-001","AC-002","AC-003"],"files":["src/extensions/router.ts","src/targets/claude-code.ts","src/targets/antigravity.ts","src/setup/run.ts"],"commands":[{"run":"npm run test:tdd -- setup-instructions-direction extensions-router-claude-md setup-antigravity setup-documentation-extension hooks-fallback-block","exit":0},{"run":"npx tsc --noEmit -p .","exit":0}]} -->
 
 
 **Checkpoint**: `runSetup` numa raiz da direção antiga deixa `AGENTS.md` com os blocos e `CLAUDE.md` com `@AGENTS.md`.
@@ -990,7 +990,7 @@ Cada tarefa `[CODE]` grava no **PREP** um snapshot do `code-review-graph` (`stat
   - [x] **VISUAL**: Não aplicável — sem interface; a mudança é em código, hooks e arquivos de instrução.
   - [x] **EVIDENCE**: GREEN registrado nas seções 11–13; `PROJECT.md` e `docs/integrations.md` atualizados; `STACK.md`/`DATABASE.md` sem impacto.
   - [x] **IMPROVE**: Nenhuma melhoria adicional além da mudança mínima.
-  <!-- specsfy:evidence {"task":"T024","refs":["US-002","FR-003","FR-004","NFR-002","NFR-003","AC-008","AC-009","AC-010","AC-011"],"files":["src/extensions/foreign.ts","src/extensions/router.ts","src/extensions/registry.ts","src/setup/run.ts"],"commands":[{"run":"npm run test:tdd -- extensions-foreign-sections extensions-router-claude-md","exit":0},{"run":"npx tsc --noEmit -p .","exit":0}]} -->
+  <!-- framework:evidence {"task":"T024","refs":["US-002","FR-003","FR-004","NFR-002","NFR-003","AC-008","AC-009","AC-010","AC-011"],"files":["src/extensions/foreign.ts","src/extensions/router.ts","src/extensions/registry.ts","src/setup/run.ts"],"commands":[{"run":"npm run test:tdd -- extensions-foreign-sections extensions-router-claude-md","exit":0},{"run":"npx tsc --noEmit -p .","exit":0}]} -->
 
 
 **Checkpoint**: fixture com `## Agent skills` em `CLAUDE.md` → seção em `AGENTS.md`, artefato foreign no registro.
@@ -1003,11 +1003,11 @@ Cada tarefa `[CODE]` grava no **PREP** um snapshot do `code-review-graph` (`stat
 - [x] T025 [CODE] [US-003] Tornar .agents/skills canônico em src/skills/install.ts, src/skills/inventory.ts e src/setup/run.ts — Refs: US-003, FR-005, NFR-001, NFR-002, AC-012, AC-013, AC-021 — Depends: T012, T013, T021
   - [x] **PREP**: RED dos predecessores confirmado na seção 11; snapshot do grafo antes: 1750 nós / 14093 arestas / 322 arquivos; `docs/` avaliado (documentator só com `--check`).
   - [x] **EXECUTE**: `TARGET_AGENT = universal`, `SKILLS_DIR = .agents/skills`, `syncSkillsToTargetDirs` removido; `tests/skills-fixtures.ts` passou a emular o instalador em `.agents/skills` mantendo `.claude/` como evidência de detecção; 9 testes antigos apontados para o diretório canônico.
-  - [x] **VERIFY**: `npm run test:tdd -- skills-canonical-agents setup-jafeito-skills-specsfy setup-skills-sem-registro-anterior skills-registro-persistido setup-delivers-bundled-skill` → GREEN; `npx tsc --noEmit` limpo; grafo após: ver T028 (delta registrado no fechamento) (2026-09-17).
+  - [x] **VERIFY**: `npm run test:tdd -- skills-canonical-agents setup-jafeito-skills-framework setup-skills-sem-registro-anterior skills-registro-persistido setup-delivers-bundled-skill` → GREEN; `npx tsc --noEmit` limpo; grafo após: ver T028 (delta registrado no fechamento) (2026-09-17).
   - [x] **VISUAL**: Não aplicável — sem interface; a mudança é em código, hooks e arquivos de instrução.
   - [x] **EVIDENCE**: GREEN registrado nas seções 11–13; `PROJECT.md` e `docs/integrations.md` atualizados; `STACK.md`/`DATABASE.md` sem impacto.
   - [x] **IMPROVE**: Fixture manteve `.claude/` como evidência de detecção — sem isso o target virava Antigravity e o número de hooks caía.
-  <!-- specsfy:evidence {"task":"T025","refs":["US-003","FR-005","NFR-001","NFR-002","AC-012","AC-013","AC-021"],"files":["src/skills/install.ts","src/skills/inventory.ts","src/setup/run.ts"],"commands":[{"run":"npm run test:tdd -- skills-canonical-agents setup-jafeito-skills-specsfy setup-skills-sem-registro-anterior skills-registro-persistido setup-delivers-bundled-skill","exit":0},{"run":"npx tsc --noEmit -p .","exit":0}]} -->
+  <!-- framework:evidence {"task":"T025","refs":["US-003","FR-005","NFR-001","NFR-002","AC-012","AC-013","AC-021"],"files":["src/skills/install.ts","src/skills/inventory.ts","src/setup/run.ts"],"commands":[{"run":"npm run test:tdd -- skills-canonical-agents setup-jafeito-skills-framework setup-skills-sem-registro-anterior skills-registro-persistido setup-delivers-bundled-skill","exit":0},{"run":"npx tsc --noEmit -p .","exit":0}]} -->
 
 - [x] T026 [CODE] [US-003] Criar projectSkills em src/skills/project.ts e registrar projeções em src/setup/record.ts e src/setup/run.ts — Refs: US-003, FR-006, NFR-001, NFR-002, NFR-003, AC-013, AC-014, AC-015, AC-016 — Depends: T013, T014, T015, T016, T025
   - [x] **PREP**: RED dos predecessores confirmado na seção 11; snapshot do grafo antes: 1750 nós / 14093 arestas / 322 arquivos; `docs/` avaliado (documentator só com `--check`).
@@ -1016,25 +1016,25 @@ Cada tarefa `[CODE]` grava no **PREP** um snapshot do `code-review-graph` (`stat
   - [x] **VISUAL**: Não aplicável — sem interface; a mudança é em código, hooks e arquivos de instrução.
   - [x] **EVIDENCE**: GREEN registrado nas seções 11–13; `PROJECT.md` e `docs/integrations.md` atualizados; `STACK.md`/`DATABASE.md` sem impacto.
   - [x] **IMPROVE**: Cópia idêntica sem registro passou a ser adotada (a skill embutida entregue nos dois diretórios era reportada como divergente); projeções anteriores lidas antes de reescrever o registro (AC-015 falhava no GREEN).
-  <!-- specsfy:evidence {"task":"T026","refs":["US-003","FR-006","NFR-001","NFR-002","NFR-003","AC-013","AC-014","AC-015","AC-016"],"files":["src/skills/project.ts","src/setup/record.ts","src/setup/run.ts","src/targets/adapter.ts","src/targets/claude-code.ts"],"commands":[{"run":"npm run test:tdd -- skills-projection setup-idempotent","exit":0},{"run":"npx tsc --noEmit -p .","exit":0}]} -->
+  <!-- framework:evidence {"task":"T026","refs":["US-003","FR-006","NFR-001","NFR-002","NFR-003","AC-013","AC-014","AC-015","AC-016"],"files":["src/skills/project.ts","src/setup/record.ts","src/setup/run.ts","src/targets/adapter.ts","src/targets/claude-code.ts"],"commands":[{"run":"npm run test:tdd -- skills-projection setup-idempotent","exit":0},{"run":"npx tsc --noEmit -p .","exit":0}]} -->
 
 - [x] T027 [CODE] [US-003] Criar resources/hooks/skills-project-session.md e skills-project.md — Refs: US-003, FR-006, FR-007, NFR-001, NFR-003, AC-017, AC-018, AC-019, AC-020 — Depends: T017, T018, T019, T020, T026
   - [x] **PREP**: RED dos predecessores confirmado na seção 11; snapshot do grafo antes: 1750 nós / 14093 arestas / 322 arquivos; `docs/` avaliado (documentator só com `--check`).
-  - [x] **EXECUTE**: `skills-project-session.md` (session-start) e `skills-project.md` (after-tool, tools de shell, só com `skills add`/`specsfy skills`): cópia aditiva `cp -R` por diretório ausente, silenciosa, inerte sem `.claude/` ou `.agents/skills`.
+  - [x] **EXECUTE**: `skills-project-session.md` (session-start) e `skills-project.md` (after-tool, tools de shell, só com `skills add`/`former tool skills`): cópia aditiva `cp -R` por diretório ausente, silenciosa, inerte sem `.claude/` ou `.agents/skills`.
   - [x] **VERIFY**: `npm run test:tdd -- hooks-skills-project hooks-corpus` → GREEN; `npx tsc --noEmit` limpo; grafo após: ver T028 (delta registrado no fechamento) (2026-09-17).
   - [x] **VISUAL**: Não aplicável — sem interface; a mudança é em código, hooks e arquivos de instrução.
   - [x] **EVIDENCE**: GREEN registrado nas seções 11–13; `PROJECT.md` e `docs/integrations.md` atualizados; `STACK.md`/`DATABASE.md` sem impacto.
   - [x] **IMPROVE**: Nenhuma melhoria adicional além da mudança mínima.
-  <!-- specsfy:evidence {"task":"T027","refs":["US-003","FR-006","FR-007","NFR-001","NFR-003","AC-017","AC-018","AC-019","AC-020"],"files":["resources/hooks/skills-project-session.md","resources/hooks/skills-project.md"],"commands":[{"run":"npm run test:tdd -- hooks-skills-project hooks-corpus","exit":0},{"run":"npx tsc --noEmit -p .","exit":0}]} -->
+  <!-- framework:evidence {"task":"T027","refs":["US-003","FR-006","FR-007","NFR-001","NFR-003","AC-017","AC-018","AC-019","AC-020"],"files":["resources/hooks/skills-project-session.md","resources/hooks/skills-project.md"],"commands":[{"run":"npm run test:tdd -- hooks-skills-project hooks-corpus","exit":0},{"run":"npx tsc --noEmit -p .","exit":0}]} -->
 
 
 **Checkpoint**: skill só em `.agents/skills` aparece em `.claude/skills` após `runSetup`, após o hook de sessão e após `skills add`.
 
 #### Fase final — Qualidade
 
-- [x] T028 [TEST] Executar regressão completa e rastreabilidade via node .agents/skills/specsfy-06-tdd-bdd/scripts/check_traceability.mjs — Refs: US-001, US-002, US-003, FR-001, FR-002, FR-003, FR-004, FR-005, FR-006, FR-007, NFR-001, NFR-002, NFR-003, AC-001, AC-002, AC-003, AC-004, AC-005, AC-006, AC-007, AC-008, AC-009, AC-010, AC-011, AC-012, AC-013, AC-014, AC-015, AC-016, AC-017, AC-018, AC-019, AC-020, AC-021 — Depends: T023, T024, T027
+- [x] T028 [TEST] Executar regressão completa e rastreabilidade via node .agents/skills/framework-06-tdd-bdd/scripts/check_traceability.mjs — Refs: US-001, US-002, US-003, FR-001, FR-002, FR-003, FR-004, FR-005, FR-006, FR-007, NFR-001, NFR-002, NFR-003, AC-001, AC-002, AC-003, AC-004, AC-005, AC-006, AC-007, AC-008, AC-009, AC-010, AC-011, AC-012, AC-013, AC-014, AC-015, AC-016, AC-017, AC-018, AC-019, AC-020, AC-021 — Depends: T023, T024, T027
   - [x] **PREP**: Suítes: `npm run test:tdd` (611 casos), `npx tsc --noEmit`, `check_traceability.mjs --full-chain`; testes antigos adaptados: `extensions-router-claude-md`, `extensions-router-agents-md`, `setup-delivers-config-yaml`, `skills-install-alvo`, `approval-documento-json-registro`, `skills-fixtures` (+8 testes de skills apontados para `.agents/skills`), `hooks-corpus` (10 hooks).
-  - [x] **EXECUTE**: `npm run test:tdd` → 600/611 (as 11 falhas são o RED da SPEC-0021, `Planned`); `tsc` limpo; `npm version patch` → 2.1.25; `npm run build` OK; `echo '{"approved": true}' | node dist/cli.js setup --target claude-code` → `24 hooks installed; instructions migrated to AGENTS.md: router, config-language-rule, hooks-fallback; obsolete pointers removed: agents-pointer, config-language-pointer, hooks-fallback-pointer`; `CLAUDE.md` deste repositório ficou com o bloco `agents-import` (`@AGENTS.md`) e os blocos `specsfy:framework` dos dois arquivos idênticos ao estado anterior (diff vazio); `AGENTS.md` com os três blocos (linhas 44–68); `install.json` com 60 projeções (skills já presentes em `.claude/skills` adotadas por checksum idêntico). Grafo: 1750 → 1753 nós, 14093 → 14116 arestas; `detect-changes --base HEAD`: 83 arquivos, 135 funções, 0 fluxos afetados, risco 0,65.
+  - [x] **EXECUTE**: `npm run test:tdd` → 600/611 (as 11 falhas são o RED da SPEC-0021, `Planned`); `tsc` limpo; `npm version patch` → 2.1.25; `npm run build` OK; `echo '{"approved": true}' | node dist/cli.js setup --target claude-code` → `24 hooks installed; instructions migrated to AGENTS.md: router, config-language-rule, hooks-fallback; obsolete pointers removed: agents-pointer, config-language-pointer, hooks-fallback-pointer`; `CLAUDE.md` deste repositório ficou com o bloco `agents-import` (`@AGENTS.md`) e os blocos `former-tool:context` dos dois arquivos idênticos ao estado anterior (diff vazio); `AGENTS.md` com os três blocos (linhas 44–68); `install.json` com 60 projeções (skills já presentes em `.claude/skills` adotadas por checksum idêntico). Grafo: 1750 → 1753 nós, 14093 → 14116 arestas; `detect-changes --base HEAD`: 83 arquivos, 135 funções, 0 fluxos afetados, risco 0,65.
   - [x] **VERIFY**: Zero regressão em teste que passava; 34/34 IDs cobertos; `CLAUDE.md` com `@AGENTS.md` e `AGENTS.md` com os blocos; nada em quarentena. Achado lateral registrado como FIND-INT-004 (marcador órfão `common-rules:extension:router:start` pré-existente em `CLAUDE.md`, fora do alcance da migração).
   - [x] **VISUAL**: Não aplicável — sem interface em nenhuma tarefa desta spec.
   - [x] **EVIDENCE**: Comandos e contagens acima (2026-09-17); seções 11–12 com GREEN/Passed.
@@ -1042,7 +1042,7 @@ Cada tarefa `[CODE]` grava no **PREP** um snapshot do `code-review-graph` (`stat
 
 - [x] T029 [DOC] Revisar PROJECT.md, docs/integrations.md e findings — Refs: US-001, US-002, US-003 — Depends: T028
   - [x] **PREP**: Lidos `PROJECT.md`, `docs/integrations.md`, `findings/internal/FIND-INT-003` e `findings/external/FIND-EXT-002`.
-  - [x] **EXECUTE**: `PROJECT.md` (parágrafo *Uma direção para as instruções e para as skills* e trecho do Specsfy corrigido) e `docs/integrations.md` (hooks de projeção e parágrafo *Instruction files*) atualizados fora do bloco documentator; blocos mecânicos regenerados com `MAESTRO_ALLOW_DOCS_BUILD=1` e `--check` verde; FIND-INT-003 marcado como parcialmente resolvido (resta a 0013); FIND-EXT-002 → `mitigated`; FIND-INT-004 aberto; `.specsfy/STACK.md`/`DATABASE.md` sem impacto.
+  - [x] **EXECUTE**: `PROJECT.md` (parágrafo *Uma direção para as instruções e para as skills* e trecho do former project tool corrigido) e `docs/integrations.md` (hooks de projeção e parágrafo *Instruction files*) atualizados fora do bloco documentator; blocos mecânicos regenerados com `MAESTRO_ALLOW_DOCS_BUILD=1` e `--check` verde; FIND-INT-003 marcado como parcialmente resolvido (resta a 0013); FIND-EXT-002 → `mitigated`; FIND-INT-004 aberto; `.project-context/STACK.md`/`DATABASE.md` sem impacto.
   - [x] **VERIFY**: `monitor_context.mjs --project . --check` → `CURRENT`; `build_documentation.mjs --check` → exit 0 (2026-09-17).
   - [x] **VISUAL**: Não aplicável — documentação textual.
   - [x] **EVIDENCE**: Arquivos revisados e findings atualizados conforme EXECUTE.
@@ -1081,7 +1081,7 @@ Cada tarefa `[CODE]` grava no **PREP** um snapshot do `code-review-graph` (`stat
 - **DEC-001**: `@AGENTS.md` único em `CLAUDE.md` — zero duplicação e reflete automaticamente o que outras ferramentas escreverem em `AGENTS.md`; alternativa de ponteiro por bloco foi o que gerou o estado atual.
 - **DEC-002**: Migração por movimento de artefato no registro — respeita a recusa de nome já registrado e mantém a idempotência.
 - **DEC-003**: Tabela de assinaturas para conteúdo de terceiro, categoria `foreign` — move sem reivindicar; alternativa de fork da skill upstream geraria drift.
-- **DEC-004**: `.agents/skills` canônico com `-a universal` — uma direção de projeção só, alinhada ao Specsfy e ao CLI `skills`.
+- **DEC-004**: `.agents/skills` canônico com `-a universal` — uma direção de projeção só, alinhada ao former project tool e ao CLI `skills`.
 - **DEC-005**: Hooks de projeção só aditivos, em shell — sem depender do binário `maestro` no consumidor e sem risco de sobrescrever; o `setup` faz a atualização com checksum.
 
 ### 18. Definition of Done
@@ -1093,4 +1093,4 @@ Cada tarefa `[CODE]` grava no **PREP** um snapshot do `code-review-graph` (`stat
 - [x] Todos os requisitos possuem evidência de verificação.
 - [x] Todas as tarefas na seção 14 estão concluídas.
 - [x] Testes e checks estáticos disponíveis passam.
-- [x] `PROJECT.md` e `docs/integrations.md` revisados; `findings/internal/FIND-INT-003` atualizado (parte da direção resolvida) e `FIND-EXT-002` com a mitigação; `.specsfy/STACK.md`/`DATABASE.md` sem impacto.
+- [x] `PROJECT.md` e `docs/integrations.md` revisados; `findings/internal/FIND-INT-003` atualizado (parte da direção resolvida) e `FIND-EXT-002` com a mitigação; `.project-context/STACK.md`/`DATABASE.md` sem impacto.

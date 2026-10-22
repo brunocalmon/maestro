@@ -4,7 +4,7 @@ import { detectEnvironment } from "../src/setup/env";
 import { project } from "./aprovacao-fixtures";
 
 describe("AC-115 — refusing writes nothing and runs nothing", () => {
-  // SPECSFY: US-071 FR-071 FR-073 AC-115
+  // TRACEABILITY: US-071 FR-071 FR-073 AC-115
   it("a refused command stays pending on the next run, never silently ends up approved", () => {
     const root = project();
     const throwingExecutor = (): never => {

@@ -13,17 +13,17 @@ function withoutTrace(): string {
 }
 
 describe("AC-047 — a record written before this fatia is read", () => {
-  // SPECSFY: US-041 FR-045 AC-047
+  // TRACEABILITY: US-041 FR-045 AC-047
   it("the read happens without error", () => {
     expect(() => inspectDependencies(env, withoutTrace(), noBackends, noExtensions)).not.toThrow();
   });
 
-  // SPECSFY: US-041 FR-044 AC-047
+  // TRACEABILITY: US-041 FR-044 AC-047
   it("the report states the run wasn't identified", () => {
     expect(inspectDependencies(env, withoutTrace(), noBackends, noExtensions).trace?.kind).toBe("unidentified");
   });
 
-  // SPECSFY: US-041 NFR-042 AC-047
+  // TRACEABILITY: US-041 NFR-042 AC-047
   it("nothing on disk is changed by the read", () => {
     const root = withoutTrace();
     const before = fileTree(root);

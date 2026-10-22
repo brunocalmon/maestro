@@ -4,7 +4,7 @@ import { readExtensionRegistry } from "../src/extensions/registry";
 import { checksumEnvFake, targetEnvFake } from "./extensions-fixtures";
 
 describe("AC-130 — an extension created via the CLI survives a reinstall", () => {
-  // SPECSFY: US-080 FR-080 FR-081 FR-082 NFR-083 AC-130
+  // TRACEABILITY: US-080 FR-080 FR-081 FR-082 NFR-083 AC-130
   it("a second read of the registry recognizes the same checksum", () => {
     const registryEnv = checksumEnvFake();
     const targetEnv = targetEnvFake();

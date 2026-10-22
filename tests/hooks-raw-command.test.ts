@@ -25,7 +25,7 @@ function declaredCommand(fileName: string): string {
 }
 
 describe("AC-010 — fragment fidelity for a hook without a code block", () => {
-  // SPECSFY: US-001 FR-002 AC-010
+  // TRACEABILITY: US-001 FR-002 AC-010
   it("the fragment embedded in the script is exactly the declared raw_command", () => {
     for (const name of HOOKS_WITHOUT_BLOCK) {
       const hook = readHook(readFileSync(join(SYNTHETIC_DIR, name), "utf8"));
@@ -33,7 +33,7 @@ describe("AC-010 — fragment fidelity for a hook without a code block", () => {
     }
   });
 
-  // SPECSFY: US-001 FR-002 AC-010
+  // TRACEABILITY: US-001 FR-002 AC-010
   it("the translated script contains the command, not an empty fragment", () => {
     for (const name of HOOKS_WITHOUT_BLOCK) {
       const hook = readHook(readFileSync(join(SYNTHETIC_DIR, name), "utf8"));
@@ -42,7 +42,7 @@ describe("AC-010 — fragment fidelity for a hook without a code block", () => {
     }
   });
 
-  // SPECSFY: US-001 FR-002 AC-010
+  // TRACEABILITY: US-001 FR-002 AC-010
   it("the command actually runs when the script executes as a subprocess, not just appears in the text", () => {
     const hook = readHook(readFileSync(join(SYNTHETIC_DIR, "dispatch-probe.md"), "utf8"));
     const translated = translateForClaudeCode(hook);

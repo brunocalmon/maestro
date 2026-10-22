@@ -2,7 +2,7 @@ import { describe, it, expect } from "vitest";
 import { run } from "../src/cli";
 
 describe("AC-001 — o comando exige a execução", () => {
-  // SPECSFY: US-001 FR-001 NFR-002 AC-001
+  // TRACEABILITY: US-001 FR-001 NFR-002 AC-001
   it("recusa quando o identificador não é informado", () => {
     const outcome = run(["run"]);
 
@@ -12,7 +12,7 @@ describe("AC-001 — o comando exige a execução", () => {
 });
 
 describe("AC-002 — o comando publica seu uso", () => {
-  // SPECSFY: US-001 FR-001 NFR-001 AC-002
+  // TRACEABILITY: US-001 FR-001 NFR-001 AC-002
   it("imprime o uso e sai com zero em --help", () => {
     const outcome = run(["run", "--help"]);
 
@@ -22,7 +22,7 @@ describe("AC-002 — o comando publica seu uso", () => {
 });
 
 describe("AC-003 — execução inexistente é recusada", () => {
-  // SPECSFY: US-001 FR-001 NFR-002 AC-003
+  // TRACEABILITY: US-001 FR-001 NFR-002 AC-003
   it("identificador sem plano aprovado é recusado", () => {
     const outcome = run(["run", "naoexisteesteidentificador"]);
 

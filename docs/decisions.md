@@ -4,20 +4,20 @@
 
 # Architecture Decision Records (ADRs) of Maestro
 
-<!-- specsfy:documentator:start -->
+<!-- maestro:inventory:start -->
 ## Política
 
-Decisões explícitas em `PROJECT.md` e `.specsfy/` prevalecem sobre inferências deste documento.
-<!-- specsfy:documentator:end -->
+Decisões explícitas em `PROJECT.md` e `.project-context/` prevalecem sobre inferências deste documento.
+<!-- maestro:inventory:end -->
 
-<!-- O bloco specsfy:documentator acima é o inventário mecânico gerado pelo Specsfy e é reescrito a cada build (findings/external/FIND-EXT-001). A documentação do projeto vive fora dele, a partir daqui. -->
+<!-- O bloco maestro:inventory acima é o inventário mecânico gerado pelo former project tool e é reescrito a cada build (findings/external/FIND-EXT-001). A documentação do projeto vive fora dele, a partir daqui. -->
 
 ## Decisions Overview
 
 Architecture decisions in **Maestro** are formally recorded through specifications (`specs/`) and aligned with principles of deterministic, secure, and non-destructive orchestration.
 
 In case of conflict, the following normative hierarchy applies:
-1. Explicit rules in `PROJECT.md` and `.specsfy/RULES.md`.
+1. Explicit rules in `PROJECT.md` and `.project-context/RULES.md`.
 2. Formal specifications approved in `specs/completed/`.
 3. Contents of this decision synthesis document.
 
@@ -26,7 +26,7 @@ In case of conflict, the following normative hierarchy applies:
 ## ADRs and Key Design Decisions
 
 ### ADR-001: 3-Layer Dependency Hierarchy (SPEC-0002)
-- **Context**: Maestro must integrate npm tools (`@promovaweb/specsfy`, `context-mode`), Python utilities (`code-review-graph`), and AI agents (`pi`, `agy`, `claude`, `codex`, `goose`).
+- **Context**: Maestro must integrate npm tools (`removed-project-integration`, `context-mode`), Python utilities (`code-review-graph`), and AI agents (`pi`, `agy`, `claude`, `codex`, `goose`).
 - **Decision**: 
   - **npm Subsystems**: Strictly pinned to local project dependency versions.
   - **Python Subsystems**: Isolated in local project `venv` (`.venv`) upon prior approval. Never installed globally.

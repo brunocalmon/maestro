@@ -5,7 +5,7 @@ import { resolve } from "node:path";
 const pkg = JSON.parse(readFileSync(resolve(__dirname, "..", "package.json"), "utf8"));
 
 describe("AC-001 — pacote e binários declaram o nome novo", () => {
-  // SPECSFY: US-001 FR-001 NFR-001 AC-001
+  // TRACEABILITY: US-001 FR-001 NFR-001 AC-001
   it("declara o pacote como @brunocalmon/maestro, com os binários maestro e maestro-mcp", () => {
     expect(pkg.name).toBe("@brunocalmon/maestro");
     expect(pkg.bin).toMatchObject({
@@ -16,7 +16,7 @@ describe("AC-001 — pacote e binários declaram o nome novo", () => {
 });
 
 describe("AC-002 — binário antigo deixa de existir", () => {
-  // SPECSFY: US-001 FR-001 NFR-001 AC-002
+  // TRACEABILITY: US-001 FR-001 NFR-001 AC-002
   it("não declara mais os binários common-rules ou common-rules-mcp", () => {
     expect(pkg.bin).not.toHaveProperty("common-rules");
     expect(pkg.bin).not.toHaveProperty("common-rules-mcp");
@@ -24,7 +24,7 @@ describe("AC-002 — binário antigo deixa de existir", () => {
 });
 
 describe("AC-003 — nenhuma referência residual no código de produção", () => {
-  // SPECSFY: US-001 FR-001 NFR-001 AC-003
+  // TRACEABILITY: US-001 FR-001 NFR-001 AC-003
   it("grep por common-rules em src/, resources/, package.json e Dockerfile não encontra nada", () => {
     const { execFileSync } = require("node:child_process") as typeof import("node:child_process");
     const root = resolve(__dirname, "..");

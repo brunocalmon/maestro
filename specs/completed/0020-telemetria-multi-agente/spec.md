@@ -2,7 +2,7 @@
 
 | Campo | Valor |
 | --- | --- |
-| Formato | Specsfy/2.0 |
+| Formato | former project tool/2.0 |
 | ID | SPEC-0020 |
 | Slug | 0020-telemetria-multi-agente |
 | Status | Complete |
@@ -530,20 +530,20 @@ tests/
 #### Gate do Ato I — Definição
 
 - **Resultado**: READY (2026-09-07)
-- **Comando**: `node .agents/skills/specsfy-04-validate/scripts/validate_spec.mjs specs/draft/0020-telemetria-multi-agente/spec.md --allow-draft` → `VALID DRAFT`.
+- **Comando**: `node .agents/skills/framework-04-validate/scripts/validate_spec.mjs specs/draft/0020-telemetria-multi-agente/spec.md --allow-draft` → `VALID DRAFT`.
 - **Achados**: Nenhum `BLOCKER`. As quatro decisões da rodada de descoberta viraram `FR`/`DEC` rastreáveis. Cobertura: US-001 → 10 AC; US-002 → 3 AC; FR-001 → 5; FR-002 → 3; FR-003 → 3; FR-004 → 3; NFR-001 → 9; NFR-002 → 5. Sem claim externo crítico — a fatia reaproveita mecanismo já verificado com binário real pela `SPEC-0019`. `Interface para pessoas: Não` justificada. Finding de privacidade material e endereçado: `PR-003`/`NFR-002`/`AC-007` existem precisamente para impedir que telemetria vire um segundo canal de vazamento do que o subprocesso produziu.
 
 #### Gate do Ato II — Plano
 
 - **Resultado**: Passed (2026-09-07)
-- **Comando**: `node .agents/skills/specsfy-05-tasks/scripts/validate_tasks.mjs specs/defined/0020-telemetria-multi-agente/spec.md` → `RESULTADO: READY`.
+- **Comando**: `node .agents/skills/framework-05-tasks/scripts/validate_tasks.mjs specs/defined/0020-telemetria-multi-agente/spec.md` → `RESULTADO: READY`.
 - **Achados**: 14 casos TDD (um por AC) escritos em três arquivos Vitest. RED confirmado para todos, incluindo AC-005/AC-007/AC-011, cuja primeira versão passava vacuamente por ausência total do mecanismo (não por comportamento correto) — refinados para provar, no mesmo teste, que o coletor de fato grava para `cli` antes de afirmar que não grava para `native`/`auto`. Quatro tarefas `[CODE]` (T015–T018) cobrem os módulos novos e a extensão aditiva de `run.ts`/`cli.ts`, cada uma com ao menos três predecessores TDD rastreáveis. Nenhum `BLOCKER` de plano.
 
 #### Gate do Ato III — Entrega
 
 - **Resultado**: Passed (2026-09-07)
 - **Comandos**: `check_traceability.mjs` → 22/22 IDs desta spec cobertos; `verify_acceptance.mjs` → `QA: PASSED`; `validate_tasks.mjs` → `RESULTADO: READY` (20/20 tarefas, contrato de evidência verificado); `npx vitest run` → 189 arquivos, 524/524; `npx tsc --noEmit` limpo.
-- **Achados**: Todas as 14 ACs passaram de RED para GREEN. Verificação manual real: `maestro plan` → `maestro run` → `maestro report <trace>` com um agente `runtime: cli` real sobre `goose` nesta máquina — o modelo respondeu "OK" à tarefa pedida, e `.maestro/telemetry/<trace>.json` gravou exatamente `agent`, `backend: "goose"`, `model: "qwen2.5:3b"`, `startedAt`, `durationMs: 16683`, `outcome: "ran"`, `exitCode: 0` — nenhum stdout/stderr, confirmando `NFR-002` fora do teste unitário. `maestro report` sobre um trace inexistente recusou nomeando a ausência, código de saída `2`. `docs/` e `.specsfy/STACK.md` atualizados; `PROJECT.md` revisado. Nenhum `BLOCKER`.
+- **Achados**: Todas as 14 ACs passaram de RED para GREEN. Verificação manual real: `maestro plan` → `maestro run` → `maestro report <trace>` com um agente `runtime: cli` real sobre `goose` nesta máquina — o modelo respondeu "OK" à tarefa pedida, e `.maestro/telemetry/<trace>.json` gravou exatamente `agent`, `backend: "goose"`, `model: "qwen2.5:3b"`, `startedAt`, `durationMs: 16683`, `outcome: "ran"`, `exitCode: 0` — nenhum stdout/stderr, confirmando `NFR-002` fora do teste unitário. `maestro report` sobre um trace inexistente recusou nomeando a ausência, código de saída `2`. `docs/` e `.project-context/STACK.md` atualizados; `PROJECT.md` revisado. Nenhum `BLOCKER`.
 
 ### 14. Tarefas
 
@@ -565,7 +565,7 @@ Cada tarefa possui exatamente este checklist, atualizado durante a execução:
 
 - [x] T001 [P] [TEST] [TDD] [US-001] Derivar de AC-001 um caso Vitest falhando em tests/telemetry-record.test.ts — Refs: US-001, FR-001, NFR-001, AC-001 — Depends: none
   - [x] **PREP**: Ler o Gherkin de AC-001; confirmar que `CliRuntimeContext.telemetry` ainda não existe.
-  - [x] **EXECUTE**: Escrever o caso com marcador `SPECSFY: US-001 FR-001 NFR-001 AC-001` — um agente cli autorizado e executado grava um registro `outcome: "ran"` com backend, modelo, exitCode e duração.
+  - [x] **EXECUTE**: Escrever o caso com marcador `TRACEABILITY: US-001 FR-001 NFR-001 AC-001` — um agente cli autorizado e executado grava um registro `outcome: "ran"` com backend, modelo, exitCode e duração.
   - [x] **VERIFY**: `npx vitest run tests/telemetry-record.test.ts` — observar RED.
   - [x] **VISUAL**: Não aplicável — arquivo de teste sem superfície visual.
   - [x] **EVIDENCE**: Registrar comando e causa do RED nas seções 11–12.
@@ -573,7 +573,7 @@ Cada tarefa possui exatamente este checklist, atualizado durante a execução:
 
 - [x] T002 [P] [TEST] [TDD] [US-001] Derivar de AC-002 um caso Vitest falhando em tests/telemetry-record.test.ts — Refs: US-001, FR-001, NFR-002, AC-002 — Depends: none
   - [x] **PREP**: Ler o Gherkin de AC-002.
-  - [x] **EXECUTE**: Escrever o caso com marcador `SPECSFY: US-001 FR-001 NFR-002 AC-002` — tools required não suportável grava `outcome: "refused", stage: "tools"`.
+  - [x] **EXECUTE**: Escrever o caso com marcador `TRACEABILITY: US-001 FR-001 NFR-002 AC-002` — tools required não suportável grava `outcome: "refused", stage: "tools"`.
   - [x] **VERIFY**: `npx vitest run tests/telemetry-record.test.ts` — observar RED.
   - [x] **VISUAL**: Não aplicável — arquivo de teste sem superfície visual.
   - [x] **EVIDENCE**: Registrar comando e causa do RED nas seções 11–12.
@@ -581,7 +581,7 @@ Cada tarefa possui exatamente este checklist, atualizado durante a execução:
 
 - [x] T003 [P] [TEST] [TDD] [US-001] Derivar de AC-003 um caso Vitest falhando em tests/telemetry-record.test.ts — Refs: US-001, FR-001, NFR-002, AC-003 — Depends: none
   - [x] **PREP**: Ler o Gherkin de AC-003.
-  - [x] **EXECUTE**: Escrever o caso com marcador `SPECSFY: US-001 FR-001 NFR-002 AC-003` — backend required ausente grava `outcome: "refused", stage: "backend"`.
+  - [x] **EXECUTE**: Escrever o caso com marcador `TRACEABILITY: US-001 FR-001 NFR-002 AC-003` — backend required ausente grava `outcome: "refused", stage: "backend"`.
   - [x] **VERIFY**: `npx vitest run tests/telemetry-record.test.ts` — observar RED.
   - [x] **VISUAL**: Não aplicável — arquivo de teste sem superfície visual.
   - [x] **EVIDENCE**: Registrar comando e causa do RED nas seções 11–12.
@@ -589,7 +589,7 @@ Cada tarefa possui exatamente este checklist, atualizado durante a execução:
 
 - [x] T004 [P] [TEST] [TDD] [US-001] Derivar de AC-004 um caso Vitest falhando em tests/telemetry-record.test.ts — Refs: US-001, FR-001, NFR-002, AC-004 — Depends: none
   - [x] **PREP**: Ler o Gherkin de AC-004.
-  - [x] **EXECUTE**: Escrever o caso com marcador `SPECSFY: US-001 FR-001 NFR-002 AC-004` — decisão negativa do gate grava `outcome: "refused", stage: "gate"`.
+  - [x] **EXECUTE**: Escrever o caso com marcador `TRACEABILITY: US-001 FR-001 NFR-002 AC-004` — decisão negativa do gate grava `outcome: "refused", stage: "gate"`.
   - [x] **VERIFY**: `npx vitest run tests/telemetry-record.test.ts` — observar RED.
   - [x] **VISUAL**: Não aplicável — arquivo de teste sem superfície visual.
   - [x] **EVIDENCE**: Registrar comando e causa do RED nas seções 11–12.
@@ -597,7 +597,7 @@ Cada tarefa possui exatamente este checklist, atualizado durante a execução:
 
 - [x] T005 [P] [TEST] [TDD] [US-001] Derivar de AC-005 um caso Vitest falhando em tests/telemetry-record.test.ts — Refs: US-001, FR-002, NFR-001, AC-005 — Depends: none
   - [x] **PREP**: Ler o Gherkin de AC-005.
-  - [x] **EXECUTE**: Escrever o caso com marcador `SPECSFY: US-001 FR-002 NFR-001 AC-005` — agente native/auto nunca chama o hook de telemetria.
+  - [x] **EXECUTE**: Escrever o caso com marcador `TRACEABILITY: US-001 FR-002 NFR-001 AC-005` — agente native/auto nunca chama o hook de telemetria.
   - [x] **VERIFY**: `npx vitest run tests/telemetry-record.test.ts` — observar RED.
   - [x] **VISUAL**: Não aplicável — arquivo de teste sem superfície visual.
   - [x] **EVIDENCE**: Registrar comando e causa do RED nas seções 11–12.
@@ -605,7 +605,7 @@ Cada tarefa possui exatamente este checklist, atualizado durante a execução:
 
 - [x] T006 [P] [TEST] [TDD] [US-001] Derivar de AC-006 um caso Vitest falhando em tests/telemetry-store.test.ts — Refs: US-001, FR-003, NFR-001, AC-006 — Depends: none
   - [x] **PREP**: Ler o Gherkin de AC-006; confirmar que `src/telemetry/store.ts` não existe.
-  - [x] **EXECUTE**: Escrever o caso com marcador `SPECSFY: US-001 FR-003 NFR-001 AC-006` — dois agentes cli do mesmo plano produzem dois registros no arquivo do trace, nenhum sobrescrevendo o outro.
+  - [x] **EXECUTE**: Escrever o caso com marcador `TRACEABILITY: US-001 FR-003 NFR-001 AC-006` — dois agentes cli do mesmo plano produzem dois registros no arquivo do trace, nenhum sobrescrevendo o outro.
   - [x] **VERIFY**: `npx vitest run tests/telemetry-store.test.ts` — observar RED.
   - [x] **VISUAL**: Não aplicável — arquivo de teste sem superfície visual.
   - [x] **EVIDENCE**: Registrar comando e causa do RED nas seções 11–12.
@@ -613,7 +613,7 @@ Cada tarefa possui exatamente este checklist, atualizado durante a execução:
 
 - [x] T007 [P] [TEST] [TDD] [US-001] Derivar de AC-007 um caso Vitest falhando em tests/telemetry-record.test.ts — Refs: US-001, FR-001, NFR-002, AC-007 — Depends: none
   - [x] **PREP**: Ler o Gherkin de AC-007.
-  - [x] **EXECUTE**: Escrever o caso com marcador `SPECSFY: US-001 FR-001 NFR-002 AC-007` — inspecionar todas as chaves do registro gravado e confirmar que nenhuma contém o texto de stdout/stderr do spawn.
+  - [x] **EXECUTE**: Escrever o caso com marcador `TRACEABILITY: US-001 FR-001 NFR-002 AC-007` — inspecionar todas as chaves do registro gravado e confirmar que nenhuma contém o texto de stdout/stderr do spawn.
   - [x] **VERIFY**: `npx vitest run tests/telemetry-record.test.ts` — observar RED.
   - [x] **VISUAL**: Não aplicável — arquivo de teste sem superfície visual.
   - [x] **EVIDENCE**: Registrar comando e causa do RED nas seções 11–12.
@@ -621,7 +621,7 @@ Cada tarefa possui exatamente este checklist, atualizado durante a execução:
 
 - [x] T008 [P] [TEST] [TDD] [US-002] Derivar de AC-008 um caso Vitest falhando em tests/telemetry-report.test.ts — Refs: US-002, FR-004, NFR-001, AC-008 — Depends: none
   - [x] **PREP**: Ler o Gherkin de AC-008; confirmar que `src/telemetry/render.ts` não existe.
-  - [x] **EXECUTE**: Escrever o caso com marcador `SPECSFY: US-002 FR-004 NFR-001 AC-008` — `renderTelemetry` sobre um registro com entradas nomeia agente, backend, modelo e resultado de cada uma.
+  - [x] **EXECUTE**: Escrever o caso com marcador `TRACEABILITY: US-002 FR-004 NFR-001 AC-008` — `renderTelemetry` sobre um registro com entradas nomeia agente, backend, modelo e resultado de cada uma.
   - [x] **VERIFY**: `npx vitest run tests/telemetry-report.test.ts` — observar RED.
   - [x] **VISUAL**: Não aplicável — arquivo de teste sem superfície visual.
   - [x] **EVIDENCE**: Registrar comando e causa do RED nas seções 11–12.
@@ -629,7 +629,7 @@ Cada tarefa possui exatamente este checklist, atualizado durante a execução:
 
 - [x] T009 [P] [TEST] [TDD] [US-002] Derivar de AC-009 um caso Vitest falhando em tests/telemetry-report.test.ts — Refs: US-002, FR-004, NFR-002, AC-009 — Depends: none
   - [x] **PREP**: Ler o Gherkin de AC-009.
-  - [x] **EXECUTE**: Escrever o caso com marcador `SPECSFY: US-002 FR-004 NFR-002 AC-009` — `formatReport` sobre um trace sem arquivo de telemetria recusa nomeando a ausência, código de saída diferente de zero.
+  - [x] **EXECUTE**: Escrever o caso com marcador `TRACEABILITY: US-002 FR-004 NFR-002 AC-009` — `formatReport` sobre um trace sem arquivo de telemetria recusa nomeando a ausência, código de saída diferente de zero.
   - [x] **VERIFY**: `npx vitest run tests/telemetry-report.test.ts` — observar RED.
   - [x] **VISUAL**: Não aplicável — arquivo de teste sem superfície visual.
   - [x] **EVIDENCE**: Registrar comando e causa do RED nas seções 11–12.
@@ -637,7 +637,7 @@ Cada tarefa possui exatamente este checklist, atualizado durante a execução:
 
 - [x] T010 [P] [TEST] [TDD] [US-001] Derivar de AC-010 um caso Vitest falhando em tests/telemetry-record.test.ts — Refs: US-001, FR-002, NFR-001, AC-010 — Depends: none
   - [x] **PREP**: Ler o Gherkin de AC-010.
-  - [x] **EXECUTE**: Escrever o caso com marcador `SPECSFY: US-001 FR-002 NFR-001 AC-010` — plano com um agente native e um agente cli grava telemetria só para o cli.
+  - [x] **EXECUTE**: Escrever o caso com marcador `TRACEABILITY: US-001 FR-002 NFR-001 AC-010` — plano com um agente native e um agente cli grava telemetria só para o cli.
   - [x] **VERIFY**: `npx vitest run tests/telemetry-record.test.ts` — observar RED.
   - [x] **VISUAL**: Não aplicável — arquivo de teste sem superfície visual.
   - [x] **EVIDENCE**: Registrar comando e causa do RED nas seções 11–12.
@@ -645,7 +645,7 @@ Cada tarefa possui exatamente este checklist, atualizado durante a execução:
 
 - [x] T011 [P] [TEST] [TDD] [US-001] Derivar de AC-011 um caso Vitest falhando em tests/telemetry-record.test.ts — Refs: US-001, FR-002, NFR-001, AC-011 — Depends: none
   - [x] **PREP**: Ler o Gherkin de AC-011.
-  - [x] **EXECUTE**: Escrever o caso com marcador `SPECSFY: US-001 FR-002 NFR-001 AC-011` — plano só com native/auto não cria nenhum arquivo de telemetria.
+  - [x] **EXECUTE**: Escrever o caso com marcador `TRACEABILITY: US-001 FR-002 NFR-001 AC-011` — plano só com native/auto não cria nenhum arquivo de telemetria.
   - [x] **VERIFY**: `npx vitest run tests/telemetry-record.test.ts` — observar RED.
   - [x] **VISUAL**: Não aplicável — arquivo de teste sem superfície visual.
   - [x] **EVIDENCE**: Registrar comando e causa do RED nas seções 11–12.
@@ -653,7 +653,7 @@ Cada tarefa possui exatamente este checklist, atualizado durante a execução:
 
 - [x] T012 [P] [TEST] [TDD] [US-001] Derivar de AC-012 um caso Vitest falhando em tests/telemetry-store.test.ts — Refs: US-001, FR-003, NFR-001, AC-012 — Depends: none
   - [x] **PREP**: Ler o Gherkin de AC-012.
-  - [x] **EXECUTE**: Escrever o caso com marcador `SPECSFY: US-001 FR-003 NFR-001 AC-012` — duas chamadas de `appendTelemetryEntry` para o mesmo trace acumulam na ordem em que foram gravadas.
+  - [x] **EXECUTE**: Escrever o caso com marcador `TRACEABILITY: US-001 FR-003 NFR-001 AC-012` — duas chamadas de `appendTelemetryEntry` para o mesmo trace acumulam na ordem em que foram gravadas.
   - [x] **VERIFY**: `npx vitest run tests/telemetry-store.test.ts` — observar RED.
   - [x] **VISUAL**: Não aplicável — arquivo de teste sem superfície visual.
   - [x] **EVIDENCE**: Registrar comando e causa do RED nas seções 11–12.
@@ -661,7 +661,7 @@ Cada tarefa possui exatamente este checklist, atualizado durante a execução:
 
 - [x] T013 [P] [TEST] [TDD] [US-001] Derivar de AC-013 um caso Vitest falhando em tests/telemetry-store.test.ts — Refs: US-001, FR-003, NFR-001, AC-013 — Depends: none
   - [x] **PREP**: Ler o Gherkin de AC-013.
-  - [x] **EXECUTE**: Escrever o caso com marcador `SPECSFY: US-001 FR-003 NFR-001 AC-013` — `appendTelemetryEntry` cria `.maestro/telemetry/` quando ausente.
+  - [x] **EXECUTE**: Escrever o caso com marcador `TRACEABILITY: US-001 FR-003 NFR-001 AC-013` — `appendTelemetryEntry` cria `.maestro/telemetry/` quando ausente.
   - [x] **VERIFY**: `npx vitest run tests/telemetry-store.test.ts` — observar RED.
   - [x] **VISUAL**: Não aplicável — arquivo de teste sem superfície visual.
   - [x] **EVIDENCE**: Registrar comando e causa do RED nas seções 11–12.
@@ -669,7 +669,7 @@ Cada tarefa possui exatamente este checklist, atualizado durante a execução:
 
 - [x] T014 [P] [TEST] [TDD] [US-002] Derivar de AC-014 um caso Vitest falhando em tests/telemetry-report.test.ts — Refs: US-002, FR-004, NFR-001, AC-014 — Depends: none
   - [x] **PREP**: Ler o Gherkin de AC-014.
-  - [x] **EXECUTE**: Escrever o caso com marcador `SPECSFY: US-002 FR-004 NFR-001 AC-014` — `renderTelemetry` sobre um registro só com entradas recusadas nomeia cada uma sem exigir nenhuma `"ran"`.
+  - [x] **EXECUTE**: Escrever o caso com marcador `TRACEABILITY: US-002 FR-004 NFR-001 AC-014` — `renderTelemetry` sobre um registro só com entradas recusadas nomeia cada uma sem exigir nenhuma `"ran"`.
   - [x] **VERIFY**: `npx vitest run tests/telemetry-report.test.ts` — observar RED.
   - [x] **VISUAL**: Não aplicável — arquivo de teste sem superfície visual.
   - [x] **EVIDENCE**: Registrar comando e causa do RED nas seções 11–12.
@@ -682,47 +682,47 @@ Cada tarefa possui exatamente este checklist, atualizado durante a execução:
 
 - [x] T015 [CODE] [US-001] Implementar a persistência por trace em src/telemetry/store.ts — Refs: US-001, FR-003, NFR-001, AC-006, AC-012, AC-013 — Depends: T006, T012, T013
   - [x] **PREP**: Confirmar RED de T006/T012/T013 e o padrão de `src/plan/store.ts`.
-  - [x] **EXECUTE**: `TELEMETRY_DIR`, `TelemetryRecord`, `readTelemetryRecord(root, trace)`, `appendTelemetryEntry(root, trace, entry)` — cria o diretório quando ausente, lê o arquivo existente (ou parte de lista vazia), acrescenta e grava. Reconstruir `docs/` com `$specsfy-documentator` antes de fechar este item.
+  - [x] **EXECUTE**: `TELEMETRY_DIR`, `TelemetryRecord`, `readTelemetryRecord(root, trace)`, `appendTelemetryEntry(root, trace, entry)` — cria o diretório quando ausente, lê o arquivo existente (ou parte de lista vazia), acrescenta e grava. Reconstruir `docs/` com `$framework-documentator` antes de fechar este item.
   - [x] **VERIFY**: `npx vitest run tests/telemetry-store.test.ts` verde; `npx tsc --noEmit` limpo.
   - [x] **VISUAL**: Não aplicável — persistência sem superfície visual.
   - [x] **EVIDENCE**: Registrar GREEN e arquivo criado nas seções 11–13.
   - [x] **IMPROVE**: Aplicar melhoria de processo ou justificar nenhuma.
-  <!-- specsfy:evidence {"task":"T015","refs":["US-001","FR-003","NFR-001","AC-006","AC-012","AC-013"],"files":["src/telemetry/store.ts"],"commands":[{"run":"npx vitest run tests/telemetry-store.test.ts","exit":0}]} -->
+  <!-- framework:evidence {"task":"T015","refs":["US-001","FR-003","NFR-001","AC-006","AC-012","AC-013"],"files":["src/telemetry/store.ts"],"commands":[{"run":"npx vitest run tests/telemetry-store.test.ts","exit":0}]} -->
 
 - [x] T016 [CODE] [US-002] Implementar a formatação de leitura em src/telemetry/render.ts — Refs: US-002, FR-004, NFR-001, NFR-002, AC-008, AC-009, AC-014 — Depends: T008, T009, T014
   - [x] **PREP**: Confirmar RED de T008/T009/T014 e o padrão de `renderPlan`/`renderBriefs`.
-  - [x] **EXECUTE**: `renderTelemetry(record)` — texto por agente, distinguindo `refused`/`ran`; ausência de registro tratada por quem chama (`formatReport`), não aqui. Reconstruir `docs/` com `$specsfy-documentator` antes de fechar este item.
+  - [x] **EXECUTE**: `renderTelemetry(record)` — texto por agente, distinguindo `refused`/`ran`; ausência de registro tratada por quem chama (`formatReport`), não aqui. Reconstruir `docs/` com `$framework-documentator` antes de fechar este item.
   - [x] **VERIFY**: `npx vitest run tests/telemetry-report.test.ts` verde.
   - [x] **VISUAL**: Não aplicável — sem superfície visual.
   - [x] **EVIDENCE**: Registrar GREEN e arquivo criado nas seções 11–13.
   - [x] **IMPROVE**: Aplicar melhoria de processo ou justificar nenhuma.
-  <!-- specsfy:evidence {"task":"T016","refs":["US-002","FR-004","NFR-001","NFR-002","AC-008","AC-009","AC-014"],"files":["src/telemetry/render.ts"],"commands":[{"run":"npx vitest run tests/telemetry-report.test.ts","exit":0}]} -->
+  <!-- framework:evidence {"task":"T016","refs":["US-002","FR-004","NFR-001","NFR-002","AC-008","AC-009","AC-014"],"files":["src/telemetry/render.ts"],"commands":[{"run":"npx vitest run tests/telemetry-report.test.ts","exit":0}]} -->
 
 - [x] T017 [CODE] [US-001] Implementar AgentTelemetryEntry em src/telemetry/record.ts e ligar o hook de telemetria em src/delegation/run.ts — Refs: US-001, FR-001, FR-002, NFR-001, NFR-002, AC-001, AC-002, AC-003, AC-004, AC-005, AC-007, AC-010, AC-011 — Depends: T001, T002, T003, T004, T005, T007, T010, T011
   - [x] **PREP**: Confirmar RED de T001–T005/T007/T010/T011 e os quatro pontos de desfecho de `runCliAgent` (`src/delegation/run.ts`, `SPEC-0019`).
-  - [x] **EXECUTE**: `src/telemetry/record.ts` com a união discriminada `AgentTelemetryEntry`; `CliRuntimeContext.telemetry?: { now(): string; record(entry): void }` em `src/delegation/run.ts`; `runCliAgent` mede o tempo e chama `cliRuntime.telemetry?.record(...)` em cada um dos quatro desfechos, sem alterar o texto já retornado. Reconstruir `docs/` com `$specsfy-documentator` antes de fechar este item.
+  - [x] **EXECUTE**: `src/telemetry/record.ts` com a união discriminada `AgentTelemetryEntry`; `CliRuntimeContext.telemetry?: { now(): string; record(entry): void }` em `src/delegation/run.ts`; `runCliAgent` mede o tempo e chama `cliRuntime.telemetry?.record(...)` em cada um dos quatro desfechos, sem alterar o texto já retornado. Reconstruir `docs/` com `$framework-documentator` antes de fechar este item.
   - [x] **VERIFY**: `npx vitest run tests/telemetry-record.test.ts` verde; suíte de delegação (`SPEC-0019`) sem regressão.
   - [x] **VISUAL**: Não aplicável — sem superfície visual.
   - [x] **EVIDENCE**: Registrar GREEN e arquivos alterados nas seções 11–13.
   - [x] **IMPROVE**: Aplicar melhoria de processo ou justificar nenhuma.
-  <!-- specsfy:evidence {"task":"T017","refs":["US-001","FR-001","FR-002","NFR-001","NFR-002","AC-001","AC-002","AC-003","AC-004","AC-005","AC-007","AC-010","AC-011"],"files":["src/telemetry/record.ts","src/delegation/run.ts"],"commands":[{"run":"npx vitest run tests/telemetry-record.test.ts","exit":0}]} -->
+  <!-- framework:evidence {"task":"T017","refs":["US-001","FR-001","FR-002","NFR-001","NFR-002","AC-001","AC-002","AC-003","AC-004","AC-005","AC-007","AC-010","AC-011"],"files":["src/telemetry/record.ts","src/delegation/run.ts"],"commands":[{"run":"npx vitest run tests/telemetry-record.test.ts","exit":0}]} -->
 
 - [x] T018 [CODE] [US-002] Implementar maestro report e ligar os hooks reais em src/cli.ts — Refs: US-002, FR-004, NFR-001, NFR-002, AC-008, AC-009, AC-014 — Depends: T015, T016, T017, T008, T009, T014
   - [x] **PREP**: Confirmar T015–T017 GREEN e o padrão de `formatPlan`/`formatRun` em `src/cli.ts`.
-  - [x] **EXECUTE**: `USAGE_REPORT`, `formatReport(args)` — lê `.maestro/telemetry/<trace>.json`, renderiza ou recusa nomeado; registro em `COMMANDS`; `formatRun` passa `telemetry: { now, record }` real dentro de `cliRuntime`. Reconstruir `docs/` com `$specsfy-documentator` antes de fechar este item.
+  - [x] **EXECUTE**: `USAGE_REPORT`, `formatReport(args)` — lê `.maestro/telemetry/<trace>.json`, renderiza ou recusa nomeado; registro em `COMMANDS`; `formatRun` passa `telemetry: { now, record }` real dentro de `cliRuntime`. Reconstruir `docs/` com `$framework-documentator` antes de fechar este item.
   - [x] **VERIFY**: `npx vitest run tests/telemetry-report.test.ts` verde; suíte de CLI sem regressão.
   - [x] **VISUAL**: Não aplicável — sem superfície visual.
   - [x] **EVIDENCE**: Registrar GREEN e arquivos alterados nas seções 11–13.
   - [x] **IMPROVE**: Aplicar melhoria de processo ou justificar nenhuma.
-  <!-- specsfy:evidence {"task":"T018","refs":["US-002","FR-004","NFR-001","NFR-002","AC-008","AC-009","AC-014"],"files":["src/cli.ts"],"commands":[{"run":"npx vitest run tests/telemetry-report.test.ts","exit":0}]} -->
+  <!-- framework:evidence {"task":"T018","refs":["US-002","FR-004","NFR-001","NFR-002","AC-008","AC-009","AC-014"],"files":["src/cli.ts"],"commands":[{"run":"npx vitest run tests/telemetry-report.test.ts","exit":0}]} -->
 
 **Checkpoint**: um plano aprovado com agentes `cli` grava telemetria de cada tentativa, e `maestro report <trace>` lê o resultado.
 
 #### Fase final — Documentação e qualidade
 
-- [x] T019 [DOC] [US-001] Registrar o módulo de telemetria em .specsfy/STACK.md e revisar PROJECT.md — Refs: US-001, US-002, FR-001, FR-004, AC-001, AC-008 — Depends: T017, T018
+- [x] T019 [DOC] [US-001] Registrar o módulo de telemetria em .project-context/STACK.md e revisar PROJECT.md — Refs: US-001, US-002, FR-001, FR-004, AC-001, AC-008 — Depends: T017, T018
   - [x] **PREP**: Confirmar T017/T018 GREEN e o conteúdo atual dos dois documentos.
-  - [x] **EXECUTE**: Seção nova em `.specsfy/STACK.md` (formato do registro, o que nunca é gravado, `maestro report`) e revisão de `PROJECT.md` registrando a telemetria entregue.
+  - [x] **EXECUTE**: Seção nova em `.project-context/STACK.md` (formato do registro, o que nunca é gravado, `maestro report`) e revisão de `PROJECT.md` registrando a telemetria entregue.
   - [x] **VERIFY**: `monitor_context.mjs --check` sem pendência real; `build_documentation.mjs --project .` limpo.
   - [x] **VISUAL**: Não aplicável — documentação em Markdown, sem tela.
   - [x] **EVIDENCE**: Registrar comandos e resultado nas seções 11–13.

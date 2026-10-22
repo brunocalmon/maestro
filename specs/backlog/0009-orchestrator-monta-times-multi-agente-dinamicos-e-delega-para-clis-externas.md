@@ -40,7 +40,7 @@ Sobreposição real com decisões já vinculantes: SPEC-0002/DEC-002 fixa três 
 | `specs/inbox/2026-09-06-212859-orchestrator-monta-times-multi-agente-dinamicos-3-9-instancias-e-delega-para-clis-externas.md` | origem — captura formal desta anotação |
 | `specs/inbox/2026-08-24-191151-reestruturacao-mcp-para-cli-com-orchestrator-multi-agente.md` | origem original — texto completo, 2026-08-24 |
 | `specs/backlog/0003-phase-1-mvp-typescript-subsistemas.md:34` | limita — classifica "multi-agente orchestration" como Phase 2+, sem desenho |
-| `specs/completed/0002-phase-1a-esqueleto-typescript/spec.md` | limita — DEC-002 fixa três subsistemas orquestrados (specsfy, context-mode, code-review-graph); `pi` não é dependência fixada |
+| `specs/completed/0002-phase-1a-esqueleto-typescript/spec.md` | limita — DEC-002 fixa três subsistemas orquestrados (framework, context-mode, code-review-graph); `pi` não é dependência fixada |
 | `specs/completed/0008-fatia-1d-deteccao-backends/spec.md` | relacionada — já entrega detecção de backends de agente (CLIs externas) sem instalar globalmente |
 | `specs/completed/0010-fatia-1i-aprovacao-em-lote-comandos/spec.md` | relacionada — já entrega aprovação em lote de comandos; possível sobreposição com "aprovação obrigatória do plano" |
 | `specs/completed/0006-fatia-1g-telemetria-trace-id/spec.md` | relacionada — trace_id já existe, possível base para rastrear execução multi-agente |

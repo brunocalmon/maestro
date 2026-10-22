@@ -12,7 +12,7 @@ import { translateForClaudeCode } from "../src/hooks/claude-code";
 const REAL_HOOKS_JSON = resolve(__dirname, "..", "node_modules", "context-mode", "hooks", "hooks.json");
 
 describe("AC-009 — the final command contains no unresolved placeholder", () => {
-  // SPECSFY: US-002 FR-002 AC-009
+  // TRACEABILITY: US-002 FR-002 AC-009
   it("no projected command keeps the {ide} or ${CLAUDE_PLUGIN_ROOT} placeholder", () => {
     if (!existsSync(REAL_HOOKS_JSON)) return;
     const { hooks, skipped } = projectContextModeHooks(REAL_HOOKS_JSON);
@@ -24,7 +24,7 @@ describe("AC-009 — the final command contains no unresolved placeholder", () =
     }
   });
 
-  // SPECSFY: US-002 FR-002 AC-009
+  // TRACEABILITY: US-002 FR-002 AC-009
   it("every projected command points at a script inside the installed package", () => {
     if (!existsSync(REAL_HOOKS_JSON)) return;
     const { hooks } = projectContextModeHooks(REAL_HOOKS_JSON);

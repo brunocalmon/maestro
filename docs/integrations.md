@@ -4,13 +4,13 @@
 
 # Integrations and External Backends of Maestro
 
-<!-- specsfy:documentator:start -->
+<!-- maestro:inventory:start -->
 ## Configuração
 
 Valores de ambiente e integrações são documentados apenas pelos nomes declarados localmente, sem segredos.
-<!-- specsfy:documentator:end -->
+<!-- maestro:inventory:end -->
 
-<!-- O bloco specsfy:documentator acima é o inventário mecânico gerado pelo Specsfy e é reescrito a cada build (findings/external/FIND-EXT-001). A documentação do projeto vive fora dele, a partir daqui. -->
+<!-- O bloco maestro:inventory acima é o inventário mecânico gerado pelo former project tool e é reescrito a cada build (findings/external/FIND-EXT-001). A documentação do projeto vive fora dele, a partir daqui. -->
 
 ## Integrations Overview
 
@@ -60,8 +60,8 @@ Maestro includes dedicated adapters for 5 supported CLI agent backends. Each ada
 - **`setup-check`**: At session start, reports a project whose setup is incomplete.
 - **`code-review-graph-update`**: Dispatches the static analysis code graph in Python.
 - **`context-mode-*`**: Projected from the installed package's own `hooks/hooks.json` (`src/hooks/upstream.ts`), so events and matchers always follow the upstream.
-- **`skills-project-session`**, **`skills-project`** (SPEC-0024): additive copy of `.agents/skills` into `.claude/skills` at session start and right after `skills add`/`specsfy skills`, because the Claude Code does not read `.agents/skills`.
-- **`code-review-graph-stop`**, **`graph-hint`**, **`guard-docs`** (SPEC-0023): turn-end graph refresh, one-per-session graph reminder before `Grep`/`Glob`, and protection against the Specsfy documentator build without `--check`.
+- **`skills-project-session`**, **`skills-project`** (SPEC-0024): additive copy of `.agents/skills` into `.claude/skills` at session start and right after `skills add`/`former tool skills`, because the Claude Code does not read `.agents/skills`.
+- **`code-review-graph-stop`**, **`graph-hint`**, **`guard-docs`** (SPEC-0023): turn-end graph refresh, one-per-session graph reminder before `Grep`/`Glob`, and protection against the former project tool documentator build without `--check`.
 
 Tool resilience (SPEC-0023): the script preamble exposes `HOOK_TOOL`, `HOOK_SESSION` and `HOOK_COMMAND` extracted from `command`, `code` (+`language`) or `commands[]`, so the guards match `Bash|mcp__.*(execute|run_in_terminal|shell).*` and give the same verdict in any shell tool; `code-review-graph-update` fires on `Edit|Write|MultiEdit|NotebookEdit|Bash|mcp__.*` and only runs the CLI when the working-tree hash in `.maestro/state/` changed; a fragment can emit `additionalContext` by setting `context`; known binaries reach fragments as `MAESTRO_BIN_*` variables. Text rules are limited to the `maestro: hooks fallback` block (three lines conditioned on `maestro doctor`).
 
@@ -80,10 +80,10 @@ Instruction files (SPEC-0024): every maestro block lives in `AGENTS.md` under th
 
 ### 6. Doctor orchestration and "configured" criterion (`src/doctor/`, `src/setup/layout.ts`) — SPEC-0025
 
-`expectedLayout()`/`assessConfiguration(root, target)` (`src/setup/layout.ts`) are the single source both `setup` and `doctor` import for what a fully configured project looks like: the canonical hooks read straight from `resources/hooks/`, the shared `AGENTS.md` blocks, and the on-disk trail `specsfy-setup` (`PROJECT.md`, `.specsfy/STACK.md`, `.specsfy/RULES.md`, `.specsfy/USER-PROFILE.md`) and `setup-matt-pocock-skills` (`## Agent skills` in `AGENTS.md`) leave behind — never a flag the maestro writes about itself. `nextStepsNote()` turns that gap into the `next: run …` line the setup report and the generated README carry while anything is pending.
+`expectedLayout()`/`assessConfiguration(root, target)` (`src/setup/layout.ts`) are the single source both `setup` and `doctor` import for what a fully configured project looks like: the canonical hooks read straight from `resources/hooks/`, the shared `AGENTS.md` blocks, and the on-disk trail `removed-project-setup` (`PROJECT.md`, `.project-context/STACK.md`, `.project-context/RULES.md`, `.project-context/USER-PROFILE.md`) and `setup-matt-pocock-skills` (`## Agent skills` in `AGENTS.md`) leave behind — never a flag the maestro writes about itself. `nextStepsNote()` turns that gap into the `next: run …` line the setup report and the generated README carry while anything is pending.
 
 `maestro doctor` (`src/doctor.ts`, `src/cli.ts`) composes two new layers on top of the existing dependency/skills/extension/agent checks:
-- **Subsystems** (`src/doctor/subsystems.ts`): runs `specsfy doctor`, `context-mode doctor`, `skills list` and `code-review-graph status` through an injectable, timeout-bound executor; each reports its own `OK`/`FAIL`/`ABSENT`, and one subsystem's failure never stops the others.
+- **Subsystems** (`src/doctor/subsystems.ts`): runs `former tool doctor`, `context-mode doctor`, `skills list` and `code-review-graph status` through an injectable, timeout-bound executor; each reports its own `OK`/`FAIL`/`ABSENT`, and one subsystem's failure never stops the others.
 - **Maestro layer** (`src/doctor/maestro.ts`): reads `assessConfiguration` and classifies each gap as `FAIL` (something `setup` would repair — a legacy hook entry, a missing script, a block still in the pre-SPEC-0024 direction, an anchor marker without a matching pair, a `hooks-fallback` rule pointing at a hook with no installed script) or `WARN` (a pending conversational step, a projected skill that diverged from its source, or unrecognized content in `CLAUDE.md` — never something the maestro can fix by itself).
 
-The doctor never writes; `exitCode` moves to `1` on any `FAIL` (dependency, subsystem, or maestro layer) but never on a `WARN`. `maestro setup` also stopped skipping the skills/Specsfy installers just because their directories already existed — they're idempotent by construction, so they now run on every call where they're configured, and only the approval prompt is still skipped when the exact command was approved before.
+The doctor never writes; `exitCode` moves to `1` on any `FAIL` (dependency, subsystem, or maestro layer) but never on a `WARN`. `maestro setup` also stopped skipping the skills/former project tool installers just because their directories already existed — they're idempotent by construction, so they now run on every call where they're configured, and only the approval prompt is still skipped when the exact command was approved before.

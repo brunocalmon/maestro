@@ -10,7 +10,7 @@ export interface SubsystemResult {
 
 /**
  * Runs one subsystem's own diagnostic. Injected so tests never depend on
- * `specsfy`, `context-mode`, `skills` or `code-review-graph` actually being
+ * `context-mode`, `skills` or `code-review-graph` actually being
  * on this machine's `PATH` (SPEC-0025, FR-005).
  */
 export type SubsystemExecutor = (bin: string, args: readonly string[], timeoutMs: number) => SpawnOutcome;
@@ -42,7 +42,6 @@ interface SubsystemSpec {
  */
 function subsystemSpecs(root: string): readonly SubsystemSpec[] {
   return [
-    { name: "specsfy", bin: "specsfy", args: ["doctor", "--project", root] },
     { name: "context-mode", bin: "context-mode", args: ["doctor"] },
     { name: "skills", bin: "skills", args: ["list"] },
     { name: "code-review-graph", bin: "code-review-graph", args: ["status"] },

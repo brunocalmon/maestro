@@ -8,7 +8,7 @@ const THIRD_PARTY_PRE = { matcher: "Bash", hooks: [{ type: "command", command: "
 const THIRD_PARTY_STOP = { matcher: "", hooks: [{ type: "command", command: "node outra-ferramenta/stop.mjs" }] };
 
 describe("AC-007 — entrada de terceiro no mesmo evento é preservada", () => {
-  // SPECSFY: US-002 FR-003 NFR-002 AC-007
+  // TRACEABILITY: US-002 FR-003 NFR-002 AC-007
   it("mantém hooks manuais em PreToolUse e Stop ao lado dos do maestro", () => {
     const root = project(JSON.stringify({ hooks: { PreToolUse: [THIRD_PARTY_PRE], Stop: [THIRD_PARTY_STOP] } }, null, 2));
     runSetup({ env: claudeEnv, root, write: true });
@@ -20,7 +20,7 @@ describe("AC-007 — entrada de terceiro no mesmo evento é preservada", () => {
 });
 
 describe("AC-008 — segunda execução não duplica nem altera", () => {
-  // SPECSFY: US-002 FR-003 NFR-001 AC-008
+  // TRACEABILITY: US-002 FR-003 NFR-001 AC-008
   it("produz settings.json byte a byte idêntico", () => {
     const root = project(JSON.stringify({ hooks: { PreToolUse: [THIRD_PARTY_PRE] } }));
     runSetup({ env: claudeEnv, root, write: true });
@@ -37,7 +37,7 @@ describe("AC-008 — segunda execução não duplica nem altera", () => {
 });
 
 describe("AC-011 — settings.json inválido é preservado em quarentena, nunca apagado", () => {
-  // SPECSFY: US-002 FR-003 FR-004 AC-011
+  // TRACEABILITY: US-002 FR-003 FR-004 AC-011
   it("copia o original antes de escrever e relata", () => {
     const broken = '{ "hooks": { "PreToolUse": [ { "matcher": "Bash", ';
     const root = project(broken);

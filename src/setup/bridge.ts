@@ -13,7 +13,7 @@ export const VENV_DIR = ".venv-crg";
 /**
  * The `maestro` package's root, not the target project's — same
  * distinction `packageRoot()` already makes in
- * `src/skills/executor.ts`/`src/specsfy/executor.ts`. `doctor.ts`'s
+ * `src/skills/executor.ts`/`src/framework/executor.ts`. `doctor.ts`'s
  * `defaultEnvironment()` already looks for `.venv-crg` here, not in the
  * target project's root: the two need to agree on where the local copy
  * lives, or `doctor` would keep reporting absence after a real,

@@ -5,7 +5,7 @@ import type { SkillRecordEntry } from "./record.js";
 /** This fatia's only target; fatia 1d opens the others. */
 /**
  * `universal` lands in `.agents/skills`, the one canonical directory every
- * source (this installer, the Specsfy's specialists) shares; targets that
+ * source (this installer, the source package) shares; targets that
  * don't read it get a projection (SPEC-0024, DEC-004).
  */
 export const TARGET_AGENT = "universal";

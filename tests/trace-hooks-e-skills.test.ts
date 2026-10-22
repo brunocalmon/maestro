@@ -17,12 +17,12 @@ function fullRecord(): Record<string, any> {
 }
 
 describe("AC-051 — the record's two lists point to the same run", () => {
-  // SPECSFY: US-040 FR-040 AC-051
+  // TRACEABILITY: US-040 FR-040 AC-051
   it("the record carries the identifier once, for the whole run", () => {
     expect(fullRecord()["trace"]).toBe(FIXED_ID);
   });
 
-  // SPECSFY: US-040 FR-041 AC-051
+  // TRACEABILITY: US-040 FR-041 AC-051
   it("hooks and skills share the same instant", () => {
     const rec = fullRecord();
     const instants = new Set([
@@ -32,7 +32,7 @@ describe("AC-051 — the record's two lists point to the same run", () => {
     expect([...instants]).toEqual([FIXED_INSTANT]);
   });
 
-  // SPECSFY: US-040 FR-040 AC-051
+  // TRACEABILITY: US-040 FR-040 AC-051
   it("both lists exist in the same record", () => {
     const rec = fullRecord();
     // SPEC-0022: five canonical hooks plus the context-mode projection (FR-006); the exact count depends on the installed upstream.

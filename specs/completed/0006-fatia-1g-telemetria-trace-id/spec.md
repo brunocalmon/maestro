@@ -2,7 +2,7 @@
 
 | Campo | Valor |
 | --- | --- |
-| Formato | Specsfy/2.0 |
+| Formato | former project tool/2.0 |
 | ID | SPEC-0006 |
 | Slug | 0006-fatia-1g-telemetria-trace-id |
 | Status | Complete |
@@ -62,7 +62,7 @@ Nada disso torna os casos não determinísticos: relógio e gerador são injetad
 - `tests/setup-record.test.ts` e `tests/skills-registro-persistido.test.ts`, pelas asserções que deixam passar.
 - `specs/backlog/0003-phase-1-mvp-typescript-subsistemas.md`, seção da fatia 1g.
 - `specs/completed/0003-fatia-1b-setup-hooks/spec.md` e `specs/completed/0005-fatia-1h-skills-lado-a-lado/spec.md`, pelo formato do registro.
-- `.specsfy/RULES.md`, pela regra de relato de origem.
+- `.project-context/RULES.md`, pela regra de relato de origem.
 
 #### Documentação consultada
 
@@ -534,7 +534,7 @@ O ponto sensível é que a fatia introduz a única fonte de não determinismo do
 #### Gate do Ato I — Definição
 
 - **Resultado**: READY (2026-08-29), reconfirmado no aceite final em 2026-08-29
-- **Comando**: `node .claude/skills/specsfy-04-validate/scripts/validate_spec.mjs specs/completed/0006-fatia-1g-telemetria-trace-id/spec.md`
+- **Comando**: `node .claude/skills/framework-04-validate/scripts/validate_spec.mjs specs/completed/0006-fatia-1g-telemetria-trace-id/spec.md`
 - **Cobertura**: 3 US, 6 FR, 3 NFR, 15 AC, 6 DEC; mínimo de 3 AC por ID satisfeito nos doze. Identificadores de 040 a 054.
 - **Research**: `load_research.mjs` em `PASSED`, com `R-040` verificado e um artefato indexado.
 
@@ -551,7 +551,7 @@ O ponto sensível é que a fatia introduz a única fonte de não determinismo do
 | ID | Achado | Severidade | Estado |
 | --- | --- | --- | --- |
 | A1 | O caso-limite normativo da seção 7 — gerador devolvendo valor vazio leva à omissão do campo — não tinha implementação nem caso executável, e `runSetup` gravava o campo vazio | BLOCKER | Resolvido — Delivery Gate reaberto, `T023` e `T024` acrescentadas com RED antes do código, e o gate refeito |
-| A2 | `check_traceability` acusa marcadores órfãos das cinco specs anteriores | NOTE | Aceito — limitação conhecida, cuja correção pertence ao `@promovaweb/specsfy` |
+| A2 | `check_traceability` acusa marcadores órfãos das cinco specs anteriores | NOTE | Aceito — limitação conhecida, cuja correção pertence ao `removed-project-integration` |
 
 **Sobre A1, e o que ele revela do processo.** A causa não é distração: a seção 7 lista casos-limite que não têm cenário `AC` próprio, e a matriz da seção 12 cobre apenas o que tem cenário. Um requisito normativo pode, por isso, atravessar definição, plano e entrega sem nunca ganhar caso executável. As fatias anteriores não expuseram isso porque seus casos-limite coincidiam com cenários existentes. A correção durável seria a matriz alcançar também os casos-limite da seção 7, e não apenas os `AC`.
 
@@ -560,9 +560,9 @@ O ponto sensível é que a fatia introduz a única fonte de não determinismo do
 #### Gate do Ato II — Plano
 
 - **Resultado**: Passed (2026-08-29)
-- **Comando**: `node .claude/skills/specsfy-05-tasks/scripts/validate_tasks.mjs specs/completed/0006-fatia-1g-telemetria-trace-id/spec.md`
+- **Comando**: `node .claude/skills/framework-05-tasks/scripts/validate_tasks.mjs specs/completed/0006-fatia-1g-telemetria-trace-id/spec.md`
 - **Plano**: 22 tarefas — 15 `[TEST] [TDD]`, 4 `[CODE]`, 2 `[DOC]`, 1 `[OPS]`; 110 itens de checklist; 27 de 27 IDs cobertos.
-- **RED**: `npm run test:tdd` com quinze arquivos novos reprovando por `Cannot find module` sobre `src/telemetry/trace` e `src/telemetry/read`, ou pelo campo ausente no registro, e os 184 casos anteriores verdes. 45 casos marcados com `SPECSFY`, cobrindo os quinze `AC`.
+- **RED**: `npm run test:tdd` com quinze arquivos novos reprovando por `Cannot find module` sobre `src/telemetry/trace` e `src/telemetry/read`, ou pelo campo ausente no registro, e os 184 casos anteriores verdes. 45 casos marcados com `TRACEABILITY`, cobrindo os quinze `AC`.
 - **Rastreabilidade**: 27 de 27 identificadores desta fatia cobertos.
 
 **Correção proativa.** A seção 8 passou a listar `tests/trace-fixtures.ts` antes de o arquivo existir. Nas duas fatias anteriores o auxiliar de fixtures ficou de fora da estrutura e virou achado do aceite; desta vez foi declarado junto do plano.
@@ -606,107 +606,107 @@ Quinze tarefas, uma por `AC`, cada uma em arquivo próprio de `tests/`. Nenhuma 
 
 - [x] T001 [P] [TEST] [TDD] [US-040] Derivar de AC-040 o caso em tests/trace-marca-execucao.test.ts — Refs: US-040, FR-040, AC-040 — Depends: none
   - [x] **PREP**: Ler o Gherkin de AC-040 e fixar o critério: o registro traz um identificador e todas as entradas da execução carregam o mesmo valor.
-  - [x] **EXECUTE**: Escrever o caso em `tests/trace-marca-execucao.test.ts`, com marcador `SPECSFY` por asserção e raízes em diretório temporário, com relógio e gerador injetados onde o cenário exigir previsibilidade.
+  - [x] **EXECUTE**: Escrever o caso em `tests/trace-marca-execucao.test.ts`, com marcador `TRACEABILITY` por asserção e raízes em diretório temporário, com relógio e gerador injetados onde o cenário exigir previsibilidade.
   - [x] **VERIFY**: RED observado — `npm run test:tdd` reprova por `Cannot find module` sobre `src/telemetry/`, ou pelo campo ausente no registro, e não por erro de escrita do caso.
-  - [x] **EVIDENCE**: `npm run test:tdd` com 15 arquivos em RED e os 184 casos anteriores verdes; 45 casos marcados com `SPECSFY` sobre os quinze `AC`. Registrado na seção 12.
+  - [x] **EVIDENCE**: `npm run test:tdd` com 15 arquivos em RED e os 184 casos anteriores verdes; 45 casos marcados com `TRACEABILITY` sobre os quinze `AC`. Registrado na seção 12.
   - [x] **IMPROVE**: Conferir hooks e skills no mesmo caso, porque a garantia é sobre a execução inteira e não sobre uma lista.
 
 - [x] T002 [P] [TEST] [TDD] [US-040] Derivar de AC-041 o caso em tests/trace-no-relato.test.ts — Refs: US-040, FR-041, AC-041 — Depends: none
   - [x] **PREP**: Ler o Gherkin de AC-041 e fixar o critério: o relato devolvido contém o identificador gravado.
-  - [x] **EXECUTE**: Escrever o caso em `tests/trace-no-relato.test.ts`, com marcador `SPECSFY` por asserção e raízes em diretório temporário, com relógio e gerador injetados onde o cenário exigir previsibilidade.
+  - [x] **EXECUTE**: Escrever o caso em `tests/trace-no-relato.test.ts`, com marcador `TRACEABILITY` por asserção e raízes em diretório temporário, com relógio e gerador injetados onde o cenário exigir previsibilidade.
   - [x] **VERIFY**: RED observado — `npm run test:tdd` reprova por `Cannot find module` sobre `src/telemetry/`, ou pelo campo ausente no registro, e não por erro de escrita do caso.
-  - [x] **EVIDENCE**: `npm run test:tdd` com 15 arquivos em RED e os 184 casos anteriores verdes; 45 casos marcados com `SPECSFY` sobre os quinze `AC`. Registrado na seção 12.
+  - [x] **EVIDENCE**: `npm run test:tdd` com 15 arquivos em RED e os 184 casos anteriores verdes; 45 casos marcados com `TRACEABILITY` sobre os quinze `AC`. Registrado na seção 12.
   - [x] **IMPROVE**: Comparar contra o valor lido do registro, e não contra um literal, para que o caso não fixe um retrato.
 
 - [x] T003 [P] [TEST] [TDD] [US-041] Derivar de AC-042 o caso em tests/trace-instante-injetado.test.ts — Refs: US-041, FR-042, AC-042 — Depends: none
   - [x] **PREP**: Ler o Gherkin de AC-042 e fixar o critério: o instante gravado é o do relógio injetado.
-  - [x] **EXECUTE**: Escrever o caso em `tests/trace-instante-injetado.test.ts`, com marcador `SPECSFY` por asserção e raízes em diretório temporário, com relógio e gerador injetados onde o cenário exigir previsibilidade.
+  - [x] **EXECUTE**: Escrever o caso em `tests/trace-instante-injetado.test.ts`, com marcador `TRACEABILITY` por asserção e raízes em diretório temporário, com relógio e gerador injetados onde o cenário exigir previsibilidade.
   - [x] **VERIFY**: RED observado — `npm run test:tdd` reprova por `Cannot find module` sobre `src/telemetry/`, ou pelo campo ausente no registro, e não por erro de escrita do caso.
-  - [x] **EVIDENCE**: `npm run test:tdd` com 15 arquivos em RED e os 184 casos anteriores verdes; 45 casos marcados com `SPECSFY` sobre os quinze `AC`. Registrado na seção 12.
+  - [x] **EVIDENCE**: `npm run test:tdd` com 15 arquivos em RED e os 184 casos anteriores verdes; 45 casos marcados com `TRACEABILITY` sobre os quinze `AC`. Registrado na seção 12.
   - [x] **IMPROVE**: Injetar um instante reconhecível e distante da época, para que passar por acidente seja impossível.
 
 - [x] T004 [P] [TEST] [TDD] [US-042] Derivar de AC-043 o caso em tests/trace-relogio-deterministico.test.ts — Refs: US-042, FR-043, NFR-040, AC-043 — Depends: none
   - [x] **PREP**: Ler o Gherkin de AC-043 e fixar o critério: duas execuções com o mesmo relógio gravam o mesmo instante.
-  - [x] **EXECUTE**: Escrever o caso em `tests/trace-relogio-deterministico.test.ts`, com marcador `SPECSFY` por asserção e raízes em diretório temporário, com relógio e gerador injetados onde o cenário exigir previsibilidade.
+  - [x] **EXECUTE**: Escrever o caso em `tests/trace-relogio-deterministico.test.ts`, com marcador `TRACEABILITY` por asserção e raízes em diretório temporário, com relógio e gerador injetados onde o cenário exigir previsibilidade.
   - [x] **VERIFY**: RED observado — `npm run test:tdd` reprova por `Cannot find module` sobre `src/telemetry/`, ou pelo campo ausente no registro, e não por erro de escrita do caso.
-  - [x] **EVIDENCE**: `npm run test:tdd` com 15 arquivos em RED e os 184 casos anteriores verdes; 45 casos marcados com `SPECSFY` sobre os quinze `AC`. Registrado na seção 12.
+  - [x] **EVIDENCE**: `npm run test:tdd` com 15 arquivos em RED e os 184 casos anteriores verdes; 45 casos marcados com `TRACEABILITY` sobre os quinze `AC`. Registrado na seção 12.
   - [x] **IMPROVE**: Usar projetos distintos, para que a igualdade venha do relógio e não de reuso de estado.
 
 - [x] T005 [P] [TEST] [TDD] [US-042] Derivar de AC-044 o caso em tests/trace-gerador-deterministico.test.ts — Refs: US-042, FR-043, NFR-040, AC-044 — Depends: none
   - [x] **PREP**: Ler o Gherkin de AC-044 e fixar o critério: o identificador gravado é exatamente o valor devolvido pelo gerador injetado.
-  - [x] **EXECUTE**: Escrever o caso em `tests/trace-gerador-deterministico.test.ts`, com marcador `SPECSFY` por asserção e raízes em diretório temporário, com relógio e gerador injetados onde o cenário exigir previsibilidade.
+  - [x] **EXECUTE**: Escrever o caso em `tests/trace-gerador-deterministico.test.ts`, com marcador `TRACEABILITY` por asserção e raízes em diretório temporário, com relógio e gerador injetados onde o cenário exigir previsibilidade.
   - [x] **VERIFY**: RED observado — `npm run test:tdd` reprova por `Cannot find module` sobre `src/telemetry/`, ou pelo campo ausente no registro, e não por erro de escrita do caso.
-  - [x] **EVIDENCE**: `npm run test:tdd` com 15 arquivos em RED e os 184 casos anteriores verdes; 45 casos marcados com `SPECSFY` sobre os quinze `AC`. Registrado na seção 12.
+  - [x] **EVIDENCE**: `npm run test:tdd` com 15 arquivos em RED e os 184 casos anteriores verdes; 45 casos marcados com `TRACEABILITY` sobre os quinze `AC`. Registrado na seção 12.
   - [x] **IMPROVE**: Afirmar igualdade exata, que é o que prova a injeção efetiva.
 
 - [x] T006 [P] [TEST] [TDD] [US-040] Derivar de AC-045 o caso em tests/trace-execucoes-distintas.test.ts — Refs: US-040, FR-040, NFR-041, AC-045 — Depends: none
   - [x] **PREP**: Ler o Gherkin de AC-045 e fixar o critério: o gerador real não repete valores e nenhum contém caminho de arquivo.
-  - [x] **EXECUTE**: Escrever o caso em `tests/trace-execucoes-distintas.test.ts`, com marcador `SPECSFY` por asserção e raízes em diretório temporário, com relógio e gerador injetados onde o cenário exigir previsibilidade.
+  - [x] **EXECUTE**: Escrever o caso em `tests/trace-execucoes-distintas.test.ts`, com marcador `TRACEABILITY` por asserção e raízes em diretório temporário, com relógio e gerador injetados onde o cenário exigir previsibilidade.
   - [x] **VERIFY**: RED observado — `npm run test:tdd` reprova por `Cannot find module` sobre `src/telemetry/`, ou pelo campo ausente no registro, e não por erro de escrita do caso.
-  - [x] **EVIDENCE**: `npm run test:tdd` com 15 arquivos em RED e os 184 casos anteriores verdes; 45 casos marcados com `SPECSFY` sobre os quinze `AC`. Registrado na seção 12.
+  - [x] **EVIDENCE**: `npm run test:tdd` com 15 arquivos em RED e os 184 casos anteriores verdes; 45 casos marcados com `TRACEABILITY` sobre os quinze `AC`. Registrado na seção 12.
   - [x] **IMPROVE**: Gerar muitos valores e afirmar sobre o conjunto, porque unicidade é propriedade e não valor.
 
 - [x] T007 [P] [TEST] [TDD] [US-040] Derivar de AC-046 o caso em tests/trace-doctor-relata.test.ts — Refs: US-040, FR-041, FR-044, AC-046 — Depends: none
   - [x] **PREP**: Ler o Gherkin de AC-046 e fixar o critério: o relato do doctor nomeia o identificador da execução registrada.
-  - [x] **EXECUTE**: Escrever o caso em `tests/trace-doctor-relata.test.ts`, com marcador `SPECSFY` por asserção e raízes em diretório temporário, com relógio e gerador injetados onde o cenário exigir previsibilidade.
+  - [x] **EXECUTE**: Escrever o caso em `tests/trace-doctor-relata.test.ts`, com marcador `TRACEABILITY` por asserção e raízes em diretório temporário, com relógio e gerador injetados onde o cenário exigir previsibilidade.
   - [x] **VERIFY**: RED observado — `npm run test:tdd` reprova por `Cannot find module` sobre `src/telemetry/`, ou pelo campo ausente no registro, e não por erro de escrita do caso.
-  - [x] **EVIDENCE**: `npm run test:tdd` com 15 arquivos em RED e os 184 casos anteriores verdes; 45 casos marcados com `SPECSFY` sobre os quinze `AC`. Registrado na seção 12.
+  - [x] **EVIDENCE**: `npm run test:tdd` com 15 arquivos em RED e os 184 casos anteriores verdes; 45 casos marcados com `TRACEABILITY` sobre os quinze `AC`. Registrado na seção 12.
   - [x] **IMPROVE**: Construir o registro à mão, para que o caso não dependa de rodar o setup.
 
 - [x] T008 [P] [TEST] [TDD] [US-041] Derivar de AC-047 o caso em tests/trace-registro-antigo.test.ts — Refs: US-041, FR-044, FR-045, NFR-042, AC-047 — Depends: none
   - [x] **PREP**: Ler o Gherkin de AC-047 e fixar o critério: um registro sem identificador é lido sem erro e o relato informa que a execução não foi identificada.
-  - [x] **EXECUTE**: Escrever o caso em `tests/trace-registro-antigo.test.ts`, com marcador `SPECSFY` por asserção e raízes em diretório temporário, com relógio e gerador injetados onde o cenário exigir previsibilidade.
+  - [x] **EXECUTE**: Escrever o caso em `tests/trace-registro-antigo.test.ts`, com marcador `TRACEABILITY` por asserção e raízes em diretório temporário, com relógio e gerador injetados onde o cenário exigir previsibilidade.
   - [x] **VERIFY**: RED observado — `npm run test:tdd` reprova por `Cannot find module` sobre `src/telemetry/`, ou pelo campo ausente no registro, e não por erro de escrita do caso.
-  - [x] **EVIDENCE**: `npm run test:tdd` com 15 arquivos em RED e os 184 casos anteriores verdes; 45 casos marcados com `SPECSFY` sobre os quinze `AC`. Registrado na seção 12.
+  - [x] **EVIDENCE**: `npm run test:tdd` com 15 arquivos em RED e os 184 casos anteriores verdes; 45 casos marcados com `TRACEABILITY` sobre os quinze `AC`. Registrado na seção 12.
   - [x] **IMPROVE**: Comparar a árvore antes e depois, porque a leitura não pode reescrever.
 
 - [x] T009 [P] [TEST] [TDD] [US-041] Derivar de AC-048 o caso em tests/trace-instante-epoca.test.ts — Refs: US-041, FR-045, NFR-042, AC-048 — Depends: none
   - [x] **PREP**: Ler o Gherkin de AC-048 e fixar o critério: um registro com o instante da época é lido sem erro e as entradas permanecem.
-  - [x] **EXECUTE**: Escrever o caso em `tests/trace-instante-epoca.test.ts`, com marcador `SPECSFY` por asserção e raízes em diretório temporário, com relógio e gerador injetados onde o cenário exigir previsibilidade.
+  - [x] **EXECUTE**: Escrever o caso em `tests/trace-instante-epoca.test.ts`, com marcador `TRACEABILITY` por asserção e raízes em diretório temporário, com relógio e gerador injetados onde o cenário exigir previsibilidade.
   - [x] **VERIFY**: RED observado — `npm run test:tdd` reprova por `Cannot find module` sobre `src/telemetry/`, ou pelo campo ausente no registro, e não por erro de escrita do caso.
-  - [x] **EVIDENCE**: `npm run test:tdd` com 15 arquivos em RED e os 184 casos anteriores verdes; 45 casos marcados com `SPECSFY` sobre os quinze `AC`. Registrado na seção 12.
+  - [x] **EVIDENCE**: `npm run test:tdd` com 15 arquivos em RED e os 184 casos anteriores verdes; 45 casos marcados com `TRACEABILITY` sobre os quinze `AC`. Registrado na seção 12.
   - [x] **IMPROVE**: Construir o registro com o valor exato que a versão anterior gravava.
 
 - [x] T010 [P] [TEST] [TDD] [US-042] Derivar de AC-049 o caso em tests/trace-opacidade.test.ts — Refs: US-042, NFR-041, AC-049 — Depends: none
   - [x] **PREP**: Ler o Gherkin de AC-049 e fixar o critério: o identificador não contém nome de usuário, caminho absoluto nem nome da máquina.
-  - [x] **EXECUTE**: Escrever o caso em `tests/trace-opacidade.test.ts`, com marcador `SPECSFY` por asserção e raízes em diretório temporário, com relógio e gerador injetados onde o cenário exigir previsibilidade.
+  - [x] **EXECUTE**: Escrever o caso em `tests/trace-opacidade.test.ts`, com marcador `TRACEABILITY` por asserção e raízes em diretório temporário, com relógio e gerador injetados onde o cenário exigir previsibilidade.
   - [x] **VERIFY**: RED observado — `npm run test:tdd` reprova por `Cannot find module` sobre `src/telemetry/`, ou pelo campo ausente no registro, e não por erro de escrita do caso.
-  - [x] **EVIDENCE**: `npm run test:tdd` com 15 arquivos em RED e os 184 casos anteriores verdes; 45 casos marcados com `SPECSFY` sobre os quinze `AC`. Registrado na seção 12.
+  - [x] **EVIDENCE**: `npm run test:tdd` com 15 arquivos em RED e os 184 casos anteriores verdes; 45 casos marcados com `TRACEABILITY` sobre os quinze `AC`. Registrado na seção 12.
   - [x] **IMPROVE**: Derivar os termos proibidos do ambiente em execução, e não de literais, para que o caso valha em qualquer máquina.
 
 - [x] T011 [P] [TEST] [TDD] [US-042] Derivar de AC-050 o caso em tests/trace-padrao-producao.test.ts — Refs: US-042, FR-042, FR-043, NFR-040, AC-050 — Depends: none
   - [x] **PREP**: Ler o Gherkin de AC-050 e fixar o critério: sem injeção, o instante é posterior à época e o identificador não é vazio.
-  - [x] **EXECUTE**: Escrever o caso em `tests/trace-padrao-producao.test.ts`, com marcador `SPECSFY` por asserção e raízes em diretório temporário, com relógio e gerador injetados onde o cenário exigir previsibilidade.
+  - [x] **EXECUTE**: Escrever o caso em `tests/trace-padrao-producao.test.ts`, com marcador `TRACEABILITY` por asserção e raízes em diretório temporário, com relógio e gerador injetados onde o cenário exigir previsibilidade.
   - [x] **VERIFY**: RED observado — `npm run test:tdd` reprova por `Cannot find module` sobre `src/telemetry/`, ou pelo campo ausente no registro, e não por erro de escrita do caso.
-  - [x] **EVIDENCE**: `npm run test:tdd` com 15 arquivos em RED e os 184 casos anteriores verdes; 45 casos marcados com `SPECSFY` sobre os quinze `AC`. Registrado na seção 12.
+  - [x] **EVIDENCE**: `npm run test:tdd` com 15 arquivos em RED e os 184 casos anteriores verdes; 45 casos marcados com `TRACEABILITY` sobre os quinze `AC`. Registrado na seção 12.
   - [x] **IMPROVE**: Afirmar sobre propriedades e nunca sobre valores, porque aqui a origem é a real.
 
 - [x] T012 [P] [TEST] [TDD] [US-040] Derivar de AC-051 o caso em tests/trace-hooks-e-skills.test.ts — Refs: US-040, FR-040, FR-041, AC-051 — Depends: none
   - [x] **PREP**: Ler o Gherkin de AC-051 e fixar o critério: as entradas de hooks e de skills carregam o mesmo identificador.
-  - [x] **EXECUTE**: Escrever o caso em `tests/trace-hooks-e-skills.test.ts`, com marcador `SPECSFY` por asserção e raízes em diretório temporário, com relógio e gerador injetados onde o cenário exigir previsibilidade.
+  - [x] **EXECUTE**: Escrever o caso em `tests/trace-hooks-e-skills.test.ts`, com marcador `TRACEABILITY` por asserção e raízes em diretório temporário, com relógio e gerador injetados onde o cenário exigir previsibilidade.
   - [x] **VERIFY**: RED observado — `npm run test:tdd` reprova por `Cannot find module` sobre `src/telemetry/`, ou pelo campo ausente no registro, e não por erro de escrita do caso.
-  - [x] **EVIDENCE**: `npm run test:tdd` com 15 arquivos em RED e os 184 casos anteriores verdes; 45 casos marcados com `SPECSFY` sobre os quinze `AC`. Registrado na seção 12.
+  - [x] **EVIDENCE**: `npm run test:tdd` com 15 arquivos em RED e os 184 casos anteriores verdes; 45 casos marcados com `TRACEABILITY` sobre os quinze `AC`. Registrado na seção 12.
   - [x] **IMPROVE**: Exercitar com o instalador de skills injetado, para que as duas listas existam no mesmo registro.
 
 - [x] T013 [P] [TEST] [TDD] [US-041] Derivar de AC-052 o caso em tests/trace-sem-epoca.test.ts — Refs: US-041, FR-042, NFR-042, AC-052 — Depends: none
   - [x] **PREP**: Ler o Gherkin de AC-052 e fixar o critério: nenhuma entrada gravada por execução nova traz o instante da época.
-  - [x] **EXECUTE**: Escrever o caso em `tests/trace-sem-epoca.test.ts`, com marcador `SPECSFY` por asserção e raízes em diretório temporário, com relógio e gerador injetados onde o cenário exigir previsibilidade.
+  - [x] **EXECUTE**: Escrever o caso em `tests/trace-sem-epoca.test.ts`, com marcador `TRACEABILITY` por asserção e raízes em diretório temporário, com relógio e gerador injetados onde o cenário exigir previsibilidade.
   - [x] **VERIFY**: RED observado — `npm run test:tdd` reprova por `Cannot find module` sobre `src/telemetry/`, ou pelo campo ausente no registro, e não por erro de escrita do caso.
-  - [x] **EVIDENCE**: `npm run test:tdd` com 15 arquivos em RED e os 184 casos anteriores verdes; 45 casos marcados com `SPECSFY` sobre os quinze `AC`. Registrado na seção 12.
+  - [x] **EVIDENCE**: `npm run test:tdd` com 15 arquivos em RED e os 184 casos anteriores verdes; 45 casos marcados com `TRACEABILITY` sobre os quinze `AC`. Registrado na seção 12.
   - [x] **IMPROVE**: É a asserção que faltava: as existentes conferiam que o texto parseia como data, e a época parseia.
 
 - [x] T014 [P] [TEST] [TDD] [US-040] Derivar de AC-053 o caso em tests/trace-doctor-sem-registro.test.ts — Refs: US-040, FR-044, FR-045, AC-053 — Depends: none
   - [x] **PREP**: Ler o Gherkin de AC-053 e fixar o critério: sem registro, o relato não nomeia identificador nem apresenta valor no lugar.
-  - [x] **EXECUTE**: Escrever o caso em `tests/trace-doctor-sem-registro.test.ts`, com marcador `SPECSFY` por asserção e raízes em diretório temporário, com relógio e gerador injetados onde o cenário exigir previsibilidade.
+  - [x] **EXECUTE**: Escrever o caso em `tests/trace-doctor-sem-registro.test.ts`, com marcador `TRACEABILITY` por asserção e raízes em diretório temporário, com relógio e gerador injetados onde o cenário exigir previsibilidade.
   - [x] **VERIFY**: RED observado — `npm run test:tdd` reprova por `Cannot find module` sobre `src/telemetry/`, ou pelo campo ausente no registro, e não por erro de escrita do caso.
-  - [x] **EVIDENCE**: `npm run test:tdd` com 15 arquivos em RED e os 184 casos anteriores verdes; 45 casos marcados com `SPECSFY` sobre os quinze `AC`. Registrado na seção 12.
+  - [x] **EVIDENCE**: `npm run test:tdd` com 15 arquivos em RED e os 184 casos anteriores verdes; 45 casos marcados com `TRACEABILITY` sobre os quinze `AC`. Registrado na seção 12.
   - [x] **IMPROVE**: Conferir a ausência do campo, e não apenas que ele não seja igual a algo.
 
 - [x] T015 [P] [TEST] [TDD] [US-042] Derivar de AC-054 o caso em tests/trace-forma.test.ts — Refs: US-042, FR-040, NFR-041, AC-054 — Depends: none
   - [x] **PREP**: Ler o Gherkin de AC-054 e fixar o critério: o identificador tem comprimento fixo e apenas caracteres hexadecimais.
-  - [x] **EXECUTE**: Escrever o caso em `tests/trace-forma.test.ts`, com marcador `SPECSFY` por asserção e raízes em diretório temporário, com relógio e gerador injetados onde o cenário exigir previsibilidade.
+  - [x] **EXECUTE**: Escrever o caso em `tests/trace-forma.test.ts`, com marcador `TRACEABILITY` por asserção e raízes em diretório temporário, com relógio e gerador injetados onde o cenário exigir previsibilidade.
   - [x] **VERIFY**: RED observado — `npm run test:tdd` reprova por `Cannot find module` sobre `src/telemetry/`, ou pelo campo ausente no registro, e não por erro de escrita do caso.
-  - [x] **EVIDENCE**: `npm run test:tdd` com 15 arquivos em RED e os 184 casos anteriores verdes; 45 casos marcados com `SPECSFY` sobre os quinze `AC`. Registrado na seção 12.
+  - [x] **EVIDENCE**: `npm run test:tdd` com 15 arquivos em RED e os 184 casos anteriores verdes; 45 casos marcados com `TRACEABILITY` sobre os quinze `AC`. Registrado na seção 12.
   - [x] **IMPROVE**: Afirmar sobre a forma por expressão regular, que é o que sobrevive a mudança de implementação.
 
 #### Fase 2 — Código, cada tarefa atrás do seu RED
@@ -718,7 +718,7 @@ Quinze tarefas, uma por `AC`, cada uma em arquivo próprio de `tests/`. Nenhuma 
   - [x] **EVIDENCE**: Comandos e contagem registrados na seção 12.
   - [x] **IMPROVE**: O identificador deriva de bytes aleatórios e não de dado do ambiente, de modo que a opacidade seja propriedade da construção: não há nome de pessoa, de máquina ou caminho a filtrar, porque nenhum entra.
 
-  <!-- specsfy:evidence {"task": "T016", "refs": ["US-042", "FR-040", "FR-042", "FR-043", "NFR-040", "NFR-041", "AC-044", "AC-045", "AC-049", "AC-050", "AC-054"], "files": ["src/telemetry/trace.ts"], "commands": [{"run": "npm run test:tdd", "exit": 0}, {"run": "npx tsc --noEmit", "exit": 0}, {"run": "npm run build", "exit": 0}]} -->
+  <!-- framework:evidence {"task": "T016", "refs": ["US-042", "FR-040", "FR-042", "FR-043", "NFR-040", "NFR-041", "AC-044", "AC-045", "AC-049", "AC-050", "AC-054"], "files": ["src/telemetry/trace.ts"], "commands": [{"run": "npm run test:tdd", "exit": 0}, {"run": "npx tsc --noEmit", "exit": 0}, {"run": "npm run build", "exit": 0}]} -->
 
 - [x] T017 [CODE] [US-041] Implementar em src/telemetry/read.ts — Refs: US-041, FR-044, FR-045, NFR-042, AC-047, AC-048, AC-053 — Depends: T008, T009, T014
   - [x] **PREP**: RED confirmado em T008, T009 e T014; `docs/` reconstruído antes da alteração.
@@ -727,7 +727,7 @@ Quinze tarefas, uma por `AC`, cada uma em arquivo próprio de `tests/`. Nenhuma 
   - [x] **EVIDENCE**: Comandos, contagem e a comparação da árvore registrados na seção 12.
   - [x] **IMPROVE**: Os três casos são representados explicitamente em vez de por texto vazio: colapsar ausência de registro e ausência de identificador perderia justamente o que o diagnóstico precisa dizer.
 
-  <!-- specsfy:evidence {"task": "T017", "refs": ["US-041", "FR-044", "FR-045", "NFR-042", "AC-047", "AC-048", "AC-053"], "files": ["src/telemetry/read.ts"], "commands": [{"run": "npm run test:tdd", "exit": 0}, {"run": "npx tsc --noEmit", "exit": 0}, {"run": "npm run build", "exit": 0}]} -->
+  <!-- framework:evidence {"task": "T017", "refs": ["US-041", "FR-044", "FR-045", "NFR-042", "AC-047", "AC-048", "AC-053"], "files": ["src/telemetry/read.ts"], "commands": [{"run": "npm run test:tdd", "exit": 0}, {"run": "npx tsc --noEmit", "exit": 0}, {"run": "npm run build", "exit": 0}]} -->
 
 - [x] T018 [CODE] [US-040] Implementar em src/setup/run.ts e src/setup/record.ts — Refs: US-040, FR-040, FR-041, FR-042, AC-040, AC-041, AC-042, AC-043, AC-051, AC-052 — Depends: T001, T002, T003, T004, T012, T013, T016
   - [x] **PREP**: RED confirmado em T001, T002, T003, T004, T012 e T013, com T016 em GREEN; `docs/` reconstruído antes da alteração.
@@ -736,7 +736,7 @@ Quinze tarefas, uma por `AC`, cada uma em arquivo próprio de `tests/`. Nenhuma 
   - [x] **EVIDENCE**: Comandos, contagem, o conteúdo gravado e o resultado do `grep` registrados na seção 12.
   - [x] **IMPROVE**: A origem é consumida uma única vez por execução, e não por entrada. Um identificador que mudasse dentro da mesma execução não correlacionaria coisa alguma, e o mesmo vale para o instante.
 
-  <!-- specsfy:evidence {"task": "T018", "refs": ["US-040", "FR-040", "FR-041", "FR-042", "NFR-040", "AC-040", "AC-041", "AC-042", "AC-043", "AC-051", "AC-052"], "files": ["src/setup/run.ts", "src/setup/record.ts"], "commands": [{"run": "npm run test:tdd", "exit": 0}, {"run": "npx tsc --noEmit", "exit": 0}, {"run": "npm run build", "exit": 0}]} -->
+  <!-- framework:evidence {"task": "T018", "refs": ["US-040", "FR-040", "FR-041", "FR-042", "NFR-040", "AC-040", "AC-041", "AC-042", "AC-043", "AC-051", "AC-052"], "files": ["src/setup/run.ts", "src/setup/record.ts"], "commands": [{"run": "npm run test:tdd", "exit": 0}, {"run": "npx tsc --noEmit", "exit": 0}, {"run": "npm run build", "exit": 0}]} -->
 
 - [x] T019 [CODE] [US-040] Implementar em src/doctor.ts — Refs: US-040, FR-044, AC-046, AC-047, AC-053 — Depends: T007, T008, T014, T017
   - [x] **PREP**: RED confirmado em T007, T008 e T014, com T017 em GREEN; `docs/` reconstruído antes da alteração.
@@ -745,7 +745,7 @@ Quinze tarefas, uma por `AC`, cada uma em arquivo próprio de `tests/`. Nenhuma 
   - [x] **EVIDENCE**: Comandos, contagem e o resultado do `grep` registrados na seção 12.
   - [x] **IMPROVE**: O campo é opcional, para que as chamadas sem raiz continuem válidas sem edição, no mesmo padrão adotado quando os conjuntos de skills entraram no relatório.
 
-  <!-- specsfy:evidence {"task": "T019", "refs": ["US-040", "FR-044", "AC-046", "AC-047", "AC-053"], "files": ["src/doctor.ts"], "commands": [{"run": "npm run test:tdd", "exit": 0}, {"run": "npx tsc --noEmit", "exit": 0}, {"run": "npm run build", "exit": 0}]} -->
+  <!-- framework:evidence {"task": "T019", "refs": ["US-040", "FR-044", "AC-046", "AC-047", "AC-053"], "files": ["src/doctor.ts"], "commands": [{"run": "npm run test:tdd", "exit": 0}, {"run": "npx tsc --noEmit", "exit": 0}, {"run": "npm run build", "exit": 0}]} -->
 
 - [x] T023 [TEST] [TDD] [US-040] Derivar do caso-limite de gerador vazio o teste em tests/trace-gerador-vazio.test.ts — Refs: US-040, FR-040, FR-044, AC-040, AC-047 — Depends: T018
   - [x] **PREP**: A seção 7 exige tratar gerador que devolve valor vazio como ausência de identificador, sem gravar campo vazio. Nenhum caso cobre, e `runSetup` grava o campo com texto vazio.
@@ -761,13 +761,13 @@ Quinze tarefas, uma por `AC`, cada uma em arquivo próprio de `tests/`. Nenhuma 
   - [x] **EVIDENCE**: Comandos, contagens e o conteúdo gravado registrados na seção 12.
   - [x] **IMPROVE**: Registro com campo vazio afirma identificação que não houve, o que é pior que a ausência do campo — a mesma razão pela qual o carimbo congelado era pior que carimbo ausente. O defeito e o que esta fatia corrige têm a mesma forma.
 
-  <!-- specsfy:evidence {"task": "T024", "refs": ["US-040", "FR-040", "FR-044", "AC-040", "AC-047"], "files": ["src/setup/run.ts"], "commands": [{"run": "npm run test:tdd", "exit": 0}, {"run": "npx tsc --noEmit", "exit": 0}, {"run": "npm run build", "exit": 0}]} -->
+  <!-- framework:evidence {"task": "T024", "refs": ["US-040", "FR-040", "FR-044", "AC-040", "AC-047"], "files": ["src/setup/run.ts"], "commands": [{"run": "npm run test:tdd", "exit": 0}, {"run": "npx tsc --noEmit", "exit": 0}, {"run": "npm run build", "exit": 0}]} -->
 
 #### Fase 3 — Fechamento
 
-- [x] T020 [DOC] Registrar os módulos e a ampliação do registro em .specsfy/STACK.md — Refs: FR-040 — Depends: T018, T019
+- [x] T020 [DOC] Registrar os módulos e a ampliação do registro em .project-context/STACK.md — Refs: FR-040 — Depends: T018, T019
   - [x] **PREP**: Conferido o que mudou de estrutura: dois arquivos em `src/telemetry/` e o campo novo no registro.
-  - [x] **EXECUTE**: `.specsfy/STACK.md` ganhou a seção `Telemetria da execução`, com a responsabilidade de cada módulo e o campo acrescentado ao registro.
+  - [x] **EXECUTE**: `.project-context/STACK.md` ganhou a seção `Telemetria da execução`, com a responsabilidade de cada módulo e o campo acrescentado ao registro.
   - [x] **VERIFY**: `build_documentation --check` em exit 0 e o monitor de contexto em `CURRENT`.
   - [x] **EVIDENCE**: Comandos e exit codes registrados na seção 12.
   - [x] **IMPROVE**: A seção registra por que relógio e gerador são injetáveis, citando o congelamento que originou esta fatia, para que a próxima não repita a mesma troca entre determinismo e verdade.
@@ -837,5 +837,5 @@ Registradas na seção 13, todas reversíveis.
 - [x] Nenhuma entrada gravada por uma execução nova traz o instante da época.
 - [x] Os casos que exercitam a origem real afirmam sobre propriedades, e não sobre valores específicos.
 - [x] Um registro sem identificador e com o instante da época é lido sem erro e não é reescrito.
-- [x] `.specsfy/STACK.md` registra os módulos novos e a ampliação do registro.
+- [x] `.project-context/STACK.md` registra os módulos novos e a ampliação do registro.
 - [x] `PROJECT.md` descreve que o registro passa a identificar a execução e o momento.

@@ -8,19 +8,19 @@ const env = { resolveNpm: () => "1.0.0", resolveLocalPython: () => "2.3.7", reso
 const noExtensions = () => [];
 
 describe("AC-053 — doctor doesn't fabricate an identifier", () => {
-  // SPECSFY: US-040 FR-044 AC-053
+  // TRACEABILITY: US-040 FR-044 AC-053
   it("with no record, the read reports absence", () => {
     expect(readTrace(project()).kind).toBe("absent");
   });
 
-  // SPECSFY: US-040 FR-045 AC-053
+  // TRACEABILITY: US-040 FR-045 AC-053
   it("the report doesn't name any identifier", () => {
     const t = inspectDependencies(env, project(), noBackends, noExtensions).trace;
     expect(t?.kind).toBe("absent");
     expect(t && "trace" in t).toBe(false);
   });
 
-  // SPECSFY: US-040 FR-044 FR-045 AC-053
+  // TRACEABILITY: US-040 FR-044 FR-045 AC-053
   it("the dependency diagnosis keeps happening", () => {
     expect(inspectDependencies(env, project(), noBackends, noExtensions).results.length).toBeGreaterThan(0);
   });

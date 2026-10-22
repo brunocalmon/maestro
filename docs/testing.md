@@ -4,7 +4,7 @@
 
 # Test Suite and Quality Assurance of Maestro
 
-<!-- specsfy:documentator:start -->
+<!-- maestro:inventory:start -->
 ## Resumo
 
 - Arquivos de teste: 234.
@@ -186,7 +186,7 @@
 | tests/setup-install.test.ts |
 | tests/setup-installers-always.test.ts |
 | tests/setup-instructions-direction.test.ts |
-| tests/setup-jafeito-skills-specsfy.test.ts |
+| tests/setup-jafeito-skills-framework.test.ts |
 | tests/setup-merge-settings.test.ts |
 | tests/setup-migrate-inline-hooks.test.ts |
 | tests/setup-next-steps.test.ts |
@@ -220,10 +220,10 @@
 | tests/skills-source-arbitraria.test.ts |
 | tests/skills-source-oficial.test.ts |
 | tests/skills-source-terceiro.test.ts |
-| tests/specsfy-install-alvo.test.ts |
-| tests/specsfy-install-falha.test.ts |
-| tests/specsfy-install-idempotente.test.ts |
-| tests/specsfy-install-real.test.ts |
+| tests/framework-install-alvo.test.ts |
+| tests/framework-install-falha.test.ts |
+| tests/framework-install-idempotente.test.ts |
+| tests/framework-install-real.test.ts |
 | tests/surface.test.ts |
 | tests/task-types-config.test.ts |
 | tests/telemetry-record.test.ts |
@@ -247,9 +247,9 @@
 | tests/trace-relogio-deterministico.test.ts |
 | tests/trace-sem-epoca.test.ts |
 | tests/version.test.ts |
-<!-- specsfy:documentator:end -->
+<!-- maestro:inventory:end -->
 
-<!-- O bloco specsfy:documentator acima é o inventário mecânico gerado pelo Specsfy e é reescrito a cada build (findings/external/FIND-EXT-001). A documentação do projeto vive fora dele, a partir daqui. -->
+<!-- O bloco maestro:inventory acima é o inventário mecânico gerado pelo former project tool e é reescrito a cada build (findings/external/FIND-EXT-001). A documentação do projeto vive fora dele, a partir daqui. -->
 
 ## Testing Strategy Overview
 
@@ -300,7 +300,7 @@ The 200 test files located in `tests/` are organized across core domains:
 - `config-backfill.test.ts`: Validates automatic backfilling of missing keys in `.maestro/config.yaml`.
 - `config-router-block.test.ts`: Tests injection of Maestro router blocks into `CLAUDE.md` and `AGENTS.md`.
 - `config-schema.test.ts`: Validates Zod schemas for global configurations and agent profiles.
-- `config-sync.test.ts`: Ensures synchronization between `config.yaml` and `.specsfy/STACK.md`.
+- `config-sync.test.ts`: Ensures synchronization between `config.yaml` and `.project-context/STACK.md`.
 - `config-write.test.ts`: Validates safe writing of configuration files.
 
 ### 4. Delegation & CLI Spawning Tests

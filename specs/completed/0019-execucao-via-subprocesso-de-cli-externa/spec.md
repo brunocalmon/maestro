@@ -2,7 +2,7 @@
 
 | Campo | Valor |
 | --- | --- |
-| Formato | Specsfy/2.0 |
+| Formato | former project tool/2.0 |
 | ID | SPEC-0019 |
 | Slug | 0019-execucao-via-subprocesso-de-cli-externa |
 | Status | Complete |
@@ -77,7 +77,7 @@ mesma divisão que a `SPEC-0016` e a `SPEC-0018` já fixaram.
 - `src/plan/model.ts` — `PlannedAgent` com `runtime: "auto" | "native" | "cli"`; nenhum campo hoje diz qual backend.
 - `src/delegation/{behavior,brief,run}.ts` — `SPEC-0018`, que hoje recusa `runtime: cli` nomeando esta fatia.
 - `src/approval/decide.ts` — `interpretDecision(ask)`, extraído na `SPEC-0016` para os dois gates do projeto reusarem a mesma regra de recusa.
-- `scripts/pinned-skills.mjs`, `tests/specsfy-install-real.test.ts` — padrão já usado no projeto para `spawnSync` com timeout e captura de `stderr` como motivo de falha.
+- `scripts/pinned-skills.mjs`, `tests/framework-install-real.test.ts` — padrão já usado no projeto para `spawnSync` com timeout e captura de `stderr` como motivo de falha.
 
 #### Documentação consultada
 
@@ -488,7 +488,7 @@ skills e tools por agente.
 - `src/delegation/cli-backends/registry.ts` (novo): `resolveAdapter(name)` e a lista dos cinco.
 - `src/delegation/cli-select.ts` (novo): `selectBackend(agent, detected)` implementando `FR-004`.
 - `src/delegation/cli-behavior-file.ts` (novo): `withTemporaryAgentsFile(root, content, fn)` — escreve, executa `fn`, remove sempre (`try/finally`), recusando se `AGENTS.md` real já existir.
-- `src/delegation/cli-spawn.ts` (novo): `spawnCliAgent(adapter, args, options)` — `spawnSync` com timeout, captura de stdout/stderr/status, mesmo padrão de `scripts/pinned-skills.mjs` e `realSpecsfyExecutor`.
+- `src/delegation/cli-spawn.ts` (novo): `spawnCliAgent(adapter, args, options)` — `spawnSync` com timeout, captura de stdout/stderr/status, mesmo padrão de `scripts/pinned-skills.mjs` e `realformer project toolExecutor`.
 - `src/delegation/cli-gate.ts` (novo): `decideSpawn(source)` sobre `interpretDecision`, um por agente.
 - `src/delegation/run.ts` (`SPEC-0018`, estendido): `runtime: cli` deixa de recusar — resolve backend, tools, gate, comportamento e spawn, um agente por vez.
 - `src/config/schema.ts`: `execution.cli_backend?: ConfiguredProperty<string>` em `AgentExecution`.
@@ -690,20 +690,20 @@ tests/
 #### Gate do Ato I — Definição
 
 - **Resultado**: READY (2026-09-07)
-- **Comando**: `node .claude/skills/specsfy-04-validate/scripts/validate_spec.mjs specs/draft/0019-execucao-via-subprocesso-de-cli-externa/spec.md --allow-draft` → `VALID DRAFT`.
+- **Comando**: `node .claude/skills/framework-04-validate/scripts/validate_spec.mjs specs/draft/0019-execucao-via-subprocesso-de-cli-externa/spec.md --allow-draft` → `VALID DRAFT`.
 - **Achados**: Nenhum `BLOCKER`. As oito decisões da entrevista viraram `FR`, `AC` ou `DEC` rastreáveis. Cobertura: US-001 → 20 AC; FR-001 → 4 (incluindo AC-019); FR-002 → 3; FR-003 → 3; FR-004 → 3; FR-005 → 3; FR-006 → 3; FR-007 → 3 (AC-002 conta para FR-001 e FR-007); NFR-001 → 13; NFR-002 → 6. `R-001` e `R-002` são claims críticos e foram verificados por execução real de `--help` nos cinco binários instalados nesta máquina — não por suposição, o que importa porque a fatia inteira depende das convenções de flag serem exatamente essas. `Interface para pessoas: Não` justificada. Finding de segurança material e endereçado: esta é a primeira fatia do épico capaz de escrever fora do controle direto do maestro; o gate novo por agente (`FR-005`, `DEC-004`) é a resposta registrada, não uma omissão.
 
 #### Gate do Ato II — Plano
 
 - **Resultado**: Passed (2026-09-07)
-- **Comando**: `node .claude/skills/specsfy-05-tasks/scripts/validate_tasks.mjs specs/defined/0019-execucao-via-subprocesso-de-cli-externa/spec.md` → `RESULTADO: READY`.
+- **Comando**: `node .claude/skills/framework-05-tasks/scripts/validate_tasks.mjs specs/defined/0019-execucao-via-subprocesso-de-cli-externa/spec.md` → `RESULTADO: READY`.
 - **Achados**: 21 casos TDD (um por AC, mais um terceiro caso adicional para AC-005) escritos em seis arquivos Vitest e RED observado para todos — `npx vitest run tests/cli-backends-adapter.test.ts tests/cli-behavior-file.test.ts tests/cli-run-tools.test.ts tests/cli-select.test.ts tests/cli-run-gate.test.ts tests/cli-spawn.test.ts` retornou 21 falhas de 21, todas por módulo de produção inexistente (`Cannot find module`), a causa correta de RED nesta fase — nenhum caso passou antes da implementação. Sete tarefas `[CODE]` (T021–T027) cobrem os módulos novos e a extensão de `run.ts`, cada uma com ao menos três predecessores TDD rastreáveis. Nenhum `BLOCKER` de plano.
 
 #### Gate do Ato III — Entrega
 
 - **Resultado**: Passed (2026-09-07)
-- **Comandos**: `node .claude/skills/specsfy-06-tdd-bdd/scripts/check_traceability.mjs specs/planned/0019-execucao-via-subprocesso-de-cli-externa/spec.md .` → 30/30 IDs desta spec cobertos; `node .claude/skills/specsfy-06-tdd-bdd/scripts/verify_acceptance.mjs specs/planned/0019-execucao-via-subprocesso-de-cli-externa/spec.md .` → `QA: PASSED`; `node .claude/skills/specsfy-05-tasks/scripts/validate_tasks.mjs specs/planned/0019-execucao-via-subprocesso-de-cli-externa/spec.md` → `RESULTADO: READY` (30/30 tarefas concluídas, contrato de evidência verificado); `npx vitest run` → 186 arquivos, 510/510; `npx tsc --noEmit` limpo.
-- **Achados**: Todas as 20 ACs passaram de RED para GREEN. Verificação manual real (`métricas de sucesso` da seção 1) executada nos cinco backends instalados nesta máquina via `maestro plan` → `maestro run`: `goose` completou de ponta a ponta (respondeu "OK" à tarefa pedida); `pi`, `claude`, `agy` e `codex` alcançaram o subprocesso real e relataram erro de conta/modelo do próprio backend, nunca uma recusa da preparação do maestro — prova real de `FR-007`. A verificação manual encontrou e corrigiu dois bugs reais que a suíte automatizada não detectava: `goose` exigia o subcomando `run` antes das flags, e `agy --print` toma o argumento imediatamente seguinte como o prompt (uma flag ali seria lida como prompt por engano) — ambos documentados em `.specsfy/STACK.md` e no código. `agy`/`codex` foram recusados por padrão neste projeto porque `specsfy setup` já grava um `AGENTS.md` real aqui — comportamento pretendido (`AC-005`/casos-limite), confirmado afastando o arquivo temporariamente para provar o caminho completo de injeção por arquivo. `docs/`, `.specsfy/STACK.md` e `PROJECT.md` atualizados; `PROJECT.md` revisado (mudança de aplicação material, `runtime: cli` agora executa de verdade). Nenhum `BLOCKER`.
+- **Comandos**: `node .claude/skills/framework-06-tdd-bdd/scripts/check_traceability.mjs specs/planned/0019-execucao-via-subprocesso-de-cli-externa/spec.md .` → 30/30 IDs desta spec cobertos; `node .claude/skills/framework-06-tdd-bdd/scripts/verify_acceptance.mjs specs/planned/0019-execucao-via-subprocesso-de-cli-externa/spec.md .` → `QA: PASSED`; `node .claude/skills/framework-05-tasks/scripts/validate_tasks.mjs specs/planned/0019-execucao-via-subprocesso-de-cli-externa/spec.md` → `RESULTADO: READY` (30/30 tarefas concluídas, contrato de evidência verificado); `npx vitest run` → 186 arquivos, 510/510; `npx tsc --noEmit` limpo.
+- **Achados**: Todas as 20 ACs passaram de RED para GREEN. Verificação manual real (`métricas de sucesso` da seção 1) executada nos cinco backends instalados nesta máquina via `maestro plan` → `maestro run`: `goose` completou de ponta a ponta (respondeu "OK" à tarefa pedida); `pi`, `claude`, `agy` e `codex` alcançaram o subprocesso real e relataram erro de conta/modelo do próprio backend, nunca uma recusa da preparação do maestro — prova real de `FR-007`. A verificação manual encontrou e corrigiu dois bugs reais que a suíte automatizada não detectava: `goose` exigia o subcomando `run` antes das flags, e `agy --print` toma o argumento imediatamente seguinte como o prompt (uma flag ali seria lida como prompt por engano) — ambos documentados em `.project-context/STACK.md` e no código. `agy`/`codex` foram recusados por padrão neste projeto porque `framework setup` já grava um `AGENTS.md` real aqui — comportamento pretendido (`AC-005`/casos-limite), confirmado afastando o arquivo temporariamente para provar o caminho completo de injeção por arquivo. `docs/`, `.project-context/STACK.md` e `PROJECT.md` atualizados; `PROJECT.md` revisado (mudança de aplicação material, `runtime: cli` agora executa de verdade). Nenhum `BLOCKER`.
 
 ### 14. Tarefas
 
@@ -725,7 +725,7 @@ Cada tarefa possui exatamente este checklist, atualizado durante a execução:
 
 - [x] T001 [P] [TEST] [TDD] [US-001] Derivar de AC-001 um caso Vitest falhando em tests/cli-backends-adapter.test.ts — Refs: US-001, FR-001, NFR-001, AC-001 — Depends: none
   - [x] **PREP**: Ler o Gherkin de AC-001; confirmar que `src/delegation/cli-backends/registry.ts` não existe.
-  - [x] **EXECUTE**: Escrever o caso com marcador `SPECSFY: US-001 FR-001 NFR-001 AC-001` — `resolveAdapter` devolve um adaptador para cada um dos cinco nomes.
+  - [x] **EXECUTE**: Escrever o caso com marcador `TRACEABILITY: US-001 FR-001 NFR-001 AC-001` — `resolveAdapter` devolve um adaptador para cada um dos cinco nomes.
   - [x] **VERIFY**: `npx vitest run tests/cli-backends-adapter.test.ts` — observar RED. RED confirmado nesta rodada: `npx vitest run` retornou falha por módulo inexistente.
   - [x] **VISUAL**: Não aplicável — arquivo de teste sem superfície visual.
   - [x] **EVIDENCE**: Registrar comando e causa do RED nas seções 11–12. Comando e causa do RED registrados nas seções 11–12 desta spec.
@@ -733,7 +733,7 @@ Cada tarefa possui exatamente este checklist, atualizado durante a execução:
 
 - [x] T002 [P] [TEST] [TDD] [US-001] Derivar de AC-002 um caso Vitest falhando em tests/cli-backends-adapter.test.ts — Refs: US-001, FR-001, FR-007, NFR-001, AC-002 — Depends: none
   - [x] **PREP**: Ler o Gherkin de AC-002.
-  - [x] **EXECUTE**: Escrever o caso com marcador `SPECSFY: US-001 FR-001 FR-007 NFR-001 AC-002` — `qwen3:8b` aparece idêntico nos argumentos dos cinco adaptadores.
+  - [x] **EXECUTE**: Escrever o caso com marcador `TRACEABILITY: US-001 FR-001 FR-007 NFR-001 AC-002` — `qwen3:8b` aparece idêntico nos argumentos dos cinco adaptadores.
   - [x] **VERIFY**: `npx vitest run tests/cli-backends-adapter.test.ts` — observar RED. RED confirmado nesta rodada: `npx vitest run` retornou falha por módulo inexistente.
   - [x] **VISUAL**: Não aplicável — arquivo de teste sem superfície visual.
   - [x] **EVIDENCE**: Registrar comando e causa do RED nas seções 11–12. Comando e causa do RED registrados nas seções 11–12 desta spec.
@@ -741,7 +741,7 @@ Cada tarefa possui exatamente este checklist, atualizado durante a execução:
 
 - [x] T003 [P] [TEST] [TDD] [US-001] Derivar de AC-003 um caso Vitest falhando em tests/cli-backends-adapter.test.ts — Refs: US-001, FR-001, NFR-001, AC-003 — Depends: none
   - [x] **PREP**: Ler o Gherkin de AC-003; confirmar as flags reais de saída estruturada de cada backend (transcritas na seção 2).
-  - [x] **EXECUTE**: Escrever o caso com marcador `SPECSFY: US-001 FR-001 NFR-001 AC-003` — cada adaptador inclui sua própria flag de saída estruturada.
+  - [x] **EXECUTE**: Escrever o caso com marcador `TRACEABILITY: US-001 FR-001 NFR-001 AC-003` — cada adaptador inclui sua própria flag de saída estruturada.
   - [x] **VERIFY**: `npx vitest run tests/cli-backends-adapter.test.ts` — observar RED. RED confirmado nesta rodada: `npx vitest run` retornou falha por módulo inexistente.
   - [x] **VISUAL**: Não aplicável — arquivo de teste sem superfície visual.
   - [x] **EVIDENCE**: Registrar comando e causa do RED nas seções 11–12. Comando e causa do RED registrados nas seções 11–12 desta spec.
@@ -749,7 +749,7 @@ Cada tarefa possui exatamente este checklist, atualizado durante a execução:
 
 - [x] T004 [P] [TEST] [TDD] [US-001] Derivar de AC-004 um caso Vitest falhando em tests/cli-backends-adapter.test.ts — Refs: US-001, FR-002, NFR-001, AC-004 — Depends: none
   - [x] **PREP**: Ler o Gherkin de AC-004.
-  - [x] **EXECUTE**: Escrever o caso com marcador `SPECSFY: US-001 FR-002 NFR-001 AC-004` — `pi`, `claude` e `goose` recebem o comportamento na flag nativa, sem arquivo.
+  - [x] **EXECUTE**: Escrever o caso com marcador `TRACEABILITY: US-001 FR-002 NFR-001 AC-004` — `pi`, `claude` e `goose` recebem o comportamento na flag nativa, sem arquivo.
   - [x] **VERIFY**: `npx vitest run tests/cli-backends-adapter.test.ts` — observar RED. RED confirmado nesta rodada: `npx vitest run` retornou falha por módulo inexistente.
   - [x] **VISUAL**: Não aplicável — arquivo de teste sem superfície visual.
   - [x] **EVIDENCE**: Registrar comando e causa do RED nas seções 11–12. Comando e causa do RED registrados nas seções 11–12 desta spec.
@@ -757,7 +757,7 @@ Cada tarefa possui exatamente este checklist, atualizado durante a execução:
 
 - [x] T005 [P] [TEST] [TDD] [US-001] Derivar de AC-005 um caso Vitest falhando em tests/cli-behavior-file.test.ts — Refs: US-001, FR-002, NFR-001, AC-005 — Depends: none
   - [x] **PREP**: Ler o Gherkin de AC-005; confirmar que `src/delegation/cli-behavior-file.ts` não existe.
-  - [x] **EXECUTE**: Escrever o caso com marcador `SPECSFY: US-001 FR-002 NFR-001 AC-005` — `withTemporaryAgentsFile` escreve o comportamento em `AGENTS.md` antes de chamar a função recebida.
+  - [x] **EXECUTE**: Escrever o caso com marcador `TRACEABILITY: US-001 FR-002 NFR-001 AC-005` — `withTemporaryAgentsFile` escreve o comportamento em `AGENTS.md` antes de chamar a função recebida.
   - [x] **VERIFY**: `npx vitest run tests/cli-behavior-file.test.ts` — observar RED. RED confirmado nesta rodada: `npx vitest run` retornou falha por módulo inexistente.
   - [x] **VISUAL**: Não aplicável — arquivo de teste sem superfície visual.
   - [x] **EVIDENCE**: Registrar comando e causa do RED nas seções 11–12. Comando e causa do RED registrados nas seções 11–12 desta spec.
@@ -765,7 +765,7 @@ Cada tarefa possui exatamente este checklist, atualizado durante a execução:
 
 - [x] T006 [P] [TEST] [TDD] [US-001] Derivar de AC-006 um caso Vitest falhando em tests/cli-behavior-file.test.ts — Refs: US-001, FR-002, NFR-002, AC-006 — Depends: none
   - [x] **PREP**: Ler o Gherkin de AC-006.
-  - [x] **EXECUTE**: Escrever o caso com marcador `SPECSFY: US-001 FR-002 NFR-002 AC-006` — o arquivo some depois, inclusive quando a função recebida lança.
+  - [x] **EXECUTE**: Escrever o caso com marcador `TRACEABILITY: US-001 FR-002 NFR-002 AC-006` — o arquivo some depois, inclusive quando a função recebida lança.
   - [x] **VERIFY**: `npx vitest run tests/cli-behavior-file.test.ts` — observar RED. RED confirmado nesta rodada: `npx vitest run` retornou falha por módulo inexistente.
   - [x] **VISUAL**: Não aplicável — arquivo de teste sem superfície visual.
   - [x] **EVIDENCE**: Registrar comando e causa do RED nas seções 11–12. Comando e causa do RED registrados nas seções 11–12 desta spec.
@@ -773,7 +773,7 @@ Cada tarefa possui exatamente este checklist, atualizado durante a execução:
 
 - [x] T007 [P] [TEST] [TDD] [US-001] Derivar de AC-007 um caso Vitest falhando em tests/cli-run-tools.test.ts — Refs: US-001, FR-003, NFR-002, AC-007 — Depends: none
   - [x] **PREP**: Ler o Gherkin de AC-007; confirmar que `src/delegation/run.ts` ainda recusa qualquer `runtime: cli`.
-  - [x] **EXECUTE**: Escrever o caso com marcador `SPECSFY: US-001 FR-003 NFR-002 AC-007` — `tools` `required` com backend sem allowlist é recusado nomeando os dois.
+  - [x] **EXECUTE**: Escrever o caso com marcador `TRACEABILITY: US-001 FR-003 NFR-002 AC-007` — `tools` `required` com backend sem allowlist é recusado nomeando os dois.
   - [x] **VERIFY**: `npx vitest run tests/cli-run-tools.test.ts` — observar RED. RED confirmado nesta rodada: `npx vitest run` retornou falha por módulo inexistente.
   - [x] **VISUAL**: Não aplicável — arquivo de teste sem superfície visual.
   - [x] **EVIDENCE**: Registrar comando e causa do RED nas seções 11–12. Comando e causa do RED registrados nas seções 11–12 desta spec.
@@ -781,7 +781,7 @@ Cada tarefa possui exatamente este checklist, atualizado durante a execução:
 
 - [x] T008 [P] [TEST] [TDD] [US-001] Derivar de AC-008 um caso Vitest falhando em tests/cli-run-tools.test.ts — Refs: US-001, FR-003, NFR-001, AC-008 — Depends: none
   - [x] **PREP**: Ler o Gherkin de AC-008.
-  - [x] **EXECUTE**: Escrever o caso com marcador `SPECSFY: US-001 FR-003 NFR-001 AC-008` — `tools` `required` com backend que suporta aparece na flag de allowlist.
+  - [x] **EXECUTE**: Escrever o caso com marcador `TRACEABILITY: US-001 FR-003 NFR-001 AC-008` — `tools` `required` com backend que suporta aparece na flag de allowlist.
   - [x] **VERIFY**: `npx vitest run tests/cli-run-tools.test.ts` — observar RED. RED confirmado nesta rodada: `npx vitest run` retornou falha por módulo inexistente.
   - [x] **VISUAL**: Não aplicável — arquivo de teste sem superfície visual.
   - [x] **EVIDENCE**: Registrar comando e causa do RED nas seções 11–12. Comando e causa do RED registrados nas seções 11–12 desta spec.
@@ -789,7 +789,7 @@ Cada tarefa possui exatamente este checklist, atualizado durante a execução:
 
 - [x] T009 [P] [TEST] [TDD] [US-001] Derivar de AC-009 um caso Vitest falhando em tests/cli-run-tools.test.ts — Refs: US-001, FR-003, NFR-001, AC-009 — Depends: none
   - [x] **PREP**: Ler o Gherkin de AC-009.
-  - [x] **EXECUTE**: Escrever o caso com marcador `SPECSFY: US-001 FR-003 NFR-001 AC-009` — sem `tools` declaradas, backend sem allowlist prossegue normalmente.
+  - [x] **EXECUTE**: Escrever o caso com marcador `TRACEABILITY: US-001 FR-003 NFR-001 AC-009` — sem `tools` declaradas, backend sem allowlist prossegue normalmente.
   - [x] **VERIFY**: `npx vitest run tests/cli-run-tools.test.ts` — observar RED. RED confirmado nesta rodada: `npx vitest run` retornou falha por módulo inexistente.
   - [x] **VISUAL**: Não aplicável — arquivo de teste sem superfície visual.
   - [x] **EVIDENCE**: Registrar comando e causa do RED nas seções 11–12. Comando e causa do RED registrados nas seções 11–12 desta spec.
@@ -797,7 +797,7 @@ Cada tarefa possui exatamente este checklist, atualizado durante a execução:
 
 - [x] T010 [P] [TEST] [TDD] [US-001] Derivar de AC-010 um caso Vitest falhando em tests/cli-select.test.ts — Refs: US-001, FR-004, NFR-001, AC-010 — Depends: none
   - [x] **PREP**: Ler o Gherkin de AC-010; confirmar que `src/delegation/cli-select.ts` não existe.
-  - [x] **EXECUTE**: Escrever o caso com marcador `SPECSFY: US-001 FR-004 NFR-001 AC-010` — sem `cli_backend`, `selectBackend` devolve o primeiro presente na ordem fixa.
+  - [x] **EXECUTE**: Escrever o caso com marcador `TRACEABILITY: US-001 FR-004 NFR-001 AC-010` — sem `cli_backend`, `selectBackend` devolve o primeiro presente na ordem fixa.
   - [x] **VERIFY**: `npx vitest run tests/cli-select.test.ts` — observar RED. RED confirmado nesta rodada: `npx vitest run` retornou falha por módulo inexistente.
   - [x] **VISUAL**: Não aplicável — arquivo de teste sem superfície visual.
   - [x] **EVIDENCE**: Registrar comando e causa do RED nas seções 11–12. Comando e causa do RED registrados nas seções 11–12 desta spec.
@@ -805,7 +805,7 @@ Cada tarefa possui exatamente este checklist, atualizado durante a execução:
 
 - [x] T011 [P] [TEST] [TDD] [US-001] Derivar de AC-011 um caso Vitest falhando em tests/cli-select.test.ts — Refs: US-001, FR-004, NFR-002, AC-011 — Depends: none
   - [x] **PREP**: Ler o Gherkin de AC-011.
-  - [x] **EXECUTE**: Escrever o caso com marcador `SPECSFY: US-001 FR-004 NFR-002 AC-011` — `cli_backend` `required` ausente do ambiente é recusado nomeando-o.
+  - [x] **EXECUTE**: Escrever o caso com marcador `TRACEABILITY: US-001 FR-004 NFR-002 AC-011` — `cli_backend` `required` ausente do ambiente é recusado nomeando-o.
   - [x] **VERIFY**: `npx vitest run tests/cli-select.test.ts` — observar RED. RED confirmado nesta rodada: `npx vitest run` retornou falha por módulo inexistente.
   - [x] **VISUAL**: Não aplicável — arquivo de teste sem superfície visual.
   - [x] **EVIDENCE**: Registrar comando e causa do RED nas seções 11–12. Comando e causa do RED registrados nas seções 11–12 desta spec.
@@ -813,7 +813,7 @@ Cada tarefa possui exatamente este checklist, atualizado durante a execução:
 
 - [x] T012 [P] [TEST] [TDD] [US-001] Derivar de AC-012 um caso Vitest falhando em tests/cli-select.test.ts — Refs: US-001, FR-004, NFR-001, AC-012 — Depends: none
   - [x] **PREP**: Ler o Gherkin de AC-012.
-  - [x] **EXECUTE**: Escrever o caso com marcador `SPECSFY: US-001 FR-004 NFR-001 AC-012` — `cli_backend` `suggested` ausente cai para outro backend presente.
+  - [x] **EXECUTE**: Escrever o caso com marcador `TRACEABILITY: US-001 FR-004 NFR-001 AC-012` — `cli_backend` `suggested` ausente cai para outro backend presente.
   - [x] **VERIFY**: `npx vitest run tests/cli-select.test.ts` — observar RED. RED confirmado nesta rodada: `npx vitest run` retornou falha por módulo inexistente.
   - [x] **VISUAL**: Não aplicável — arquivo de teste sem superfície visual.
   - [x] **EVIDENCE**: Registrar comando e causa do RED nas seções 11–12. Comando e causa do RED registrados nas seções 11–12 desta spec.
@@ -821,7 +821,7 @@ Cada tarefa possui exatamente este checklist, atualizado durante a execução:
 
 - [x] T013 [P] [TEST] [TDD] [US-001] Derivar de AC-013 um caso Vitest falhando em tests/cli-run-gate.test.ts — Refs: US-001, FR-005, NFR-002, AC-013 — Depends: none
   - [x] **PREP**: Ler o Gherkin de AC-013; confirmar `interpretDecision` e o padrão de `decidePlan` da SPEC-0016.
-  - [x] **EXECUTE**: Escrever o caso com marcador `SPECSFY: US-001 FR-005 NFR-002 AC-013` — decisão positiva injetada para um agente `cli` inicia o spawn.
+  - [x] **EXECUTE**: Escrever o caso com marcador `TRACEABILITY: US-001 FR-005 NFR-002 AC-013` — decisão positiva injetada para um agente `cli` inicia o spawn.
   - [x] **VERIFY**: `npx vitest run tests/cli-run-gate.test.ts` — observar RED. RED confirmado nesta rodada: `npx vitest run` retornou falha por módulo inexistente.
   - [x] **VISUAL**: Não aplicável — arquivo de teste sem superfície visual.
   - [x] **EVIDENCE**: Registrar comando e causa do RED nas seções 11–12. Comando e causa do RED registrados nas seções 11–12 desta spec.
@@ -829,7 +829,7 @@ Cada tarefa possui exatamente este checklist, atualizado durante a execução:
 
 - [x] T014 [P] [TEST] [TDD] [US-001] Derivar de AC-014 um caso Vitest falhando em tests/cli-run-gate.test.ts — Refs: US-001, FR-005, NFR-001, AC-014 — Depends: none
   - [x] **PREP**: Ler o Gherkin de AC-014.
-  - [x] **EXECUTE**: Escrever o caso com marcador `SPECSFY: US-001 FR-005 NFR-001 AC-014` — recusar o primeiro agente de dois não impede o segundo, com decisão positiva.
+  - [x] **EXECUTE**: Escrever o caso com marcador `TRACEABILITY: US-001 FR-005 NFR-001 AC-014` — recusar o primeiro agente de dois não impede o segundo, com decisão positiva.
   - [x] **VERIFY**: `npx vitest run tests/cli-run-gate.test.ts` — observar RED. RED confirmado nesta rodada: `npx vitest run` retornou falha por módulo inexistente.
   - [x] **VISUAL**: Não aplicável — arquivo de teste sem superfície visual.
   - [x] **EVIDENCE**: Registrar comando e causa do RED nas seções 11–12. Comando e causa do RED registrados nas seções 11–12 desta spec.
@@ -837,7 +837,7 @@ Cada tarefa possui exatamente este checklist, atualizado durante a execução:
 
 - [x] T015 [P] [TEST] [TDD] [US-001] Derivar de AC-015 um caso Vitest falhando em tests/cli-run-gate.test.ts — Refs: US-001, FR-005, NFR-002, AC-015 — Depends: none
   - [x] **PREP**: Ler o Gherkin de AC-015.
-  - [x] **EXECUTE**: Escrever o caso com marcador `SPECSFY: US-001 FR-005 NFR-002 AC-015` — fonte de decisão que lança é tratada como recusa, sem spawn.
+  - [x] **EXECUTE**: Escrever o caso com marcador `TRACEABILITY: US-001 FR-005 NFR-002 AC-015` — fonte de decisão que lança é tratada como recusa, sem spawn.
   - [x] **VERIFY**: `npx vitest run tests/cli-run-gate.test.ts` — observar RED. RED confirmado nesta rodada: `npx vitest run` retornou falha por módulo inexistente.
   - [x] **VISUAL**: Não aplicável — arquivo de teste sem superfície visual.
   - [x] **EVIDENCE**: Registrar comando e causa do RED nas seções 11–12. Comando e causa do RED registrados nas seções 11–12 desta spec.
@@ -845,7 +845,7 @@ Cada tarefa possui exatamente este checklist, atualizado durante a execução:
 
 - [x] T016 [P] [TEST] [TDD] [US-001] Derivar de AC-016 um caso Vitest falhando em tests/cli-spawn.test.ts — Refs: US-001, FR-006, NFR-001, AC-016 — Depends: none
   - [x] **PREP**: Ler o Gherkin de AC-016; confirmar que `src/delegation/cli-spawn.ts` não existe.
-  - [x] **EXECUTE**: Escrever o caso com marcador `SPECSFY: US-001 FR-006 NFR-001 AC-016` — `spawnCliAgent` sobre um comando fake que imprime em stdout/stderr devolve os dois como texto.
+  - [x] **EXECUTE**: Escrever o caso com marcador `TRACEABILITY: US-001 FR-006 NFR-001 AC-016` — `spawnCliAgent` sobre um comando fake que imprime em stdout/stderr devolve os dois como texto.
   - [x] **VERIFY**: `npx vitest run tests/cli-spawn.test.ts` — observar RED. RED confirmado nesta rodada: `npx vitest run` retornou falha por módulo inexistente.
   - [x] **VISUAL**: Não aplicável — arquivo de teste sem superfície visual.
   - [x] **EVIDENCE**: Registrar comando e causa do RED nas seções 11–12. Comando e causa do RED registrados nas seções 11–12 desta spec.
@@ -853,7 +853,7 @@ Cada tarefa possui exatamente este checklist, atualizado durante a execução:
 
 - [x] T017 [P] [TEST] [TDD] [US-001] Derivar de AC-017 um caso Vitest falhando em tests/cli-spawn.test.ts — Refs: US-001, FR-006, NFR-001, AC-017 — Depends: none
   - [x] **PREP**: Ler o Gherkin de AC-017.
-  - [x] **EXECUTE**: Escrever o caso com marcador `SPECSFY: US-001 FR-006 NFR-001 AC-017` — comando fake que sai com código 3 devolve `exitCode: 3`.
+  - [x] **EXECUTE**: Escrever o caso com marcador `TRACEABILITY: US-001 FR-006 NFR-001 AC-017` — comando fake que sai com código 3 devolve `exitCode: 3`.
   - [x] **VERIFY**: `npx vitest run tests/cli-spawn.test.ts` — observar RED. RED confirmado nesta rodada: `npx vitest run` retornou falha por módulo inexistente.
   - [x] **VISUAL**: Não aplicável — arquivo de teste sem superfície visual.
   - [x] **EVIDENCE**: Registrar comando e causa do RED nas seções 11–12. Comando e causa do RED registrados nas seções 11–12 desta spec.
@@ -861,7 +861,7 @@ Cada tarefa possui exatamente este checklist, atualizado durante a execução:
 
 - [x] T018 [P] [TEST] [TDD] [US-001] Derivar de AC-018 um caso Vitest falhando em tests/cli-spawn.test.ts — Refs: US-001, FR-006, NFR-002, AC-018 — Depends: none
   - [x] **PREP**: Ler o Gherkin de AC-018.
-  - [x] **EXECUTE**: Escrever o caso com marcador `SPECSFY: US-001 FR-006 NFR-002 AC-018` — comando fake que nunca termina produz resultado de timeout, sem o teste travar.
+  - [x] **EXECUTE**: Escrever o caso com marcador `TRACEABILITY: US-001 FR-006 NFR-002 AC-018` — comando fake que nunca termina produz resultado de timeout, sem o teste travar.
   - [x] **VERIFY**: `npx vitest run tests/cli-spawn.test.ts` — observar RED. RED confirmado nesta rodada: `npx vitest run` retornou falha por módulo inexistente.
   - [x] **VISUAL**: Não aplicável — arquivo de teste sem superfície visual.
   - [x] **EVIDENCE**: Registrar comando e causa do RED nas seções 11–12. Comando e causa do RED registrados nas seções 11–12 desta spec.
@@ -869,7 +869,7 @@ Cada tarefa possui exatamente este checklist, atualizado durante a execução:
 
 - [x] T019 [P] [TEST] [TDD] [US-001] Derivar de AC-019 um caso Vitest falhando em tests/cli-backends-adapter.test.ts — Refs: US-001, FR-007, NFR-001, AC-019 — Depends: none
   - [x] **PREP**: Ler o Gherkin de AC-019.
-  - [x] **EXECUTE**: Escrever o caso com marcador `SPECSFY: US-001 FR-007 NFR-001 AC-019` — construir argumentos com um nome de modelo qualquer nunca lança nem recusa.
+  - [x] **EXECUTE**: Escrever o caso com marcador `TRACEABILITY: US-001 FR-007 NFR-001 AC-019` — construir argumentos com um nome de modelo qualquer nunca lança nem recusa.
   - [x] **VERIFY**: `npx vitest run tests/cli-backends-adapter.test.ts` — observar RED. RED confirmado nesta rodada: `npx vitest run` retornou falha por módulo inexistente.
   - [x] **VISUAL**: Não aplicável — arquivo de teste sem superfície visual.
   - [x] **EVIDENCE**: Registrar comando e causa do RED nas seções 11–12. Comando e causa do RED registrados nas seções 11–12 desta spec.
@@ -877,7 +877,7 @@ Cada tarefa possui exatamente este checklist, atualizado durante a execução:
 
 - [x] T020 [P] [TEST] [TDD] [US-001] Derivar de AC-020 um caso Vitest falhando em tests/cli-backends-adapter.test.ts — Refs: US-001, FR-007, NFR-001, AC-020 — Depends: none
   - [x] **PREP**: Ler o Gherkin de AC-020.
-  - [x] **EXECUTE**: Escrever o caso com marcador `SPECSFY: US-001 FR-007 NFR-001 AC-020` — o mesmo modelo em dois adaptadores diferentes aparece com o mesmo valor exato.
+  - [x] **EXECUTE**: Escrever o caso com marcador `TRACEABILITY: US-001 FR-007 NFR-001 AC-020` — o mesmo modelo em dois adaptadores diferentes aparece com o mesmo valor exato.
   - [x] **VERIFY**: `npx vitest run tests/cli-backends-adapter.test.ts` — observar RED. RED confirmado nesta rodada: `npx vitest run` retornou falha por módulo inexistente.
   - [x] **VISUAL**: Não aplicável — arquivo de teste sem superfície visual.
   - [x] **EVIDENCE**: Registrar comando e causa do RED nas seções 11–12. Comando e causa do RED registrados nas seções 11–12 desta spec.
@@ -885,7 +885,7 @@ Cada tarefa possui exatamente este checklist, atualizado durante a execução:
 
 - [x] T031 [P] [TEST] [TDD] [US-001] Derivar de AC-005 um terceiro caso Vitest falhando em tests/cli-behavior-file.test.ts — Refs: US-001, FR-002, NFR-001, AC-005 — Depends: none
   - [x] **PREP**: Ler o Gherkin de AC-005; confirmar que `withTemporaryAgentsFile` ainda não existe.
-  - [x] **EXECUTE**: Escrever o caso com marcador `SPECSFY: US-001 FR-002 NFR-001 AC-005` — chamar a função recebida somente depois do arquivo escrito em disco, não antes.
+  - [x] **EXECUTE**: Escrever o caso com marcador `TRACEABILITY: US-001 FR-002 NFR-001 AC-005` — chamar a função recebida somente depois do arquivo escrito em disco, não antes.
   - [x] **VERIFY**: `npx vitest run tests/cli-behavior-file.test.ts` — observar RED. RED confirmado nesta rodada: `npx vitest run` retornou falha por módulo inexistente.
   - [x] **VISUAL**: Não aplicável — arquivo de teste sem superfície visual.
   - [x] **EVIDENCE**: Registrar comando e causa do RED nas seções 11–12. Comando e causa do RED registrados nas seções 11–12 desta spec.
@@ -898,77 +898,77 @@ Cada tarefa possui exatamente este checklist, atualizado durante a execução:
 
 - [x] T021 [CODE] [US-001] Implementar os cinco adaptadores e o registro em src/delegation/cli-backends/{adapter,pi,claude,goose,agy,codex,registry}.ts — Refs: US-001, FR-001, FR-002, FR-007, NFR-001, AC-001, AC-002, AC-003, AC-004, AC-019, AC-020 — Depends: T001, T002, T003, T004, T019, T020
   - [x] **PREP**: Confirmar RED de T001/T002/T003/T004/T019/T020 e as flags reais de cada backend (seção 2).
-  - [x] **EXECUTE**: `CliBackendAdapter` e os cinco módulos concretos, cada um mapeando as flags verificadas — modelo, saída estruturada, comportamento (flag ou não), tools (allowlist ou não). Reconstruir `docs/` com `$specsfy-documentator` antes de fechar este item.
+  - [x] **EXECUTE**: `CliBackendAdapter` e os cinco módulos concretos, cada um mapeando as flags verificadas — modelo, saída estruturada, comportamento (flag ou não), tools (allowlist ou não). Reconstruir `docs/` com `$framework-documentator` antes de fechar este item.
   - [x] **VERIFY**: `npx vitest run tests/cli-backends-adapter.test.ts` verde; `npx tsc --noEmit` limpo. GREEN confirmado: `npx vitest run tests/cli-backends-adapter.test.ts` — 6/6; `npx tsc --noEmit` limpo.
   - [x] **VISUAL**: Não aplicável — módulos de construção de argumentos, sem tela.
   - [x] **EVIDENCE**: Registrar GREEN e arquivos criados nas seções 11–13. GREEN e arquivos registrados na seção 11; verificação real com os cinco `--help`/spawn confirmou as flags.
   - [x] **IMPROVE**: Aplicar melhoria de processo ou justificar nenhuma.
-  <!-- specsfy:evidence {"task":"T021","refs":["US-001","FR-001","FR-002","FR-007","NFR-001","AC-001","AC-002","AC-003","AC-004","AC-019","AC-020"],"files":["src/delegation/cli-backends/adapter.ts","src/delegation/cli-backends/pi.ts","src/delegation/cli-backends/claude.ts","src/delegation/cli-backends/goose.ts","src/delegation/cli-backends/agy.ts","src/delegation/cli-backends/codex.ts","src/delegation/cli-backends/registry.ts"],"commands":[{"run":"npx vitest run tests/cli-backends-adapter.test.ts","exit":0}]} -->
+  <!-- framework:evidence {"task":"T021","refs":["US-001","FR-001","FR-002","FR-007","NFR-001","AC-001","AC-002","AC-003","AC-004","AC-019","AC-020"],"files":["src/delegation/cli-backends/adapter.ts","src/delegation/cli-backends/pi.ts","src/delegation/cli-backends/claude.ts","src/delegation/cli-backends/goose.ts","src/delegation/cli-backends/agy.ts","src/delegation/cli-backends/codex.ts","src/delegation/cli-backends/registry.ts"],"commands":[{"run":"npx vitest run tests/cli-backends-adapter.test.ts","exit":0}]} -->
 
 - [x] T022 [CODE] [US-001] Implementar a injeção por arquivo temporário em src/delegation/cli-behavior-file.ts — Refs: US-001, FR-002, NFR-001, NFR-002, AC-005, AC-006 — Depends: T005, T006, T031
   - [x] **PREP**: Confirmar RED de T005/T006.
-  - [x] **EXECUTE**: `withTemporaryAgentsFile(root, content, fn)` com `try/finally` garantindo remoção, e recusa quando `AGENTS.md` real já existir. Reconstruir `docs/` com `$specsfy-documentator` antes de fechar este item.
+  - [x] **EXECUTE**: `withTemporaryAgentsFile(root, content, fn)` com `try/finally` garantindo remoção, e recusa quando `AGENTS.md` real já existir. Reconstruir `docs/` com `$framework-documentator` antes de fechar este item.
   - [x] **VERIFY**: `npx vitest run tests/cli-behavior-file.test.ts` verde. GREEN confirmado: `npx vitest run tests/cli-behavior-file.test.ts` — 3/3.
   - [x] **VISUAL**: Não aplicável — sem superfície visual.
   - [x] **EVIDENCE**: Registrar GREEN e arquivo criado nas seções 11–13. GREEN registrado na seção 11; verificação real confirmou remoção do arquivo em sucesso e em erro, para agy e codex.
   - [x] **IMPROVE**: Aplicar melhoria de processo ou justificar nenhuma.
-  <!-- specsfy:evidence {"task":"T022","refs":["US-001","FR-002","NFR-001","NFR-002","AC-005","AC-006"],"files":["src/delegation/cli-behavior-file.ts"],"commands":[{"run":"npx vitest run tests/cli-behavior-file.test.ts","exit":0}]} -->
+  <!-- framework:evidence {"task":"T022","refs":["US-001","FR-002","NFR-001","NFR-002","AC-005","AC-006"],"files":["src/delegation/cli-behavior-file.ts"],"commands":[{"run":"npx vitest run tests/cli-behavior-file.test.ts","exit":0}]} -->
 
 - [x] T023 [CODE] [US-001] Implementar a seleção de backend em src/delegation/cli-select.ts — Refs: US-001, FR-004, NFR-001, NFR-002, AC-010, AC-011, AC-012 — Depends: T010, T011, T012
   - [x] **PREP**: Confirmar RED de T010/T011/T012 e `SUPPORTED_AGENT_BACKENDS`.
-  - [x] **EXECUTE**: `selectBackend(agent, detected)` — sem declaração usa o primeiro detectado; `required` ausente recusa; `suggested` ausente cai para outro presente. Reconstruir `docs/` com `$specsfy-documentator` antes de fechar este item.
+  - [x] **EXECUTE**: `selectBackend(agent, detected)` — sem declaração usa o primeiro detectado; `required` ausente recusa; `suggested` ausente cai para outro presente. Reconstruir `docs/` com `$framework-documentator` antes de fechar este item.
   - [x] **VERIFY**: `npx vitest run tests/cli-select.test.ts` verde. GREEN confirmado: `npx vitest run tests/cli-select.test.ts` — 3/3.
   - [x] **VISUAL**: Não aplicável — sem superfície visual.
   - [x] **EVIDENCE**: Registrar GREEN e arquivo criado nas seções 11–13. GREEN registrado na seção 11.
   - [x] **IMPROVE**: Aplicar melhoria de processo ou justificar nenhuma.
-  <!-- specsfy:evidence {"task":"T023","refs":["US-001","FR-004","NFR-001","NFR-002","AC-010","AC-011","AC-012"],"files":["src/delegation/cli-select.ts"],"commands":[{"run":"npx vitest run tests/cli-select.test.ts","exit":0}]} -->
+  <!-- framework:evidence {"task":"T023","refs":["US-001","FR-004","NFR-001","NFR-002","AC-010","AC-011","AC-012"],"files":["src/delegation/cli-select.ts"],"commands":[{"run":"npx vitest run tests/cli-select.test.ts","exit":0}]} -->
 
 - [x] T024 [CODE] [US-001] Adicionar execution.cli_backend em src/config/schema.ts e a recusa de tools não suportável ligada à seleção — Refs: US-001, FR-003, FR-004, NFR-001, NFR-002, AC-007, AC-008, AC-009 — Depends: T007, T008, T009
   - [x] **PREP**: Confirmar RED de T007/T008/T009 e o formato de `AgentExecution`.
-  - [x] **EXECUTE**: `execution.cli_backend?: ConfiguredProperty<string>` no schema e em `SCHEMA_KEYS`; lógica de recusa de `tools` `required` não suportável, usando `supportsToolsAllowlist` do adaptador escolhido. Reconstruir `docs/` com `$specsfy-documentator` antes de fechar este item.
+  - [x] **EXECUTE**: `execution.cli_backend?: ConfiguredProperty<string>` no schema e em `SCHEMA_KEYS`; lógica de recusa de `tools` `required` não suportável, usando `supportsToolsAllowlist` do adaptador escolhido. Reconstruir `docs/` com `$framework-documentator` antes de fechar este item.
   - [x] **VERIFY**: `npx vitest run tests/cli-run-tools.test.ts` verde; suíte de config sem regressão. GREEN confirmado: `npx vitest run tests/cli-run-tools.test.ts` — 3/3; suíte de config sem regressão.
   - [x] **VISUAL**: Não aplicável — sem superfície visual.
   - [x] **EVIDENCE**: Registrar GREEN e arquivos alterados nas seções 11–13. GREEN registrado na seção 11; `src/delegation/cli-tools.ts` acrescentado à lista de arquivos desta tarefa.
   - [x] **IMPROVE**: Aplicar melhoria de processo ou justificar nenhuma.
-  <!-- specsfy:evidence {"task":"T024","refs":["US-001","FR-003","FR-004","NFR-001","NFR-002","AC-007","AC-008","AC-009"],"files":["src/config/schema.ts","src/delegation/cli-tools.ts"],"commands":[{"run":"npx vitest run tests/cli-run-tools.test.ts","exit":0}]} -->
+  <!-- framework:evidence {"task":"T024","refs":["US-001","FR-003","FR-004","NFR-001","NFR-002","AC-007","AC-008","AC-009"],"files":["src/config/schema.ts","src/delegation/cli-tools.ts"],"commands":[{"run":"npx vitest run tests/cli-run-tools.test.ts","exit":0}]} -->
 
 - [x] T025 [CODE] [US-001] Implementar o gate por agente em src/delegation/cli-gate.ts — Refs: US-001, FR-005, NFR-001, NFR-002, AC-013, AC-014, AC-015 — Depends: T013, T014, T015
   - [x] **PREP**: Confirmar RED de T013/T014/T015 e `interpretDecision`.
-  - [x] **EXECUTE**: `decideSpawn(source)` chamando `interpretDecision`, uma vez por agente. Reconstruir `docs/` com `$specsfy-documentator` antes de fechar este item.
+  - [x] **EXECUTE**: `decideSpawn(source)` chamando `interpretDecision`, uma vez por agente. Reconstruir `docs/` com `$framework-documentator` antes de fechar este item.
   - [x] **VERIFY**: `npx vitest run tests/cli-run-gate.test.ts` verde. GREEN confirmado: `npx vitest run tests/cli-run-gate.test.ts` — 3/3.
   - [x] **VISUAL**: Não aplicável — sem superfície visual.
   - [x] **EVIDENCE**: Registrar GREEN e arquivo criado nas seções 11–13. GREEN registrado na seção 11.
   - [x] **IMPROVE**: Aplicar melhoria de processo ou justificar nenhuma.
-  <!-- specsfy:evidence {"task":"T025","refs":["US-001","FR-005","NFR-001","NFR-002","AC-013","AC-014","AC-015"],"files":["src/delegation/cli-gate.ts"],"commands":[{"run":"npx vitest run tests/cli-run-gate.test.ts","exit":0}]} -->
+  <!-- framework:evidence {"task":"T025","refs":["US-001","FR-005","NFR-001","NFR-002","AC-013","AC-014","AC-015"],"files":["src/delegation/cli-gate.ts"],"commands":[{"run":"npx vitest run tests/cli-run-gate.test.ts","exit":0}]} -->
 
 - [x] T026 [CODE] [US-001] Implementar o spawn com timeout e captura em src/delegation/cli-spawn.ts — Refs: US-001, FR-006, NFR-001, NFR-002, AC-016, AC-017, AC-018 — Depends: T016, T017, T018
   - [x] **PREP**: Confirmar RED de T016/T017/T018 e o padrão de `spawnSync` já usado em `scripts/pinned-skills.mjs`.
-  - [x] **EXECUTE**: `spawnCliAgent(adapter, args, options)` com timeout de 120s, capturando stdout/stderr/status sem interpretar; timeout vira `SpawnResult` de erro nomeando o motivo. Reconstruir `docs/` com `$specsfy-documentator` antes de fechar este item.
+  - [x] **EXECUTE**: `spawnCliAgent(adapter, args, options)` com timeout de 120s, capturando stdout/stderr/status sem interpretar; timeout vira `SpawnResult` de erro nomeando o motivo. Reconstruir `docs/` com `$framework-documentator` antes de fechar este item.
   - [x] **VERIFY**: `npx vitest run tests/cli-spawn.test.ts` verde. GREEN confirmado: `npx vitest run tests/cli-spawn.test.ts` — 3/3, incluindo o timeout real sem travar o processo de teste.
   - [x] **VISUAL**: Não aplicável — sem superfície visual.
   - [x] **EVIDENCE**: Registrar GREEN e arquivo criado nas seções 11–13. GREEN registrado na seção 11.
   - [x] **IMPROVE**: Aplicar melhoria de processo ou justificar nenhuma.
-  <!-- specsfy:evidence {"task":"T026","refs":["US-001","FR-006","NFR-001","NFR-002","AC-016","AC-017","AC-018"],"files":["src/delegation/cli-spawn.ts"],"commands":[{"run":"npx vitest run tests/cli-spawn.test.ts","exit":0}]} -->
+  <!-- framework:evidence {"task":"T026","refs":["US-001","FR-006","NFR-001","NFR-002","AC-016","AC-017","AC-018"],"files":["src/delegation/cli-spawn.ts"],"commands":[{"run":"npx vitest run tests/cli-spawn.test.ts","exit":0}]} -->
 
 - [x] T027 [CODE] [US-001] Estender src/delegation/run.ts para runtime cli deixar de recusar, ligando seleção, tools, gate, injeção e spawn — Refs: US-001, FR-001, FR-002, FR-003, FR-004, FR-005, FR-006, NFR-001, NFR-002 — Depends: T021, T022, T023, T024, T025, T026
   - [x] **PREP**: Confirmar T021–T026 GREEN e o ponto exato onde `runDelegation` recusa `cli` hoje.
-  - [x] **EXECUTE**: Substituir a recusa fixa por: selecionar backend, checar tools, montar argumentos, injetar comportamento (arquivo ou flag), pedir decisão, spawnar, relatar — um agente `cli` por vez, sem interromper os demais do plano em caso de recusa. Reconstruir `docs/` com `$specsfy-documentator` antes de fechar este item.
-  - [x] **VERIFY**: Suíte de delegação completa verde; verificado com o binário real sobre os cinco backends nesta máquina. GREEN confirmado: suíte de delegação completa verde (`tests/delegation-runtime.test.ts`, `tests/delegation-brief.test.ts`, `tests/delegation-behavior.test.ts`); verificado com os cinco binários reais nesta máquina via `maestro plan` → `maestro run` — `goose` completou de ponta a ponta, os demais alcançaram o subprocesso real (achados registrados em `.specsfy/STACK.md`).
+  - [x] **EXECUTE**: Substituir a recusa fixa por: selecionar backend, checar tools, montar argumentos, injetar comportamento (arquivo ou flag), pedir decisão, spawnar, relatar — um agente `cli` por vez, sem interromper os demais do plano em caso de recusa. Reconstruir `docs/` com `$framework-documentator` antes de fechar este item.
+  - [x] **VERIFY**: Suíte de delegação completa verde; verificado com o binário real sobre os cinco backends nesta máquina. GREEN confirmado: suíte de delegação completa verde (`tests/delegation-runtime.test.ts`, `tests/delegation-brief.test.ts`, `tests/delegation-behavior.test.ts`); verificado com os cinco binários reais nesta máquina via `maestro plan` → `maestro run` — `goose` completou de ponta a ponta, os demais alcançaram o subprocesso real (achados registrados em `.project-context/STACK.md`).
   - [x] **VISUAL**: Não aplicável — sem superfície visual.
   - [x] **EVIDENCE**: Registrar GREEN e arquivos alterados nas seções 11–13. GREEN e arquivos registrados na seção 11; dois bugs reais corrigidos pela verificação manual: `goose` exigia o subcomando `run`, e `agy --print` toma o argumento seguinte como prompt — ambos com testes/comentário no código apontando o achado.
   - [x] **IMPROVE**: Aplicar melhoria de processo ou justificar nenhuma.
-  <!-- specsfy:evidence {"task":"T027","refs":["US-001","FR-001","FR-002","FR-003","FR-004","FR-005","FR-006","NFR-001","NFR-002"],"files":["src/delegation/run.ts","src/delegation/brief.ts","src/cli.ts"],"commands":[{"run":"npx vitest run tests/delegation-runtime.test.ts","exit":0}]} -->
+  <!-- framework:evidence {"task":"T027","refs":["US-001","FR-001","FR-002","FR-003","FR-004","FR-005","FR-006","NFR-001","NFR-002"],"files":["src/delegation/run.ts","src/delegation/brief.ts","src/cli.ts"],"commands":[{"run":"npx vitest run tests/delegation-runtime.test.ts","exit":0}]} -->
 
 **Checkpoint**: um plano aprovado com um agente `runtime: cli` por backend, autorizado spawn a spawn, roda de verdade nos cinco.
 
 #### Fase final — Documentação e qualidade
 
-- [x] T028 [DOC] [US-001] Registrar os cinco adaptadores e execution.cli_backend em .specsfy/STACK.md e revisar PROJECT.md — Refs: US-001, FR-001, FR-004, AC-001, AC-010 — Depends: T021, T022, T023, T024, T025, T026, T027
+- [x] T028 [DOC] [US-001] Registrar os cinco adaptadores e execution.cli_backend em .project-context/STACK.md e revisar PROJECT.md — Refs: US-001, FR-001, FR-004, AC-001, AC-010 — Depends: T021, T022, T023, T024, T025, T026, T027
   - [x] **PREP**: Confirmar T021–T027 GREEN e o conteúdo atual dos dois documentos.
-  - [x] **EXECUTE**: Seção nova em `.specsfy/STACK.md` (os cinco adaptadores, injeção por flag ou arquivo, gate por agente) e revisão de `PROJECT.md`, corrigindo "O que ainda não existe" para dizer que `runtime: cli` executa de verdade.
+  - [x] **EXECUTE**: Seção nova em `.project-context/STACK.md` (os cinco adaptadores, injeção por flag ou arquivo, gate por agente) e revisão de `PROJECT.md`, corrigindo "O que ainda não existe" para dizer que `runtime: cli` executa de verdade.
   - [x] **VERIFY**: `monitor_context.mjs --check` sem pendência real; `build_documentation.mjs --check` limpo. `monitor_context.mjs --check` sem pendência de PROJECT.md/docs (PACKAGES.md sinalizado por mudança de versão no lockfile, sem dependência nova — sem impacto material, justificado aqui); `build_documentation.mjs --project .` reconstruiu `docs/` sem erro.
   - [x] **VISUAL**: Não aplicável — documentação em Markdown, sem tela.
-  - [x] **EVIDENCE**: Registrar comandos e resultado nas seções 11–13. `.specsfy/STACK.md` e `PROJECT.md` atualizados; `docs/` reconstruído.
+  - [x] **EVIDENCE**: Registrar comandos e resultado nas seções 11–13. `.project-context/STACK.md` e `PROJECT.md` atualizados; `docs/` reconstruído.
   - [x] **IMPROVE**: Registrar melhoria aplicada ou ausência justificada.
 
 - [x] T029 [TEST] Regressão completa e verificação manual com os cinco backends reais, registrada em specs/defined/0019-execucao-via-subprocesso-de-cli-externa/spec.md — Refs: US-001, FR-001, FR-002, FR-003, FR-004, FR-005, FR-006, FR-007, NFR-001, NFR-002, AC-001, AC-002, AC-003, AC-004, AC-005, AC-006, AC-007, AC-008, AC-009, AC-010, AC-011, AC-012, AC-013, AC-014, AC-015, AC-016, AC-017, AC-018, AC-019, AC-020 — Depends: T021, T022, T023, T024, T025, T026, T027, T028
@@ -976,7 +976,7 @@ Cada tarefa possui exatamente este checklist, atualizado durante a execução:
   - [x] **EXECUTE**: `npx vitest run`, `npx tsc --noEmit`, `check_traceability.mjs`, `verify_acceptance.mjs`, e o ciclo real `maestro plan` → `maestro run` autorizando um agente por backend, um dos cinco por vez.
   - [x] **VERIFY**: Suíte verde, `tsc` limpo, rastreabilidade cobrindo os IDs da spec, `QA: PASSED`, e os cinco spawns reais confirmados — comportamento aplicado, modelo repassado, saída relatada. `npx vitest run` → 186 arquivos, 510/510; `npx tsc --noEmit` limpo; verificação real dos cinco backends (`pi`, `agy`, `claude`, `codex`, `goose`) via `maestro plan`/`maestro run` nesta máquina, com `AGENTS.md` real temporariamente afastado para provar o caminho de arquivo de `agy`/`codex` de ponta a ponta.
   - [x] **VISUAL**: Não aplicável — repasse final sem superfície visual própria.
-  - [x] **EVIDENCE**: Registrar contagens, os cinco comandos reais e seus resultados nas seções 11–13. Contagens e os cinco resultados reais registrados na seção 11/`.specsfy/STACK.md`; `goose` respondeu "OK" à tarefa pedida (sucesso completo); `pi`/`claude`/`agy`/`codex` alcançaram o subprocesso real e relataram erro de conta/modelo do próprio backend — nenhum bloqueado pela preparação do maestro.
+  - [x] **EVIDENCE**: Registrar contagens, os cinco comandos reais e seus resultados nas seções 11–13. Contagens e os cinco resultados reais registrados na seção 11/`.project-context/STACK.md`; `goose` respondeu "OK" à tarefa pedida (sucesso completo); `pi`/`claude`/`agy`/`codex` alcançaram o subprocesso real e relataram erro de conta/modelo do próprio backend — nenhum bloqueado pela preparação do maestro.
   - [x] **IMPROVE**: Registrar retrospectiva do processo.
 
 ### 15. Ordem de execução
@@ -1006,7 +1006,7 @@ Cada tarefa possui exatamente este checklist, atualizado durante a execução:
 #### Suposições
 
 - O nome de propriedade `execution.cli_backend` é reversível — decisão desta fatia, não de uma anterior; renomear antes da implementação muda vocabulário, não comportamento.
-- O timeout do spawn segue o mesmo valor já usado em `realSpecsfyExecutor` (120 segundos) até haver motivo real para outro número.
+- O timeout do spawn segue o mesmo valor já usado em `realformer project toolExecutor` (120 segundos) até haver motivo real para outro número.
 
 ### 17. Decisões
 
@@ -1028,5 +1028,5 @@ Cada tarefa possui exatamente este checklist, atualizado durante a execução:
 - [ ] `FR-001` a `FR-007` e `NFR-001`/`NFR-002` têm evidência de verificação nas seções 11–12.
 - [ ] Todas as tarefas da seção 14 estão concluídas.
 - [ ] Verificação manual com os cinco backends reais registrada, não só a suíte.
-- [ ] `.specsfy/STACK.md` registra os cinco adaptadores e a propriedade nova do schema.
+- [ ] `.project-context/STACK.md` registra os cinco adaptadores e a propriedade nova do schema.
 - [ ] `PROJECT.md` revisado quanto à capacidade nova e à correção de "O que ainda não existe".

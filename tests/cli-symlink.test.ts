@@ -19,20 +19,20 @@ function viaLink(...args: string[]): { stdout: string; stderr: string; status: n
 }
 
 describe("AC-008 — the binary responds when invoked via symlink", () => {
-  // SPECSFY: US-001 FR-005 AC-008
+  // TRACEABILITY: US-001 FR-005 AC-008
   it("--version produces output and exits with zero", () => {
     const r = viaLink("--version");
     expect(r.status).toBe(0);
     expect(r.stdout.trim().length).toBeGreaterThan(0);
   });
 
-  // SPECSFY: US-002 FR-006 AC-008
+  // TRACEABILITY: US-002 FR-006 AC-008
   it("doctor produces output", () => {
     const r = viaLink("doctor");
     expect((r.stdout + r.stderr).trim().length).toBeGreaterThan(0);
   });
 
-  // SPECSFY: US-001 US-002 NFR-003 AC-008
+  // TRACEABILITY: US-001 US-002 NFR-003 AC-008
   it("the output via link matches the output via the direct path", () => {
     const realCli = resolve(__dirname, "..", "dist", "cli.js");
     const direct = spawnSync("node", [realCli, "--version"], { encoding: "utf8" });

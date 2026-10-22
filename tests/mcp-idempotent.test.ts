@@ -6,7 +6,7 @@ import { executeSetup } from "../src/mcp/tool";
 import { disposableProject } from "./mcp-fixtures";
 
 describe("AC-007 — the second call recognizes the state", () => {
-  // SPECSFY: US-003 FR-004 AC-007
+  // TRACEABILITY: US-003 FR-004 AC-007
   it("states it was already configured", async () => {
     const root = disposableProject();
     await executeSetup({ project_root: root });
@@ -14,7 +14,7 @@ describe("AC-007 — the second call recognizes the state", () => {
     expect(JSON.stringify(second.content)).toMatch(/already configured/i);
   });
 
-  // SPECSFY: US-003 NFR-002 AC-007
+  // TRACEABILITY: US-003 NFR-002 AC-007
   it("keeps the record with seven entries", async () => {
     const root = disposableProject();
     await executeSetup({ project_root: root });
@@ -23,10 +23,10 @@ describe("AC-007 — the second call recognizes the state", () => {
     expect(rec.hooks).toHaveLength(installedHookCount());
   });
 
-  // SPECSFY: US-003 FR-004 AC-007
+  // TRACEABILITY: US-003 FR-004 AC-007
   it("second call still reports the write pass (SPEC-0025, FR-004)", async () => {
     // Idempotency used to mean "the second call writes nothing", enforced by
-    // skipping the skills/Specsfy installers whenever their directories
+    // skipping the skills/Framework installers whenever their directories
     // already existed. SPEC-0025 removed that shortcut on purpose: a
     // directory existing isn't proof the installer has nothing left to
     // reconcile, and by the time you'd know, you'd already have

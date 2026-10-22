@@ -20,11 +20,11 @@ const tree = () => {
 };
 
 assert("assert-no-legacy", [
-  // SPECSFY: US-001 FR-004 AC-004
+  // TRACEABILITY: US-001 FR-004 AC-004
   [`branch ${WORK_BRANCH} existe`, () =>
     refExists(WORK_BRANCH) || `referência ${WORK_BRANCH} não encontrada`],
 
-  // SPECSFY: US-001 FR-004 AC-004 AC-009
+  // TRACEABILITY: US-001 FR-004 AC-004 AC-009
   ["cada caminho versionado está sob o conjunto preservado", () => {
     const files = tree();
     if (files === null) return "referência ausente";
@@ -34,7 +34,7 @@ assert("assert-no-legacy", [
       : true;
   }],
 
-  // SPECSFY: US-001 FR-004 AC-004
+  // TRACEABILITY: US-001 FR-004 AC-004
   ["nenhum arquivo Python versionado", () => {
     const files = tree();
     if (files === null) return "referência ausente";
@@ -42,7 +42,7 @@ assert("assert-no-legacy", [
     return py.length ? `${py.length} arquivo(s), p.ex. ${py.slice(0, 3).join(", ")}` : true;
   }],
 
-  // SPECSFY: US-001 FR-004 AC-004
+  // TRACEABILITY: US-001 FR-004 AC-004
   ["nenhum diretório da v0.2.8 versionado", () => {
     const files = tree();
     if (files === null) return "referência ausente";
@@ -50,7 +50,7 @@ assert("assert-no-legacy", [
     return found.length ? `presente(s): ${found.join(", ")}` : true;
   }],
 
-  // SPECSFY: US-001 FR-004 AC-004
+  // TRACEABILITY: US-001 FR-004 AC-004
   ["nenhum manifesto ou artefato nomeado da v0.2.8", () => {
     const files = tree();
     if (files === null) return "referência ausente";

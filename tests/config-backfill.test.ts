@@ -45,7 +45,7 @@ git:
       description: ""
       paths: []
       ignored: true
-    specsfy:
+    framework:
       description: ""
       paths: []
       ignored: false
@@ -64,7 +64,7 @@ git:
 `;
 
 describe("AC-004 — setup doesn't overwrite a value the person already edited", () => {
-  // SPECSFY: US-001 FR-005 FR-008 NFR-001 AC-004
+  // TRACEABILITY: US-001 FR-005 FR-008 NFR-001 AC-004
   it("keeps a manually edited value after running again", () => {
     const root = mktemp();
     const path = writeExisting(root, COMPLETE_YAML);
@@ -76,7 +76,7 @@ describe("AC-004 — setup doesn't overwrite a value the person already edited",
 });
 
 describe("AC-005 — a new schema key is added without touching existing ones", () => {
-  // SPECSFY: US-001 FR-008 NFR-001 AC-005
+  // TRACEABILITY: US-001 FR-008 NFR-001 AC-005
   it("backfills a missing schema key while preserving existing ones", () => {
     const root = mktemp();
     const withoutInstalledSkills = COMPLETE_YAML.replace(
@@ -92,7 +92,7 @@ describe("AC-005 — a new schema key is added without touching existing ones", 
 });
 
 describe("AC-006 — backfill is idempotent over an already-complete file", () => {
-  // SPECSFY: US-001 FR-008 NFR-001 NFR-002 AC-006
+  // TRACEABILITY: US-001 FR-008 NFR-001 NFR-002 AC-006
   it("produces byte-identical content on a second run", () => {
     const root = mktemp();
     const path = writeExisting(root, COMPLETE_YAML);

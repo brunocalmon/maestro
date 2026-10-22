@@ -43,7 +43,7 @@ export interface Report {
   divergentExtensions?: DivergentArtifact[];
   /** Agent profile divergence, when a root is given — same read-only contract (`SPEC-0015`, `FR-004`). */
   divergentAgents?: ProfileProblem[];
-  /** Each subsystem's own diagnostic (`specsfy doctor`, `context-mode doctor`, `skills list`, `code-review-graph status`), when a root is given (`SPEC-0025`, `FR-005`). */
+  /** Each subsystem's own diagnostic (`former tool doctor`, `context-mode doctor`, `skills list`, `code-review-graph status`), when a root is given (`SPEC-0025`, `FR-005`). */
   subsystems?: SubsystemResult[];
   /** What the maestro itself guarantees — hooks, instruction direction, projections, configuration traces (`SPEC-0025`, `FR-006`). `FAIL` items move `exitCode`; `WARN` items never do. */
   maestro?: MaestroFinding[];
@@ -66,7 +66,7 @@ export interface Environment {
   resolveOnPath(): string | null;
 }
 
-export const NPM_SUBSYSTEMS = ["@promovaweb/specsfy", "context-mode"] as const;
+export const NPM_SUBSYSTEMS = ["context-mode"] as const;
 export const PYTHON_SUBSYSTEM = "code-review-graph";
 
 const NPM_HINT =

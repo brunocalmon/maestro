@@ -14,7 +14,7 @@ export function buildRouterBlock(): string {
     "",
     "Instructions for agents live in `AGENTS.md`. A skill or tool that wants to",
     "add instructions writes them there; `CLAUDE.md` keeps only the",
-    "`@AGENTS.md` import and what the Specsfy framework places in it.",
+    "`@AGENTS.md` import and what Maestro places in it.",
   ].join("\n");
 }
 
@@ -76,7 +76,6 @@ export function buildHooksFallbackBlock(): string {
     "",
     "- `guard-destructive`, `guard-secrets` and `protect-authorship` guard shell commands in any tool; if `maestro doctor` reports one of them absent or inert, review destructive commands, credential reads and commit trailers yourself before running them.",
     "- `code-review-graph-update` keeps the code graph current after any edit and `graph-hint` points at it once per session; if `maestro doctor` reports them absent or inert, refresh the graph yourself after editing and prefer it over bulk Grep.",
-    "- `guard-docs` keeps the Specsfy documentator build from overwriting docs/; if `maestro doctor` reports it absent or inert, run that script only with `--check`.",
   ].join("\n");
 }
 

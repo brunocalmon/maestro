@@ -15,27 +15,27 @@
 
 ## Ideia original
 
-O specsfy adiciona as regras no AGENTS.md e uma referencia no CLAUDE.md, muito inteligente pois mantem a compatilidade generica de IDE e a especifica do CLAUDE... já o maestro faz o caminho invertido, isso é definitivamente uma inconsistencia ele deveria seguir o metodo do specsfy a referencia é do CLAUDE para o AGENTS, já o matt_pocock é pior ainda, ele ao reconhecer o claude só cria as linhas ali no CLAUDE.md nada no AGENTS.md, o maestro deve padronizar isso, ou seja, intercepta e joga pro AGENTS.md e deixa apenas as referencias ali no CLAUDE. Outra coisa que eu percebi, ao baixar especialistas do specsfy ele apenas baixa no .agents, o .claude não recebe ou seja, as skills specialists do specsfy nunca vão pro claude.
+O framework adiciona as regras no AGENTS.md e uma referencia no CLAUDE.md, muito inteligente pois mantem a compatilidade generica de IDE e a especifica do CLAUDE... já o maestro faz o caminho invertido, isso é definitivamente uma inconsistencia ele deveria seguir o metodo do framework a referencia é do CLAUDE para o AGENTS, já o matt_pocock é pior ainda, ele ao reconhecer o claude só cria as linhas ali no CLAUDE.md nada no AGENTS.md, o maestro deve padronizar isso, ou seja, intercepta e joga pro AGENTS.md e deixa apenas as referencias ali no CLAUDE. Outra coisa que eu percebi, ao baixar especialistas do framework ele apenas baixa no .agents, o .claude não recebe ou seja, as skills specialists do framework nunca vão pro claude.
 
 ## Problema percebido
 
-Três ferramentas escrevem instruções em direções diferentes: Specsfy (conteúdo em AGENTS.md, @-import em CLAUDE.md), maestro (conteúdo em CLAUDE.md, ponteiro em prosa em AGENTS.md — src/extensions/router.ts) e matt-pocock (edita só CLAUDE.md quando existe). Especialistas Specsfy são instalados com --agent universal em .agents/skills, e o Claude Code 2.1.273 não lê essa pasta (verificado no binário: a referência a .agents/skills é o importador de config do Cursor, que copia sob demanda; confirmado empiricamente em projeto consumidor). O sync atual do maestro só copia .claude → .agents.
+Três ferramentas escrevem instruções em direções diferentes: former project tool (conteúdo em AGENTS.md, @-import em CLAUDE.md), maestro (conteúdo em CLAUDE.md, ponteiro em prosa em AGENTS.md — src/extensions/router.ts) e matt-pocock (edita só CLAUDE.md quando existe). Especialistas former project tool são instalados com --agent universal em .agents/skills, e o Claude Code 2.1.273 não lê essa pasta (verificado no binário: a referência a .agents/skills é o importador de config do Cursor, que copia sob demanda; confirmado empiricamente em projeto consumidor). O sync atual do maestro só copia .claude → .agents.
 
 ## Pessoa afetada ou beneficiada
 
-Pessoas que usam Claude Code e outras IDEs no mesmo projeto consumidor; agentes que carregam instruções de AGENTS.md/CLAUDE.md; quem instala especialistas Specsfy e espera usá-los na sessão do Claude.
+Pessoas que usam Claude Code e outras IDEs no mesmo projeto consumidor; agentes que carregam instruções de AGENTS.md/CLAUDE.md; quem instala especialistas former project tool e espera usá-los na sessão do Claude.
 
 ## Resultado ou valor esperado
 
-Uma única direção: conteúdo completo em AGENTS.md, CLAUDE.md com uma linha @AGENTS.md. Blocos invertidos do próprio maestro migram automaticamente; o bloco ## Agent skills do matt-pocock é movido quando ficou em CLAUDE.md e rastreado como foreign; blocos specsfy:* nunca são tocados. .agents/skills é a única fonte canônica de skills (matt-pocock passa a instalar com -a universal) e o maestro projeta para .claude/skills no setup, no SessionStart e ao detectar skills add/specsfy skills em Bash, sem sobrescrever cópia editada à mão.
+Uma única direção: conteúdo completo em AGENTS.md, CLAUDE.md com uma linha @AGENTS.md. Blocos invertidos do próprio maestro migram automaticamente; o bloco ## Agent skills do matt-pocock é movido quando ficou em CLAUDE.md e rastreado como foreign; blocos framework:* nunca são tocados. .agents/skills é a única fonte canônica de skills (matt-pocock passa a instalar com -a universal) e o maestro projeta para .claude/skills no setup, no SessionStart e ao detectar skills add/former tool skills em Bash, sem sobrescrever cópia editada à mão.
 
 ## Contexto
 
-Origem: specs/inbox/2026-09-17-105213-hooks-do-maestro-com-matcher-invalido-no-claude-code-e-setup-que-instala-sem-configurar-specsfy-e-skills.md. Decisões tomadas em sessão de grill em 2026-09-17 (Q10-Q14, Q17, Q23-Q25). Segunda fatia; depende fracamente da primeira (hooks SessionStart/PostToolUse para projeção).
+Origem: specs/inbox/2026-09-17-105213-hooks-do-maestro-com-matcher-invalido-no-claude-code-e-setup-que-instala-sem-configurar-framework-e-skills.md. Decisões tomadas em sessão de grill em 2026-09-17 (Q10-Q14, Q17, Q23-Q25). Segunda fatia; depende fracamente da primeira (hooks SessionStart/PostToolUse para projeção).
 
 ## Referências relacionadas
 
-- `specs/inbox/2026-09-17-105213-hooks-do-maestro-com-matcher-invalido-no-claude-code-e-setup-que-instala-sem-configurar-specsfy-e-skills.md` — origem (Inbox).
+- `specs/inbox/2026-09-17-105213-hooks-do-maestro-com-matcher-invalido-no-claude-code-e-setup-que-instala-sem-configurar-framework-e-skills.md` — origem (Inbox).
 - `specs/inbox/2026-08-29-155551-skills-do-mattpocock-como-dependencia-instalada-pelo-setup.md` — inbox relacionada: origem da instalação via `skills add`.
 - `specs/completed/0005-fatia-1h-skills-lado-a-lado/spec.md` — spec relacionada: instalação e registro de skills.
 - `specs/completed/0011-extensoes-locais-reparo-assistido/spec.md` — spec relacionada: blocos por checksum, quarentena e `createExtension`.
@@ -49,10 +49,10 @@ Origem: specs/inbox/2026-09-17-105213-hooks-do-maestro-com-matcher-invalido-no-c
 1. Os blocos do maestro (`router`, `config-language-rule`) passam a ter conteúdo completo em `AGENTS.md`; `CLAUDE.md` recebe uma única linha `@AGENTS.md`.
 2. Projetos com blocos na direção antiga migram automaticamente quando o checksum registrado bate; conteúdo divergente vai para quarentena pelo mecanismo existente.
 3. O bloco router instrui o agente: qualquer skill que edite `CLAUDE.md` coloca o conteúdo em `AGENTS.md` e deixa só referência.
-4. `maestro setup` move blocos de assinatura conhecida (tabela inicial: `## Agent skills` do matt-pocock) de `CLAUDE.md` para `AGENTS.md`; blocos `specsfy:*` nunca são tocados; conteúdo desconhecido não é movido.
+4. `maestro setup` move blocos de assinatura conhecida (tabela inicial: `## Agent skills` do matt-pocock) de `CLAUDE.md` para `AGENTS.md`; blocos `framework:*` nunca são tocados; conteúdo desconhecido não é movido.
 5. Bloco movido é registrado como *foreign* (checksum) — detectável, nunca sobrescrito nem reparado pelo maestro.
 6. `.agents/skills` é a única fonte canônica; matt-pocock passa a ser instalado com `-a universal`; a projeção é sempre `.agents → .claude`.
-7. A projeção roda em `maestro setup`, no hook `SessionStart` e no hook `PostToolUse(Bash)` ao detectar `skills add` ou `specsfy skills`.
+7. A projeção roda em `maestro setup`, no hook `SessionStart` e no hook `PostToolUse(Bash)` ao detectar `skills add` ou `former tool skills`.
 8. Projeções são registradas em `install.json` com checksum; cópia em `.claude/skills` cujo checksum difere do registrado é tratada como editada à mão: não é sobrescrita e é reportada.
 
 ## Regras de negócio
@@ -112,4 +112,4 @@ Origem: specs/inbox/2026-09-17-105213-hooks-do-maestro-com-matcher-invalido-no-c
 
 ## Próximo passo
 
-Promover com `$specsfy-03-specify` após BACKLOG-0011.
+Promover com `$framework-03-specify` após BACKLOG-0011.

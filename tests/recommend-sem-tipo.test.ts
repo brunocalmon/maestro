@@ -5,7 +5,7 @@ import { backends, snapshot, BIG_SMALL_WINDOW, SMALL_BIG_WINDOW, countingReader,
 const both = snapshot([BIG_SMALL_WINDOW, SMALL_BIG_WINDOW]);
 
 describe("AC-010 — sem tipo, o comportamento é o de hoje", () => {
-  // SPECSFY: US-001 FR-004 NFR-002 AC-010
+  // TRACEABILITY: US-001 FR-004 NFR-002 AC-010
   it("escolhe o maior que cabe e declara a ausência de tipo", () => {
     const r = recommend(backends, both, capacity, {}, undefined, countingReader([]));
 
@@ -15,7 +15,7 @@ describe("AC-010 — sem tipo, o comportamento é o de hoje", () => {
 });
 
 describe("AC-011 — sem tipo, nenhuma janela é consultada", () => {
-  // SPECSFY: US-001 FR-001 FR-004 NFR-001 AC-011
+  // TRACEABILITY: US-001 FR-001 FR-004 NFR-001 AC-011
   it("o leitor não é chamado quando nenhum tipo é informado", () => {
     const asked: string[] = [];
     recommend(backends, both, capacity, {}, undefined, countingReader(asked));
@@ -25,7 +25,7 @@ describe("AC-011 — sem tipo, nenhuma janela é consultada", () => {
 });
 
 describe("AC-012 — a janela só é consultada para quem passou na memória", () => {
-  // SPECSFY: US-001 FR-001 NFR-001 AC-012
+  // TRACEABILITY: US-001 FR-001 NFR-001 AC-012
   it("modelo que não cabe na memória não tem a janela consultada", () => {
     const asked: string[] = [];
     const tight = { freeBytes: 6 * 1024 ** 3, totalBytes: 16 * 1024 ** 3 } as const;

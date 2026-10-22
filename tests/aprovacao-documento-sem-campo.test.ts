@@ -9,13 +9,13 @@ const runWith = (root: string, text: string) => runSetup({
 });
 
 describe("Edge case — valid JSON, an object, missing the decision field", () => {
-  // SPECSFY: US-061 FR-062 AC-067
+  // TRACEABILITY: US-061 FR-062 AC-067
   it("an empty object is a refusal", () => {
     const root = project();
     expect(runWith(root, "{}").exitCode).not.toBe(0);
   });
 
-  // SPECSFY: US-061 FR-064 NFR-060 AC-067
+  // TRACEABILITY: US-061 FR-064 NFR-060 AC-067
   it("no file is created", () => {
     const root = project();
     const before = fileTree(root);
@@ -23,7 +23,7 @@ describe("Edge case — valid JSON, an object, missing the decision field", () =
     expect(fileTree(root)).toEqual(before);
   });
 
-  // SPECSFY: US-061 FR-064 AC-067
+  // TRACEABILITY: US-061 FR-064 AC-067
   it("an object with other fields, but no approved, is also a refusal", () => {
     const root = project();
     expect(runWith(root, '{"comment": "approved in chat"}').exitCode).not.toBe(0);

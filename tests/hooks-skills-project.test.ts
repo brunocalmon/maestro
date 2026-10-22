@@ -10,7 +10,7 @@ import { skill, claudeSkill } from "./helpers-spec-0024";
 const opts = { upstream: { contextModeHooksJson: null } };
 
 describe("AC-017 — hook de sessão copia o que falta", () => {
-  // SPECSFY: US-003 FR-007 NFR-001 AC-017
+  // TRACEABILITY: US-003 FR-007 NFR-001 AC-017
   it("SessionStart copia b, preserva a, sem stdout", () => {
     const root = project();
     skill(root, ".agents/skills", "a", "fonte a\n");
@@ -24,26 +24,26 @@ describe("AC-017 — hook de sessão copia o que falta", () => {
   });
 });
 
-describe("AC-018 — hook pós-ferramenta copia após skills add ou specsfy skills", () => {
-  // SPECSFY: US-003 FR-007 NFR-001 AC-018
+describe("AC-018 — hook pós-ferramenta copia após skills add ou former tool skills", () => {
+  // TRACEABILITY: US-003 FR-007 NFR-001 AC-018
   it("copia após o comando de instalação e ignora comandos comuns", () => {
     const root = project();
     skill(root, ".agents/skills", "c", "fonte c\n");
     const script = scriptFor("skills-project");
     runScript(script, shellEvent("Bash", "ls"), root);
     expect(existsSync(resolve(root, ".claude", "skills", "c"))).toBe(false);
-    const r = runScript(script, shellEvent("Bash", "npx skills add promovaweb/specsfy --skill x"), root);
+    const r = runScript(script, shellEvent("Bash", "npx skills add mattpocock/skills --skill x"), root);
     expect(r.status).toBe(0);
     expect(r.stdout).toBe("");
     expect(claudeSkill(root, "c")).toBe("fonte c\n");
     skill(root, ".agents/skills", "d", "fonte d\n");
-    runScript(script, shellEvent(CTX_EXECUTE, "specsfy skills install foo"), root);
+    runScript(script, shellEvent(CTX_EXECUTE, "former tool skills install foo"), root);
     expect(claudeSkill(root, "d")).toBe("fonte d\n");
   });
 });
 
 describe("AC-019 — hooks de projeção inertes sem .claude/ ou sem .agents/skills", () => {
-  // SPECSFY: US-003 FR-007 NFR-003 AC-019
+  // TRACEABILITY: US-003 FR-007 NFR-003 AC-019
   it("nada é criado e exit 0", () => {
     const noClaude = mkdtempSync(join(tmpdir(), "spec0024-noclaude-"));
     skill(noClaude, ".agents/skills", "x");
@@ -60,7 +60,7 @@ describe("AC-019 — hooks de projeção inertes sem .claude/ ou sem .agents/ski
 });
 
 describe("AC-020 — hooks de projeção instalados com os matchers corretos", () => {
-  // SPECSFY: US-003 FR-007 FR-006 AC-020
+  // TRACEABILITY: US-003 FR-007 FR-006 AC-020
   it("SessionStart e PostToolUse referenciam os scripts", () => {
     const root = project();
     runSetup({ env: claudeEnv, root, write: true, ...opts });

@@ -3,7 +3,7 @@ import { existsSync, mkdirSync, mkdtempSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 
-// SPECSFY: US-001 FR-004 AC-010 — projeto descartável, o mesmo padrão da SPEC-0013.
+// TRACEABILITY: US-001 FR-004 AC-010 — projeto descartável, o mesmo padrão da SPEC-0013.
 function project(): string {
   const root = mkdtempSync(join(tmpdir(), "plan-store-"));
   mkdirSync(resolve(root, ".maestro"), { recursive: true });
@@ -20,7 +20,7 @@ const PLAN = {
 };
 
 describe("AC-010 — o plano aprovado é identificado pelo trace da execução", () => {
-  // SPECSFY: US-001 FR-004 NFR-001 AC-010
+  // TRACEABILITY: US-001 FR-004 NFR-001 AC-010
   it("grava com o identificador da execução, dentro e fora do arquivo", async () => {
     const { writeApprovedPlan } = await import("../src/plan/store");
     const root = project();
@@ -32,7 +32,7 @@ describe("AC-010 — o plano aprovado é identificado pelo trace da execução",
 });
 
 describe("AC-011 — o gravado é o mesmo que foi apresentado", () => {
-  // SPECSFY: US-001 FR-004 NFR-001 AC-011
+  // TRACEABILITY: US-001 FR-004 NFR-001 AC-011
   it("agente, modelo e runtime sobrevivem ao round trip", async () => {
     const { writeApprovedPlan, readApprovedPlan } = await import("../src/plan/store");
     const root = project();
@@ -46,7 +46,7 @@ describe("AC-011 — o gravado é o mesmo que foi apresentado", () => {
 });
 
 describe("AC-012 — o artefato é legível sem replanejar", () => {
-  // SPECSFY: US-001 FR-004 NFR-001 AC-012
+  // TRACEABILITY: US-001 FR-004 NFR-001 AC-012
   it("a leitura por identificador devolve a mesma forma gravada", async () => {
     const { writeApprovedPlan, readApprovedPlan } = await import("../src/plan/store");
     const root = project();

@@ -1,8 +1,7 @@
 import { createHash } from "node:crypto";
 
 /**
- * HTML comment, same pattern `.specsfy/Spec.md` already documents and uses
- * for Specsfy (`<!-- specsfy:framework:start/end -->`) — `DEC-080`.
+ * HTML comment, the same pattern used by generated extension blocks.
  */
 export function anchorMarkers(category: string, name: string): { start: string; end: string } {
   return {

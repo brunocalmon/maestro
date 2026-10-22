@@ -19,7 +19,7 @@ export interface SkillsInspection {
  * The official installer creates a symlink by default, and `--copy` is
  * optional. Symlinked content lives outside the project: the hash stops
  * describing what the agent reads, two machines diverge without a record,
- * and Specsfy's tooling refuses a symlinked path. That's why detection
+ * and the upstream installer refuses a symlinked path. That's why detection
  * walks the whole tree, not just the first level.
  *
  * Takes the root as a parameter and never consults the working directory

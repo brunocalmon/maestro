@@ -13,7 +13,7 @@ function projectWithTarget(): string {
 }
 
 describe("AC-075 — the real command, with no injected channel, approves and writes", () => {
-  // SPECSFY: US-060 FR-060 FR-065 AC-075
+  // TRACEABILITY: US-060 FR-060 FR-065 AC-075
   it("a document approving via standard input unlocks the write", () => {
     const root = projectWithTarget();
     const r = spawnSync("node", [cli, "setup"], {
@@ -28,7 +28,7 @@ describe("AC-075 — the real command, with no injected channel, approves and wr
 });
 
 describe("AC-076 — the real command, with no injected channel, refuses and doesn't write", () => {
-  // SPECSFY: US-061 FR-060 FR-064 NFR-060 AC-076
+  // TRACEABILITY: US-061 FR-060 FR-064 NFR-060 AC-076
   it("empty standard input is a refusal, with no write", () => {
     const root = projectWithTarget();
     const r = spawnSync("node", [cli, "setup"], {

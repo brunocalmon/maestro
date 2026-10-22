@@ -11,7 +11,7 @@ function mktemp(): string {
 }
 
 describe("AC-007 — the router receives the language/config.yaml instruction", () => {
-  // SPECSFY: US-002 FR-006 AC-007
+  // TRACEABILITY: US-002 FR-006 AC-007
   it("delivers the anchored block into CLAUDE.md", () => {
     const root = mktemp();
     const registryEnv = realChecksumEnvironment(root);
@@ -32,7 +32,7 @@ describe("AC-007 — the router receives the language/config.yaml instruction", 
 });
 
 describe("AC-008 — AGENTS.md receives the matching pointer", () => {
-  // SPECSFY: US-002 FR-006 AC-008
+  // TRACEABILITY: US-002 FR-006 AC-008
   it("delivers a pointer into AGENTS.md", () => {
     const root = mktemp();
     const registryEnv = realChecksumEnvironment(root);
@@ -52,7 +52,7 @@ describe("AC-008 — AGENTS.md receives the matching pointer", () => {
 });
 
 describe("AC-009 — the router instruction is idempotent", () => {
-  // SPECSFY: US-002 FR-006 NFR-002 AC-009
+  // TRACEABILITY: US-002 FR-006 NFR-002 AC-009
   it("does not duplicate the block on a second run", () => {
     const root = mktemp();
     const registryEnv = realChecksumEnvironment(root);

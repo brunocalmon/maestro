@@ -24,7 +24,7 @@ function realOllamaList(): string[] {
 }
 
 describe("AC-099 — parity between the real source and the machine", () => {
-  // SPECSFY: US-035 NFR-034 AC-099
+  // TRACEABILITY: US-035 NFR-034 AC-099
   it("memory used matches os.freemem() and os.totalmem()", () => {
     const before = freemem();
     const capacity = readCapacity();
@@ -34,7 +34,7 @@ describe("AC-099 — parity between the real source and the machine", () => {
     expect(capacity.freeBytes).toBeLessThanOrEqual(Math.max(before, after) * 1.1);
   });
 
-  // SPECSFY: US-035 NFR-034 AC-099
+  // TRACEABILITY: US-035 NFR-034 AC-099
   it("local models match the real output of 'ollama list'", () => {
     if (!hasOllama()) return;
     const expected = realOllamaList();

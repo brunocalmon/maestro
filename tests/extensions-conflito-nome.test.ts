@@ -3,7 +3,7 @@ import { createExtension } from "../src/extensions/create";
 import { checksumEnvFake, targetEnvFake } from "./extensions-fixtures";
 
 describe("AC-132 — a name conflict asks for an explicit choice, no silent default", () => {
-  // SPECSFY: US-080 FR-080 FR-081 FR-082 AC-132
+  // TRACEABILITY: US-080 FR-080 FR-081 FR-082 AC-132
   it("an already registered name produces a conflict notice, without applying skip or replace", () => {
     const registryEnv = checksumEnvFake();
     const targetEnv = targetEnvFake();

@@ -20,7 +20,7 @@ function commandsIn(root: string): string[] {
 }
 
 describe("AC-014 — the installed hook doesn't depend on PATH for a dependency maestro already knows the location of", () => {
-  // SPECSFY: US-001 FR-001 AC-014
+  // TRACEABILITY: US-001 FR-001 AC-014
   it("embeds context-mode's absolute bin path, not the bare command", () => {
     const bin = resolve(packageRoot(), "node_modules", ".bin", "context-mode");
     // Only meaningful on a real, fully-installed checkout; skip rather than
@@ -42,7 +42,7 @@ describe("AC-014 — the installed hook doesn't depend on PATH for a dependency 
     }
   });
 
-  // SPECSFY: US-001 FR-001 NFR-001 AC-014
+  // TRACEABILITY: US-001 FR-001 NFR-001 AC-014
   it("the resolved hook still runs context-mode for real, with PATH stripped of it", () => {
     const bin = resolve(packageRoot(), "node_modules", ".bin", "context-mode");
     if (!existsSync(bin)) return;
@@ -67,7 +67,7 @@ describe("AC-014 — the installed hook doesn't depend on PATH for a dependency 
     expect(r.status).not.toBeNull();
   }, 30_000);
 
-  // SPECSFY: US-001 FR-002 AC-014
+  // TRACEABILITY: US-001 FR-002 AC-014
   it("leaves code-review-graph as a bare command when only a global copy exists (no forced local path)", () => {
     const localBin = resolve(packageRoot(), ".venv-crg", "bin", "code-review-graph");
     // This assertion is about the common case in this checkout — global

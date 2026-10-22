@@ -6,10 +6,10 @@ import * as router from "../src/extensions/router";
 import { claudeEnv, project } from "./helpers-spec-0022";
 
 const build = (): string => (router as unknown as { buildHooksFallbackBlock?: () => string }).buildHooksFallbackBlock?.() ?? "";
-const HOOKS = ["guard-destructive", "guard-secrets", "protect-authorship", "code-review-graph-update", "guard-docs"];
+const HOOKS = ["guard-destructive", "guard-secrets", "protect-authorship", "code-review-graph-update", "graph-hint"];
 
 describe("AC-014 — bloco hooks-fallback com até três regras condicionais", () => {
-  // SPECSFY: US-004 FR-005 NFR-003 AC-014
+  // TRACEABILITY: US-004 FR-005 NFR-003 AC-014
   it("≤3 itens, cada um cita um hook e maestro doctor, nenhum descreve o comando", () => {
     const text = build();
     expect(text.length).toBeGreaterThan(0);
@@ -25,7 +25,7 @@ describe("AC-014 — bloco hooks-fallback com até três regras condicionais", (
 });
 
 describe("AC-015 — bloco instalado uma vez e idempotente", () => {
-  // SPECSFY: US-004 FR-005 NFR-003 AC-015
+  // TRACEABILITY: US-004 FR-005 NFR-003 AC-015
   it("dois setups deixam um único bloco e um único artefato registrado", () => {
     const root = project();
     runSetup({ env: claudeEnv, root, write: true, upstream: { contextModeHooksJson: null } });
@@ -38,7 +38,7 @@ describe("AC-015 — bloco instalado uma vez e idempotente", () => {
 });
 
 describe("AC-016 — bloco separado do router", () => {
-  // SPECSFY: US-004 FR-005 NFR-003 AC-016
+  // TRACEABILITY: US-004 FR-005 NFR-003 AC-016
   it("router já registrado permanece intacto quando o bloco novo entra", () => {
     const root = project();
     runSetup({ env: claudeEnv, root, write: true, upstream: { contextModeHooksJson: null } });

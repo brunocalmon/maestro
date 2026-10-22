@@ -47,7 +47,7 @@ Nenhuma fonte contextual consultada.
 
 ### Sinais de escopo, regras ou solução
 
-**Sinais extraídos, não decisões:** Refatoração TypeScript (alinhamento com Specsfy/pi.dev ecosystem); Orchestrator como subagent self-aware; sempre pedir aprovação de plano antes de execução; model selection com recomendação; suporte a múltiplos backends (local ollama, cloud claude, cursor-agent, agy); setup único centralizado; hooks built-in do projeto incluídos automaticamente.
+**Sinais extraídos, não decisões:** Refatoração TypeScript (alinhamento com former project tool/pi.dev ecosystem); Orchestrator como subagent self-aware; sempre pedir aprovação de plano antes de execução; model selection com recomendação; suporte a múltiplos backends (local ollama, cloud claude, cursor-agent, agy); setup único centralizado; hooks built-in do projeto incluídos automaticamente.
 
 ### Informações que talvez precisem ser guardadas
 
@@ -73,4 +73,4 @@ Nenhuma fonte contextual consultada.
 
 ## Próximo passo
 
-Manter em `specs/inbox/` ou refinar com `$specsfy-02-backlog`.
+Manter em `specs/inbox/` ou refinar com `$framework-02-backlog`.

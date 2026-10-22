@@ -8,7 +8,7 @@ import { realChecksumEnvironment } from "../src/extensions/registry";
 import { buildRouterBlock, buildAgentsPointer } from "../src/extensions/router";
 
 describe("AC-013 — creating config.yaml doesn't depend on other extensions already existing", () => {
-  // SPECSFY: US-001 FR-001 FR-002 FR-004 NFR-001 NFR-003 AC-013
+  // TRACEABILITY: US-001 FR-001 FR-002 FR-004 NFR-001 NFR-003 AC-013
   it("creates config.yaml even when router/agents-pointer are already registered", () => {
     const root = mktemp();
     const registryEnv = realChecksumEnvironment(root);

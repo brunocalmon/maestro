@@ -2,7 +2,7 @@
 
 | Campo | Valor |
 | --- | --- |
-| Formato | Specsfy/2.0 |
+| Formato | former project tool/2.0 |
 | ID | SPEC-0001 |
 | Slug | 0001-phase-0-preparacao-limpeza |
 | Status | Complete |
@@ -30,9 +30,9 @@ A v0.2.8 (Python, MCP, 47 recursos embutidos) é um produto diferente da direç�
 
 Duas linhas de vida separadas e sem ponte entre elas.
 
-A branch `archived` guarda a main atual inteira, congelada e nunca mais tocada. A branch de trabalho nasce com histórico órfão — sem ancestral comum com a main — contendo exclusivamente o **conjunto preservado**: `specs/`, `.claude/`, `.specsfy/` e o link `.agents`. O restante do repositório atual deixa de existir nessa branch: código, documentação, testes, empacotamento e ferramentas.
+A branch `archived` guarda a main atual inteira, congelada e nunca mais tocada. A branch de trabalho nasce com histórico órfão — sem ancestral comum com a main — contendo exclusivamente o **conjunto preservado**: `specs/`, `.claude/`, `.project-context/` e o link `.agents`. O restante do repositório atual deixa de existir nessa branch: código, documentação, testes, empacotamento e ferramentas.
 
-O conjunto preservado não é resíduo da v0.2.8. `specs/` é o registro das decisões que governam a reescrita, e `.claude/` com `.specsfy/` são o framework Specsfy já configurado — as skills e os templates que produzem esses registros. Preservá-los evita reconfigurar o framework na branch nova.
+O conjunto preservado não é resíduo da v0.2.8. `specs/` é o registro das decisões que governam a reescrita, e `.claude/` com `.project-context/` são o framework former project tool já configurado — as skills e os templates que produzem esses registros. Preservá-los evita reconfigurar o framework na branch nova.
 
 Não há CHANGELOG, aviso de quebra de compatibilidade, guia de migração ou pull request. Quando a branch de trabalho estabilizar, ela substitui a main diretamente e a main atual deixa de existir fora de `archived`.
 
@@ -43,7 +43,7 @@ Não há CHANGELOG, aviso de quebra de compatibilidade, guia de migração ou pu
 - A árvore da branch de trabalho contém o conjunto preservado e nada além dele.
 - Nenhum arquivo `.py`, nenhum diretório `src/`, `.docs/`, `tools/`, `.github/` e nenhum manifesto Python permanecem na branch de trabalho.
 - A Phase 1 consegue ler seus próprios requisitos em `specs/` sem trocar de branch.
-- As skills Specsfy funcionam na branch nova sem reinstalação: uma captura de inbox pode ser criada e resolve seu template em `.specsfy/templates/`.
+- As skills former project tool funcionam na branch nova sem reinstalação: uma captura de inbox pode ser criada e resolve seu template em `.project-context/templates/`.
 
 ### 2. Research e esclarecimentos
 
@@ -69,7 +69,7 @@ As demais decisões vieram do refinamento do backlog e das rodadas de validaçã
 
 #### Dúvidas respondidas
 
-- **Q**: O que sobrevive à limpeza? → **A**: O conjunto preservado — `specs/`, `.claude/` e `.specsfy/`. `specs/` é o insumo da Phase 1; `.claude/` e `.specsfy/` são o framework Specsfy já configurado, mantido para não exigir reconfiguração na branch nova. `.specsfy/` acompanha `.claude/` por necessidade técnica: as skills resolvem seus templates em `.specsfy/templates/` e carregam o contrato em `.specsfy/Spec.md`, de modo que preservar as skills sem os templates as deixaria presentes e inoperantes. O restante é removido, inclusive `.github/`, `tools/`, `README.md`, `AGENTS.md` e `CLAUDE.md`.
+- **Q**: O que sobrevive à limpeza? → **A**: O conjunto preservado — `specs/`, `.claude/` e `.project-context/`. `specs/` é o insumo da Phase 1; `.claude/` e `.project-context/` são o framework former project tool já configurado, mantido para não exigir reconfiguração na branch nova. `.project-context/` acompanha `.claude/` por necessidade técnica: as skills resolvem seus templates em `.project-context/templates/` e carregam o contrato em `.project-context/Spec.md`, de modo que preservar as skills sem os templates as deixaria presentes e inoperantes. O restante é removido, inclusive `.github/`, `tools/`, `README.md`, `AGENTS.md` e `CLAUDE.md`.
 - **Q**: A branch precisa de histórico realmente vazio? → **A**: Sim. Histórico órfão, sem ancestral comum com a main. Um commit de limpeza sobre o histórico existente não atende, porque manteria a v0.2.8 alcançável na nova linha.
 - **Q**: Como anunciar a quebra de compatibilidade? → **A**: Não se anuncia. Não há CHANGELOG, nota de breaking change nem guia de migração. O produto é novo e substitui o anterior.
 - **Q**: Como a substituição acontece? → **A**: Sem merge e sem pull request. `archived` congela a main atual; quando a branch de trabalho estabilizar, ela vira a main diretamente.
@@ -88,22 +88,22 @@ Quatro caminhos sobrevivem à limpeza, e somente eles:
 | Caminho | Por que sobrevive |
 | --- | --- |
 | `specs/` | Registro das decisões que governam a reescrita; insumo direto da Phase 1 |
-| `.claude/` | Skills Specsfy já instaladas e configuradas, mais os scripts de asserção desta fase |
-| `.specsfy/` | Contrato e templates que as skills resolvem em tempo de execução |
+| `.claude/` | Skills former project tool já instaladas e configuradas, mais os scripts de asserção desta fase |
+| `.project-context/` | Contrato e templates que as skills resolvem em tempo de execução |
 | `.agents` | Link simbólico para `.claude`; sem ele, os comandos que o framework documenta não resolvem |
 
 Qualquer caminho fora dessa lista é removido, sem decisão caso a caso durante a execução.
 
 #### Incluído
 
-- Retirar `specs/`, `.specsfy/` e `.claude/` do `.gitignore` e versioná-los na main, antes de qualquer congelamento. Sem isso o conjunto preservado não existe em git e nada do que a fase promete preservar sobreviveria.
+- Retirar `specs/`, `.project-context/` e `.claude/` do `.gitignore` e versioná-los na main, antes de qualquer congelamento. Sem isso o conjunto preservado não existe em git e nada do que a fase promete preservar sobreviveria.
 - Criar a branch `archived` a partir do commit atual da main e publicá-la no remoto.
 - Confirmar que `archived` reproduz a main atual integralmente, por comparação de árvore.
 - Criar a branch de trabalho `refactor/v1-cli-first` com histórico órfão, sem ancestral comum com a main.
 - Preservar o conjunto preservado integralmente nessa branch, com conteúdo idêntico ao da main.
 - Remover da branch de trabalho o restante do repositório: `src/`, `.docs/`, `tools/`, `.github/`, `.pytest_cache/`, `.venv/`, `dist/`, `pyproject.toml`, `.python-version`, `uv.lock`, `.coverage`, `agent_bdd.feature`, `Dockerfile`, `.dockerignore`, `skills-lock.json`, `README.md`, `AGENTS.md` e `CLAUDE.md`.
 - Registrar o commit raiz único da branch de trabalho e publicá-lo.
-- Comprovar que as skills Specsfy operam na branch nova sem reinstalação.
+- Comprovar que as skills former project tool operam na branch nova sem reinstalação.
 - Escrever em `.claude/scripts/phase0/` os scripts de asserção em Node que guardam cada operação destrutiva, sem dependência externa.
 
 #### Fora de escopo
@@ -137,7 +137,7 @@ Qualquer caminho fora dessa lista é removido, sem decisão caso a caso durante 
 Como **pessoa que refatora o projeto**, quero **uma branch de trabalho com histórico órfão contendo apenas o conjunto preservado**, para **escrever a v1.0 sem nenhum arquivo da v0.2.8 ao lado, sem a v0.2.8 alcançável a partir da nova linha e sem reconfigurar o framework que conduz o trabalho**.
 
 **Por que P1**: Bloqueia toda a reescrita. Sem a árvore limpa, cada arquivo novo convive com um antigo que o contradiz.
-**Teste independente**: `git log` na branch mostra um commit sem pai; `git ls-files` lista apenas caminhos sob `specs/`, `.claude/` e `.specsfy/`; uma captura de inbox pode ser criada na branch sem reinstalação.
+**Teste independente**: `git log` na branch mostra um commit sem pai; `git ls-files` lista apenas caminhos sob `specs/`, `.claude/` e `.project-context/`; uma captura de inbox pode ser criada na branch sem reinstalação.
 **Requisitos**: FR-002, FR-003, FR-004
 
 #### US-002 — Congelar a v0.2.8 de forma permanente e consultável
@@ -191,7 +191,7 @@ Feature: Histórico órfão da branch de trabalho
 Feature: Preservação do registro de decisões e do framework
 
   Scenario: O conjunto preservado chega intacto à branch de trabalho
-    Given as árvores de specs, .claude e .specsfy na main
+    Given as árvores de specs, .claude e .project-context na main
     When a limpeza da branch de trabalho termina
     Then cada arquivo presente nesses três caminhos na main está presente na branch de trabalho
     And o conteúdo de cada um desses arquivos é idêntico ao da main
@@ -209,24 +209,24 @@ Feature: Remoção do conteúdo da versão anterior
   Scenario: A árvore versionada contém apenas o conjunto preservado
     Given a branch de trabalho com o commit raiz registrado
     When a pessoa lista os arquivos versionados da branch
-    Then cada caminho listado começa por specs/, .claude/ ou .specsfy/
+    Then cada caminho listado começa por specs/, .claude/ ou .project-context/
     And nenhum arquivo com extensão .py está versionado
     And os diretórios src, .docs, tools e .github não estão versionados
     And os arquivos pyproject.toml, uv.lock, Dockerfile, agent_bdd.feature, skills-lock.json, README.md, AGENTS.md e CLAUDE.md não estão versionados
 ```
 
-#### AC-011 — As skills Specsfy operam sem reinstalação
+#### AC-011 — As skills former project tool operam sem reinstalação
 
 **Cobre**: US-001, FR-003, NFR-003
 
 ```gherkin
 @US-001 @FR-003 @NFR-003 @AC-011
-Feature: Framework utilizável na branch nova
+Feature: former project tool utilizável na branch nova
 
   Scenario: Uma captura de inbox é criada sem reconfigurar o framework
     Given a branch de trabalho publicada com o conjunto preservado
-    When a pessoa executa o script de captura de inbox de uma skill Specsfy
-    Then o script encontra seu template em .specsfy/templates
+    When a pessoa executa o script de captura de inbox de uma skill former project tool
+    Then o script encontra seu template em .project-context/templates
     And grava a captura em specs/inbox
     And nenhuma etapa de instalação ou reconfiguração é necessária
 ```
@@ -307,7 +307,7 @@ Feature: Critério único de preservação
   Scenario: Somente o conjunto preservado é exceção à limpeza
     Given a lista de conteúdo da main atual
     When a pessoa aplica o critério de preservação da Phase 0
-    Then specs, .claude e .specsfy são os únicos caminhos preservados
+    Then specs, .claude e .project-context são os únicos caminhos preservados
     And qualquer caminho fora desses três é removido sem exceção
     And nenhuma decisão caso a caso é tomada durante a execução
 ```
@@ -334,7 +334,7 @@ Feature: Verificação final da Phase 0
 
 - **FR-001**: O processo deve criar a branch `archived` no commit atual da main, publicá-la no remoto e não gravar nada nela depois disso.
 - **FR-002**: O processo deve criar a branch de trabalho com raiz órfã, de modo que seu histórico tenha um único commit sem ancestral comum com a main.
-- **FR-003**: O processo deve preservar o conjunto preservado — `specs/`, `.claude/` e `.specsfy/` — integralmente na branch de trabalho, com conteúdo idêntico ao da main.
+- **FR-003**: O processo deve preservar o conjunto preservado — `specs/`, `.claude/` e `.project-context/` — integralmente na branch de trabalho, com conteúdo idêntico ao da main.
 - **FR-004**: O processo deve remover da branch de trabalho cada caminho versionado que não esteja sob o conjunto preservado.
 
 #### Não funcionais
@@ -351,7 +351,7 @@ Feature: Verificação final da Phase 0
 - Interrupção entre T003 e T005 → descartar a branch de trabalho e recriá-la a partir da main; `archived` e main permanecem íntegras.
 - Qualquer caminho do conjunto preservado ausente ou vazio no momento de T004 → abortar. A branch de trabalho não pode nascer sem o registro de decisões que a governa nem sem o framework que a conduz.
 - Arquivo não rastreado presente na árvore durante a limpeza → remover junto; a regra de preservação vale para a árvore inteira, não só para o índice.
-- `.claude/` contendo configuração específica da v0.2.8 além das skills Specsfy → preservar mesmo assim nesta fase e tratar na Phase 1, que reescreve a configuração de agentes. A Phase 0 não faz curadoria dentro do conjunto preservado.
+- `.claude/` contendo configuração específica da v0.2.8 além das skills former project tool → preservar mesmo assim nesta fase e tratar na Phase 1, que reescreve a configuração de agentes. A Phase 0 não faz curadoria dentro do conjunto preservado.
 
 ## Ato II — Projetar e provar
 
@@ -360,7 +360,7 @@ Feature: Verificação final da Phase 0
 #### Contexto existente
 
 - Repositório git com remoto configurado; `main` é a branch padrão e carrega a v0.2.8.
-- Raiz atual contém: `src/common_rules_server/`, `src/test/`, `.docs/`, `tools/`, `.github/`, `.claude/`, `.specsfy/`, `specs/`, `.pytest_cache/`, `.venv/`, `dist/`, `pyproject.toml`, `.python-version`, `uv.lock`, `.coverage`, `agent_bdd.feature`, `Dockerfile`, `.dockerignore`, `skills-lock.json`, `README.md`, `AGENTS.md`, `CLAUDE.md`.
+- Raiz atual contém: `src/common_rules_server/`, `src/test/`, `.docs/`, `tools/`, `.github/`, `.claude/`, `.project-context/`, `specs/`, `.pytest_cache/`, `.venv/`, `dist/`, `pyproject.toml`, `.python-version`, `uv.lock`, `.coverage`, `agent_bdd.feature`, `Dockerfile`, `.dockerignore`, `skills-lock.json`, `README.md`, `AGENTS.md`, `CLAUDE.md`.
 - `specs/` contém `inbox/` com quatro capturas, `backlog/` com três itens e `draft/` com esta spec.
 - Empacotamento Python via `pyproject.toml` com hatchling; ambiente gerido por `uv`.
 
@@ -412,8 +412,8 @@ specs/
   backlog/
   draft/0001-phase-0-preparacao-limpeza/spec.md
 .claude/
-  skills/specsfy-*/
-.specsfy/
+  skills/framework-*/
+.project-context/
   Spec.md
   templates/
 ```
@@ -450,7 +450,7 @@ Não aplicável.
 
 A Phase 0 entrega um estado de repositório, e esse estado é asseverável. Cada asserção falha antes da operação correspondente e passa depois dela, de modo que o ciclo RED-GREEN é real, ainda que a unidade sob teste seja o repositório e não uma função.
 
-**Runner**: Node puro, em arquivos `.js` CommonJS sem dependência alguma. A escolha atende três restrições simultâneas. O escopo proíbe instalar dependências, e o Node já é exigido para executar as próprias skills Specsfy, de modo que nada novo entra. A árvore é esvaziada no meio da execução, e scripts sem `node_modules` sobrevivem à limpeza que precisam verificar. Por fim, o auditor de rastreabilidade do framework varre apenas um conjunto fechado de extensões, no qual `.js` está e `.sh` não — asserções em shell seriam corretas e invisíveis ao Delivery Gate.
+**Runner**: Node puro, em arquivos `.js` CommonJS sem dependência alguma. A escolha atende três restrições simultâneas. O escopo proíbe instalar dependências, e o Node já é exigido para executar as próprias skills former project tool, de modo que nada novo entra. A árvore é esvaziada no meio da execução, e scripts sem `node_modules` sobrevivem à limpeza que precisam verificar. Por fim, o auditor de rastreabilidade do framework varre apenas um conjunto fechado de extensões, no qual `.js` está e `.sh` não — asserções em shell seriam corretas e invisíveis ao Delivery Gate.
 
 **Localização**: `.claude/scripts/phase0/`, dentro do conjunto preservado, para que as asserções sobrevivam à limpeza e possam ser reexecutadas na branch nova. A Phase 1 remove esse diretório quando a fase estiver encerrada.
 
@@ -540,7 +540,7 @@ Sequência destrutiva executada em 70 segundos, entre `2026-08-24T19:09:54.40651
 1. `origin/main` era comparado ao SHA da `main` local, o que testava sincronia entre local e remoto em vez da intenção declarada. Passou a ter baseline própria, `originMainSha`. Exercitado com SHA forjado, voltou a RED.
 2. `mainSha` era gravado no congelamento (T008) e comparado após a sequência, mas a main recebe legitimamente o commit de evidência de T008 entre um momento e outro. O reflog mostra que o último write na main foi às 21:08:38 e que a sequência começou às 21:09:54 — durante T009 a T012 a main não recebeu nada, de modo que a propriedade de segurança valia e apenas o instante da baseline estava errado. `mainSha` passou a ser gravado no início da sequência, e `mainShaAtFreeze` preserva o valor anterior.
 
-**Uma diferença real capturada em T011.** `assert-preserved-set` reprovou por `.specsfy/skills-lock.json`, que entrou no índice porque o `.gitignore` foi removido antes do `git add` e esse arquivo sempre foi ignorado na main. Retirado do índice e mantido em disco, o que restaura a identidade com a main exigida por AC-003. Se o lockfile deve passar a ser versionado, a decisão cabe à Phase 1.
+**Uma diferença real capturada em T011.** `assert-preserved-set` reprovou por `.project-context/skills-lock.json`, que entrou no índice porque o `.gitignore` foi removido antes do `git add` e esse arquivo sempre foi ignorado na main. Retirado do índice e mantido em disco, o que restaura a identidade com a main exigida por AC-003. Se o lockfile deve passar a ser versionado, a decisão cabe à Phase 1.
 
 #### Duas asserções presas ao instante da entrega — corrigidas após o gate
 
@@ -555,7 +555,7 @@ O estado entregue não mudou: commit raiz, `archived` e a branch publicada perma
 
 #### Suposição falsa na base do plano, detectada antes da execução
 
-O gate inicial da implementação revelou que o conjunto preservado não estava versionado. `.gitignore` ignorava `.specsfy/` (linha 10), `specs/` (linha 11) e `.claude/` (linha 27), de modo que `git ls-files` retornava zero para os três, enquanto o disco continha 8, 14 e 97 arquivos respectivamente. A main rastreava 259 arquivos, todos do lado Python.
+O gate inicial da implementação revelou que o conjunto preservado não estava versionado. `.gitignore` ignorava `.project-context/` (linha 10), `specs/` (linha 11) e `.claude/` (linha 27), de modo que `git ls-files` retornava zero para os três, enquanto o disco continha 8, 14 e 97 arquivos respectivamente. A main rastreava 259 arquivos, todos do lado Python.
 
 Três consequências, se a fase tivesse sido executada como planejada:
 
@@ -575,7 +575,7 @@ O estado passou a viver em `.git/phase0-run-state.json`, fora da árvore version
 
 #### Rastreabilidade
 
-`node .claude/skills/specsfy-06-tdd-bdd/scripts/check_traceability.mjs specs/completed/0001-phase-0-preparacao-limpeza/spec.md .` → **OK, 20 de 20 IDs cobertos**.
+`node .claude/skills/framework-06-tdd-bdd/scripts/check_traceability.mjs specs/completed/0001-phase-0-preparacao-limpeza/spec.md .` → **OK, 20 de 20 IDs cobertos**.
 
 #### Matriz de verificação
 
@@ -588,7 +588,7 @@ O estado passou a viver em `.git/phase0-run-state.json`, fora da árvore version
 | FR-002 | AC-006 | Execução | `node .claude/scripts/phase0/assert-elapsed-budget.check.js` | **Passed** — 70s de 300s em T012 |
 | FR-002 | AC-007 | Execução | `node .claude/scripts/phase0/assert-baseline-untouched.check.js` | **Passed** — GREEN 5/5 em T013 |
 | FR-003 | AC-003 | Execução | `node .claude/scripts/phase0/assert-preserved-set.check.js` | **Passed** — GREEN 5/5 em T011 |
-| FR-003 | AC-008 | Inspeção | `git ls-tree -r archived -- specs .claude .specsfy .agents` | **Passed** — 119 arquivos em T014 |
+| FR-003 | AC-008 | Inspeção | `git ls-tree -r archived -- specs .claude .project-context .agents` | **Passed** — 119 arquivos em T014 |
 | FR-003 | AC-009 | Execução | `node .claude/scripts/phase0/assert-preserved-set.check.js` | **Passed** — GREEN em T011 |
 | FR-003 | AC-011 | Execução | `node .claude/scripts/phase0/assert-framework-operational.check.js` | **Passed** — captura real criada em T011 |
 | FR-004 | AC-004 | Execução | `node .claude/scripts/phase0/assert-no-legacy.check.js` | **Passed** — GREEN 5/5 em T011 |
@@ -611,7 +611,7 @@ O estado passou a viver em `.git/phase0-run-state.json`, fora da árvore version
 #### Gate do Ato I — Definição
 
 - **Resultado**: READY (2026-08-24, rodada 2). Aceite final em 2026-08-24, rodada 3: ver `Aceite final` ao fim desta seção.
-- **Comando**: `node .claude/skills/specsfy-04-validate/scripts/validate_spec.mjs specs/completed/0001-phase-0-preparacao-limpeza/spec.md`
+- **Comando**: `node .claude/skills/framework-04-validate/scripts/validate_spec.mjs specs/completed/0001-phase-0-preparacao-limpeza/spec.md`
 
 **Rodada 1 — 2026-08-24 — NOT READY (histórico)**
 
@@ -621,7 +621,7 @@ Estrutural: VALID DRAFT. Semântico: 4 BLOCKER, 5 WARNING, 3 NOTE.
 | --- | --- | --- |
 | B1 | `git reset --hard HEAD~0` era no-op e não produzia o histórico vazio exigido pelos ACs | Resolvido — substituído por raiz órfã em T003 |
 | B2 | AC de limpeza era insatisfazível: exigia zero ocorrências de um literal presente na própria spec | Resolvido — o critério passou a ser a lista de arquivos versionados, não busca textual |
-| B3 | O escopo não decidia o que sobrevive à limpeza | Resolvido — D1: conjunto preservado com `specs/`, `.claude/` e `.specsfy/` |
+| B3 | O escopo não decidia o que sobrevive à limpeza | Resolvido — D1: conjunto preservado com `specs/`, `.claude/` e `.project-context/` |
 | B4 | `CHANGELOG.md` não existia, mas um FR mandava atualizá-lo | Resolvido — D3: sem CHANGELOG; FR removido |
 | W1 | Tarefa de limpeza removia arquivos inexistentes e omitia artefatos reais | Resolvido — lista conferida contra o repositório em 2026-08-24 |
 | W2 | `README.md` ficaria com quinze links quebrados | Resolvido — D4: removido junto com o resto |
@@ -651,7 +651,7 @@ Estrutural: VALID DRAFT. Cobertura: 2 US, 4 FR, 3 NFR, 11 AC; mínimo de 3 AC po
 #### Gate do Ato II — Plano
 
 - **Resultado**: Passed (2026-08-24) — estrutura válida e RED observado nas sete asserções antes de qualquer operação.
-- **Comando**: `node .claude/skills/specsfy-05-tasks/scripts/validate_tasks.mjs specs/completed/0001-phase-0-preparacao-limpeza/spec.md --allow-draft`
+- **Comando**: `node .claude/skills/framework-05-tasks/scripts/validate_tasks.mjs specs/completed/0001-phase-0-preparacao-limpeza/spec.md --allow-draft`
 - **Contagens**: 14 tarefas, 8 predecessores TDD, 0 tarefas `[CODE]`, 70 itens de checklist, 20 de 20 IDs da spec cobertos.
 - **RED comprovado**: T001 a T007 materializaram as sete asserções em `.claude/scripts/phase0/` e todas falharam antes de qualquer operação, por ausência do comportamento. A evidência, a prova de sensibilidade e a de discriminação estão na seção 12.
 - **Rastreabilidade**: `check_traceability.mjs` reporta 20 de 20 IDs cobertos.
@@ -672,7 +672,7 @@ Estrutural: VALID DRAFT. Cobertura: 2 US, 4 FR, 3 NFR, 11 AC; mínimo de 3 AC po
 
 - **Resultado**: Passed (2026-08-24)
 - **Verificação**: `node .claude/scripts/phase0/run-all.check.js` em GREEN nas sete asserções; clone limpo de `archived` com 1010 testes da v0.2.8 passando; os oito itens do checklist de T014 positivos.
-- **Auditoria de aceite**: `node .claude/skills/specsfy-06-tdd-bdd/scripts/verify_acceptance.mjs` — os onze ACs registram resultado na matriz da seção 12.
+- **Auditoria de aceite**: `node .claude/skills/framework-06-tdd-bdd/scripts/verify_acceptance.mjs` — os onze ACs registram resultado na matriz da seção 12.
 
 ### 14. Tarefas
 
@@ -685,49 +685,49 @@ As sete asserções são escritas antes de qualquer operação e observadas falh
   - [x] **EXECUTE**: Escrever o script em shell POSIX, sem dependência externa, saindo com código diferente de zero em qualquer condição não satisfeita.
   - [x] **VERIFY**: RED observado — `node .claude/scripts/phase0/assert-archived-frozen.check.js` saiu com código 1 e 5 de 5 condições não satisfeitas, por ausência do comportamento e não por erro de ambiente.
   - [x] **EVIDENCE**: Comando, saída e código registrados na seção 12, junto da prova de sensibilidade e discriminação.
-  - [x] **IMPROVE**: Cada condição recebeu marcador `SPECSFY` próprio e mensagem que nomeia a causa, para que a falha diga o que quebrou em vez de apenas que quebrou.
+  - [x] **IMPROVE**: Cada condição recebeu marcador `TRACEABILITY` próprio e mensagem que nomeia a causa, para que a falha diga o que quebrou em vez de apenas que quebrou.
 
 - [x] T002 [P] [TEST] [TDD] [US-001] Escrever a asserção de raiz órfã em .claude/scripts/phase0/assert-orphan-root.check.js — Refs: US-001, FR-002, AC-002 — Depends: none
   - [x] **PREP**: Ler AC-002 e definir as três condições: um único commit, ausência de pai e ausência de ancestral comum com a main.
   - [x] **EXECUTE**: Escrever o script usando `git rev-list` e `git merge-base`, tratando a ausência de ancestral comum como sucesso e não como erro do git.
   - [x] **VERIFY**: RED observado — `node .claude/scripts/phase0/assert-orphan-root.check.js` saiu com código 1 e 4 de 4 condições não satisfeitas, por ausência do comportamento e não por erro de ambiente.
   - [x] **EVIDENCE**: Comando, saída e código registrados na seção 12, junto da prova de sensibilidade e discriminação.
-  - [x] **IMPROVE**: Cada condição recebeu marcador `SPECSFY` próprio e mensagem que nomeia a causa, para que a falha diga o que quebrou em vez de apenas que quebrou.
+  - [x] **IMPROVE**: Cada condição recebeu marcador `TRACEABILITY` próprio e mensagem que nomeia a causa, para que a falha diga o que quebrou em vez de apenas que quebrou.
 
 - [x] T003 [P] [TEST] [TDD] [US-001] Escrever a asserção do conjunto preservado em .claude/scripts/phase0/assert-preserved-set.check.js — Refs: US-001, FR-003, FR-004, NFR-003, AC-003, AC-009 — Depends: none
-  - [x] **PREP**: Ler AC-003 e AC-009 e definir a comparação: a listagem de `specs/`, `.claude/`, `.specsfy/` e `.agents` na branch precisa coincidir com a da main, arquivo a arquivo.
+  - [x] **PREP**: Ler AC-003 e AC-009 e definir a comparação: a listagem de `specs/`, `.claude/`, `.project-context/` e `.agents` na branch precisa coincidir com a da main, arquivo a arquivo.
   - [x] **EXECUTE**: Escrever o script comparando `git ls-files` dos quatro caminhos entre a branch e a main, e falhando se qualquer caminho estiver ausente ou vazio.
   - [x] **VERIFY**: RED observado — `node .claude/scripts/phase0/assert-preserved-set.check.js` saiu com código 1 e 5 de 5 condições não satisfeitas, por ausência do comportamento e não por erro de ambiente.
   - [x] **EVIDENCE**: Comando, saída e código registrados na seção 12, junto da prova de sensibilidade e discriminação.
-  - [x] **IMPROVE**: Cada condição recebeu marcador `SPECSFY` próprio e mensagem que nomeia a causa, para que a falha diga o que quebrou em vez de apenas que quebrou.
+  - [x] **IMPROVE**: Cada condição recebeu marcador `TRACEABILITY` próprio e mensagem que nomeia a causa, para que a falha diga o que quebrou em vez de apenas que quebrou.
 
 - [x] T004 [P] [TEST] [TDD] [US-001] Escrever a asserção de ausência de resíduo em .claude/scripts/phase0/assert-no-legacy.check.js — Refs: US-001, FR-004, AC-004, AC-009 — Depends: none
   - [x] **PREP**: Ler AC-004 e listar as condições: nenhum caminho versionado fora do conjunto preservado, nenhum arquivo `.py` e ausência dos artefatos nomeados no cenário.
   - [x] **EXECUTE**: Escrever o script filtrando `git ls-files` por prefixo e verificando os artefatos nomeados um a um.
   - [x] **VERIFY**: RED observado — `node .claude/scripts/phase0/assert-no-legacy.check.js` saiu com código 1 e 5 de 5 condições não satisfeitas, por ausência do comportamento e não por erro de ambiente.
   - [x] **EVIDENCE**: Comando, saída e código registrados na seção 12, junto da prova de sensibilidade e discriminação.
-  - [x] **IMPROVE**: Cada condição recebeu marcador `SPECSFY` próprio e mensagem que nomeia a causa, para que a falha diga o que quebrou em vez de apenas que quebrou.
+  - [x] **IMPROVE**: Cada condição recebeu marcador `TRACEABILITY` próprio e mensagem que nomeia a causa, para que a falha diga o que quebrou em vez de apenas que quebrou.
 
 - [x] T005 [P] [TEST] [TDD] [US-001] Escrever a asserção de framework operante em .claude/scripts/phase0/assert-framework-operational.check.js — Refs: US-001, FR-003, NFR-003, AC-011 — Depends: none
-  - [x] **PREP**: Ler AC-011 e definir o critério: uma captura de inbox real é criada, resolvendo template em `.specsfy/templates/`, sem etapa de instalação.
-  - [x] **EXECUTE**: Escrever o script que invoca o script de captura de uma skill Specsfy, confere o arquivo gerado e o remove ao final para não poluir `specs/inbox/`.
+  - [x] **PREP**: Ler AC-011 e definir o critério: uma captura de inbox real é criada, resolvendo template em `.project-context/templates/`, sem etapa de instalação.
+  - [x] **EXECUTE**: Escrever o script que invoca o script de captura de uma skill former project tool, confere o arquivo gerado e o remove ao final para não poluir `specs/inbox/`.
   - [x] **VERIFY**: RED observado — `node .claude/scripts/phase0/assert-framework-operational.check.js` saiu com código 1 e 3 de 4 condições não satisfeitas, por ausência do comportamento e não por erro de ambiente.
   - [x] **EVIDENCE**: Comando, saída e código registrados na seção 12, junto da prova de sensibilidade e discriminação.
-  - [x] **IMPROVE**: Cada condição recebeu marcador `SPECSFY` próprio e mensagem que nomeia a causa, para que a falha diga o que quebrou em vez de apenas que quebrou.
+  - [x] **IMPROVE**: Cada condição recebeu marcador `TRACEABILITY` próprio e mensagem que nomeia a causa, para que a falha diga o que quebrou em vez de apenas que quebrou.
 
 - [x] T006 [P] [TEST] [TDD] [US-001] [US-002] Escrever a asserção de baseline intocada em .claude/scripts/phase0/assert-baseline-untouched.check.js — Refs: US-001, US-002, FR-001, FR-002, NFR-001, NFR-002, AC-007 — Depends: none
   - [x] **PREP**: Ler AC-007 e definir o critério: os SHAs da main e de `archived` registrados no congelamento permanecem inalterados durante e após a sequência destrutiva.
   - [x] **EXECUTE**: Escrever o script que lê a baseline registrada e compara com o estado atual das duas referências, local e remota, falhando ao detectar qualquer escrita.
   - [x] **VERIFY**: RED observado — `node .claude/scripts/phase0/assert-baseline-untouched.check.js` saiu com código 1 e 5 de 5 condições não satisfeitas, por ausência do comportamento e não por erro de ambiente.
   - [x] **EVIDENCE**: Comando, saída e código registrados na seção 12, junto da prova de sensibilidade e discriminação.
-  - [x] **IMPROVE**: Cada condição recebeu marcador `SPECSFY` próprio e mensagem que nomeia a causa, para que a falha diga o que quebrou em vez de apenas que quebrou.
+  - [x] **IMPROVE**: Cada condição recebeu marcador `TRACEABILITY` próprio e mensagem que nomeia a causa, para que a falha diga o que quebrou em vez de apenas que quebrou.
 
 - [x] T007 [P] [TEST] [TDD] [US-001] Escrever a asserção de orçamento de tempo em .claude/scripts/phase0/assert-elapsed-budget.check.js — Refs: US-001, NFR-001, AC-006, AC-007 — Depends: none
   - [x] **PREP**: Ler AC-006 e NFR-001 e definir o critério: o intervalo entre os horários registrados no início e no fim da sequência é inferior a trezentos segundos.
   - [x] **EXECUTE**: Escrever o script que lê os dois horários registrados e falha quando o intervalo excede o orçamento ou quando algum horário está ausente.
   - [x] **VERIFY**: RED observado — `node .claude/scripts/phase0/assert-elapsed-budget.check.js` saiu com código 1 e 4 de 4 condições não satisfeitas, por ausência do comportamento e não por erro de ambiente.
   - [x] **EVIDENCE**: Comando, saída e código registrados na seção 12, junto da prova de sensibilidade e discriminação.
-  - [x] **IMPROVE**: Cada condição recebeu marcador `SPECSFY` próprio e mensagem que nomeia a causa, para que a falha diga o que quebrou em vez de apenas que quebrou.
+  - [x] **IMPROVE**: Cada condição recebeu marcador `TRACEABILITY` próprio e mensagem que nomeia a causa, para que a falha diga o que quebrou em vez de apenas que quebrou.
 
 #### Fase 2 — Congelar
 
@@ -757,7 +757,7 @@ As sete asserções são escritas antes de qualquer operação e observadas falh
 - [x] T011 [OPS] [US-001] Registrar o commit raiz da branch de trabalho, verificando com .claude/scripts/phase0/assert-preserved-set.check.js — Refs: US-001, FR-002, FR-003, FR-004, AC-002, AC-003, AC-004 — Depends: T010
   - [x] **PREP**: Resultado de T010 confirmado.
   - [x] **EXECUTE**: Commit raiz `53f9949` com 119 arquivos.
-  - [x] **VERIFY**: Quatro asserções em GREEN após corrigir a inclusão indevida de `.specsfy/skills-lock.json`.
+  - [x] **VERIFY**: Quatro asserções em GREEN após corrigir a inclusão indevida de `.project-context/skills-lock.json`.
   - [x] **EVIDENCE**: Saídas de GREEN e o SHA do commit raiz registrados na seção 12.
   - [x] **IMPROVE**: `assert-preserved-set` capturou um arquivo a mais e evitou que a branch nascesse divergente da main.
 
@@ -818,11 +818,11 @@ As sete asserções são escritas antes de qualquer operação e observadas falh
 
 ### 17. Decisões
 
-- **DEC-001**: Sobrevivem à limpeza `specs/`, `.claude/` e `.specsfy/`. *Razão*: `specs/` é o registro das decisões que governam a reescrita, e `.claude/` com `.specsfy/` são o framework Specsfy já configurado; preservá-los evita reconfigurar o framework e permite que a Phase 1 leia seus requisitos onde vai produzir código. *Nota*: `.specsfy/` acompanha `.claude/` por necessidade técnica, não por escolha independente — as skills resolvem templates em `.specsfy/templates/` e carregam o contrato em `.specsfy/Spec.md`. *Alternativas*: preservar nada — descartada porque obrigaria a Phase 1 a trocar de branch para ler os próprios requisitos e a reinstalar o framework; preservar só `specs/` — descartada pelo custo de reconfiguração; preservar só `.claude/` — inviável, deixaria as skills presentes e inoperantes.
+- **DEC-001**: Sobrevivem à limpeza `specs/`, `.claude/` e `.project-context/`. *Razão*: `specs/` é o registro das decisões que governam a reescrita, e `.claude/` com `.project-context/` são o framework former project tool já configurado; preservá-los evita reconfigurar o framework e permite que a Phase 1 leia seus requisitos onde vai produzir código. *Nota*: `.project-context/` acompanha `.claude/` por necessidade técnica, não por escolha independente — as skills resolvem templates em `.project-context/templates/` e carregam o contrato em `.project-context/Spec.md`. *Alternativas*: preservar nada — descartada porque obrigaria a Phase 1 a trocar de branch para ler os próprios requisitos e a reinstalar o framework; preservar só `specs/` — descartada pelo custo de reconfiguração; preservar só `.claude/` — inviável, deixaria as skills presentes e inoperantes.
 - **DEC-002**: A branch de trabalho nasce com raiz órfã. *Razão*: sem ancestral comum, a v0.2.8 não é alcançável a partir da linha nova, e a substituição posterior da main vira troca de ponteiro em vez de merge. *Alternativa*: commit de limpeza sobre o histórico existente — descartada porque manteria a v0.2.8 na linha e exigiria merge depois.
 - **DEC-003**: Não há CHANGELOG, aviso de breaking change nem guia de migração. *Razão*: o resultado é um produto novo que substitui o anterior, não uma versão seguinte dele. *Trade-off*: quem usa a v0.2.8 não recebe aviso no repositório; aceito porque `archived` mantém a versão anterior consultável para sempre.
 - **DEC-004**: A substituição da main fica fora da Phase 0. *Razão*: a troca só faz sentido com a branch estabilizada, o que depende da Phase 1. *Trade-off*: o repositório fica com duas linhas por um período; aceito por ser reversível até a troca.
-- **DEC-006**: A verificação é feita por scripts de asserção em Node puro, arquivos `.js` CommonJS sem dependência, guardados em `.claude/scripts/phase0/`. *Razão*: o escopo proíbe instalar dependências, e o Node já é pré-requisito das próprias skills Specsfy, de modo que nada novo entra; scripts sem `node_modules` sobrevivem à limpeza que precisam verificar. *Alternativas*: shell POSIX — foi a primeira escolha e satisfazia as duas restrições acima, mas o auditor `check_traceability.mjs` varre um conjunto fechado de extensões que inclui `.js` e exclui `.sh`, o que tornaria as asserções corretas e invisíveis ao Delivery Gate; Node com Vitest — descartada por antecipar a tooling da Phase 1 e exigir instalação; checklist puramente manual — descartada porque operação irreversível merece guarda executável.
+- **DEC-006**: A verificação é feita por scripts de asserção em Node puro, arquivos `.js` CommonJS sem dependência, guardados em `.claude/scripts/phase0/`. *Razão*: o escopo proíbe instalar dependências, e o Node já é pré-requisito das próprias skills former project tool, de modo que nada novo entra; scripts sem `node_modules` sobrevivem à limpeza que precisam verificar. *Alternativas*: shell POSIX — foi a primeira escolha e satisfazia as duas restrições acima, mas o auditor `check_traceability.mjs` varre um conjunto fechado de extensões que inclui `.js` e exclui `.sh`, o que tornaria as asserções corretas e invisíveis ao Delivery Gate; Node com Vitest — descartada por antecipar a tooling da Phase 1 e exigir instalação; checklist puramente manual — descartada porque operação irreversível merece guarda executável.
 - **DEC-007**: `.agents` passa a ser link simbólico para `.claude` e entra no conjunto preservado. *Razão*: esta instalação usa o layout do Claude Code, enquanto os scripts e a documentação do framework resolvem caminhos sob `.agents/skills/`; sem o link, o validador de tarefas reprova por não encontrar `verify_evidence.mjs` e os comandos documentados nas skills falham. *Trade-off*: é acomodação local a um defeito do framework, não correção dele; a correção pertence ao validador, que deveria aceitar os dois layouts.
 - **DEC-008**: A contagem de asserções é definida pelos riscos da fase, e o mínimo do validador é tratado como sinal, não como cota a preencher. *Razão*: o plano começou com cinco asserções e ficou abaixo do mínimo em cinco IDs. A análise do que faltava expôs duas lacunas reais, não burocráticas: nada verificava mecanicamente que a main e `archived` permaneciam intocadas durante a sequência destrutiva — o risco mais grave da fase —, e o orçamento de tempo dependia de leitura humana de cronômetro. Fechadas as duas, o mínimo passou a ser atendido sem asserção supérflua. *Consequência*: `assert-baseline-untouched.check.js` e `assert-elapsed-budget.check.js` existem porque guardam algo, e não porque o validador pedia número.
 - **DEC-005**: `archived` é congelada antes de qualquer remoção. *Razão*: a limpeza é irreversível e a ordem inversa perderia a v0.2.8. *Alternativa*: congelar ao final — descartada por não haver o que congelar depois.
@@ -845,7 +845,7 @@ As sete asserções são escritas antes de qualquer operação e observadas falh
 
 #### Aceite final — 2026-08-24
 
-`node .claude/skills/specsfy-04-validate/scripts/validate_spec.mjs` READY · `validate_tasks.mjs` READY · `verify_acceptance.mjs` QA PASSED nos onze ACs · `check_traceability.mjs` OK em 20 de 20 IDs · `run-all.check.js` GREEN nas sete asserções · Definition of Done sem item aberto.
+`node .claude/skills/framework-04-validate/scripts/validate_spec.mjs` READY · `validate_tasks.mjs` READY · `verify_acceptance.mjs` QA PASSED nos onze ACs · `check_traceability.mjs` OK em 20 de 20 IDs · `run-all.check.js` GREEN nas sete asserções · Definition of Done sem item aberto.
 
 O aceite conferiu cada afirmação contra o repositório em vez de reler a evidência registrada, e isso expôs quatro defeitos que a entrega não tinha visto:
 

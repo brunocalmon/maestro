@@ -3,7 +3,7 @@ import { recommend } from "../src/models/recommend";
 import { backendsFake, capacityFake, ollamaAbsent } from "./models-fixtures";
 
 describe("AC-094 — an absent ollama is reported", () => {
-  // SPECSFY: US-033 FR-035 AC-094
+  // TRACEABILITY: US-033 FR-035 AC-094
   it("with ollama absent, the recommended local model is null", () => {
     const r = recommend(backendsFake([]), ollamaAbsent, capacityFake(10));
     expect(r.localModel).toBeNull();

@@ -13,7 +13,7 @@
 ## Preparação
 
 Projeto vazio com `package.json` e três diretórios em `.claude/skills/`
-simulando o que o `specsfy` ocupa, cada um com seu `SKILL.md`.
+simulando o que o `framework` ocupa, cada um com seu `SKILL.md`.
 
 ## Resultado
 
@@ -21,7 +21,7 @@ simulando o que o `specsfy` ocupa, cada um com seu `SKILL.md`.
 | --- | --- |
 | Diretórios antes | 3 |
 | Diretórios depois | 40 |
-| Do conjunto simulado do `specsfy` | 3, todos com `SKILL.md` intacto |
+| Do conjunto simulado do `framework` | 3, todos com `SKILL.md` intacto |
 | Do conjunto de `mattpocock` | 37 |
 | Links simbólicos em qualquer nível | 0 |
 | `AGENTS.md` criado | Não |
@@ -53,5 +53,5 @@ detectar deriva, não para reproduzir um estado.
 
 A raiz deste projeto já contém um `skills-lock.json` com `version` 1 e mapa
 vazio, isto é, o mesmo formato produzido por esta ferramenta. O comentário do
-`.gitignore` o atribui ao instalador do `specsfy`, atribuição que a observação
+`.gitignore` o atribui ao instalador do `framework`, atribuição que a observação
 não sustenta.

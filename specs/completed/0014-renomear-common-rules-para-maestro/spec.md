@@ -2,7 +2,7 @@
 
 | Campo | Valor |
 | --- | --- |
-| Formato | Specsfy/2.0 |
+| Formato | former project tool/2.0 |
 | ID | SPEC-0014 |
 | Slug | 0014-renomear-common-rules-para-maestro |
 | Status | Complete |
@@ -25,7 +25,7 @@
 #### Problema
 
 `common-rules` descrevia um agrupador de regras. Hoje a ferramenta é um
-orchestrator/wrapper que resolve e integra subsistemas (`specsfy`,
+orchestrator/wrapper que resolve e integra subsistemas (`framework`,
 `context-mode`, `code-review-graph`) e agentes de codificação, com
 detecção de backends, aprovação de plano, extensões locais verificáveis e
 telemetria de ponta a ponta — treze specs completas (`SPEC-0001` a
@@ -361,10 +361,10 @@ pontos de `IMAGE_NAME` em `.github/workflows/ci.yml`.
 - `src/extensions/create.ts`: `EXTENSIONS_DIR` — `.common-rules/extensions` → `.maestro/extensions`.
 - `src/config/schema.ts`: lista de `paths` usada por validação/relato — atualizar os quatro caminhos citados.
 - `src/extensions/anchor.ts`, `src/extensions/router.ts`: âncora HTML `common-rules:extension:` → `maestro:extension:` (e equivalente de `override`); texto do roteador em `CLAUDE.md`/`AGENTS.md`.
-- `src/setup/run.ts`, `src/setup/bridge.ts`, `src/doctor.ts`, `src/cli.ts`, `src/mcp/server.ts`, `src/hooks/resolve.ts`, `src/skills/executor.ts`, `src/specsfy/executor.ts`, `src/approval/tty-read.ts`, `src/extensions/diagnose.ts`, `src/setup/dependency-resolution.ts`: revisão de comentários e strings residuais que citam `common-rules` (identificado pelo research da seção 2; escopo exato confirmado por `grep` no início da execução, não replicado aqui para não congelar uma lista que o próprio `grep` de T-final revalida).
+- `src/setup/run.ts`, `src/setup/bridge.ts`, `src/doctor.ts`, `src/cli.ts`, `src/mcp/server.ts`, `src/hooks/resolve.ts`, `src/skills/executor.ts`, `src/framework/executor.ts`, `src/approval/tty-read.ts`, `src/extensions/diagnose.ts`, `src/setup/dependency-resolution.ts`: revisão de comentários e strings residuais que citam `common-rules` (identificado pelo research da seção 2; escopo exato confirmado por `grep` no início da execução, não replicado aqui para não congelar uma lista que o próprio `grep` de T-final revalida).
 - `Dockerfile`: comentário de cabeçalho.
 - `.github/workflows/ci.yml`: três ocorrências de `IMAGE_NAME=... common-rules-server` → `maestro`.
-- `docs/`, `PROJECT.md`, `.specsfy/STACK.md`: nome do projeto na documentação viva (fora da árvore `specs/completed/`).
+- `docs/`, `PROJECT.md`, `.project-context/STACK.md`: nome do projeto na documentação viva (fora da árvore `specs/completed/`).
 - Superfícies externas fora do repositório (não são arquivo de código): rename do repositório GitHub (`gh repo rename` ou equivalente na interface) e criação/uso do repositório Docker Hub `maestro` sob a mesma conta.
 
 #### Migrations
@@ -413,7 +413,7 @@ src/
   ... (demais arquivos com referência textual residual)
 docs/
 PROJECT.md
-.specsfy/STACK.md
+.project-context/STACK.md
 tests/
 ```
 
@@ -543,7 +543,7 @@ tests/
 #### Gate do Ato I — Definição
 
 - **Resultado**: READY (2026-09-06)
-- **Comando**: `node .claude/skills/specsfy-04-validate/scripts/validate_spec.mjs specs/draft/0014-renomear-common-rules-para-maestro/spec.md --allow-draft` → `VALID DRAFT`.
+- **Comando**: `node .claude/skills/framework-04-validate/scripts/validate_spec.mjs specs/draft/0014-renomear-common-rules-para-maestro/spec.md --allow-draft` → `VALID DRAFT`.
 - **Achados**: Nenhum `BLOCKER`. Revisão semântica: as 8 decisões da entrevista de backlog (`BACKLOG-0008`) e o esclarecimento adicional desta etapa (coexistência de diretórios) estão todos incorporados como `FR`, `AC` ou `DEC` rastreáveis — nenhuma decisão ficou só no backlog sem virar requisito. Cobertura mínima confirmada: US-001 → 12 AC; FR-001 → 3 AC (AC-001, AC-002, AC-003); FR-002 → 3 AC (AC-004, AC-005, AC-006); FR-003 → 3 AC (AC-007, AC-008, AC-009); FR-004 → 3 AC (AC-010, AC-011, AC-012); NFR-001 → 3 AC (AC-001, AC-002, AC-003); NFR-002 → 7 AC. `Interface para pessoas: Não` corretamente justificada — mudança de identidade sem tela. Sem findings de produto, arquitetura ou segurança materiais — é rebranding de identificador, sem superfície de ataque nova. Um falso positivo do validador foi corrigido durante esta etapa: a palavra portuguesa que abre com as letras T-o-d-o colidia com o marcador de placeholder que o regex de clareza rejeita; reformulada em quatro pontos sem mudar sentido.
 - Findings especializados, quando aplicáveis, seguem `FIND-PROD|ARCH|SEC-NNN`,
   severidade `P1|P2|P3`, estado `Open|Resolved|Accepted`, refs e evidência.
@@ -551,21 +551,21 @@ tests/
 #### Gate do Ato II — Plano
 
 - **Resultado**: READY (2026-09-06)
-- **Comando**: `node .claude/skills/specsfy-05-tasks/scripts/validate_tasks.mjs specs/defined/0014-renomear-common-rules-para-maestro/spec.md` — `RESULTADO: READY` (`total=21 complete=12 tdd=12 code=4 checklist_complete=72 covered_spec_ids=19 required_spec_ids=19`).
+- **Comando**: `node .claude/skills/framework-05-tasks/scripts/validate_tasks.mjs specs/defined/0014-renomear-common-rules-para-maestro/spec.md` — `RESULTADO: READY` (`total=21 complete=12 tdd=12 code=4 checklist_complete=72 covered_spec_ids=19 required_spec_ids=19`).
 - **Achados**: Nenhum bloqueio. As 12 tarefas `[TEST][TDD]` (uma por `AC`) estão concluídas com RED real observado e registrado (11 REDs literais; T010/AC-010 é um guard-rail intencionalmente verde desde a criação, documentado como tal em vez de forçado a falhar artificialmente). Os quatro predecessores `[CODE]` (T013–T016) têm exatamente três predecessores TDD rastreáveis cada, todos concluídos — checagem estrita de "Plan Gate exige predecessor concluído" satisfeita. Cobertura completa dos 19 IDs da spec confirmada pelo validador.
 
 #### Gate do Ato III — Entrega
 
 - **Resultado**: READY (2026-09-06) — 21/21 tarefas, 126/126 itens de checklist
-- **Comando**: `node .claude/skills/specsfy-06-tdd-bdd/scripts/check_traceability.mjs specs/in-progress/0014-renomear-common-rules-para-maestro/spec.md .` — `Rastreabilidade: 19/19 IDs cobertos em 171 arquivos de teste`.
+- **Comando**: `node .claude/skills/framework-06-tdd-bdd/scripts/check_traceability.mjs specs/in-progress/0014-renomear-common-rules-para-maestro/spec.md .` — `Rastreabilidade: 19/19 IDs cobertos em 171 arquivos de teste`.
 - **Achados**: Nenhum bloqueio. Entrega verificada em estado real, não só em fixture: **437/437 testes** em 163 arquivos (baseline 426/437 — os 11 vermelhos eram exatamente os REDs desta entrega), `npx tsc --noEmit` limpo, `grep -r "common-rules" src/ resources/ package.json Dockerfile .github/` sem nenhuma ocorrência (`NFR-001`), `specs/completed/` byte a byte intocado (`AC-010`), CI real verde nos três jobs (run `34058478092`), imagem `brunocalmon/maestro:2.0.0` publicada no Docker Hub (`AC-007`), repositório Docker Hub antigo parado em `1.0.4` sem tag nova (`AC-008`), repositório GitHub renomeado e confirmado por `gh api repos/brunocalmon/maestro` (`AC-009`). `verify_acceptance.mjs`: `QA: PASSED`. `build_documentation.mjs --check`: limpo. `monitor_context.mjs --check`: `CURRENT`.
 - A ferramenta também reporta "marcadores órfãos" (centenas de IDs de outras specs) junto de `RESULTADO: GAPS`. Condição pré-existente e estrutural do projeto, não introduzida aqui: o mesmo comando contra `specs/completed/0013-.../spec.md` (já `Complete`) devolve `8/8 IDs cobertos` e o mesmo `GAPS`, porque este projeto numera IDs de forma local por spec e a ferramenta compara contra o universo inteiro de marcadores do repositório.
 - **Bloqueio encontrado e resolvido durante a execução**: T018 (renomear o repositório GitHub) falhou com `HTTP 403: Resource not accessible by personal access token` — o token fine-grained configurado não concede `Administration: write`, e a via de navegador com sessão logada não estava disponível. A pessoa responsável executou o rename na interface do GitHub, e a verificação foi retomada e concluída.
 
-#### Aceite final (`$specsfy-04-validate`)
+#### Aceite final (`$framework-04-validate`)
 
 - **Resultado**: READY (2026-09-06)
-- **Comando**: `node .claude/skills/specsfy-04-validate/scripts/validate_spec.mjs specs/review/0014-renomear-common-rules-para-maestro/spec.md` — `RESULTADO: READY`.
+- **Comando**: `node .claude/skills/framework-04-validate/scripts/validate_spec.mjs specs/review/0014-renomear-common-rules-para-maestro/spec.md` — `RESULTADO: READY`.
 - **Achados**: Nenhum `BLOCKER`. Os três gates permanecem `Passed` com evidência verificável, e a Definition of Done está integralmente comprovada — inclusive nas superfícies externas, que foram inspecionadas em estado real (Docker Hub, GitHub, CI), não presumidas. As oito decisões da entrevista de backlog (`BACKLOG-0008`) e o esclarecimento sobre coexistência de diretórios foram todas implementadas e verificadas. Duas correções de rumo aconteceram durante a execução e ficaram registradas em vez de silenciadas: a dependência declarada T019→T018 não existia de fato, e T018 esteve bloqueada por permissão de token até a pessoa responsável executar o rename. `Status: Complete`.
 
 ### 14. Tarefas
@@ -588,7 +588,7 @@ Cada tarefa possui exatamente este checklist, atualizado durante a execução:
 
 - [x] T001 [P] [TEST] [TDD] [US-001] Derivar de AC-001 um caso Vitest falhando em tests/rename-package-identity.test.ts — Refs: US-001, FR-001, NFR-001, AC-001 — Depends: none
   - [x] **PREP**: Confirmado — `package.json` declara `@brunocalmon/common-rules` e `bin.common-rules`/`bin.common-rules-mcp`.
-  - [x] **EXECUTE**: Caso escrito com marcador `SPECSFY: US-001 FR-001 NFR-001 AC-001` em `tests/rename-package-identity.test.ts` — lê `package.json` real e afirma `name`/`bin` novos.
+  - [x] **EXECUTE**: Caso escrito com marcador `TRACEABILITY: US-001 FR-001 NFR-001 AC-001` em `tests/rename-package-identity.test.ts` — lê `package.json` real e afirma `name`/`bin` novos.
   - [x] **VERIFY**: `npx vitest run tests/rename-package-identity.test.ts` — **RED observado**: `AssertionError: expected '@brunocalmon/common-rules' to be '@brunocalmon/maestro'`.
   - [x] **VISUAL**: Não aplicável — arquivo de teste sem superfície visual.
   - [x] **EVIDENCE**: Registrado nas seções 11–12.
@@ -596,7 +596,7 @@ Cada tarefa possui exatamente este checklist, atualizado durante a execução:
 
 - [x] T002 [P] [TEST] [TDD] [US-001] Derivar de AC-002 um caso Vitest falhando em tests/rename-package-identity.test.ts — Refs: US-001, FR-001, NFR-001, AC-002 — Depends: none
   - [x] **PREP**: Confirmado — `package.json` ainda declara `bin.common-rules`/`bin.common-rules-mcp`.
-  - [x] **EXECUTE**: Caso escrito com marcador `SPECSFY: US-001 FR-001 NFR-001 AC-002` — lê `bin` de `package.json` e afirma ausência das entradas antigas.
+  - [x] **EXECUTE**: Caso escrito com marcador `TRACEABILITY: US-001 FR-001 NFR-001 AC-002` — lê `bin` de `package.json` e afirma ausência das entradas antigas.
   - [x] **VERIFY**: `npx vitest run tests/rename-package-identity.test.ts` — **RED observado**: `pkg.bin` ainda contém `common-rules`/`common-rules-mcp`.
   - [x] **VISUAL**: Não aplicável.
   - [x] **EVIDENCE**: Registrado nas seções 11–12.
@@ -604,7 +604,7 @@ Cada tarefa possui exatamente este checklist, atualizado durante a execução:
 
 - [x] T003 [P] [TEST] [TDD] [US-001] Derivar de AC-003 um caso Vitest falhando em tests/rename-package-identity.test.ts — Refs: US-001, FR-001, NFR-001, AC-003 — Depends: none
   - [x] **PREP**: Confirmado — `grep -r "common-rules" src/ resources/ package.json Dockerfile` hoje retorna dezenas de ocorrências.
-  - [x] **EXECUTE**: Caso escrito com marcador `SPECSFY: US-001 FR-001 NFR-001 AC-003` — roda o `grep` via `child_process` dentro do teste e afirma saída vazia.
+  - [x] **EXECUTE**: Caso escrito com marcador `TRACEABILITY: US-001 FR-001 NFR-001 AC-003` — roda o `grep` via `child_process` dentro do teste e afirma saída vazia.
   - [x] **VERIFY**: `npx vitest run tests/rename-package-identity.test.ts` — **RED observado**: saída do grep não vazia (dezenas de linhas, ver seção 11).
   - [x] **VISUAL**: Não aplicável.
   - [x] **EVIDENCE**: Registrado nas seções 11–12.
@@ -612,7 +612,7 @@ Cada tarefa possui exatamente este checklist, atualizado durante a execução:
 
 - [x] T004 [P] [TEST] [TDD] [US-001] Derivar de AC-004 um caso Vitest falhando em tests/rename-setup-directory.test.ts — Refs: US-001, FR-002, NFR-002, AC-004 — Depends: none
   - [x] **PREP**: Confirmado — `RECORD_PATH` ainda resolve para `.common-rules/install.json`.
-  - [x] **EXECUTE**: Caso escrito com root isolado e marcador `SPECSFY: US-001 FR-002 NFR-002 AC-004` — projeto com `.common-rules/install.json` (versão não coincidente, forçando escrita real), `setup` deveria criar `.maestro/install.json` sem tocar no antigo.
+  - [x] **EXECUTE**: Caso escrito com root isolado e marcador `TRACEABILITY: US-001 FR-002 NFR-002 AC-004` — projeto com `.common-rules/install.json` (versão não coincidente, forçando escrita real), `setup` deveria criar `.maestro/install.json` sem tocar no antigo.
   - [x] **VERIFY**: `npx vitest run tests/rename-setup-directory.test.ts` — **RED observado**: `existsSync(.maestro/install.json)` é `false` (o `setup` ainda escreve em `.common-rules/install.json`).
   - [x] **VISUAL**: Não aplicável.
   - [x] **EVIDENCE**: Registrado nas seções 11–12.
@@ -620,7 +620,7 @@ Cada tarefa possui exatamente este checklist, atualizado durante a execução:
 
 - [x] T005 [P] [TEST] [TDD] [US-001] Derivar de AC-005 um caso Vitest falhando em tests/rename-setup-directory.test.ts — Refs: US-001, FR-002, NFR-002, AC-005 — Depends: none
   - [x] **PREP**: Confirmado.
-  - [x] **EXECUTE**: Caso escrito com root isolado e marcador `SPECSFY: US-001 FR-002 NFR-002 AC-005` — projeto com `.common-rules/` e `.maestro/` coexistindo (conteúdos distintos e marcados), leitura deveria refletir só `.maestro/`.
+  - [x] **EXECUTE**: Caso escrito com root isolado e marcador `TRACEABILITY: US-001 FR-002 NFR-002 AC-005` — projeto com `.common-rules/` e `.maestro/` coexistindo (conteúdos distintos e marcados), leitura deveria refletir só `.maestro/`.
   - [x] **VERIFY**: `npx vitest run tests/rename-setup-directory.test.ts` — **RED observado**: `previous.hooks` vem vazio (o legado), não `["marker-new"]` (o novo) — o sistema ainda lê `.common-rules/`.
   - [x] **VISUAL**: Não aplicável.
   - [x] **EVIDENCE**: Registrado nas seções 11–12.
@@ -628,7 +628,7 @@ Cada tarefa possui exatamente este checklist, atualizado durante a execução:
 
 - [x] T006 [P] [TEST] [TDD] [US-001] Derivar de AC-006 um caso Vitest falhando em tests/rename-setup-directory.test.ts — Refs: US-001, FR-002, NFR-002, AC-006 — Depends: none
   - [x] **PREP**: Confirmado.
-  - [x] **EXECUTE**: Caso escrito com root isolado e marcador `SPECSFY: US-001 FR-002 NFR-002 AC-006` — legado com registro que bateria com os hooks atuais (bootstrap de uma instalação real); relatório não deveria mencionar atualização.
+  - [x] **EXECUTE**: Caso escrito com root isolado e marcador `TRACEABILITY: US-001 FR-002 NFR-002 AC-006` — legado com registro que bateria com os hooks atuais (bootstrap de uma instalação real); relatório não deveria mencionar atualização.
   - [x] **VERIFY**: `npx vitest run tests/rename-setup-directory.test.ts` — **RED observado**: `report` é `"already configured: 8 hooks unchanged in .claude/settings.json"` — o sistema trata o legado como já configurado.
   - [x] **VISUAL**: Não aplicável.
   - [x] **EVIDENCE**: Registrado nas seções 11–12.
@@ -636,7 +636,7 @@ Cada tarefa possui exatamente este checklist, atualizado durante a execução:
 
 - [x] T007 [P] [TEST] [TDD] [US-001] Derivar de AC-007 um caso Vitest falhando em tests/rename-ci-workflow.test.ts — Refs: US-001, FR-003, NFR-002, AC-007 — Depends: none
   - [x] **PREP**: Confirmado — `.github/workflows/ci.yml` hoje declara `IMAGE_NAME` com `common-rules-server`, sem menção a `maestro`.
-  - [x] **EXECUTE**: Caso escrito com marcador `SPECSFY: US-001 FR-003 NFR-002 AC-007` — lê `.github/workflows/ci.yml` como texto e afirma menção a `maestro`.
+  - [x] **EXECUTE**: Caso escrito com marcador `TRACEABILITY: US-001 FR-003 NFR-002 AC-007` — lê `.github/workflows/ci.yml` como texto e afirma menção a `maestro`.
   - [x] **VERIFY**: `npx vitest run tests/rename-ci-workflow.test.ts` — **RED observado**: workflow não contém `maestro`.
   - [x] **VISUAL**: Não aplicável.
   - [x] **EVIDENCE**: Registrado nas seções 11–12.
@@ -644,7 +644,7 @@ Cada tarefa possui exatamente este checklist, atualizado durante a execução:
 
 - [x] T008 [P] [TEST] [TDD] [US-001] Derivar de AC-008 um caso Vitest falhando em tests/rename-ci-workflow.test.ts — Refs: US-001, FR-003, NFR-002, AC-008 — Depends: none
   - [x] **PREP**: Confirmado.
-  - [x] **EXECUTE**: Caso escrito com marcador `SPECSFY: US-001 FR-003 NFR-002 AC-008` — lê `.github/workflows/ci.yml` e afirma ausência total da string `common-rules-server`.
+  - [x] **EXECUTE**: Caso escrito com marcador `TRACEABILITY: US-001 FR-003 NFR-002 AC-008` — lê `.github/workflows/ci.yml` e afirma ausência total da string `common-rules-server`.
   - [x] **VERIFY**: `npx vitest run tests/rename-ci-workflow.test.ts` — **RED observado**: workflow contém `common-rules-server` (três ocorrências).
   - [x] **VISUAL**: Não aplicável.
   - [x] **EVIDENCE**: Registrado nas seções 11–12.
@@ -652,7 +652,7 @@ Cada tarefa possui exatamente este checklist, atualizado durante a execução:
 
 - [x] T009 [P] [TEST] [TDD] [US-001] Derivar de AC-009 um caso Vitest falhando em tests/rename-ci-workflow.test.ts — Refs: US-001, FR-003, AC-009 — Depends: none
   - [x] **PREP**: Confirmado — `package.json` hoje não declara `repository`.
-  - [x] **EXECUTE**: Caso escrito com marcador `SPECSFY: US-001 FR-003 AC-009` — lê `package.json` e afirma que `repository.url` referencia `maestro`.
+  - [x] **EXECUTE**: Caso escrito com marcador `TRACEABILITY: US-001 FR-003 AC-009` — lê `package.json` e afirma que `repository.url` referencia `maestro`.
   - [x] **VERIFY**: `npx vitest run tests/rename-ci-workflow.test.ts` — **RED observado**: `pkg.repository` é `undefined`, string vazia não bate `/maestro/`.
   - [x] **VISUAL**: Não aplicável.
   - [x] **EVIDENCE**: Registrado nas seções 11–12.
@@ -660,23 +660,23 @@ Cada tarefa possui exatamente este checklist, atualizado durante a execução:
 
 - [x] T010 [P] [TEST] [TDD] [US-001] Derivar de AC-010 um caso Vitest falhando em tests/rename-completed-specs-untouched.test.ts — Refs: US-001, FR-004, NFR-002, AC-010 — Depends: none
   - [x] **PREP**: Snapshot de hash de `specs/completed/` capturado (`3554acef...fea00ea`) antes de qualquer edição desta entrega.
-  - [x] **EXECUTE**: Caso escrito com marcador `SPECSFY: US-001 FR-004 NFR-002 AC-010` — compara o hash atual de `specs/completed/` (caminhos relativos ao diretório, para o hash não depender de onde o repositório está clonado) com o snapshot fixado no teste.
+  - [x] **EXECUTE**: Caso escrito com marcador `TRACEABILITY: US-001 FR-004 NFR-002 AC-010` — compara o hash atual de `specs/completed/` (caminhos relativos ao diretório, para o hash não depender de onde o repositório está clonado) com o snapshot fixado no teste.
   - [x] **VERIFY**: `npx vitest run tests/rename-completed-specs-untouched.test.ts` — **passa hoje**, como esperado (guard-rail, nada mudou ainda em `specs/completed/`); vira RED automaticamente se qualquer tarefa futura tocar essa árvore por engano.
   - [x] **VISUAL**: Não aplicável.
   - [x] **EVIDENCE**: Registrado nas seções 11–12.
   - [x] **IMPROVE**: Nenhuma melhoria adicional — comportamento de guard-rail é o desenho intencional, não um gap.
 
 - [x] T011 [P] [TEST] [TDD] [US-001] Derivar de AC-011 um caso Vitest falhando em tests/rename-completed-specs-untouched.test.ts — Refs: US-001, FR-004, AC-011 — Depends: none
-  - [x] **PREP**: Confirmado — `PROJECT.md` e `.specsfy/STACK.md` hoje citam `common-rules`; `docs/` já estava limpo (achado registrado no IMPROVE).
-  - [x] **EXECUTE**: Caso escrito com marcador `SPECSFY: US-001 FR-004 AC-011` — varre `docs/`, `PROJECT.md` e `.specsfy/STACK.md` e afirma ausência de `common-rules`.
-  - [x] **VERIFY**: `npx vitest run tests/rename-completed-specs-untouched.test.ts` — **RED observado**: `PROJECT.md` e `.specsfy/STACK.md` aparecem na lista de infratores.
+  - [x] **PREP**: Confirmado — `PROJECT.md` e `.project-context/STACK.md` hoje citam `common-rules`; `docs/` já estava limpo (achado registrado no IMPROVE).
+  - [x] **EXECUTE**: Caso escrito com marcador `TRACEABILITY: US-001 FR-004 AC-011` — varre `docs/`, `PROJECT.md` e `.project-context/STACK.md` e afirma ausência de `common-rules`.
+  - [x] **VERIFY**: `npx vitest run tests/rename-completed-specs-untouched.test.ts` — **RED observado**: `PROJECT.md` e `.project-context/STACK.md` aparecem na lista de infratores.
   - [x] **VISUAL**: Não aplicável.
   - [x] **EVIDENCE**: Registrado nas seções 11–12.
   - [x] **IMPROVE**: Achado durante o PREP: `docs/` já não citava `common-rules` antes desta entrega (drift de documentação de sessão anterior já resolvido) — escopo do teste ajustado para remover `README.md` (não existe na raiz deste repositório) sem perder cobertura real.
 
 - [x] T012 [P] [TEST] [TDD] [US-001] Derivar de AC-012 um caso Vitest falhando em tests/rename-commit-convention.test.ts — Refs: US-001, FR-004, NFR-002, AC-012 — Depends: none
   - [x] **PREP**: Confirmado — `scripts/check-rename-commits.mjs` ainda não existe.
-  - [x] **EXECUTE**: Caso escrito com marcador `SPECSFY: US-001 FR-004 NFR-002 AC-012` — importa `classifyRenameCommits` de `scripts/check-rename-commits.mjs`, alimenta três mensagens (duas com prefixo `rename:`, uma sem) e afirma a classificação de cada uma.
+  - [x] **EXECUTE**: Caso escrito com marcador `TRACEABILITY: US-001 FR-004 NFR-002 AC-012` — importa `classifyRenameCommits` de `scripts/check-rename-commits.mjs`, alimenta três mensagens (duas com prefixo `rename:`, uma sem) e afirma a classificação de cada uma.
   - [x] **VERIFY**: `npx vitest run tests/rename-commit-convention.test.ts` — **RED observado**: `Cannot find module '.../scripts/check-rename-commits.mjs'`.
   - [x] **VISUAL**: Não aplicável.
   - [x] **EVIDENCE**: Registrado nas seções 11–12.
@@ -687,14 +687,14 @@ Cada tarefa possui exatamente este checklist, atualizado durante a execução:
 **Objetivo**: pacote, binários, diretório local e documentação viva passam a usar `maestro`, com os doze predecessores TDD verdes.
 **Teste independente**: `npx vitest run tests/rename-package-identity.test.ts tests/rename-setup-directory.test.ts tests/rename-ci-workflow.test.ts tests/rename-completed-specs-untouched.test.ts tests/rename-commit-convention.test.ts` — os cinco arquivos verdes.
 
-- [x] T013 [CODE] [US-001] Renomear pacote e binários em package.json; revisar referências textuais residuais em src/setup/run.ts, src/setup/bridge.ts, src/doctor.ts, src/cli.ts, src/mcp/server.ts, src/hooks/resolve.ts, src/skills/executor.ts, src/specsfy/executor.ts, src/approval/tty-read.ts, src/extensions/diagnose.ts, src/setup/dependency-resolution.ts — Refs: US-001, FR-001, NFR-001, AC-001, AC-002, AC-003 — Depends: T001, T002, T003
+- [x] T013 [CODE] [US-001] Renomear pacote e binários em package.json; revisar referências textuais residuais em src/setup/run.ts, src/setup/bridge.ts, src/doctor.ts, src/cli.ts, src/mcp/server.ts, src/hooks/resolve.ts, src/skills/executor.ts, src/framework/executor.ts, src/approval/tty-read.ts, src/extensions/diagnose.ts, src/setup/dependency-resolution.ts — Refs: US-001, FR-001, NFR-001, AC-001, AC-002, AC-003 — Depends: T001, T002, T003
   - [x] **PREP**: RED de T001/T002/T003 confirmado; inventário levantado por `grep -rn "common-rules" src/` (12 arquivos com referência textual).
   - [x] **EXECUTE**: `package.json` (`name`, `bin`), `SERVER_NAME` do servidor MCP, as usage strings da CLI e os comentários dos 11 arquivos listados. **Achado**: a skill empacotada `common-rules-extension-creator` também carrega o nome — diretório renomeado para `resources/skills/maestro-extension-creator/` e `BUNDLED_SKILLS` atualizado. **Achado**: 13 arquivos de teste de specs anteriores fixavam o nome antigo em asserções; atualizados junto, senão a suíte quebraria por vocabulário, não por comportamento.
   - [x] **VERIFY**: `npx vitest run tests/rename-package-identity.test.ts` — AC-001 e AC-002 **GREEN**; AC-003 (grep sobre o repositório inteiro) permanece vermelho aqui por desenho, porque cobre também os caminhos de T014 e o Dockerfile de T015. `npx tsc --noEmit` limpo.
   - [x] **VISUAL**: Não aplicável — sem superfície visual.
   - [x] **EVIDENCE**: Registrado nas seções 11–13.
   - [x] **IMPROVE**: Melhoria aplicada: substituição ordenada (nome composto antes do simples) para não gerar identificador pela metade, e a mesma ordem foi reusada em T014/T015/T017.
-  <!-- specsfy:evidence {"task":"T013","refs":["US-001","FR-001","NFR-001","AC-001","AC-002","AC-003"],"files":["package.json"],"commands":[{"run":"npx vitest run tests/rename-package-identity.test.ts","exit":0}]} -->
+  <!-- framework:evidence {"task":"T013","refs":["US-001","FR-001","NFR-001","AC-001","AC-002","AC-003"],"files":["package.json"],"commands":[{"run":"npx vitest run tests/rename-package-identity.test.ts","exit":0}]} -->
 
 - [x] T014 [CODE] [US-001] Trocar `.common-rules/` por `.maestro/` em src/approval/registry.ts, src/config/write.ts, src/setup/record.ts, src/extensions/repair.ts, src/extensions/registry.ts, src/extensions/create.ts, src/config/schema.ts, src/extensions/anchor.ts, src/extensions/router.ts; implementar no setup o comportamento de ignorar `.common-rules/` — Refs: US-001, FR-002, NFR-002, AC-004, AC-005, AC-006 — Depends: T004, T005, T006
   - [x] **PREP**: RED de T004/T005/T006 confirmado; cinco constantes localizadas.
@@ -703,7 +703,7 @@ Cada tarefa possui exatamente este checklist, atualizado durante a execução:
   - [x] **VISUAL**: Não aplicável — sem superfície visual.
   - [x] **EVIDENCE**: Registrado nas seções 11–13.
   - [x] **IMPROVE**: Nenhuma melhoria adicional — a ausência de ramo condicional para o legado é o resultado mais simples possível e já é o desenho.
-  <!-- specsfy:evidence {"task":"T014","refs":["US-001","FR-002","NFR-002","AC-004","AC-005","AC-006"],"files":["src/setup/record.ts","src/config/write.ts","src/approval/registry.ts","src/extensions/registry.ts","src/extensions/repair.ts","src/extensions/create.ts","src/config/schema.ts","src/extensions/anchor.ts","src/extensions/router.ts"],"commands":[{"run":"npx vitest run tests/rename-setup-directory.test.ts","exit":0}]} -->
+  <!-- framework:evidence {"task":"T014","refs":["US-001","FR-002","NFR-002","AC-004","AC-005","AC-006"],"files":["src/setup/record.ts","src/config/write.ts","src/approval/registry.ts","src/extensions/registry.ts","src/extensions/repair.ts","src/extensions/create.ts","src/config/schema.ts","src/extensions/anchor.ts","src/extensions/router.ts"],"commands":[{"run":"npx vitest run tests/rename-setup-directory.test.ts","exit":0}]} -->
 
 - [x] T015 [CODE] [US-001] Atualizar Dockerfile, as três ocorrências de IMAGE_NAME em .github/workflows/ci.yml e adicionar repository.url a package.json — Refs: US-001, FR-003, NFR-002, AC-007, AC-008, AC-009 — Depends: T007, T008, T009
   - [x] **PREP**: RED de T007/T008/T009 confirmado; T013 e T014 já GREEN antes de tocar o workflow, respeitando a restrição de sequenciamento da seção 15.
@@ -712,7 +712,7 @@ Cada tarefa possui exatamente este checklist, atualizado durante a execução:
   - [x] **VISUAL**: Não aplicável — sem superfície visual.
   - [x] **EVIDENCE**: Registrado nas seções 11–13.
   - [x] **IMPROVE**: Nenhuma melhoria adicional necessária.
-  <!-- specsfy:evidence {"task":"T015","refs":["US-001","FR-003","NFR-002","AC-007","AC-008","AC-009"],"files":["Dockerfile",".github/workflows/ci.yml","package.json"],"commands":[{"run":"npx vitest run tests/rename-ci-workflow.test.ts","exit":0},{"run":"docker build -t maestro:test .","exit":0}]} -->
+  <!-- framework:evidence {"task":"T015","refs":["US-001","FR-003","NFR-002","AC-007","AC-008","AC-009"],"files":["Dockerfile",".github/workflows/ci.yml","package.json"],"commands":[{"run":"npx vitest run tests/rename-ci-workflow.test.ts","exit":0},{"run":"docker build -t maestro:test .","exit":0}]} -->
 
 - [x] T016 [CODE] [US-001] Criar scripts/check-rename-commits.mjs (função pura de classificação de mensagem de commit) — Refs: US-001, FR-004, NFR-002, AC-012 — Depends: T010, T011, T012
   - [x] **PREP**: RED de T012 confirmado (módulo inexistente).
@@ -721,16 +721,16 @@ Cada tarefa possui exatamente este checklist, atualizado durante a execução:
   - [x] **VISUAL**: Não aplicável.
   - [x] **EVIDENCE**: Registrado nas seções 11–13.
   - [x] **IMPROVE**: Melhoria aplicada: o próprio módulo documenta por que a verificação é por convenção de mensagem e não por heurística sobre o diff — a alternativa seria adivinhação disfarçada de checagem.
-  <!-- specsfy:evidence {"task":"T016","refs":["US-001","FR-004","NFR-002","AC-012"],"files":["scripts/check-rename-commits.mjs"],"commands":[{"run":"npx vitest run tests/rename-commit-convention.test.ts","exit":0}]} -->
+  <!-- framework:evidence {"task":"T016","refs":["US-001","FR-004","NFR-002","AC-012"],"files":["scripts/check-rename-commits.mjs"],"commands":[{"run":"npx vitest run tests/rename-commit-convention.test.ts","exit":0}]} -->
 
-- [x] T017 [DOC] [US-001] Atualizar documentação viva (docs/, PROJECT.md, .specsfy/STACK.md) para maestro, preservando specs/completed/ intocado — Refs: US-001, FR-004, AC-010, AC-011 — Depends: T010, T011, T013, T014, T015
+- [x] T017 [DOC] [US-001] Atualizar documentação viva (docs/, PROJECT.md, .project-context/STACK.md) para maestro, preservando specs/completed/ intocado — Refs: US-001, FR-004, AC-010, AC-011 — Depends: T010, T011, T013, T014, T015
   - [x] **PREP**: RED de T011 confirmado (PROJECT.md e STACK.md citavam o nome antigo); T010 seguiu verde o tempo inteiro, como guard-rail.
-  - [x] **EXECUTE**: `build_documentation.mjs --project .` reconstruiu `docs/` a partir da fonte já renomeada; `PROJECT.md` e `.specsfy/STACK.md` ajustados na sequência.
+  - [x] **EXECUTE**: `build_documentation.mjs --project .` reconstruiu `docs/` a partir da fonte já renomeada; `PROJECT.md` e `.project-context/STACK.md` ajustados na sequência.
   - [x] **VERIFY**: `npx vitest run tests/rename-completed-specs-untouched.test.ts` — AC-010 e AC-011 **GREEN**; `build_documentation.mjs --project . --check` sem saída (limpo).
   - [x] **VISUAL**: Não aplicável — documentação em Markdown, sem tela.
   - [x] **EVIDENCE**: Registrado nas seções 11–13.
   - [x] **IMPROVE**: Nenhuma melhoria adicional — `docs/` já saiu correto da reconstrução automática, sem edição manual necessária.
-  <!-- specsfy:evidence {"task":"T017","refs":["US-001","FR-004","AC-010","AC-011"],"files":["docs/","PROJECT.md",".specsfy/STACK.md"],"commands":[{"run":"npx vitest run tests/rename-completed-specs-untouched.test.ts","exit":0}]} -->
+  <!-- framework:evidence {"task":"T017","refs":["US-001","FR-004","AC-010","AC-011"],"files":["docs/","PROJECT.md",".project-context/STACK.md"],"commands":[{"run":"npx vitest run tests/rename-completed-specs-untouched.test.ts","exit":0}]} -->
 
 **Checkpoint**: `npx vitest run` completo verde; `grep -r "common-rules" src/ resources/ package.json Dockerfile .github/` sem resultado.
 

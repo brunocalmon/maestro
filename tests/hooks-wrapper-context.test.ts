@@ -3,7 +3,7 @@ import { project, syntheticHook } from "./helpers-spec-0022";
 import { scriptFor, runScript, CTX_EXECUTE } from "./helpers-spec-0023";
 
 describe("AC-023 — preâmbulo expõe HOOK_TOOL e o wrapper suporta context", () => {
-  // SPECSFY: FR-001 FR-004 NFR-002 AC-023
+  // TRACEABILITY: FR-001 FR-004 NFR-002 AC-023
   it("fragmento com context= emite o JSON de contexto e vê o tool_name", () => {
     const root = project();
     const hook = syntheticHook(

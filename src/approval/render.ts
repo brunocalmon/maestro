@@ -19,7 +19,7 @@ export interface RenderedPlan {
  *
  * Both derive from a single pass, so `AC-069` can't fail from drift
  * between implementations that extract the same fields twice. Hooks and
- * dependency commands (skills, Specsfy, Python bridge) coexist side by
+ * dependency commands (skills and Python bridge) coexist side by
  * side without merging into a single structure (`FR-071`) — hooks have no
  * `bin`/`args`, and this fatia's persistent registry doesn't apply to them.
  */

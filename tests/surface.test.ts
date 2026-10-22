@@ -7,18 +7,18 @@ import { COMMANDS } from "../src/cli";
 const FORBIDDEN = ["orchestrate", "approve", "model", "agent", "serve", "mcp"];
 
 describe("AC-010 — the skeleton doesn't deliver product capability", () => {
-  // SPECSFY: US-001 US-002 FR-005 FR-006 AC-010
+  // TRACEABILITY: US-001 US-002 FR-005 FR-006 AC-010
   it("offers the two commands this fatia delivered", () => {
     for (const c of ["doctor", "version"]) expect(Object.keys(COMMANDS)).toContain(c);
   });
 
-  // SPECSFY: US-001 FR-005 AC-010
+  // TRACEABILITY: US-001 FR-005 AC-010
   it("offers no command from the following fatias", () => {
     const leaked = Object.keys(COMMANDS).filter((c) => FORBIDDEN.includes(c));
     expect(leaked).toEqual([]);
   });
 
-  // SPECSFY: US-002 FR-006 AC-010
+  // TRACEABILITY: US-002 FR-006 AC-010
   it("keeps doctor as the sole verification surface", () => {
     expect(COMMANDS.doctor).toBeTypeOf("function");
   });

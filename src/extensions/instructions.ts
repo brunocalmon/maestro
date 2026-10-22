@@ -37,7 +37,7 @@ const SHARED_BLOCKS: readonly { name: string; content: () => string }[] = [
 ];
 
 /**
- * Installs the maestro's instructions in the one direction the Specsfy
+ * Installs the maestro's instructions in the one direction the target
  * already uses: full content in `AGENTS.md`, a single `@AGENTS.md` import in
  * `CLAUDE.md` (DEC-001). Runs the direction migration first, so a project
  * installed by an older release ends up in the same layout as a new one.

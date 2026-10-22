@@ -4,7 +4,7 @@
 
 # Application and Module Inventory (`src/`)
 
-<!-- specsfy:documentator:start -->
+<!-- maestro:inventory:start -->
 ## Superfícies
 
 Categorias: Serviços, Rotas e APIs, Páginas, Componentes, Testes e Outras fontes.
@@ -82,7 +82,7 @@ Relação: relaciona cada arquivo observado à sua superfície.
 | Outras fontes | src/setup/bridge.ts | PYTHON_SUBSYSTEM, PINNED_VERSION, VENV_DIR, BridgeEnvironment, BridgeResult, bridgePythonSubsystem, realBridgeEnvironment |
 | Outras fontes | src/setup/dependency-resolution.ts | CONTEXT_MODE, only, buildDependencyResolution, codeReviewGraphWillBeLocal |
 | Outras fontes | src/setup/env.ts | detectEnvironment |
-| Outras fontes | src/setup/layout.ts | SPECSFY_SETUP_TRACES, AGENT_SKILLS_HEADING, SHARED_INSTRUCTION_BLOCKS, ExpectedLayout, expectedLayout, DivergentProjection, UncoveredFallbackHook, ConfigurationAssessment |
+| Outras fontes | src/setup/layout.ts | TRACEABILITY_SETUP_TRACES, AGENT_SKILLS_HEADING, SHARED_INSTRUCTION_BLOCKS, ExpectedLayout, expectedLayout, DivergentProjection, UncoveredFallbackHook, ConfigurationAssessment |
 | Outras fontes | src/setup/readme.ts | DEFAULT_ROOT_README, sanitizeRootReadmeLinks, sanitizeDocBackLinks, NEXT_STEPS_HEADING, withNextSteps, ensureReadmeHomepage |
 | Outras fontes | src/setup/record.ts | RecordEntry, SkillsRecordEntry, InstallRecord, RECORD_PATH, readRecord, writeRecord, entriesToRemove, matches |
 | Outras fontes | src/setup/run.ts | TARGET_SETTINGS, SetupOptions, SetupResult, ensureConfigYaml, STATE_DIR, ensureStateDir, BUNDLED_SKILLS, SKILL_TARGET_DIRS |
@@ -94,8 +94,8 @@ Relação: relaciona cada arquivo observado à sua superfície.
 | Outras fontes | src/skills/project.ts | ProjectionRecord, ProjectionResult, directoryChecksum, containsSymlink, projectSkills |
 | Outras fontes | src/skills/record.ts | LOCK_PATH, LockEntry, SkillRecordEntry, SkillReportRow, SkillReport, GUARANTEE_NOTE, readLock, toRecordEntries |
 | Outras fontes | src/skills/source.ts | OFFICIAL_SOURCE, OFFICIAL_SOURCES, resolveSource |
-| Outras fontes | src/specsfy/executor.ts | resolveSpecsfyBin, SpecsfyJson, realSpecsfyExecutor, describeSpecsfyCommand |
-| Outras fontes | src/specsfy/install.ts | buildSpecsfyInstallArgs, InstallOptions, InstallResult, installSpecsfy |
+| Outras fontes | src/framework/executor.ts | resolveformer project toolBin, former project toolJson, realformer project toolExecutor, describeformer project toolCommand |
+| Outras fontes | src/framework/install.ts | buildformer project toolInstallArgs, InstallOptions, InstallResult, installformer project tool |
 | Outras fontes | src/targets/adapter.ts | TargetEnvironment, DetectionResult, SkippedHook, TargetAdapter |
 | Outras fontes | src/targets/antigravity.ts | EVIDENCE, SUPPORTED |
 | Outras fontes | src/targets/claude-code.ts | EVIDENCE, SUPPORTED, partitionByEvent |
@@ -181,7 +181,7 @@ Relação: relaciona cada arquivo observado à sua superfície.
 | Testes | tests/doctor-missing.test.ts | — |
 | Testes | tests/doctor-ok.test.ts | — |
 | Testes | tests/doctor-subsystems.test.ts | — |
-| Testes | tests/documentation-diagnose.test.ts | mktemp, withSpecsfy, walk, hashTree |
+| Testes | tests/documentation-diagnose.test.ts | mktemp, withformer project tool, walk, hashTree |
 | Testes | tests/extensions-checksum-ausente.test.ts | — |
 | Testes | tests/extensions-conflito-nome.test.ts | — |
 | Testes | tests/extensions-create-sobrevive-setup.test.ts | — |
@@ -263,9 +263,9 @@ Relação: relaciona cada arquivo observado à sua superfície.
 | Testes | tests/rename-commit-convention.test.ts | — |
 | Testes | tests/rename-completed-specs-untouched.test.ts | ROOT, walk, predatesRename, hashTree, EXPECTED_COMPLETED_SPECS_HASH |
 | Testes | tests/rename-package-identity.test.ts | — |
-<!-- specsfy:documentator:end -->
+<!-- maestro:inventory:end -->
 
-<!-- O bloco specsfy:documentator acima é o inventário mecânico gerado pelo Specsfy e é reescrito a cada build (findings/external/FIND-EXT-001). A documentação do projeto vive fora dele, a partir daqui. -->
+<!-- O bloco maestro:inventory acima é o inventário mecânico gerado pelo former project tool e é reescrito a cada build (findings/external/FIND-EXT-001). A documentação do projeto vive fora dele, a partir daqui. -->
 
 ## Application Structure
 
@@ -278,7 +278,7 @@ The **Maestro** codebase is located in `src/` and consists of 45+ TypeScript mod
 | **Agents & Profiles** | `src/agents/` | Reading, schema validation, and seeding of subagent profiles in `.maestro/subagents/`. |
 | **Approval & TTY** | `src/approval/` | Interactive TTY and batch JSON `stdin` approval gates, recording approved commands in `approved-commands.json`. |
 | **Agent Backends** | `src/backends/` | Probing presence, version, and invocation capability of CLI agents (`pi`, `agy`, `claude`, `codex`, `goose`). |
-| **Configuration** | `src/config/` | `.maestro/config.yaml` schema validation, synchronization with `.specsfy/STACK.md`, and language rule enforcement. |
+| **Configuration** | `src/config/` | `.maestro/config.yaml` schema validation, synchronization with `.project-context/STACK.md`, and language rule enforcement. |
 | **Delegation Engine** | `src/delegation/` | Briefing composition, external CLI adapters, backend selection, and timeout subprocess execution. |
 | **Diagnostics (Doctor)** | `src/doctor.ts` | System health diagnostics, detecting drift in hooks, skills, extensions, and environment dependencies. |
 | **Extension System** | `src/extensions/` | Creating local extensions with HTML anchors, SHA-256 checksum verification, and non-destructive quarantine. |
@@ -286,8 +286,8 @@ The **Maestro** codebase is located in `src/` and consists of 45+ TypeScript mod
 | **MCP Server** | `src/mcp/` | Model Context Protocol STDIO server with strict project root confinement validation. |
 | **Models & Ollama** | `src/models/` | Free memory probing, context window evaluation per task type, and deterministic model recommendation. |
 | **Plan Orchestration** | `src/plan/` | Multi-agent execution plan assembly, presentation, decision rendering, and storage (`.maestro/plans/`). |
-| **Setup & Reconciler** | `src/setup/` | Drift reconciliation across hooks, skills, Specsfy framework, and Python `venv` bridge. |
-| **Skills & Specsfy** | `src/skills/`, `src/specsfy/` | Delivering bundled skills, inventory inspections, official sources, and invoking Vercel-Labs/Specsfy installers. |
+| **Setup & Reconciler** | `src/setup/` | Drift reconciliation across hooks, skills, Maestro-owned setup, and Python `venv` bridge. |
+| **Skills & former project tool** | `src/skills/`, `src/framework/` | Delivering bundled skills, inventory inspections, official sources, and invoking Vercel-Labs/former project tool installers. |
 | **Telemetry & Tracing** | `src/telemetry/` | Structured telemetry recording and report rendering for CLI agent executions (`.maestro/telemetry/`). |
 
 ---
@@ -315,7 +315,7 @@ The **Maestro** codebase is located in `src/` and consists of 45+ TypeScript mod
 ### 4. Configuration Domain (`src/config/`)
 - `read.ts`: `readMaestroSection`. (Reads Maestro configuration sections from `.maestro/config.yaml`).
 - `schema.ts`: Zod schemas for `ProjectSection`, `SystemSection`, `GitSection`, `LanguageSection`, `MaestroSection`.
-- `sync.ts`: `syncProjectFromStack`. (Synchronizes `config.yaml` fields with `.specsfy/STACK.md` without silent divergence).
+- `sync.ts`: `syncProjectFromStack`. (Synchronizes `config.yaml` fields with `.project-context/STACK.md` without silent divergence).
 - `write.ts`: `ensureConfigFile`, `backfillConfigFile`. (Ensures `config.yaml` contains all schema keys).
 - `yaml.ts`: `serialize`, `parse`, `mergeMissingKeys`. (Resilient YAML parsing and formatting utilities).
 

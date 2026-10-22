@@ -3,17 +3,17 @@
 const { refExists, sha, filesIn, readState, assert, ARCHIVED_BRANCH, MAIN_BRANCH } = require("./lib.cjs");
 
 assert("assert-archived-frozen", [
-  // SPECSFY: US-002 FR-001 AC-001
+  // TRACEABILITY: US-002 FR-001 AC-001
   [`branch ${ARCHIVED_BRANCH} existe`, () =>
     refExists(ARCHIVED_BRANCH) || `referência ${ARCHIVED_BRANCH} não encontrada`],
 
-  // SPECSFY: US-002 FR-001 AC-001
+  // TRACEABILITY: US-002 FR-001 AC-001
   [`${ARCHIVED_BRANCH} publicada no remoto`, () => {
     const remote = sha(`refs/remotes/origin/${ARCHIVED_BRANCH}`);
     return remote !== null || `origin/${ARCHIVED_BRANCH} não encontrada`;
   }],
 
-  // SPECSFY: US-002 FR-001 NFR-002 AC-001
+  // TRACEABILITY: US-002 FR-001 NFR-002 AC-001
   [`árvore de ${ARCHIVED_BRANCH} idêntica à de ${MAIN_BRANCH}`, () => {
     if (!refExists(ARCHIVED_BRANCH) || !refExists(MAIN_BRANCH)) return "referência ausente";
     const a = filesIn(ARCHIVED_BRANCH), m = filesIn(MAIN_BRANCH);
@@ -25,7 +25,7 @@ assert("assert-archived-frozen", [
     return true;
   }],
 
-  // SPECSFY: US-002 NFR-002 AC-008
+  // TRACEABILITY: US-002 NFR-002 AC-008
   [`v0.2.8 recuperável a partir de ${ARCHIVED_BRANCH}`, () => {
     if (!refExists(ARCHIVED_BRANCH)) return "referência ausente";
     const tracked = filesIn(ARCHIVED_BRANCH, ["pyproject.toml", "src", "specs"]);
@@ -35,7 +35,7 @@ assert("assert-archived-frozen", [
     return absent.length ? `ausente(s): ${absent.join(", ")}` : true;
   }],
 
-  // SPECSFY: US-002 NFR-003 AC-005
+  // TRACEABILITY: US-002 NFR-003 AC-005
   [`${ARCHIVED_BRANCH} mantém o SHA congelado`, () => {
     const state = readState();
     if (!state || !state.archivedSha) return "baseline ainda não registrada (esperado antes de T008)";

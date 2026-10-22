@@ -12,19 +12,19 @@ function recordOf(root: string): Record<string, any> {
 }
 
 describe("AC-040 — every entry from the same run shares the identifier", () => {
-  // SPECSFY: US-040 FR-040 AC-040
+  // TRACEABILITY: US-040 FR-040 AC-040
   it("the record carries a correlation identifier", () => {
     expect(recordOf(project())["trace"]).toBe(FIXED_ID);
   });
 
-  // SPECSFY: US-040 FR-040 AC-040
+  // TRACEABILITY: US-040 FR-040 AC-040
   it("the identifier isn't empty or absent", () => {
     const t = recordOf(project())["trace"];
     expect(typeof t).toBe("string");
     expect(String(t).length).toBeGreaterThan(0);
   });
 
-  // SPECSFY: US-040 FR-040 AC-040
+  // TRACEABILITY: US-040 FR-040 AC-040
   it("the hook entries belong to that run", () => {
     const rec = recordOf(project());
     expect(rec["hooks"].length).toBe(installedHookCount());

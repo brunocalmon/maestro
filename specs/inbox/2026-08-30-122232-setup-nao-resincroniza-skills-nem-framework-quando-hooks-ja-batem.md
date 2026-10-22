@@ -15,7 +15,7 @@
 
 ## Texto original
 
-Achado durante a verificação manual real da SPEC-0005 (2026-08-30): apagar .claude/skills/ manualmente e rodar common-rules setup de novo não restaura nada, porque runSetup sai cedo assim que os hooks já batem (matches() olha só nome e versão dos hooks), antes de sequer considerar skills ou o framework Specsfy. Reproduzido de verdade: 57 skills instaladas, apagadas manualmente, segunda execução relata 'já estava configurado: 7 hooks inalterados' e mantém 0 skills em disco. Usuário pediu tratamento formal deste achado antes de continuar, com atualização de inbox, backlog e specs.
+Achado durante a verificação manual real da SPEC-0005 (2026-08-30): apagar .claude/skills/ manualmente e rodar common-rules setup de novo não restaura nada, porque runSetup sai cedo assim que os hooks já batem (matches() olha só nome e versão dos hooks), antes de sequer considerar skills ou o framework former project tool. Reproduzido de verdade: 57 skills instaladas, apagadas manualmente, segunda execução relata 'já estava configurado: 7 hooks inalterados' e mantém 0 skills em disco. Usuário pediu tratamento formal deste achado antes de continuar, com atualização de inbox, backlog e specs.
 
 ## Contexto consultado
 
@@ -23,13 +23,13 @@ src/setup/run.ts (jaFeito/matches), src/setup/record.ts (matches()), reproduçã
 
 ## Resumo processado
 
-**Inferência:** runSetup considera 'já configurado' olhando só hooks (nome+versão), então apagar skills ou o framework Specsfy manualmente e rodar setup de novo não os restaura — o setup relata sucesso sobre um estado que não corresponde ao disco.
+**Inferência:** runSetup considera 'já configurado' olhando só hooks (nome+versão), então apagar skills ou o framework former project tool manualmente e rodar setup de novo não os restaura — o setup relata sucesso sobre um estado que não corresponde ao disco.
 
 ## Análise inicial
 
 ### Problema ou oportunidade
 
-**Declaração ou inferência identificada:** matches() em src/setup/record.ts só compara a lista de nomes de hooks e a versão do pacote contra o registro anterior. Quando bate, runSetup devolve cedo, antes do bloco que instala skills e specsfy — então esse bloco nunca roda numa segunda execução, mesmo que .claude/skills/ ou .specsfy/ tenham sido apagados por fora.
+**Declaração ou inferência identificada:** matches() em src/setup/record.ts só compara a lista de nomes de hooks e a versão do pacote contra o registro anterior. Quando bate, runSetup devolve cedo, antes do bloco que instala skills e framework — então esse bloco nunca roda numa segunda execução, mesmo que .claude/skills/ ou .project-context/ tenham sido apagados por fora.
 
 ### Pessoas afetadas ou beneficiadas
 
@@ -53,11 +53,11 @@ src/setup/run.ts (jaFeito/matches), src/setup/record.ts (matches()), reproduçã
 
 ## Possíveis direções futuras
 
-**Hipóteses para backlog ou spec, não requisitos:** Redefinir 'já estava configurado' para exigir também que os conjuntos de skills e o framework Specsfy previamente instalados ainda estejam presentes no disco, com verificação barata de arquivo, sem subprocesso, preservando o curto-circuito quando nada mudou de verdade.
+**Hipóteses para backlog ou spec, não requisitos:** Redefinir 'já estava configurado' para exigir também que os conjuntos de skills e o framework former project tool previamente instalados ainda estejam presentes no disco, com verificação barata de arquivo, sem subprocesso, preservando o curto-circuito quando nada mudou de verdade.
 
 ## Pontos a revisar no futuro
 
-**A revisar:** Confirmar com a pessoa responsável se a verificação de presença do framework Specsfy deve ser .specsfy/ existir, ou algo mais específico.
+**A revisar:** Confirmar com a pessoa responsável se a verificação de presença do framework former project tool deve ser .project-context/ existir, ou algo mais específico.
 
 ## Rastreabilidade
 
@@ -68,10 +68,10 @@ src/setup/run.ts (jaFeito/matches), src/setup/record.ts (matches()), reproduçã
 ## Próximo passo
 
 Nenhum — resolvido. Confirmado em `src/setup/run.ts`: `alreadyDone` agora exige
-`hooksAlreadyDone && skillsAlreadyDone && specsfyAlreadyDone && !bridgePending`,
+`hooksAlreadyDone && skillsAlreadyDone && frameworkAlreadyDone && !bridgePending`,
 não apenas os hooks — exatamente a direção hipotetizada na captura
 ("Redefinir 'já estava configurado' para exigir também que os conjuntos de
-skills e o framework Specsfy previamente instalados ainda estejam presentes
+skills e o framework former project tool previamente instalados ainda estejam presentes
 no disco"). A pergunta em "Pontos a revisar no futuro" também está
-respondida no código: a presença do Specsfy é `existsSync(join(root,
-".specsfy"))`.
+respondida no código: a presença do former project tool é `existsSync(join(root,
+".project-context"))`.

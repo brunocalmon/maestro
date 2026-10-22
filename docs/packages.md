@@ -11,8 +11,8 @@ The `@brunocalmon/maestro` package minimizes third-party dependencies to maintai
 1. **`@modelcontextprotocol/sdk` (v1.30.0)**:
    - **Role**: Native implementation of the Model Context Protocol (MCP).
    - **Usage**: Powers the `maestro-mcp` binary via STDIO JSON-RPC 2.0 communication.
-2. **`@promovaweb/specsfy` (v0.22.2)**:
-   - **Role**: CLI and TUI for the Specsfy specification engineering framework.
+2. **`removed-project-integration` (v0.22.2)**:
+   - **Role**: CLI and TUI for the former project tool specification engineering framework.
    - **Usage**: Installation and synchronization of project specifications, rules, and stack metadata.
 3. **`context-mode` (v1.0.169)**:
    - **Role**: MCP plugin for context window optimization and token savings.
@@ -29,13 +29,13 @@ The `@brunocalmon/maestro` package minimizes third-party dependencies to maintai
 
 ---
 
-<!-- specsfy:documentator:start -->
+<!-- maestro:inventory:start -->
 ## Inventário
 
 | Categoria | Escopo | Pacote | Versão | Finalidade | Fonte | GitHub |
 | --- | --- | --- | --- | --- | --- | --- |
 | Terceiro | produção | @modelcontextprotocol/sdk | 1.30.0 | Model Context Protocol implementation for TypeScript | https://github.com/modelcontextprotocol/typescript-sdk | https://github.com/modelcontextprotocol/typescript-sdk |
-| Terceiro | produção | @promovaweb/specsfy | 0.23.0 | CLI e TUI do Specsfy para instalar skills e acompanhar especificações. | https://github.com/promovaweb/specsfy | https://github.com/promovaweb/specsfy |
+| Terceiro | produção | removed-project-integration | 0.23.0 | CLI e TUI do former project tool para instalar skills e acompanhar especificações. | https://github.com/removed-project-integration | https://github.com/removed-project-integration |
 | Terceiro | produção | context-mode | 1.0.169 | MCP plugin that saves 98% of your context window. Works with Claude Code, Gemini CLI, VS Code Copilot, OpenCode, and Codex CLI. Sandboxed code execution, FTS5 knowledge base, and intent-driven search. | https://github.com/mksglu/context-mode | https://github.com/mksglu/context-mode |
 | Terceiro | produção | skills | 1.5.26 | The open agent skills ecosystem | https://github.com/vercel-labs/skills | https://github.com/vercel-labs/skills |
 | Terceiro | produção | yaml | 2.9.1 | JavaScript parser and stringifier for YAML | github:eemeli/yaml | — |
@@ -60,7 +60,7 @@ The `@brunocalmon/maestro` package minimizes third-party dependencies to maintai
 | Terceiro | transitiva | @mixmark-io/domino | 2.2.0 | Server-side DOM implementation based on Mozilla's dom.js | https://github.com/mixmark-io/domino | https://github.com/mixmark-io/domino |
 | Terceiro | transitiva | @modelcontextprotocol/sdk | 1.30.0 | Model Context Protocol implementation for TypeScript | https://github.com/modelcontextprotocol/typescript-sdk | https://github.com/modelcontextprotocol/typescript-sdk |
 | Terceiro | transitiva | @oxc-project/types | 0.149.0 | Types for Oxc AST nodes | https://github.com/oxc-project/oxc | https://github.com/oxc-project/oxc |
-| Terceiro | transitiva | @promovaweb/specsfy | 0.23.0 | CLI e TUI do Specsfy para instalar skills e acompanhar especificações. | https://github.com/promovaweb/specsfy | https://github.com/promovaweb/specsfy |
+| Terceiro | transitiva | removed-project-integration | 0.23.0 | CLI e TUI do former project tool para instalar skills e acompanhar especificações. | https://github.com/removed-project-integration | https://github.com/removed-project-integration |
 | Terceiro | transitiva | @rolldown/binding-android-arm-eabi | 1.2.8 | Finalidade não descrita nos metadados locais. |  | — |
 | Terceiro | transitiva | @rolldown/binding-android-arm64 | 1.2.8 | Finalidade não descrita nos metadados locais. |  | — |
 | Terceiro | transitiva | @rolldown/binding-darwin-arm64 | 1.2.8 | Finalidade não descrita nos metadados locais. |  | — |
@@ -332,16 +332,16 @@ The `@brunocalmon/maestro` package minimizes third-party dependencies to maintai
 | Terceiro | transitiva | yargs-parser | 20.2.9 | the mighty option parser used by yargs | https://github.com/yargs/yargs-parser | https://github.com/yargs/yargs-parser |
 | Terceiro | transitiva | zod | 4.6.5 | TypeScript-first schema declaration and validation library with static type inference | https://github.com/colinhacks/zod | https://github.com/colinhacks/zod |
 | Terceiro | transitiva | zod-to-json-schema | 3.25.2 | Converts Zod schemas to Json Schemas | https://github.com/StefanTerdell/zod-to-json-schema | https://github.com/StefanTerdell/zod-to-json-schema |
-<!-- specsfy:documentator:end -->
+<!-- maestro:inventory:end -->
 
-<!-- O bloco specsfy:documentator acima é o inventário mecânico gerado pelo Specsfy e é reescrito a cada build (findings/external/FIND-EXT-001). A documentação do projeto vive fora dele, a partir daqui. -->
+<!-- O bloco maestro:inventory acima é o inventário mecânico gerado pelo former project tool e é reescrito a cada build (findings/external/FIND-EXT-001). A documentação do projeto vive fora dele, a partir daqui. -->
 
 ## Complete Package Inventory (Direct and Transitive)
 
 | Category | Scope | Package | Version | Purpose | Source | GitHub |
 | --- | --- | --- | --- | --- | --- | --- |
 | Third-party | production | @modelcontextprotocol/sdk | 1.30.0 | Model Context Protocol implementation for TypeScript | https://github.com/modelcontextprotocol/typescript-sdk | https://github.com/modelcontextprotocol/typescript-sdk |
-| Third-party | production | @promovaweb/specsfy | 0.22.2 | Specsfy CLI & TUI to install skills and track specifications. | https://github.com/promovaweb/specsfy | https://github.com/promovaweb/specsfy |
+| Third-party | production | removed-project-integration | 0.22.2 | former project tool CLI & TUI to install skills and track specifications. | https://github.com/removed-project-integration | https://github.com/removed-project-integration |
 | Third-party | production | context-mode | 1.0.169 | MCP plugin that saves 98% of your context window. Works with Claude Code, Gemini CLI, VS Code Copilot, OpenCode, and Codex CLI. Sandboxed code execution, FTS5 knowledge base, and intent-driven search. | https://github.com/mksglu/context-mode | https://github.com/mksglu/context-mode |
 | Third-party | production | skills | 1.5.23 | The open agent skills ecosystem | https://github.com/vercel-labs/skills | https://github.com/vercel-labs/skills |
 | Third-party | production | yaml | 2.9.0 | JavaScript parser and stringifier for YAML | github:eemeli/yaml | — |

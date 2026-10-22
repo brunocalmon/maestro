@@ -3,7 +3,7 @@ import { detectBackends } from "../src/backends/detect";
 import { sourceFake } from "./backends-fixtures";
 
 describe("AC-083 — the supported list is fixed, not discovered in production", () => {
-  // SPECSFY: US-030 FR-032 NFR-030 AC-083
+  // TRACEABILITY: US-030 FR-032 NFR-030 AC-083
   it("no call beyond resolving presence/version happens", () => {
     const { env, calls } = sourceFake({ pi: "0.84.3" });
     detectBackends(env);

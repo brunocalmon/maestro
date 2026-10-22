@@ -8,7 +8,7 @@ const original = process.cwd();
 afterEach(() => process.chdir(original));
 
 describe("AC-005 — the process's working directory points elsewhere", () => {
-  // SPECSFY: US-002 FR-002 AC-005
+  // TRACEABILITY: US-002 FR-002 AC-005
   it("files appear inside the given project", async () => {
     const foreign = disposableProject("crs-foreign-");
     const target = disposableProject("crs-target-");
@@ -17,7 +17,7 @@ describe("AC-005 — the process's working directory points elsewhere", () => {
     expect(existsSync(join(target, ".maestro", "install.json"))).toBe(true);
   });
 
-  // SPECSFY: US-002 NFR-001 AC-005
+  // TRACEABILITY: US-002 NFR-001 AC-005
   it("nothing is created in the process's working directory", async () => {
     const foreign = disposableProject("crs-foreign-");
     const target = disposableProject("crs-target-");
@@ -27,7 +27,7 @@ describe("AC-005 — the process's working directory points elsewhere", () => {
     expect(fileTree(foreign)).toEqual(before);
   });
 
-  // SPECSFY: US-002 NFR-003 AC-005
+  // TRACEABILITY: US-002 NFR-003 AC-005
   it("the result doesn't change when the working directory changes", async () => {
     const targetA = disposableProject("crs-a-");
     const targetB = disposableProject("crs-b-");

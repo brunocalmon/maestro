@@ -6,7 +6,6 @@ import { detectEnvironment } from "../setup/env.js";
 import { validateRoot } from "./root.js";
 import { KNOWN_TARGETS } from "../hooks/detect.js";
 import { realSkillsExecutor } from "../skills/executor.js";
-import { realSpecsfyExecutor } from "../specsfy/executor.js";
 import { realBridgeEnvironment } from "../setup/bridge.js";
 import type { DecisionSource } from "../approval/decide.js";
 
@@ -59,7 +58,7 @@ export const inputShape = {
 export const outputShape = {
   root: z.string().describe("Project root that received the configuration."),
   target: z.string().describe("Path, relative to the root, of the target's configuration file."),
-  changed: z.boolean().describe("False only on a dry run or when nothing is configured to install; SPEC-0025 made the skills/Specsfy installers reconcile on every call, so a normal call with them configured always reports true."),
+  changed: z.boolean().describe("False only on a dry run or when nothing is configured to install."),
   hooks: z
     .array(z.object({ name: z.string(), event: z.string() }))
     .describe("Installed hooks, with the event each one was registered under."),
@@ -132,12 +131,11 @@ export async function executeSetup(args: {
       previous,
       target: args.target,
       // Parity with the CLI (`formatSetup` in `src/cli.ts`): without these,
-      // `runSetup` skips skills and the Specsfy framework entirely — its
+      // `runSetup` skips skills — its
       // own documented behavior for an absent executor — so a project
       // configured through this tool ended up with hooks only, silently
       // less than what the same command does from a terminal.
       skills: { execute: realSkillsExecutor() },
-      specsfy: { execute: realSpecsfyExecutor() },
       bridgeEnv: realBridgeEnvironment(),
       approval: { source: alwaysApprove },
     });

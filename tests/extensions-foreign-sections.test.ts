@@ -14,7 +14,7 @@ const foreign = (root: string) => registry(root).artifacts.find((a) => (a as { c
 const quarantine = (root: string): string[] => (existsSync(resolve(root, ".maestro", "quarantine")) ? readdirSync(resolve(root, ".maestro", "quarantine")) : []);
 
 describe("AC-008 — ## Agent skills movido de CLAUDE.md para AGENTS.md", () => {
-  // SPECSFY: US-002 FR-003 FR-004 NFR-002 AC-008
+  // TRACEABILITY: US-002 FR-003 FR-004 NFR-002 AC-008
   it("seção movida com o mesmo texto e registrada como foreign", () => {
     const root = project();
     writeFileSync(resolve(root, "CLAUDE.md"), `# Projeto\n\n${AGENT_SKILLS_SECTION}\n## Outra seção humana\n\nfica.\n`);
@@ -32,7 +32,7 @@ describe("AC-008 — ## Agent skills movido de CLAUDE.md para AGENTS.md", () => 
 });
 
 describe("AC-009 — conteúdo foreign nunca é reescrito pelo maestro", () => {
-  // SPECSFY: US-002 FR-004 NFR-002 AC-009
+  // TRACEABILITY: US-002 FR-004 NFR-002 AC-009
   it("texto alterado em AGENTS.md permanece, é relatado e não vai para quarentena", () => {
     const root = project();
     writeFileSync(resolve(root, "CLAUDE.md"), `${AGENT_SKILLS_SECTION}`);
@@ -48,7 +48,7 @@ describe("AC-009 — conteúdo foreign nunca é reescrito pelo maestro", () => {
 });
 
 describe("AC-010 — só assinaturas conhecidas são movidas; duplicata idêntica resolvida", () => {
-  // SPECSFY: US-002 FR-003 FR-004 NFR-002 AC-010
+  // TRACEABILITY: US-002 FR-003 FR-004 NFR-002 AC-010
   it("seção desconhecida fica; duplicata idêntica some de CLAUDE.md; seção diferente é mantida e relatada", () => {
     const root = project();
     writeFileSync(resolve(root, "AGENTS.md"), `${AGENT_SKILLS_SECTION}`);
@@ -148,7 +148,7 @@ describe("AC-013 — ## Agent skills fica envolta pelo anchor padrão do maestro
 });
 
 describe("AC-011 — router instrui skills que editam CLAUDE.md", () => {
-  // SPECSFY: US-002 FR-003 NFR-003 AC-011
+  // TRACEABILITY: US-002 FR-003 NFR-003 AC-011
   it("texto do router menciona AGENTS.md e @AGENTS.md", () => {
     const text = buildRouterBlock();
     expect(text).toMatch(/AGENTS\.md/);

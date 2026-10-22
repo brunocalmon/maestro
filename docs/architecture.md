@@ -4,7 +4,7 @@
 
 # System Design and Architecture of Maestro
 
-<!-- specsfy:documentator:start -->
+<!-- maestro:inventory:start -->
 ## Componentes
 
 | Tipo | Quantidade |
@@ -23,9 +23,9 @@ flowchart TD
 classDiagram
   class Application
 ```
-<!-- specsfy:documentator:end -->
+<!-- maestro:inventory:end -->
 
-<!-- O bloco specsfy:documentator acima é o inventário mecânico gerado pelo Specsfy e é reescrito a cada build (findings/external/FIND-EXT-001). A documentação do projeto vive fora dele, a partir daqui. -->
+<!-- O bloco maestro:inventory acima é o inventário mecânico gerado pelo former project tool e é reescrito a cada build (findings/external/FIND-EXT-001). A documentação do projeto vive fora dele, a partir daqui. -->
 
 ## Architectural Overview
 
@@ -35,7 +35,7 @@ The architecture is built upon a core design decision (**SPEC-0002**), categoriz
 
 | Layer | Examples | Management Policy |
 | --- | --- | --- |
-| **1. Local npm Subsystems** | `@promovaweb/specsfy`, `context-mode` | Strictly pinned version, resolved from local project copy (`node_modules/`). |
+| **1. Local npm Subsystems** | `removed-project-integration`, `context-mode` | Strictly pinned version, resolved from local project copy (`node_modules/`). |
 | **2. Local Python Subsystems** | `code-review-graph` | Isolated in local project `venv` (`.venv`), installed via `uv` upon prior explicit approval. Never installed globally. |
 | **3. CLI Agent Backends** | `pi`, `agy`, `claude`, `codex`, `goose` | Dynamically detected in `PATH` by invocation capability. Interchangeable by design and never installed by Maestro. |
 
@@ -155,7 +155,7 @@ graph LR
     subgraph ProjectBoundary ["Target Project Root"]
         MaestroStorage[".maestro/ Config & Plans"]
         ClaudeSettings[".claude/settings.json Hooks"]
-        SpecsfyDirectory[".specsfy/ Metadata & Specs"]
+        former project toolDirectory[".project-context/ Metadata & Specs"]
         VenvDirectory[".venv/ Python Environment"]
     end
 
